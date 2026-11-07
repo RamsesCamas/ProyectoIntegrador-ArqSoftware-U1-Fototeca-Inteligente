@@ -1,0 +1,39 @@
+# ── Entornos virtuales y cachés de Python ──
+.venv/
+venv/
+env/
+ENV/
+.python-version
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Variables de entorno y secretos ──
+.env
+.env.*
+!.env.ejemplo
+*.key
+*.pem
+*.p12
+secrets/
+credentials*.json
+*token*.txt
+
+# ── Datos y artefactos pesados ──
+data/
+*.sqlite
+*.db
+qdrant_storage/
+ollama/
+*.log
+
+# ── Sistema y editores ──
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+
+# Nota: los .docx de docs/curso/originales/ SÍ se versionan (no se ignoran).
