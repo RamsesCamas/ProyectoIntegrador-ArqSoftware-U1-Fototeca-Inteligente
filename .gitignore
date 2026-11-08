@@ -36,10 +36,14 @@ Thumbs.db
 .vscode/
 node_modules/
 
-# Nota: los .docx de docs/curso/originales/ SÍ se versionan (no se ignoran).
 
-# ── Instrucciones y seguimiento del asistente de IA (no se publican) ──
-# Se conservan en la copia local de trabajo. Al cerrar el proyecto, su contenido se sintetiza en AI_USAGE.md.
+# ── Material de desarrollo del asistente de IA (no forma parte del producto) ──
+# Instrucciones, especificaciones de trabajo, documentos del curso y bitácoras del proceso. Se conservan en la
+# copia local; al cerrar el proyecto, el uso de IA se sintetiza en AI_USAGE.md.
 CLAUDE.md
 PROMPT_INICIAL.md
 PROGRESO.md
+docs/specs/
+docs/curso/
+docs/BLOQUEOS.md
+docs/bitacora.md

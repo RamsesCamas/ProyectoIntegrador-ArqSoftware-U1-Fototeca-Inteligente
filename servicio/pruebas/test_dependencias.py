@@ -1,4 +1,4 @@
-"""Regla 9 de CLAUDE.md: dependencias fijadas con == y requirements.txt coherente con el lock de uv."""
+"""Dependencias fijadas con == y requirements.txt coherente con el lock de uv."""
 from __future__ import annotations
 
 import re

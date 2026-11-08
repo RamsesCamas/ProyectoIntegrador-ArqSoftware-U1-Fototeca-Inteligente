@@ -3,7 +3,7 @@ name = "fototeca"
 version = "0.1.0"
 description = "Fototeca Viva: catalogación accesible y trazable de archivos fotográficos"
 requires-python = "==3.12.*"
-# Versiones fijadas con == (regla 9 de CLAUDE.md). Se resuelven en uv.lock y se exportan a requirements.txt.
+# Versiones fijadas con == (versiones exactas para una demo reproducible y sin red). Se resuelven en uv.lock y se exportan a requirements.txt.
 dependencies = [
   "fastapi==0.162.0",
   "uvicorn==0.54.0",
