@@ -1,0 +1,104 @@
+{
+  "fecha": "2026-11-08T01:56:36+00:00",
+  "version_corpus": "e1879cf60262",
+  "documentos_fuente_sin_tesauro": 13,
+  "fragmentos": 412,
+  "caracteres_sin_tesauro": 177118,
+  "paginas_aprox_sin_tesauro": 88.6,
+  "criterio_r1": "20 documentos o 50 páginas como mínimo (2,000 caracteres = 1 página), sin contar el tesauro",
+  "cumple_r1": true,
+  "longitud_fragmentos": {
+    "min": 98,
+    "max": 1142,
+    "media": 429.9,
+    "en_300_800": 200,
+    "menores_300": 157,
+    "mayores_800": 55
+  },
+  "por_documento": [
+    {
+      "fuente": "IPTC Photo Metadata Standard 2025.1",
+      "url": "http://iptc.org/std/photometadata/specification/IPTC-PhotoMetadata-2025.1.html",
+      "fragmentos": 196,
+      "caracteres": 89515
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/",
+      "fragmentos": 5,
+      "caracteres": 3568
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/decorative/",
+      "fragmentos": 4,
+      "caracteres": 1076
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+      "fragmentos": 5,
+      "caracteres": 1766
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/functional/",
+      "fragmentos": 5,
+      "caracteres": 1683
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/textual/",
+      "fragmentos": 7,
+      "caracteres": 3052
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+      "fragmentos": 6,
+      "caracteres": 4310
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/groups/",
+      "fragmentos": 2,
+      "caracteres": 1027
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/imagemap/",
+      "fragmentos": 1,
+      "caracteres": 831
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/decision-tree/",
+      "fragmentos": 3,
+      "caracteres": 1937
+    },
+    {
+      "fuente": "W3C WAI Images Tutorial",
+      "url": "https://www.w3.org/WAI/tutorials/images/tips/",
+      "fragmentos": 5,
+      "caracteres": 3207
+    },
+    {
+      "fuente": "WCAG 2.2 Understanding 1.1.1: Non-text Content",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-content",
+      "fragmentos": 44,
+      "caracteres": 32719
+    },
+    {
+      "fuente": "DCMI Metadata Terms",
+      "url": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/",
+      "fragmentos": 129,
+      "caracteres": 32427
+    }
+  ],
+  "tesauro": {
+    "conceptos_totales": 4500,
+    "con_etiqueta_es": 4500,
+    "descartados_sin_es": 0
+  },
+  "nota": "El corpus de fotos (Crossmodal-3600, 3,600 imágenes con descripciones) se cuenta aparte"
+}

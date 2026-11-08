@@ -23,9 +23,19 @@ def slug(texto: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", texto.lower()).strip("-")[:60] or "seccion"
 
 
-def dividir(texto: str, parrafos: list[str] | None = None) -> list[str]:
+def dividir(texto: str, parrafos: list[str] | None = None, encabezado: str | None = None) -> list[str]:
     """Una sección de 1,200 caracteres o menos es un fragmento. Si es mayor, se divide por párrafos (≤800) y cada
-    fragmento repite el final del anterior (15 %), cortado en un límite de palabra."""
+    fragmento repite el final del anterior (15 %), cortado en un límite de palabra.
+
+    Con `encabezado` (p. ej. «Norma — sección»), cada fragmento que no empiece con él lo lleva al inicio, para que
+    un fragmento suelto conserve de qué norma y sección viene al recuperarse."""
+    partes = _dividir(texto, parrafos)
+    if encabezado:
+        partes = [p if p.startswith(encabezado) else f"{encabezado}. {p}" for p in partes]
+    return partes
+
+
+def _dividir(texto: str, parrafos: list[str] | None) -> list[str]:
     if len(texto) <= MAX_SECCION:
         return [texto]
     partes: list[str] = []
@@ -121,7 +131,7 @@ def fragmentar_documento(contenido: bytes, extension: str, base: dict) -> list[d
     fragmentos: list[dict] = []
     for seccion in secciones_de_texto(texto, "txt" if extension == "pdf" else extension):
         cuerpo = f"{seccion.titulo}. " + " ".join(seccion.parrafos)
-        for i, parte in enumerate(dividir(cuerpo, seccion.parrafos)):
+        for i, parte in enumerate(dividir(cuerpo, seccion.parrafos, encabezado=seccion.titulo)):
             fid = f"{base['id']}#{slug(seccion.titulo)}" + (f"-p{i + 1}" if i else "")
             fragmentos.append({**{k: v for k, v in base.items() if k != "id"}, "id": fid,
                                "seccion": seccion.titulo, "texto": parte})

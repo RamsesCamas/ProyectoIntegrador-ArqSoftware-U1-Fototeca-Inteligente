@@ -35,8 +35,11 @@ consultas de prueba con datos personales usan datos **ficticios**.
 **Nota sobre CC BY-SA:** el tesauro se usa como vocabulario de referencia; si se redistribuyera un derivado del
 tesauro, tendría que llevar la misma licencia. El repositorio no versiona el volcado (se descarga en la preparación).
 
-**Tamaño del corpus normativo y cumplimiento de R1:** pendiente — lo reporta `scripts/preparar_corpus.py` en
-`evaluacion/resultados/corpus_r1.json` (documentos, fragmentos y páginas aproximadas sin contar el tesauro).
+**Tamaño del corpus normativo y cumplimiento de R1** (`evaluacion/resultados/corpus_r1.json`, versión del
+corpus `e1879cf60262`): 13 documentos fuente (1 de IPTC, 10 páginas del tutorial de W3C, 1 de WCAG y 1 de DCMI);
+412 fragmentos y 177,118 caracteres, es decir, **88.6 páginas aproximadas** (2,000 caracteres por página) **sin
+contar el tesauro**. R1 se cumple por el criterio de 50 páginas. El tesauro aporta 4,500 conceptos, todos con
+etiqueta en español (ninguno descartado). El corpus de fotos (XM3600) se cuenta aparte.
 
 ## 3. Modelos (todos servidos localmente con Ollama `0.40.15`)
 
