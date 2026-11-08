@@ -1,0 +1,59 @@
+---
+title: "Diagrama 5 · Despliegue local (estilo UML de despliegue)"
+---
+%% Nodos UML («dispositivo», «entorno de ejecución», «contenedor», «volumen») dibujados con un flowchart de Mermaid.
+%% Corresponde a: docker-compose.yml (imágenes, límites de memoria, puertos, volúmenes y perfiles),
+%% docker-compose.sinred.yml (prueba sin red de H9), web/nginx.conf y servicio/Dockerfile (uvicorn en el puerto 8000).
+flowchart TB
+  classDef nodo fill:#e8f0fb,stroke:#2f5d9a,color:#14213d
+  classDef contenedor fill:#438dd5,stroke:#2e6295,color:#ffffff
+  classDef volumen fill:#ffffff,stroke:#2e6295,stroke-width:2px,color:#14213d
+  classDef efimero fill:#ffffff,stroke:#438dd5,stroke-width:2px,stroke-dasharray:5 4,color:#14213d
+  classDef nota fill:#fff7d6,stroke:#b8a24a,color:#14213d
+
+  subgraph laptop["«dispositivo» Laptop de la demo · Windows con Docker Desktop (8 GB o más asignados a Docker) · solo CPU"]
+    direction TB
+    navegador["«artefacto» <b>Navegador web</b><br/>http://localhost:8080 (aplicación)<br/>http://localhost:8000/docs (OpenAPI)"]:::nodo
+    repo["«carpeta» <b>Repositorio clonado</b><br/>./data · ./evaluacion · ./web · ./docs/diagramas"]:::nodo
+
+    subgraph vm["«entorno de ejecución» VM Linux de Docker Desktop (WSL 2) · Docker Engine"]
+      direction TB
+      subgraph red["red fototeca-viva_default (bridge interna de compose; nombres DNS = nombres de servicio)"]
+        direction LR
+        web["«contenedor» <b>web</b><br/>nginx:1.30.6-alpine<br/>límite 64m<br/>host 8080 → 80"]:::contenedor
+        servicio["«contenedor» <b>servicio</b><br/>python:3.12.16-slim-bookworm<br/>uvicorn fototeca.api.principal:app<br/>límite 1536m · host 8000 → 8000"]:::contenedor
+        ollama["«contenedor» <b>ollama</b><br/>ollama/ollama:0.40.15 · límite 5g<br/>127.0.0.1:11434 (diagnóstico;<br/>variable OLLAMA_PUERTO_HOST)<br/>KEEP_ALIVE=-1 · NUM_PARALLEL=1<br/>CONTEXT_LENGTH=4096 · LLAMA_ARG_CACHE_RAM=0"]:::contenedor
+        qdrant["«contenedor» <b>qdrant</b><br/>qdrant/qdrant:v1.19.2 · límite 512m<br/>127.0.0.1:6333 (diagnóstico;<br/>variable QDRANT_PUERTO_HOST)"]:::contenedor
+      end
+      vmod[("«volumen» ollama_modelos<br/>→ /root/.ollama")]:::volumen
+      vqd[("«volumen» qdrant_datos<br/>→ /qdrant/storage")]:::volumen
+      vsql[("«volumen» sqlite_datos<br/>→ /app/data/sqlite")]:::volumen
+      subgraph efimeros["Contenedores efímeros (docker compose run --rm)"]
+        direction LR
+        modelos["«contenedor» <b>modelos</b> · perfil preparacion<br/>ollama pull de los 4 modelos<br/>contra ollama:11434"]:::efimero
+        scripts["«contenedor» <b>servicio</b> (run)<br/>scripts de preparación,<br/>evaluación y pytest"]:::efimero
+        diagramas["«contenedor» <b>diagramas</b> · perfil docs<br/>minlag/mermaid-cli:12.0.0, sin red<br/>monta ./docs/diagramas en /data"]:::efimero
+      end
+    end
+  end
+
+  presupuesto["<b>Presupuesto de memoria</b> (límites de docker-compose.yml)<br/>5g + 512m + 1536m + 64m = 7.0625 GiB · Docker Desktop con 8 GB o más<br/><b>Prueba sin red</b> (docker-compose.sinred.yml): ollama, qdrant y servicio<br/>en una red internal: true; web también se une a la red por defecto"]:::nota
+
+  navegador -->|"HTTP :8080"| web
+  navegador -.->|"HTTP :8000/docs"| servicio
+  web -->|"proxy /api/* · HTTP"| servicio
+  servicio -->|"HTTP/JSON :11434"| ollama
+  servicio -->|"HTTP/JSON :6333"| qdrant
+  ollama --- vmod
+  qdrant --- vqd
+  servicio --- vsql
+  repo -.->|"bind mount ./data → /app/data<br/>./evaluacion → /app/evaluacion_datos"| servicio
+  repo -.->|"bind mount ./web<br/>(solo lectura)"| web
+  vmod ~~~ efimeros
+  vqd ~~~ efimeros
+  vm ~~~ presupuesto
+
+  style laptop fill:#fbfcfe,stroke:#14213d,stroke-width:2px,color:#14213d
+  style vm fill:#f2f6fb,stroke:#2f5d9a,stroke-width:2px,color:#14213d
+  style red fill:#e8f0fb,stroke:#2f5d9a,stroke-dasharray:6 4,color:#14213d
+  style efimeros fill:#ffffff,stroke:#438dd5,stroke-dasharray:6 4,color:#14213d

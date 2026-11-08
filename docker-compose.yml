@@ -107,6 +107,25 @@ services:
         limits:
           memory: 64m
 
+  # Perfil de documentación: convierte docs/diagramas/*.mmd (Mermaid) a PNG con mermaid-cli y termina.
+  #   docker compose --profile docs run --rm diagramas
+  # No forma parte de la operación ni del presupuesto de memoria de la demo. Imagen multiarquitectura (amd64 y arm64).
+  diagramas:
+    image: minlag/mermaid-cli:12.0.0
+    profiles: ["docs"]
+    network_mode: none                  # no necesita red: Mermaid y Chromium van dentro de la imagen
+    working_dir: /data
+    volumes:
+      - ./docs/diagramas:/data
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        set -e;
+        for f in /data/*.mmd; do
+        mmdc -p /puppeteer-config.json -c /data/mermaid-config.json -i "$$f" -o "$${f%.mmd}.png" -s 2 -b white -q;
+        echo "PNG listo: $${f%.mmd}.png";
+        done
+
 volumes:
   ollama_modelos: {}
   qdrant_datos: {}

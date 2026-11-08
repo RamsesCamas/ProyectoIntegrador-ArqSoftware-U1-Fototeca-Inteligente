@@ -1,0 +1,62 @@
+---
+title: "Diagrama 3 · Capas del servicio y dirección de las dependencias"
+---
+%% Corresponde a: servicio/fototeca/ (un paquete por capa), servicio/pyproject.toml (3 contratos de import-linter),
+%% servicio/fototeca/observabilidad/puertos.py (SumideroEventos), servicio/fototeca/retroalimentacion/puertos.py
+%% (AlmacenRetroalimentacion), servicio/fototeca/datos/eventos_sqlite.py y retroalimentacion_sqlite.py (adaptadores),
+%% servicio/fototeca/api/arranque.py (raíz de composición) y servicio/pruebas/test_contratos.py (prueba de contratos).
+flowchart TB
+  classDef capa fill:#e8f0fb,stroke:#2f5d9a,color:#14213d
+  classDef raiz fill:#d6e4f7,stroke:#2f5d9a,stroke-width:2px,color:#14213d
+  classDef dominio fill:#eeeeee,stroke:#666666,color:#222222
+  classDef transversal fill:#fdebd3,stroke:#b5651d,color:#3b2410
+  classDef puerto fill:#ffffff,stroke:#b5651d,stroke-width:2px,color:#3b2410
+  classDef externo fill:#8a8a8a,stroke:#666666,color:#ffffff
+  classDef nota fill:#fff7d6,stroke:#b8a24a,color:#14213d
+
+  web["<b>Aplicación web</b> (contenedor web)<br/>Solo llama a /api/* por HTTP/JSON; entra por C1"]:::externo
+
+  subgraph servicio["Contenedor servicio · paquete fototeca"]
+    direction LR
+    subgraph negocio["Capas de negocio · contrato «Capas del servicio (C1→C7)» (layers)"]
+      direction TB
+      C1["<b>C1 · Interfaz del servicio</b> · api/<br/>Rutas FastAPI y esquemas Pydantic, códigos de estado<br/>y MiddlewareTraza (X-Traza-Id). arranque.py es la raíz<br/>de composición: el único módulo que conoce los adaptadores"]:::raiz
+      C2["<b>C2 · Orquestación y patrones de agente</b> · orquestacion/<br/>FlujoFicha (máquina de estados y ciclo de agente),<br/>FlujoBusqueda, FlujoIngesta, GestorLotes,<br/>FlujoRetroalimentacion, FlujoMetricas y FlujoSalud"]:::capa
+      C3["<b>C3 · Guardrails</b> · guardrails/<br/>Entrada: archivo, EXIF, fuera de dominio, texto visible,<br/>inyección y datos personales. Salida: esquema, reglas IPTC,<br/>atributos sensibles, tesauro, apego visual, consistencia<br/>y fuentes. politicas.py fija la política de cada falla"]:::capa
+      C4["<b>C4 · Caché</b> · cache/<br/>CacheFichas y CacheBusquedas: exacta y semántica,<br/>TTL y etiquetas de invalidación"]:::capa
+      C5["<b>C5 · Construcción de contexto</b> · contexto/<br/>RAG de ejemplos (fusión RRF) y normativo, tesauro,<br/>ensamblador del prompt y fragmentador"]:::capa
+      C6["<b>C6 · Enrutador y gateway de modelos</b> · modelos/<br/>EnrutadorFichas, EnrutadorBusquedas y Gateway<br/>(P1–P6: tiempo límite, reintento, respaldo y registro)"]:::capa
+      C7["<b>C7 · Acceso a datos y modelos</b> · datos/<br/>puertos.py (Protocol) y un adaptador por recurso:<br/>Ollama, Qdrant, SQLite y archivos"]:::capa
+      DOM["<b>dominio/</b><br/>entidades, esquemas de la ficha, errores,<br/>colecciones y configuración. Sin dependencias"]:::dominio
+      C1 -->|"usa"| C2
+      C2 -->|"usa"| C3
+      C3 -->|"usa"| C4
+      C4 -->|"usa"| C5
+      C5 -->|"usa"| C6
+      C6 -->|"usa"| C7
+      C7 -->|"usa"| DOM
+    end
+
+    subgraph transversales["Transversales · contrato «Transversales independientes» (forbidden)"]
+      direction TB
+      T1["<b>T1 · Observabilidad</b> · observabilidad/<br/>traza_id por petición (contextvars),<br/>bitácora JSON por capa y métricas.<br/>La usan C1, C2 y C6 con registrar() y medir()"]:::transversal
+      PT1{{"«puerto» SumideroEventos<br/>registrar · consultar<br/>lo implementa datos/eventos_sqlite.py (C7)"}}:::puerto
+      T2["<b>T2 · Retroalimentación</b> · retroalimentacion/<br/>ServicioRetroalimentacion: opinión<br/>ligada a la traza. La usa C2"]:::transversal
+      PT2{{"«puerto» AlmacenRetroalimentacion<br/>guardar · listar<br/>lo implementa datos/retroalimentacion_sqlite.py (C7)"}}:::puerto
+      inyeccion["<b>Inversión de dependencias</b><br/>T1 y T2 definen sus puertos y no importan<br/>ninguna capa de negocio; C7 los implementa y<br/>api/arranque.py los conecta (configurar_sumidero)"]:::nota
+      T1 -->|"define"| PT1
+      T2 -->|"registra eventos"| T1
+      T2 -->|"define"| PT2
+      PT2 ~~~ inyeccion
+    end
+  end
+
+  contratos["<b>Contratos verificados en pytest</b> (servicio/pyproject.toml · pruebas/test_contratos.py)<br/>1 · Capas: cada capa importa solo capas inferiores (puede saltarse capas, nunca sube)<br/>2 · Transversales independientes: T1 y T2 no importan C1–C7<br/>3 · Dominio sin dependencias internas: dominio no importa T1 ni T2"]:::nota
+
+  web -->|"HTTP/JSON"| servicio
+  negocio -.->|"usan T1 y T2<br/>(nunca al revés)"| transversales
+  servicio ~~~ contratos
+
+  style servicio fill:#ffffff,stroke:#14213d,stroke-width:2px,color:#14213d
+  style negocio fill:#f7fafd,stroke:#2f5d9a,stroke-width:2px,color:#14213d
+  style transversales fill:#fffaf3,stroke:#b5651d,stroke-width:2px,color:#3b2410

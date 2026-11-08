@@ -1,0 +1,40 @@
+---
+title: "Diagrama 2 · Contenedores de Fototeca Viva (C4, nivel 2)"
+---
+%% Notación C4 (nivel 2) dibujada con un flowchart de Mermaid.
+%% Corresponde a: docker-compose.yml (servicios, imágenes, puertos y volúmenes), web/nginx.conf (proxy /api/),
+%% servicio/fototeca/datos/ollama_cliente.py, embebedor_ollama.py y qdrant_almacen.py (REST con httpx),
+%% servicio/fototeca/api/arranque.py (rutas de SQLite y fotos).
+flowchart TB
+  classDef persona fill:#08427b,stroke:#052e56,color:#ffffff
+  classDef contenedor fill:#438dd5,stroke:#2e6295,color:#ffffff
+  classDef almacen fill:#438dd5,stroke:#2e6295,color:#ffffff
+  classDef efimero fill:#ffffff,stroke:#438dd5,stroke-width:2px,stroke-dasharray:5 4,color:#14213d
+  classDef externo fill:#8a8a8a,stroke:#666666,color:#ffffff
+
+  usuarios("<b>Archivista, persona lectora y administrador de TI</b><br/>[Personas]<br/>Usan un navegador web en el mismo equipo"):::persona
+
+  subgraph fv["Fototeca Viva · proyecto docker compose «fototeca-viva»"]
+    direction TB
+    web["<b>web</b><br/>[Contenedor: nginx 1.30.6-alpine]<br/>Sirve HTML, CSS y JS sin framework y hace de<br/>proxy inverso de /api/*. Nunca habla con Ollama<br/>ni con Qdrant (R8)"]:::contenedor
+    servicio["<b>servicio</b><br/>[Contenedor: Python 3.12 · FastAPI · uvicorn]<br/>API REST con OpenAPI (/docs) y lógica en capas<br/>C1–C7 con T1 y T2. También ejecuta los scripts<br/>de preparación, la evaluación y las pruebas"]:::contenedor
+    ollama["<b>ollama</b><br/>[Contenedor: ollama/ollama 0.40.15]<br/>Sirve los 4 modelos en CPU:<br/>qwen3.5:0.8b · lfm3:1.7b-q4_K_M<br/>embeddinggemma-2:440m · granite-embedding:278m"]:::contenedor
+    qdrant[("<b>qdrant</b><br/>[Contenedor: qdrant v1.19.2]<br/>Base vectorial: fotos_img, fotos_txt,<br/>fotos_txt_granite, fotos_desc_qwen,<br/>normas, tesauro, prototipos")]:::almacen
+    sqlite[("<b>SQLite</b><br/>[Almacén: fototeca.db en el volumen sqlite_datos]<br/>documentos, fichas, duplicados, caché,<br/>eventos, retroalimentación y lotes")]:::almacen
+    archivos[("<b>Archivos</b><br/>[Almacén: carpeta ./data]<br/>fotos sin EXIF, miniaturas,<br/>datasets y corpus preparados")]:::almacen
+    modelos["<b>modelos</b><br/>[Contenedor efímero · perfil preparacion]<br/>ollama pull de los 4 modelos y termina"]:::efimero
+  end
+
+  registro["<b>Biblioteca de modelos de Ollama</b><br/>[Sistema externo · solo en la preparación]"]:::externo
+
+  usuarios -->|"Usa la aplicación<br/><i>[HTTP :8080]</i>"| web
+  usuarios -.->|"Consulta OpenAPI<br/><i>[HTTP :8000/docs]</i>"| servicio
+  web -->|"Reenvía /api/*<br/>sin el prefijo<br/><i>[HTTP/JSON<br/>servicio:8000]</i>"| servicio
+  servicio -->|"Genera texto y embeddings<br/><i>[HTTP/JSON :11434<br/>/api/chat · /api/embed]</i>"| ollama
+  servicio -->|"Inserta, busca y borra<br/>vectores<br/><i>[HTTP/JSON REST :6333]</i>"| qdrant
+  servicio -->|"Lee y escribe<br/><i>[sqlite3 en proceso]</i>"| sqlite
+  servicio -->|"Guarda y lee fotos<br/><i>[bind mount]</i>"| archivos
+  modelos -.->|"ollama pull<br/><i>[HTTP :11434]</i>"| ollama
+  ollama -.->|"Descarga modelos<br/><i>[HTTPS]</i>"| registro
+
+  style fv fill:#f7fafd,stroke:#2e6295,stroke-width:2px,stroke-dasharray:6 4,color:#14213d

@@ -1,0 +1,85 @@
+---
+title: "Diagrama 6 · Secuencia de ingesta: POST /documentos (fotos y normas) y eliminación"
+---
+%% UML de secuencia. Corresponde a: servicio/fototeca/api/rutas/documentos.py, orquestacion/ingesta.py
+%% (FlujoIngesta.ingerir_foto, ingerir_norma y eliminar), guardrails/entrada/archivo.py, exif.py e imagen.py
+%% (fuera_de_dominio, conectado en api/arranque.py como verificador_dominio),
+%% contexto/fragmentador.py y los adaptadores de datos/ (embebedor_ollama.py, qdrant_almacen.py,
+%% documentos_sqlite.py y cache_sqlite.py). Ojo: en Mermaid el punto y coma separa instrucciones.
+sequenceDiagram
+  autonumber
+  actor A as Archivista
+  participant W as web<br/>(nginx)
+  box rgb(232,240,251) C1 · API
+    participant API as rutas/<br/>documentos.py
+  end
+  box rgb(214,228,247) C2 · Orquestación
+    participant ING as FlujoIngesta
+  end
+  box rgb(253,235,211) C3 · Guardrails
+    participant G as archivo.py · exif.py<br/>imagen.py
+  end
+  box rgb(232,240,251) C5 · Contexto
+    participant F as fragmentador.py
+  end
+  box rgb(220,232,246) C7 · Adaptadores detrás de sus puertos
+    participant E as EmbebedorOllama<br/>→ ollama
+    participant Q as QdrantAlmacen<br/>→ qdrant
+    participant D as DocumentosSqlite<br/>CacheSqlite
+  end
+
+  A->>W: Sube fotos
+  W->>API: POST /api/documentos<br/>archivos[], tipo
+  Note over W,API: nginx reenvía /api/* a servicio:8000<br/>MiddlewareTraza crea el traza_id (T1)
+  alt tipo = foto (JPEG o PNG)
+    API->>ING: ingerir_foto()
+    ING->>G: verificar_archivo(): contenido real JPEG o PNG,<br/>tamaño máximo y lados mínimo y máximo
+    alt archivo inválido
+      G--xAPI: ArchivoDemasiadoGrande · FormatoNoSoportado<br/>· BloqueadoPorGuardrail
+      API-->>W: 413 · 415 · 422<br/>con mensaje seguro
+      Note over W,API: con varios archivos: 201<br/>y el error en cada resultado
+    end
+    ING->>G: sanitizar(): quita GPS, número de serie,<br/>autor, XMP e IPTC antes de guardar
+    G-->>ING: bytes limpios · exif_privacidad<br/>(sanitizado o aprobada)
+    ING->>D: buscar_por_sha(sha256 de los bytes limpios)
+    alt ya existía: duplicado exacto
+      D-->>ING: documento_id existente
+      ING-->>API: ya_existia = true<br/>duplicado «exacto»
+    else foto nueva
+      ING->>E: embeber_imagenes([foto])
+      Note right of E: POST /api/embed<br/>EmbeddingGemma-2<br/>JPEG reducido a 384 px
+      E-->>ING: vector de la imagen (normalizado L2)
+      ING->>G: fuera_de_dominio(vector): ¿fotografía o captura<br/>de un documento, tabla o interfaz?
+      opt no parece una fotografía
+        G--xAPI: BloqueadoPorGuardrail: 422 con mensaje seguro,<br/>la foto no se guarda (diagrama 9)
+      end
+      ING->>D: guardar_foto(): archivo en ./data/fotos<br/>y fila en la tabla documentos
+      ING->>Q: buscar(fotos_img, vector, k = 5, sin la propia)
+      Q-->>ING: vecinos con su similitud coseno
+      opt similitud ≥ τ_dup (cache.fichas.tau_dup)
+        ING->>D: registrar_duplicado(): alimenta GET /duplicados
+      end
+      ING->>Q: insertar(fotos_img, validada = false, particion = subida)
+      ING->>D: incrementar_version_archivo()
+      Note over ING,D: version_archivo forma parte de la clave de la caché de búsquedas:<br/>las búsquedas guardadas antes de esta ingesta dejan de servirse
+    end
+  else tipo = norma (HTML, Markdown, PDF o TXT)
+    API->>ING: ingerir_norma()
+    ING->>F: fragmentar_documento(): una regla o campo por fragmento,<br/>una sección larga se divide por párrafos con solapamiento
+    F-->>ING: fragmentos con fuente, url, seccion y licencia
+    ING->>E: embeber_textos(fragmentos, rol = documento)
+    ING->>Q: insertar(normas, fragmentos, version_corpus)
+    ING->>D: guardar_documento() y nueva version_corpus
+    Note over ING,D: la versión del corpus entra en la versión de configuración:<br/>las fichas en caché de la versión anterior ya no se sirven
+  end
+  ING-->>API: ResultadoIngesta
+  API-->>W: 201 + X-Traza-Id<br/>{documentos, creados,<br/>version_archivo, traza_id}
+  W-->>A: Documento cargado y<br/>aviso de duplicados
+
+  Note over A,D: Otra petición · eliminación de un documento (DELETE /documentos/{id})
+  A->>W: Elimina con confirmación
+  W->>API: DELETE /api/<br/>documentos/{id}
+  API->>ING: eliminar(documento_id)
+  ING->>Q: eliminar_por_documento() en fotos_img, fotos_txt,<br/>fotos_txt_granite y fotos_desc_qwen (o en normas)
+  ING->>D: invalidar_por_etiqueta("doc:{id}") en la caché,<br/>eliminar() e incrementar_version_archivo()
+  API-->>W: 200 {vectores_eliminados,<br/>entradas_cache_invalidadas}

@@ -1,0 +1,132 @@
+---
+title: "Diagrama 4 · Componentes del contenedor servicio (C4, nivel 3)"
+---
+%% Notación C4 (nivel 3) dibujada con un flowchart de Mermaid. Corresponde a los módulos de servicio/fototeca/:
+%% api/ (rutas, middleware, errores, arranque), orquestacion/, guardrails/, cache/, contexto/, modelos/, datos/
+%% (puertos.py y adaptadores), observabilidad/ y retroalimentacion/. Los hexágonos son puertos (typing.Protocol);
+%% las flechas punteadas «puerto → adaptador» se leen «lo implementa».
+flowchart TB
+  classDef comp fill:#85bbf0,stroke:#5d82a8,color:#0b2545
+  classDef raiz fill:#85bbf0,stroke:#0b4884,stroke-width:3px,color:#0b2545
+  classDef puerto fill:#ffffff,stroke:#2f5d9a,stroke-width:2px,color:#14213d
+  classDef adaptador fill:#438dd5,stroke:#2e6295,color:#ffffff
+  classDef trans fill:#fdebd3,stroke:#b5651d,color:#3b2410
+  classDef puertot fill:#ffffff,stroke:#b5651d,stroke-width:2px,color:#3b2410
+  classDef externo fill:#8a8a8a,stroke:#666666,color:#ffffff
+
+  web["<b>web</b> [contenedor nginx]<br/>reenvía /api/* a servicio:8000"]:::externo
+
+  subgraph C1["C1 · api/"]
+    rutas["<b>rutas/</b> [FastAPI]<br/>fichas.py: /fichas, /fichas/{id}, /lotes, /lotes/{id}<br/>busquedas.py: /busquedas<br/>documentos.py: /documentos, /fotos/{id}/miniatura<br/>sistema.py: /health, /configuracion<br/>observabilidad.py: /retroalimentacion, /metricas, /duplicados"]:::comp
+    apoyo["<b>middleware.py · errores.py</b><br/>MiddlewareTraza (X-Traza-Id);<br/>errores 400 · 404 · 413 · 415<br/>422 · 503 · 504 en español"]:::comp
+    arranque["<b>arranque.py</b><br/>[raíz de composición]<br/>crea los adaptadores de C7<br/>y los conecta con los flujos"]:::raiz
+  end
+
+  subgraph C2["C2 · orquestacion/"]
+    fficha["<b>FlujoFicha</b><br/>máquina de estados<br/>y ciclo de agente"]:::comp
+    fbusq["<b>FlujoBusqueda</b><br/>por texto (P4, P5)<br/>y por foto"]:::comp
+    fing["<b>FlujoIngesta</b><br/>fotos, normas<br/>y eliminación"]:::comp
+    flotes["<b>GestorLotes</b><br/>un trabajador en<br/>segundo plano"]:::comp
+    fotros["<b>FlujoRetroalimentacion</b><br/><b>FlujoMetricas</b><br/><b>FlujoSalud</b>"]:::comp
+    fficha ~~~ flotes
+    fbusq ~~~ fotros
+  end
+
+  subgraph C3["C3 · guardrails/"]
+    gent["<b>entrada/</b><br/>archivo.py · exif.py · texto.py<br/>imagen.py (VerificadorImagen)"]:::comp
+    gsal["<b>salida/</b><br/>reglas.py: esquema, IPTC, fuentes<br/>semanticas.py: GuardrailsSemanticos"]:::comp
+    gpol["<b>politicas.py · resultado.py</b><br/>política por verificación<br/>y ResultadoGuardrail"]:::comp
+  end
+
+  subgraph C6["C6 · modelos/"]
+    gw["<b>Gateway</b><br/>ejecutar(tarea, variables,<br/>imágenes): tiempo límite,<br/>reintento y respaldo"]:::comp
+    efi["<b>EnrutadorFichas</b><br/>rápida o completa"]:::comp
+    ebu["<b>EnrutadorBusquedas</b><br/>simple, compleja o imagen"]:::comp
+    pl["<b>plantillas.py</b><br/><b>validacion.py</b><br/>prompts/P1–P6.md"]:::comp
+    gw ~~~ ebu
+    efi ~~~ pl
+  end
+
+  subgraph C5["C5 · contexto/"]
+    rej["<b>RecuperadorEjemplos</b><br/>fotos_img + fotos_txt, RRF"]:::comp
+    rnor["<b>RecuperadorNormas</b><br/>colección normas"]:::comp
+    tes["<b>Tesauro</b><br/>candidatos y<br/>normalización"]:::comp
+    ens["<b>ensamblador_prompt.py</b><br/>ids estables y presupuesto"]:::comp
+    frag["<b>fragmentador.py</b><br/><b>fusion.py</b> (RRF)"]:::comp
+    rej ~~~ ens
+    rnor ~~~ frag
+  end
+
+  subgraph C4["C4 · cache/"]
+    cfichas["<b>CacheFichas</b><br/>exacta y semántica (τ_dup)"]:::comp
+    cbusq["<b>CacheBusquedas</b><br/>exacta y semántica (τ_busq)"]:::comp
+    cfichas ~~~ cbusq
+  end
+
+  subgraph T["T1 y T2 · transversales"]
+    t1["<b>T1 · observabilidad/</b><br/>traza.py · registro.py<br/>metricas.py"]:::trans
+    pEv{{"SumideroEventos"}}:::puertot
+    t2["<b>T2 · retroalimentacion/</b><br/>ServicioRetroalimentacion"]:::trans
+    pRet{{"AlmacenRetroalimentacion"}}:::puertot
+    t1 --- pEv
+    t2 --- pRet
+  end
+
+  subgraph C7["C7 · datos/ · puertos.py (hexágonos) y adaptadores"]
+    pLLM{{"ClienteLLM"}}:::puerto
+    pEmb{{"Embebedor"}}:::puerto
+    pVec{{"AlmacenVectorial"}}:::puerto
+    pDoc{{"AlmacenDocumentos"}}:::puerto
+    aOll["<b>OllamaCliente</b>"]:::adaptador
+    aEmb["<b>EmbebedorOllama</b> ×2<br/>EmbeddingGemma-2 · granite"]:::adaptador
+    aQd["<b>QdrantAlmacen</b>"]:::adaptador
+    aDoc["<b>DocumentosSqlite</b>"]:::adaptador
+    pCache{{"AlmacenCache"}}:::puerto
+    pLotes{{"AlmacenLotes"}}:::puerto
+    aCache["<b>CacheSqlite</b>"]:::adaptador
+    aLotes["<b>LotesSqlite</b>"]:::adaptador
+    aEv["<b>EventosSqlite</b>"]:::adaptador
+    aRet["<b>RetroalimentacionSqlite</b>"]:::adaptador
+    pLLM -.-> aOll
+    pEmb -.-> aEmb
+    pVec -.-> aQd
+    pDoc -.-> aDoc
+    aOll ~~~ pCache
+    aEmb ~~~ pLotes
+    pCache -.-> aCache
+    pLotes -.-> aLotes
+  end
+
+  ollama["<b>ollama</b> [contenedor]"]:::externo
+  qdrant[("<b>qdrant</b> [contenedor]")]:::externo
+  sqlite[("<b>SQLite y ./data</b><br/>[almacenes del servicio]")]:::externo
+
+  web --> rutas
+  rutas -->|"traduce cada petición"| C2
+  arranque -.->|"crea e inyecta"| C7
+  C2 -->|"verificaciones"| C3
+  C2 -->|"enruta y genera"| C6
+  C2 -->|"recupera contexto"| C5
+  C2 -->|"busca y guarda"| C4
+  C2 -.->|"registra y opina"| T
+  C3 -->|"P6"| gw
+  C3 -->|"normaliza"| tes
+  gw --> pLLM
+  C5 --> pEmb
+  C5 --> pVec
+  C4 --> pCache
+  flotes --> pLotes
+  pEv -.-> aEv
+  pRet -.-> aRet
+  C7 -->|"OllamaCliente y EmbebedorOllama<br/>HTTP/JSON :11434"| ollama
+  C7 -->|"QdrantAlmacen<br/>HTTP/JSON REST :6333"| qdrant
+  C7 -->|"adaptadores *Sqlite y archivos<br/>sqlite3 en proceso"| sqlite
+
+  style C1 fill:#f7fafd,stroke:#2f5d9a
+  style C2 fill:#f7fafd,stroke:#2f5d9a
+  style C3 fill:#f7fafd,stroke:#2f5d9a
+  style C4 fill:#f7fafd,stroke:#2f5d9a
+  style C5 fill:#f7fafd,stroke:#2f5d9a
+  style C6 fill:#f7fafd,stroke:#2f5d9a
+  style C7 fill:#f7fafd,stroke:#2f5d9a
+  style T fill:#fffaf3,stroke:#b5651d

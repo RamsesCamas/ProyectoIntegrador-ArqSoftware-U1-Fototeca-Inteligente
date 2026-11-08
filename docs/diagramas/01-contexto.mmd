@@ -1,0 +1,34 @@
+---
+title: "Diagrama 1 · Contexto de Fototeca Viva (C4, nivel 1)"
+---
+%% Notación C4 (nivel 1) dibujada con un flowchart de Mermaid. Corresponde a: docker-compose.yml (perfil
+%% preparacion), servicio/scripts/preparar_datos.py y preparar_corpus.py (las descargas solo ocurren en la
+%% preparación) y docs/LICENCIAS-Y-CORPUS.md (fuentes de datos y de modelos).
+flowchart TB
+  classDef persona fill:#08427b,stroke:#052e56,color:#ffffff
+  classDef sistema fill:#1168bd,stroke:#0b4884,color:#ffffff
+  classDef externo fill:#8a8a8a,stroke:#666666,color:#ffffff
+
+  archivista("<b>Archivista</b><br/>[Persona: usuario principal]<br/>Responsable del archivo fotográfico de la institución.<br/>Carga lotes de fotos, revisa y valida fichas,<br/>busca y depura duplicados"):::persona
+  lector("<b>Persona ciega o con baja visión</b><br/>[Persona: beneficiaria]<br/>Consulta el archivo con lector de pantalla<br/>y recibe el texto alternativo de cada foto"):::persona
+  ti("<b>Administrador de TI</b><br/>[Persona]<br/>Prepara datos y modelos, levanta el sistema<br/>con docker compose y vigila /health y /metricas"):::persona
+
+  fototeca["<b>Fototeca Viva</b><br/>[Sistema de software]<br/>Genera fichas IPTC en las que cada campo indica su fuente,<br/>detecta casi duplicados y busca por texto o por foto.<br/>Aprende de las fichas validadas, sin fine-tuning.<br/>Modelos locales en CPU; en operación no usa la red"]:::sistema
+
+  subgraph prep["Solo durante la preparación (con internet)"]
+    direction LR
+    ollamalib["<b>Biblioteca de modelos de Ollama</b><br/>[Sistema externo]<br/>qwen3.5:0.8b · lfm3:1.7b-q4_K_M<br/>embeddinggemma-2:440m<br/>granite-embedding:278m"]:::externo
+    fotos["<b>Crossmodal-3600 y Open Images V7</b><br/>[Sistema externo]<br/>Fotos, descripciones en español<br/>y etiquetas verificadas por humanos"]:::externo
+    normas["<b>Corpus normativo</b><br/>[Sistema externo]<br/>IPTC Photo Metadata 2025.1,<br/>W3C WAI Images, WCAG 2.2 (1.1.1)<br/>y DCMI Terms"]:::externo
+    tesauro["<b>Tesauro de la UNESCO</b><br/>[Sistema externo]<br/>Vocabulario controlado SKOS<br/>con etiquetas en español"]:::externo
+  end
+
+  archivista -->|"Carga fotos, valida fichas, busca<br/>y revisa duplicados<br/><i>[navegador · HTTP :8080]</i>"| fototeca
+  lector -->|"Busca fotos y lee<br/>su texto alternativo<br/><i>[navegador accesible · HTTP :8080]</i>"| fototeca
+  ti -->|"Prepara, levanta y monitorea<br/><i>[docker compose · /health<br/>/metricas · /docs]</i>"| fototeca
+  fototeca -.->|"ollama pull<br/><i>[perfil preparacion · HTTPS]</i>"| ollamalib
+  fototeca -.->|"scripts.preparar_datos<br/><i>[HTTPS]</i>"| fotos
+  fototeca -.->|"scripts.preparar_corpus<br/><i>[HTTPS]</i>"| normas
+  fototeca -.->|"scripts.preparar_corpus<br/><i>[HTTPS]</i>"| tesauro
+
+  style prep fill:#ffffff,stroke:#8a8a8a,stroke-width:2px,stroke-dasharray:6 4,color:#3d4b63

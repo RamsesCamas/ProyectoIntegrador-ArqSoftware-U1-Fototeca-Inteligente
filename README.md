@@ -40,6 +40,51 @@ docker compose run --rm servicio pytest -q
 
 Crear un archivo `.env` es **opcional**: `docker-compose.yml` ya trae los valores de `.env.ejemplo`.
 
+## Ejemplos con curl
+
+Con el sistema levantado (`docker compose up -d`), estos comandos usan la API a través de la web, en
+`http://localhost:8080/api/...` (la documentación OpenAPI está en `http://localhost:8000/docs`). Cada comando ocupa una
+sola línea y funciona igual en bash y en PowerShell:
+
+- En **Windows PowerShell 5.1**, `curl` es un alias de `Invoke-WebRequest`: escribe `curl.exe` en lugar de `curl`. En
+  PowerShell 7 y en bash no hace falta.
+- Los cuerpos JSON viajan por la entrada estándar (`echo '…' | curl … -d "@-"`), para que las comillas lleguen intactas en
+  los dos shells. PowerShell 5.1 convierte en «?» los acentos que pasan por la tubería: usa PowerShell 7 o escribe el
+  acento como escape JSON (por ejemplo, `\u00e1` para «á»).
+- Sustituye `foto.jpg`, `DOC_ID` y `TRAZA_ID`. El `documento_id` sale de la respuesta de la carga; el `traza_id`, de la
+  ficha (`meta.traza_id`) o de la cabecera `X-Traza-Id`, que se ve agregando `-i` al comando.
+
+```bash
+# Estado del sistema: servicio, modelos, Qdrant, almacén y caché
+curl -s http://localhost:8080/api/health
+
+# 1. Cargar una foto (JPEG o PNG): responde 201 con su documento_id y los posibles duplicados
+curl -s http://localhost:8080/api/documentos -F "archivos=@foto.jpg" -F "tipo=foto"
+
+# 2. Catalogar la foto cargada: ficha IPTC con la fuente de cada campo y meta (ruta, modelos, caché, guardrails, traza_id)
+echo '{"documento_id": "DOC_ID"}' | curl -s http://localhost:8080/api/fichas -H "Content-Type: application/json" -d "@-"
+
+# 2b. Cargar y catalogar en una sola llamada, y consultar después la ficha guardada
+curl -s http://localhost:8080/api/fichas -F "foto=@foto.jpg"
+curl -s http://localhost:8080/api/fichas/DOC_ID
+
+# 3. Buscar por texto en español: cada resultado trae sus razones
+echo '{"texto": "mercado con frutas", "k": 6}' | curl -s http://localhost:8080/api/busquedas -H "Content-Type: application/json" -d "@-"
+
+# 3b. Buscar por foto (imagen a imagen, sin modelo de lenguaje)
+curl -s http://localhost:8080/api/busquedas -F "imagen=@foto.jpg" -F "k=6"
+
+# 4. Registrar la opinión sobre una ficha y validarla con una corrección: la ficha validada se vuelve ejemplo del RAG
+echo '{"traza_id": "TRAZA_ID", "util": true, "comentario": "El texto alternativo omite el toldo", "correcciones": {"texto_alternativo": "Puesto de mercado con mangos bajo un toldo azul."}, "validar_ficha": true}' | curl -s http://localhost:8080/api/retroalimentacion -H "Content-Type: application/json" -d "@-"
+
+# 5. Consultar las métricas (latencia por capa, caché, guardrails, modelos, retroalimentación y accesibilidad del archivo)
+curl -s http://localhost:8080/api/metricas
+curl -s "http://localhost:8080/api/metricas?desde=2026-11-08T00:00:00Z"
+```
+
+Los errores tienen la forma `{"error": {"codigo", "mensaje", "traza_id"}}`; una entrada bloqueada por los guardrails
+responde 422 con un `mensaje_seguro`.
+
 ## Modelos (todos servidos por Ollama `0.40.15`, en CPU)
 
 | Rol | Tag | Licencia |
@@ -78,5 +123,3 @@ web/                 aplicación web estática (nginx) que solo consume /api/*
 evaluacion/          conjuntos de prueba, resultados, gráficas y plantillas de revisión manual
 docs/                especificaciones, ADR, diagramas, informe y presentación
 ```
-
-El estado del proyecto y la evidencia de cada hito están en [`PROGRESO.md`](PROGRESO.md).
