@@ -1,0 +1,152 @@
+{
+  "descripcion": "20 consultas en español sobre reglas de texto alternativo y de metadatos, con los fragmentos del corpus normativo que contienen cada regla (prueba de recuperación de normas; métrica: acierto@k).",
+  "corpus": "data/corpus/normas.jsonl",
+  "version_corpus": "e1879cf60262",
+  "metodo": "Consultas redactadas a partir del contenido de los fragmentos; esperadas marcadas por lectura de los fragmentos. Un fragmento es «esperado» si su texto enuncia la regla que pide la consulta (también cuenta el traslape inicial «…» de un fragmento -pN cuando ese traslape contiene la regla). Las redactó y marcó el agente de evaluación (Claude) leyendo data/corpus/normas.jsonl; el autor puede revisarlas. Son datos de prueba, no resultados.",
+  "autor_etiquetas": "agente de evaluación (Claude); pendiente de revisión del autor",
+  "items": [
+    {
+      "id": "cn-01",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Cuántos caracteres puede tener como máximo el texto alternativo de una foto?",
+      "regla": "El texto alternativo (Alt Text) no debe pasar de 250 caracteres.",
+      "esperadas": ["iptc-2025.1#alt-text-accessibility"]
+    },
+    {
+      "id": "cn-02",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Conviene incluir palabras como «imagen», «foto» o «ícono» en el texto alternativo?",
+      "regla": "Normalmente no hace falta incluir palabras como «imagen», «ícono» o «fotografía»: el lector de pantalla ya anuncia la imagen.",
+      "esperadas": ["w3c-wai-images#tips/introduccion-p4"]
+    },
+    {
+      "id": "cn-03",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Qué información debe ir al principio del texto alternativo?",
+      "regla": "Poner la información más importante al principio del texto alternativo.",
+      "esperadas": ["w3c-wai-images#tips/introduccion"]
+    },
+    {
+      "id": "cn-04",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Qué hacer si una descripción breve no basta para transmitir el significado de la imagen?",
+      "regla": "Si hace falta más que una frase corta, usar una descripción larga o extendida además del texto alternativo.",
+      "esperadas": ["iptc-2025.1#extended-description-accessibility", "iptc-2025.1#extended-description-accessibility-p2",
+                    "w3c-wai-images#tips/introduccion", "w3c-wai-images#tips/introduccion-p2"]
+    },
+    {
+      "id": "cn-05",
+      "tipo": "texto_alternativo",
+      "consulta": "¿La descripción extendida debe repetir la información del texto alternativo?",
+      "regla": "La descripción extendida (accesibilidad) no debe repetir lo que ya dice el texto alternativo.",
+      "esperadas": ["iptc-2025.1#extended-description-accessibility-p2"]
+    },
+    {
+      "id": "cn-06",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Qué debe decir el texto alternativo cuando la foto muestra un letrero o texto escrito?",
+      "regla": "Si la imagen contiene texto que no aparece en otro lugar, el texto alternativo incluye las mismas palabras de la imagen.",
+      "esperadas": ["w3c-wai-images#introduccion-p2", "w3c-wai-images#decision-tree/introduccion",
+                    "w3c-wai-images#decision-tree/introduccion-p2", "w3c-wai-images#textual/using-an-image"]
+    },
+    {
+      "id": "cn-07",
+      "tipo": "texto_alternativo",
+      "consulta": "¿En qué idioma debe escribirse el texto alternativo?",
+      "regla": "Los textos alternativos deben estar en el mismo idioma que el contenido original.",
+      "esperadas": ["wcag22-111#note-on-alternatives-matching-the-language-of-content"]
+    },
+    {
+      "id": "cn-08",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Cuándo no se debe identificar a las personas que aparecen en una fotografía?",
+      "regla": "En una foto de archivo (stock) las personas no deben identificarse; el texto alternativo transmite la impresión que se busca.",
+      "esperadas": ["w3c-wai-images#informative/example-4-images-conveying-an-impression-or-emotion"]
+    },
+    {
+      "id": "cn-09",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Qué texto alternativo necesita una fotografía que aporta información a la página?",
+      "regla": "Una imagen informativa (foto) lleva al menos una descripción breve que transmita la información esencial.",
+      "esperadas": ["w3c-wai-images#introduccion", "w3c-wai-images#decision-tree/introduccion-p2"]
+    },
+    {
+      "id": "cn-10",
+      "tipo": "texto_alternativo",
+      "consulta": "¿Se puede usar el nombre del archivo como texto alternativo?",
+      "regla": "Usar como texto alternativo algo que no es una alternativa (nombres de archivo o texto de relleno) es una falla de WCAG 1.1.1 (F30).",
+      "esperadas": ["wcag22-111#failures", "wcag22-111#failures-p2"]
+    },
+    {
+      "id": "cn-11",
+      "tipo": "texto_alternativo",
+      "consulta": "¿El texto alternativo es lo mismo que el titular de la foto?",
+      "regla": "El texto alternativo no debe confundirse con el titular (Headline), que es una sinopsis del contenido.",
+      "esperadas": ["iptc-2025.1#alt-text-accessibility"]
+    },
+    {
+      "id": "cn-12",
+      "tipo": "texto_alternativo",
+      "consulta": "¿El texto alternativo de una misma imagen puede cambiar según el contexto en que se use?",
+      "regla": "El texto alternativo depende del uso, el contexto y el contenido; la misma imagen puede llevar alternativas distintas en sitios distintos.",
+      "esperadas": ["w3c-wai-images#introduccion-p4", "wcag22-111#examples-p6"]
+    },
+    {
+      "id": "cn-13",
+      "tipo": "metadatos",
+      "consulta": "¿En qué se diferencian el titular y el título de una fotografía?",
+      "regla": "El titular (Headline) es una sinopsis breve publicable; el título (Title) es una referencia corta, a veces el nombre del archivo, y no es lo mismo que el titular.",
+      "esperadas": ["iptc-2025.1#headline", "iptc-2025.1#title"]
+    },
+    {
+      "id": "cn-14",
+      "tipo": "metadatos",
+      "consulta": "¿Qué debe contar la descripción o pie de foto?",
+      "regla": "La descripción (Description/Caption) cuenta el quién, qué y por qué de lo que ocurre en la imagen.",
+      "esperadas": ["iptc-2025.1#description", "iptc-2025.1#extended-description-accessibility-p2"]
+    },
+    {
+      "id": "cn-15",
+      "tipo": "metadatos",
+      "consulta": "¿Las palabras clave deben tomarse de un vocabulario controlado?",
+      "regla": "Las palabras clave (Keywords) pueden ser texto libre; los términos de un vocabulario controlado van en CV-Term About Image, y para el tema se recomienda un vocabulario controlado.",
+      "esperadas": ["iptc-2025.1#keywords", "iptc-2025.1#cv-term-about-image", "dcmi-terms#subject",
+                    "dcmi-terms#elements11-subject"]
+    },
+    {
+      "id": "cn-16",
+      "tipo": "metadatos",
+      "consulta": "¿Una palabra clave puede ser una frase de varias palabras?",
+      "regla": "Cada valor de Keywords no debe limitarse a una sola palabra: debe admitir frases.",
+      "esperadas": ["iptc-2025.1#keywords"]
+    },
+    {
+      "id": "cn-17",
+      "tipo": "metadatos",
+      "consulta": "¿Dónde se registra quién escribió o corrigió la descripción y el texto alternativo?",
+      "regla": "Description Writer guarda el nombre de quien escribió, editó o corrigió la descripción, el texto alternativo o la descripción extendida.",
+      "esperadas": ["iptc-2025.1#description-writer"]
+    },
+    {
+      "id": "cn-18",
+      "tipo": "metadatos",
+      "consulta": "¿Qué fecha se registra como fecha de creación de una fotografía digitalizada?",
+      "regla": "Date Created es la fecha en que se creó el contenido de la imagen, no la de su representación digital; admite fechas truncadas (solo año o año y mes).",
+      "esperadas": ["iptc-2025.1#date-created"]
+    },
+    {
+      "id": "cn-19",
+      "tipo": "metadatos",
+      "consulta": "¿Qué campo identifica al dueño actual de los derechos de autor de la foto?",
+      "regla": "Copyright Notice debe identificar al dueño actual de los derechos; Copyright Owner y Rights Holder identifican al titular de los derechos.",
+      "esperadas": ["iptc-2025.1#copyright-notice", "iptc-2025.1#copyright-owner", "dcmi-terms#rightsHolder"]
+    },
+    {
+      "id": "cn-20",
+      "tipo": "metadatos",
+      "consulta": "¿Qué propiedad describe el lugar donde se tomó la fotografía?",
+      "regla": "Location Created es el lugar donde se tomó la foto; si el lugar que se ve es otro, se usa Location Shown in the Image.",
+      "esperadas": ["iptc-2025.1#location-created", "iptc-2025.1#location-shown-in-the-image"]
+    }
+  ]
+}
