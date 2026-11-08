@@ -349,7 +349,7 @@ operación.
   longitud de la consulta, con el costo de cómputo del pipeline; descripción→descripción; asignación de términos del
   tesauro; recuperación de normas.
 
-**Tabla 8.** Comparación de modelos de lenguaje (formato del enunciado). pendiente (H7): `r3_modelos.json`.
+**Tabla 8.** Comparación de modelos de lenguaje (formato que pide el curso). pendiente (H7): `r3_modelos.json`.
 
 | Modelo | Parámetros / cuantización | Calidad (0–5) | Latencia (s) | Memoria (GB) | Licencia |
 |---|---|---|---|---|---|
@@ -702,12 +702,23 @@ modelos de IA).
 
 # Declaración de uso de inteligencia artificial
 
-Como pide el enunciado del proyecto, declaramos el uso de asistentes de IA y en qué partes se usaron:
+Como piden los lineamientos éticos y académicos del proyecto, se declara el uso de asistentes de IA para programar y
+redactar, y en qué partes se usaron. El detalle está en `AI_USAGE.md`, en la raíz del repositorio.
 
-«El diseño de la idea, la selección de modelos y las decisiones de arquitectura fueron dirigidos por el autor con apoyo
-de Claude (Anthropic) como asistente de diseño. La implementación del código, los scripts de evaluación, los diagramas y
-el primer borrador de este informe fueron generados por Claude Code siguiendo especificaciones escritas por el autor,
-quien revisó, corrigió y validó el resultado. [AUTOR: detallar qué partes se revisaron o reescribieron a mano.]»
+- **Diseño.** El diseño de la idea, la selección de modelos y las decisiones de arquitectura fueron dirigidos por el
+  autor con apoyo de Claude (Anthropic) como asistente de diseño. El autor escribió las especificaciones que guiaron el
+  desarrollo (requisitos, arquitectura, API, datos, modelos, prompts iniciales, evaluación y plan por hitos).
+- **Desarrollo y redacción.** Claude Code (agente de programación de Anthropic, con el modelo Claude Opus 5.5), con
+  subagentes en paralelo para tareas independientes, escribió el código del servicio y de la web, las pruebas, los
+  scripts de preparación y de evaluación, los diagramas, los ADR y el primer borrador de este informe y de la
+  presentación, y ejecutó en el equipo del autor las mediciones de viabilidad (`evaluacion/resultados/h0.json`). Las
+  decisiones reservadas (reemplazar un modelo o excluir una fuente) y las de la forma de trabajo y del repositorio
+  fueron del autor.
+- **Control.** Cada hito se cierra con sus criterios de aceptación verificados con comandos reales y con `pytest`,
+  incluido el contrato de capas de import-linter; toda cifra de este informe sale de `evaluacion/resultados/` y lo que
+  no se ha medido dice «pendiente». El autor revisa, corrige y valida el resultado. [AUTOR: detallar qué partes se
+  revisaron o reescribieron a mano.]
 
 Los modelos que usa el producto en tiempo de ejecución (Qwen3.5-0.8B, LFM3-1.7B, EmbeddingGemma-2 y granite-embedding)
-corren localmente y son parte del sistema evaluado, no asistentes de redacción.
+corren localmente en Ollama, en CPU y sin APIs en la nube: son parte del sistema evaluado, no asistentes de desarrollo
+ni de redacción.
