@@ -89,9 +89,26 @@ def _env(nombre: str, por_defecto: str) -> str:
     return os.environ.get(nombre) or por_defecto
 
 
+def fusionar_calibracion(parametros: dict, calibracion: dict | None) -> dict:
+    """Mezcla los umbrales calibrados (`config/calibracion.yaml`, lo escribe `scripts/aplicar_calibracion.py`) sobre
+    los parámetros de diseño. Las claves que empiezan con «_» son metadatos (origen de cada valor) y se ignoran."""
+    salida = dict(parametros)
+    for clave, valor in (calibracion or {}).items():
+        if clave.startswith("_"):
+            continue
+        if isinstance(valor, dict) and isinstance(salida.get(clave), dict):
+            salida[clave] = fusionar_calibracion(salida[clave], valor)
+        else:
+            salida[clave] = valor
+    return salida
+
+
 def cargar_configuracion(modo_evaluacion: bool | None = None) -> Configuracion:
     dir_config = Path(_env("FOTOTECA_CONFIG", str(DIR_SERVICIO / "config")))
     parametros = yaml.safe_load((dir_config / "parametros.yaml").read_text(encoding="utf-8"))
+    ruta_calibracion = dir_config / "calibracion.yaml"
+    if ruta_calibracion.exists():
+        parametros = fusionar_calibracion(parametros, yaml.safe_load(ruta_calibracion.read_text(encoding="utf-8")))
     datos = Path(_env("FOTOTECA_DATA", str(DIR_SERVICIO / "data")))
     modelos = {
         "vision": _env("MODELO_RAPIDO", "qwen3.5:0.8b"),
