@@ -26,6 +26,8 @@ class Fuente(BaseModel):
     id: str
     titulo: str | None = None
     puntaje: float | None = None
+    url: str | None = None           # reglas: página de la norma de origen
+    extracto: str | None = None      # reglas: inicio del fragmento citado (para mostrarlo sin buscarlo)
 
 
 class Ficha(BaseModel):

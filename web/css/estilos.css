@@ -22,10 +22,12 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--fondo); color: var(--texto); line-height: 1.5; font-size: 1rem; }
 a { color: var(--acento); }
+/* Foco visible con contraste ≥ 3:1: oscuro sobre fondos claros y ámbar sobre la cabecera oscura */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible,
 summary:focus-visible, [tabindex]:focus-visible {
-  outline: 3px solid #f2a900; outline-offset: 2px;
+  outline: 3px solid #12263a; outline-offset: 2px;
 }
+.cabecera a:focus-visible, .saltar:focus-visible { outline-color: #f2a900; }
 
 .saltar { position: absolute; left: -999px; top: 0; background: var(--texto); color: #fff; padding: .5rem 1rem; z-index: 10; }
 .saltar:focus { left: 1rem; }
@@ -49,10 +51,14 @@ h2 { font-size: 1.25rem; margin: 1.5rem 0 .75rem; }
 .intro { color: var(--texto-suave); max-width: 70ch; }
 
 .rejilla { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+ul.rejilla { list-style: none; padding: 0; margin: 0; }
+.acceso { display: flex; flex-direction: column; gap: .25rem; height: 100%; text-decoration: none; color: var(--texto); }
+.acceso strong { color: var(--acento); }
+.acceso:hover { border-color: var(--acento); }
 .tarjeta { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); padding: 1rem; box-shadow: var(--sombra); }
 .tarjeta h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
 .tarjeta p { margin: .25rem 0; color: var(--texto-suave); font-size: .95rem; }
-.cifra { font-size: 2rem; font-weight: 700; color: var(--texto); }
+.cifra, .tarjeta .cifra { font-size: 2rem; font-weight: 700; color: var(--texto); margin: 0; }
 
 .insignia { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; font-size: .9rem; border-radius: 999px; padding: .1rem .6rem; }
 .insignia::before { content: ""; width: .6rem; height: .6rem; border-radius: 50%; background: currentColor; }
@@ -141,9 +147,17 @@ svg.barra-apilada { width: 100%; height: 22px; border-radius: 4px; overflow: hid
 .leyenda { list-style: none; display: flex; flex-wrap: wrap; gap: .25rem .9rem; padding: 0; margin: .4rem 0 0; font-size: .85rem; }
 .leyenda .muestra { display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .3rem; vertical-align: middle; }
 .tabla-barras { width: 100%; border-collapse: collapse; font-size: .9rem; }
-.tabla-barras th { text-align: left; font-weight: 400; padding: .2rem .5rem .2rem 0; width: 45%; }
-.tabla-barras td { padding: .2rem 0; }
-.tabla-barras .barra { display: inline-block; height: .8rem; background: var(--acento); border-radius: 3px; vertical-align: middle; margin-right: .4rem; }
+.tabla-barras th, .tabla-barras td { text-align: left; padding: .2rem .5rem .2rem 0; vertical-align: middle; }
+.tabla-barras thead th { font-weight: 600; border-bottom: 1px solid var(--borde); }
+.tabla-barras tbody th { font-weight: 400; word-break: break-word; }
+.tabla-barras .celda-barra { width: 35%; min-width: 80px; }
+.tabla-barras .valor { white-space: nowrap; font-weight: 600; }
+svg.barra-svg { display: block; width: 100%; height: .9rem; }
+.desplazable { overflow-x: auto; }
+.tabla-compacta { font-size: .85rem; margin: .5rem 0; }
+.tabla-compacta caption { text-align: left; font-weight: 600; padding: .25rem 0; }
+.muestra { display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .35rem; vertical-align: middle; }
+.id { color: var(--texto-suave); font-size: .8rem; word-break: break-all; }
 .transiciones { font-size: .8rem; color: var(--texto-suave); word-break: break-word; }
 
 @media (max-width: 720px) {

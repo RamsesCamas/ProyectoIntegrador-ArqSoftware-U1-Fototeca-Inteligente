@@ -153,3 +153,19 @@ def test_casi_duplicado_sale_de_la_cache_semantica_como_propuesta_a_revisar(clie
     assert any("duplicado" in a for a in cuerpo["ficha"]["advertencias"])
     guardada = cliente_api.get(f"/fichas/{cuerpo['documento_id']}")
     assert guardada.status_code == 200 and guardada.json()["origen"] == "cache"
+
+
+def test_busqueda_filtrada_por_particion(cliente_api, contenedor):
+    from fototeca.dominio import colecciones as col
+    subida = _subir(cliente_api, color=(200, 180, 20))
+    # Una foto «del archivo» directamente en la base vectorial (como las que deja indexar_archivo)
+    vector = contenedor.embebedor.embeber_imagenes([imagen_bytes(color=(200, 180, 25))])
+    contenedor.almacen_vectorial.insertar(col.FOTOS_IMG, ["xm-archivo"], vector,
+                                          [{"documento_id": "xm-archivo", "particion": "archivo", "validada": True}])
+    def ids(filtros):
+        r = cliente_api.post("/busquedas", json={"texto": "foto amarilla", "filtros": filtros})
+        assert r.status_code == 200, r.text
+        return {x["documento_id"] for x in r.json()["resultados"]}
+    assert ids({"particion": "subida"}) == {subida}
+    assert ids({"particion": "archivo"}) == {"xm-archivo"}
+    assert cliente_api.post("/busquedas", json={"texto": "foto amarilla", "filtros": {"color": "rojo"}}).status_code == 400

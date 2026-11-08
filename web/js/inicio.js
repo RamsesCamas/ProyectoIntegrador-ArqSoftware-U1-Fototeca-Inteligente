@@ -1,6 +1,7 @@
-// Página de inicio: estado del sistema (GET /api/health).
+// Página de inicio: estado del sistema (GET /api/health) y el archivo en cifras (GET /api/metricas).
 // Los nombres de los componentes vienen de la API: la web no conoce los recursos internos (R8).
 import { api, anunciar, el, insignia } from "./api.js";
+import { porcentaje } from "./comun.js";
 
 function detalle(c) {
   if (c.estado === "error") return c.error || "No disponible";
@@ -18,7 +19,7 @@ function detalle(c) {
 
 let anterior = null;
 
-async function actualizar() {
+async function actualizarSalud() {
   const contenedor = document.getElementById("componentes");
   const general = document.getElementById("estado-general");
   try {
@@ -42,5 +43,26 @@ async function actualizar() {
   }
 }
 
-actualizar();
-setInterval(actualizar, 10000);
+function cifra(valor, texto) {
+  return el("article", { clase: "tarjeta" }, el("p", { clase: "cifra", texto: valor }), el("p", { texto }));
+}
+
+async function actualizarArchivo() {
+  const contenedor = document.getElementById("cifras");
+  try {
+    const { cuerpo: m } = await api("/metricas");
+    const a = m.accesibilidad || {};
+    contenedor.replaceChildren(
+      cifra(String(a.fotos ?? 0), "fotos en el archivo"),
+      cifra(String(a.fichas_validadas ?? 0), "fichas validadas por el archivista"),
+      cifra(porcentaje(a.porcentaje_alt_validado), "de las fotos tienen texto alternativo validado"),
+      cifra(String(a.requiere_revision ?? 0), "fichas requieren revisión"));
+  } catch (e) {
+    contenedor.replaceChildren(el("p", { clase: "mensaje error", role: "alert", texto: e.message }));
+  }
+}
+
+actualizarSalud();
+actualizarArchivo();
+setInterval(actualizarSalud, 10000);
+setInterval(actualizarArchivo, 60000);

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogar · Fototeca Viva</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <script type="module" src="js/catalogar.js"></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera">
+    <div class="contenedor">
+      <a class="marca" href="index.html">Fototeca Viva <span>Catalogación accesible y trazable</span></a>
+      <nav class="navegacion" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="catalogar.html" aria-current="page">Catalogar</a></li>
+          <li><a href="buscar.html">Buscar</a></li>
+          <li><a href="duplicados.html">Duplicados</a></li>
+          <li><a href="archivo.html">Archivo</a></li>
+          <li><a href="metricas.html">Métricas</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="aviso-ia" role="note">
+    <p class="contenedor">Las fichas y resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.</p>
+  </div>
+
+  <main id="contenido" class="contenedor">
+    <h1>Catalogar fotos</h1>
+    <p class="intro">Sube una foto para obtener su ficha IPTC con texto alternativo, o varias para catalogarlas en lote.
+      Cada campo indica de dónde salió. Generar una ficha en CPU toma tiempo: la página muestra los segundos transcurridos.</p>
+
+    <form id="formulario-carga" class="tarjeta">
+      <label for="fotos" class="etiqueta">Fotos (JPEG o PNG, hasta 10 MB cada una)</label>
+      <div id="zona-soltar" class="zona-soltar">
+        <input id="fotos" name="fotos" type="file" accept="image/jpeg,image/png" multiple required aria-describedby="ayuda-fotos">
+        <p id="ayuda-fotos">Con una foto verás su ficha al terminar; con varias se crea un lote con barra de progreso. También puedes arrastrar las fotos aquí.</p>
+      </div>
+      <button class="boton" type="submit" id="boton-catalogar">Catalogar</button>
+    </form>
+
+    <section id="progreso" aria-live="polite" class="progreso-region"></section>
+    <section id="lote" aria-labelledby="titulo-lote" hidden>
+      <h2 id="titulo-lote">Fichas del lote</h2>
+      <div id="lista-lote" class="rejilla"></div>
+    </section>
+    <section id="revision" aria-labelledby="titulo-revision" hidden></section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">Proyecto integrador · Tópicos Selectos de Arquitectura de Software · MCIT UPChiapas</div>
+  </footer>
+  <div id="anuncios" class="solo-lectores" aria-live="polite"></div>
+</body>
+</html>

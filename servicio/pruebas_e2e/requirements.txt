@@ -1,0 +1,12 @@
+# Pruebas E2E de la web: se instalan SOLO en la imagen de Playwright (servicio `e2e`, perfil `pruebas`), nunca en
+# la imagen del servicio. Todas fijadas con ==, publicadas al menos 14 días antes del corte; `playwright` es la
+# misma versión que la imagen base (mcr.microsoft.com/playwright/python:v1.64.0-noble), que ya trae Chromium.
+playwright==1.64.0
+greenlet==3.5.6
+pyee==14.0.0
+typing-extensions==4.16.0
+pytest==9.1.1
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+pygments==2.21.0

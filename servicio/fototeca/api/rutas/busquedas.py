@@ -6,7 +6,7 @@ from typing import Literal
 from fastapi import APIRouter, Request, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from fototeca.api.esquemas import respuestas_error
 from fototeca.dominio.errores import PeticionInvalida
@@ -14,10 +14,16 @@ from fototeca.dominio.errores import PeticionInvalida
 router = APIRouter(tags=["Búsquedas"])
 
 
+class FiltrosBusqueda(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    particion: Literal["archivo", "subida"] | None = Field(
+        None, description="Limita la búsqueda al archivo catalogado o a las fotos subidas después")
+
+
 class PeticionBusqueda(BaseModel):
     texto: str = Field(min_length=2, max_length=300, examples=["mercado con frutas"])
     k: int = Field(12, ge=1, le=48)
-    filtros: dict | None = None
+    filtros: FiltrosBusqueda | None = None
     sin_cache: bool = False                                       # solo evaluación
     forzar_ruta: Literal["simple", "compleja"] | None = None      # solo evaluación
 
@@ -65,6 +71,7 @@ async def buscar(request: Request):
     except (ValidationError, ValueError) as e:
         raise PeticionInvalida("El cuerpo debe ser JSON con `texto` (2 a 300 caracteres).") from e
     evaluacion = c.config.modo_evaluacion
-    respuesta = await run_in_threadpool(c.busquedas.buscar_texto, p.texto, p.k, p.filtros,
+    filtros = p.filtros.model_dump(exclude_none=True) or None if p.filtros else None
+    respuesta = await run_in_threadpool(c.busquedas.buscar_texto, p.texto, p.k, filtros,
                                         p.sin_cache and evaluacion, p.forzar_ruta if evaluacion else None)
     return JSONResponse(respuesta)

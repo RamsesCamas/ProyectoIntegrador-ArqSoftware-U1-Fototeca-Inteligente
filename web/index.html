@@ -15,6 +15,11 @@
       <nav class="navegacion" aria-label="Principal">
         <ul>
           <li><a href="index.html" aria-current="page">Inicio</a></li>
+          <li><a href="catalogar.html">Catalogar</a></li>
+          <li><a href="buscar.html">Buscar</a></li>
+          <li><a href="duplicados.html">Duplicados</a></li>
+          <li><a href="archivo.html">Archivo</a></li>
+          <li><a href="metricas.html">Métricas</a></li>
         </ul>
       </nav>
     </div>
@@ -30,6 +35,23 @@
 
     <p id="estado-general" aria-live="polite">Consultando el estado…</p>
     <p id="precalentamiento" class="intro"></p>
+
+    <section aria-labelledby="titulo-archivo">
+      <h2 id="titulo-archivo">El archivo</h2>
+      <div id="cifras" class="rejilla" aria-live="polite"><p>Consultando el archivo…</p></div>
+    </section>
+
+    <section aria-labelledby="titulo-accesos">
+      <h2 id="titulo-accesos">Accesos rápidos</h2>
+      <ul class="rejilla accesos">
+        <li><a class="tarjeta acceso" href="catalogar.html"><strong>Catalogar fotos</strong><span>Sube una o varias fotos y revisa su ficha con fuentes.</span></a></li>
+        <li><a class="tarjeta acceso" href="buscar.html"><strong>Buscar</strong><span>Por texto en español o con una foto parecida.</span></a></li>
+        <li><a class="tarjeta acceso" href="duplicados.html"><strong>Casi duplicados</strong><span>Grupos de fotos casi iguales, lado a lado.</span></a></li>
+        <li><a class="tarjeta acceso" href="archivo.html"><strong>Archivo</strong><span>Fotos y normas cargadas, con el estado de su ficha.</span></a></li>
+        <li><a class="tarjeta acceso" href="metricas.html"><strong>Métricas</strong><span>Latencias por capa, caché, guardrails y accesibilidad.</span></a></li>
+      </ul>
+    </section>
+
     <section aria-labelledby="titulo-componentes">
       <h2 id="titulo-componentes">Componentes</h2>
       <div id="componentes" class="rejilla"></div>

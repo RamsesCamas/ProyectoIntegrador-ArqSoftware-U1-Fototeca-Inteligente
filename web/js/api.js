@@ -9,18 +9,26 @@ export class ErrorApi extends Error {
   }
 }
 
+// Respuestas sin cuerpo JSON (p. ej. el proxy no alcanzó al servicio)
+const SIN_CUERPO = {
+  502: "El servicio no está disponible todavía. Espera unos segundos y vuelve a intentarlo.",
+  503: "El servicio no está disponible todavía. Espera unos segundos y vuelve a intentarlo.",
+  504: "El servicio tardó demasiado en responder. Vuelve a intentarlo en un momento.",
+};
+
 export async function api(ruta, opciones = {}) {
+  const { aceptar = [], headers = {}, ...resto } = opciones;
   let resp;
   try {
-    resp = await fetch(`/api${ruta}`, { headers: { Accept: "application/json", ...(opciones.headers || {}) }, ...opciones });
+    resp = await fetch(`/api${ruta}`, { ...resto, headers: { Accept: "application/json", ...headers } });
   } catch (e) {
     throw new ErrorApi("No se pudo conectar con el servicio. ¿Está levantado con docker compose?", { estado: 0 });
   }
   const traza = resp.headers.get("X-Traza-Id");
   const tipo = resp.headers.get("Content-Type") || "";
   const cuerpo = tipo.includes("application/json") ? await resp.json() : null;
-  if (!resp.ok && !(opciones.aceptar || []).includes(resp.status)) {
-    const mensaje = cuerpo?.error?.mensaje_seguro || cuerpo?.error?.mensaje || `Error ${resp.status}`;
+  if (!resp.ok && !aceptar.includes(resp.status)) {
+    const mensaje = cuerpo?.error?.mensaje_seguro || cuerpo?.error?.mensaje || SIN_CUERPO[resp.status] || `Error ${resp.status}`;
     throw new ErrorApi(mensaje, { estado: resp.status, cuerpo, traza });
   }
   return { cuerpo, traza, estado: resp.status };
@@ -44,9 +52,12 @@ export function el(etiqueta, atributos = {}, ...hijos) {
   return nodo;
 }
 
-export const ETIQUETA_ESTADO = { ok: "En verde", degradado: "Degradado", error: "Con fallas", listo: "Listo", en_curso: "En curso", pendiente: "Pendiente" };
+export const ETIQUETA_ESTADO = {
+  ok: "En verde", degradado: "Degradado", error: "Con fallas", listo: "Listo", en_curso: "En curso", pendiente: "Pendiente",
+  borrador: "Borrador", validada: "Validada", requiere_revision: "Requiere revisión",
+};
 
 export function insignia(estado) {
-  const clase = estado === "ok" || estado === "listo" ? "ok" : estado === "error" ? "error" : "degradado";
+  const clase = ["ok", "listo", "validada"].includes(estado) ? "ok" : estado === "error" ? "error" : "degradado";
   return el("span", { clase: `insignia ${clase}`, texto: ETIQUETA_ESTADO[estado] || estado });
 }

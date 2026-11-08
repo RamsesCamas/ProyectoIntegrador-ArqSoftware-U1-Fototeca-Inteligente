@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Archivo · Fototeca Viva</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <script type="module" src="js/archivo.js"></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera">
+    <div class="contenedor">
+      <a class="marca" href="index.html">Fototeca Viva <span>Catalogación accesible y trazable</span></a>
+      <nav class="navegacion" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="catalogar.html">Catalogar</a></li>
+          <li><a href="buscar.html">Buscar</a></li>
+          <li><a href="duplicados.html">Duplicados</a></li>
+          <li><a href="archivo.html" aria-current="page">Archivo</a></li>
+          <li><a href="metricas.html">Métricas</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="aviso-ia" role="note">
+    <p class="contenedor">Las fichas y resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.</p>
+  </div>
+  <main id="contenido" class="contenedor">
+    <h1>Archivo</h1>
+    <form id="filtros" class="fila tarjeta">
+      <label for="tipo">Tipo de documento</label>
+      <select id="tipo" name="tipo">
+        <option value="foto">Fotos</option>
+        <option value="norma">Normas</option>
+        <option value="">Todos</option>
+      </select>
+    </form>
+    <section id="estado" aria-live="polite"></section>
+    <div id="confirmacion" class="tarjeta confirmacion" role="alertdialog" aria-modal="false"
+         aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-texto" hidden></div>
+    <table class="tabla">
+      <caption class="solo-lectores">Documentos del archivo</caption>
+      <thead><tr><th scope="col">Vista</th><th scope="col">Documento</th><th scope="col">Tipo</th><th scope="col">Ficha</th><th scope="col">Fecha</th><th scope="col">Acciones</th></tr></thead>
+      <tbody id="filas"></tbody>
+    </table>
+    <nav class="paginacion fila" aria-label="Paginación">
+      <button class="boton secundario" type="button" id="anterior">Anterior</button>
+      <span id="pagina" aria-live="polite"></span>
+      <button class="boton secundario" type="button" id="siguiente">Siguiente</button>
+    </nav>
+  </main>
+  <footer class="pie">
+    <div class="contenedor">Proyecto integrador · Tópicos Selectos de Arquitectura de Software · MCIT UPChiapas</div>
+  </footer>
+  <div id="anuncios" class="solo-lectores" aria-live="polite"></div>
+</body>
+</html>

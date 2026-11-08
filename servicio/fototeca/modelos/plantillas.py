@@ -6,6 +6,7 @@ La versión de cada prompt forma parte de la versión de configuración: cambiar
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
@@ -60,4 +61,12 @@ def cargar_plantillas(directorio: Path = DIR_PROMPTS) -> dict[str, Plantilla]:
 
 
 def versiones(plantillas: dict[str, Plantilla]) -> dict[str, str]:
-    return {t: f"{p.nombre}@v{p.version}" for t, p in sorted(plantillas.items())}
+    """`nombre@vN#huella`: la huella (sha256 del sistema, el usuario y el esquema) cambia con cualquier edición del
+    prompt aunque nadie suba la versión, y así la caché de fichas se invalida (forma parte de la versión de
+    configuración)."""
+    salida = {}
+    for t, p in sorted(plantillas.items()):
+        huella = hashlib.sha256(json.dumps([p.sistema, p.usuario, p.esquema], ensure_ascii=False,
+                                           sort_keys=True).encode("utf-8")).hexdigest()[:8]
+        salida[t] = f"{p.nombre}@v{p.version}#{huella}"
+    return salida

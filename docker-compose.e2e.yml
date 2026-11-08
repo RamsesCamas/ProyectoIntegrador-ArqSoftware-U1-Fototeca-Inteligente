@@ -1,0 +1,39 @@
+# Pruebas de punta a punta (E2E) de la web con Playwright, en un contenedor aparte del perfil `pruebas`.
+# Un Chromium sin interfaz recorre: inicio con el estado del sistema (/health) → cargar una foto → catalogar →
+# ver las fuentes → validar → buscar → métricas; al final elimina la foto de prueba desde la página Archivo.
+# Las pruebas están en servicio/pruebas_e2e/ (pytest + API síncrona de Playwright).
+#
+# Uso, desde la raíz del repositorio (se combina con docker-compose.yml para quedar en la misma red que `web`):
+#
+#   # Preparación (con internet): construye la imagen de pruebas
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml --profile pruebas build e2e
+#   # Con el sistema levantado (docker compose up -d) y los modelos descargados; no necesita internet:
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml --profile pruebas run --rm e2e
+#   # Con otra foto de prueba (ruta dentro del contenedor; ./data se monta en /datos):
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml --profile pruebas run --rm -e FOTOTECA_E2E_FOTO=/datos/demo/mi_foto.jpg e2e
+#
+# La foto de prueba por defecto es la primera de data/demo/ o de la partición `nuevas`; nunca una del archivo de
+# referencia (si ya estaba cargada, la prueba se detiene antes de catalogar).
+# Memoria: este contenedor tiene su propio límite (1536m) y NO entra en el presupuesto de operación, porque solo se
+# usa al probar; Docker Desktop necesita ese margen libre además del sistema levantado.
+services:
+  e2e:
+    build:
+      context: ./servicio/pruebas_e2e
+    image: fototeca-viva-e2e:playwright-1.64.0
+    profiles: ["pruebas"]
+    depends_on:
+      - web
+    environment:
+      FOTOTECA_WEB_URL: http://web
+      FOTOTECA_E2E_FOTO: ${FOTOTECA_E2E_FOTO:-}
+    volumes:
+      - ./servicio/pruebas_e2e:/e2e:ro
+      - ./data:/datos:ro
+      - ./evaluacion:/evaluacion:ro
+    working_dir: /e2e
+    command: ["python", "-m", "pytest", "-q", "/e2e"]
+    deploy:
+      resources:
+        limits:
+          memory: 1536m

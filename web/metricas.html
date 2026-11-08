@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Métricas · Fototeca Viva</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <script type="module" src="js/metricas.js"></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera">
+    <div class="contenedor">
+      <a class="marca" href="index.html">Fototeca Viva <span>Catalogación accesible y trazable</span></a>
+      <nav class="navegacion" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="catalogar.html">Catalogar</a></li>
+          <li><a href="buscar.html">Buscar</a></li>
+          <li><a href="duplicados.html">Duplicados</a></li>
+          <li><a href="archivo.html">Archivo</a></li>
+          <li><a href="metricas.html" aria-current="page">Métricas</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="aviso-ia" role="note">
+    <p class="contenedor">Las fichas y resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.</p>
+  </div>
+  <main id="contenido" class="contenedor">
+    <h1>Panel de métricas</h1>
+    <form id="periodo" class="fila tarjeta">
+      <label for="desde">Desde</label>
+      <select id="desde">
+        <option value="">Todo el historial</option>
+        <option value="1">Última hora</option>
+        <option value="24">Últimas 24 horas</option>
+      </select>
+      <button class="boton secundario" type="submit">Actualizar</button>
+    </form>
+    <section id="estado" aria-live="polite"></section>
+    <div id="panel" class="panel"></div>
+  </main>
+  <footer class="pie">
+    <div class="contenedor">Proyecto integrador · Tópicos Selectos de Arquitectura de Software · MCIT UPChiapas</div>
+  </footer>
+  <div id="anuncios" class="solo-lectores" aria-live="polite"></div>
+</body>
+</html>

@@ -22,6 +22,7 @@ from fototeca.api.middleware import MiddlewareTraza
 from fototeca.api.rutas import busquedas as rutas_busquedas
 from fototeca.api.rutas import documentos as rutas_documentos
 from fototeca.api.rutas import fichas as rutas_fichas
+from fototeca.api.rutas import observabilidad as rutas_observabilidad
 from fototeca.api.rutas import sistema
 from fototeca.cache.cache_busquedas import CacheBusquedas
 from fototeca.cache.cache_fichas import CacheFichas
@@ -39,15 +40,18 @@ from fototeca.dominio.configuracion import Configuracion
 from fototeca.guardrails.entrada.imagen import VerificadorImagen
 from fototeca.modelos.enrutador_busquedas import EnrutadorBusquedas
 from fototeca.modelos.gateway import Gateway
-from fototeca.modelos.plantillas import cargar_plantillas
+from fototeca.modelos.plantillas import cargar_plantillas, versiones
 from fototeca.observabilidad.puertos import SumideroEventos
 from fototeca.observabilidad.registro import configurar_sumidero
 from fototeca.orquestacion.flujo_busqueda import FlujoBusqueda
 from fototeca.orquestacion.flujo_ficha import FlujoFicha
 from fototeca.orquestacion.ingesta import FlujoIngesta
 from fototeca.orquestacion.lotes import GestorLotes
+from fototeca.orquestacion.metricas import FlujoMetricas
+from fototeca.orquestacion.retroalimentacion import FlujoRetroalimentacion
 from fototeca.orquestacion.salud import FlujoSalud
 from fototeca.retroalimentacion.puertos import AlmacenRetroalimentacion
+from fototeca.retroalimentacion.servicio import ServicioRetroalimentacion
 
 DIR_SERVICIO = Path(__file__).resolve().parents[2]
 ESTATICOS = Path(__file__).resolve().parent / "estaticos"
@@ -58,6 +62,10 @@ DESCRIPCION = """
 - `POST /fichas` genera la ficha IPTC de una foto; cada campo indica su fuente.
 - `POST /busquedas` busca por texto en español o por foto y explica cada coincidencia.
 - `GET /duplicados` reporta casi duplicados.
+- `POST /retroalimentacion` liga la opinión del archivista a la traza; al validar una ficha, esta se vuelve un
+  ejemplo más para catalogar fotos parecidas (el archivo aprende sin fine-tuning).
+- `GET /metricas` resume latencias por capa, caché, guardrails, modelos, rutas, agente, retroalimentación y la
+  accesibilidad del archivo.
 
 Todas las respuestas llevan la cabecera `X-Traza-Id`. Los errores tienen la forma
 `{"error": {"codigo", "mensaje", "traza_id"}}`.
@@ -69,6 +77,10 @@ ETIQUETAS = [
     {"name": "Fichas", "description": "Catalogación de fotos (ficha IPTC con fuentes) y lotes asíncronos"},
     {"name": "Búsquedas", "description": "Búsqueda por texto en español o por foto, con razones"},
     {"name": "Documentos", "description": "Carga de fotos y normas, listado, eliminación y miniaturas"},
+    {"name": "Duplicados", "description": "Grupos de casi duplicados detectados al cargar las fotos"},
+    {"name": "Retroalimentación y métricas",
+     "description": "Opinión ligada a la traza, validación de fichas (promoción a ejemplo del RAG) y métricas de "
+                    "observabilidad y de accesibilidad del archivo"},
     {"name": "Sistema", "description": "Salud del servicio y configuración activa"},
 ]
 
@@ -93,6 +105,7 @@ def cargar_configuracion(modo_evaluacion: bool | None = None) -> Configuracion:
     if modo_evaluacion is None:
         modo_evaluacion = _env("MODO_EVALUACION", "0").lower() in ("1", "true", "si", "sí")
     return Configuracion(parametros=parametros, modelos=modelos, urls=urls, rutas=rutas,
+                         versiones_prompts=versiones(cargar_plantillas()),
                          version_servicio=__version__, modo_evaluacion=modo_evaluacion)
 
 
@@ -139,6 +152,8 @@ class Contenedor:
     fichas: FlujoFicha
     busquedas: FlujoBusqueda
     lotes: GestorLotes
+    retroalimentacion: FlujoRetroalimentacion
+    metricas: FlujoMetricas
 
 
 def ensamblar(config: Configuracion, *, cliente_llm: ClienteLLM, almacen_vectorial: AlmacenVectorial,
@@ -169,12 +184,21 @@ def ensamblar(config: Configuracion, *, cliente_llm: ClienteLLM, almacen_vectori
                               EnrutadorBusquedas(config, almacen_vectorial, embebedor), verificador_imagen,
                               version_corpus)
     lotes = GestorLotes(fichas, almacen_lotes)
+    # T2 solo persiste y emite el evento; la promoción de la ficha validada al RAG de ejemplos la orquesta C2.
+    # Las palabras clave corregidas pasan por el mismo guardrail `tesauro` (C3) que las del modelo.
+    servicio_retroalimentacion = ServicioRetroalimentacion(almacen_retroalimentacion)
+    retroalimentacion = FlujoRetroalimentacion(servicio_retroalimentacion, sumidero_eventos, almacen_documentos,
+                                               almacen_vectorial, embebedor, embebedor_secundario, almacen_cache,
+                                               normalizar_palabras=fichas.semanticos.normalizar_palabras)
+    # `GET /metricas` combina T1 (eventos), T2 (opiniones) y el estado del archivo (C7)
+    metricas = FlujoMetricas(sumidero_eventos, servicio_retroalimentacion, almacen_documentos)
     return Contenedor(config=config, cliente_llm=cliente_llm, almacen_vectorial=almacen_vectorial,
                       almacen_documentos=almacen_documentos, almacen_cache=almacen_cache,
                       sumidero_eventos=sumidero_eventos, almacen_retroalimentacion=almacen_retroalimentacion,
                       embebedor=embebedor, embebedor_secundario=embebedor_secundario, salud=salud, ingesta=ingesta,
                       gateway=gateway, verificador_imagen=verificador_imagen, cache_fichas=cache_fichas,
-                      fichas=fichas, busquedas=busquedas, lotes=lotes)
+                      fichas=fichas, busquedas=busquedas, lotes=lotes, retroalimentacion=retroalimentacion,
+                      metricas=metricas)
 
 
 def construir_contenedor(config: Configuracion) -> Contenedor:
@@ -216,6 +240,7 @@ def crear_app(contenedor: Contenedor | None = None, precalentar: bool | None = N
     app.include_router(rutas_fichas.router)
     app.include_router(rutas_busquedas.router)
     app.include_router(rutas_documentos.router)
+    app.include_router(rutas_observabilidad.router)
     app.include_router(sistema.router)
 
     # Swagger UI servido con assets locales (sin CDN): la demo funciona sin red.

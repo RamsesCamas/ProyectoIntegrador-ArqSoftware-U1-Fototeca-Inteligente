@@ -77,7 +77,7 @@ class FlujoBusqueda:
         if not sin_cache:
             previo = self.cache.exacta(limpio, filtros, version_archivo, version)
             tipo_cache = "exacta" if previo else None
-            if previo is None:
+            if previo is None and not filtros:   # la caché semántica no distingue filtros: solo sin filtros
                 semantico = self.cache.semantica(v_consulta, version_archivo, version)
                 if semantico:
                     previo, tipo_cache = semantico[0], "semantica"
@@ -115,7 +115,7 @@ class FlujoBusqueda:
         max_iter = 2
         while True:
             marca = time.perf_counter()
-            resultados = self._recuperar(consultas, k, interpretada)
+            resultados = self._recuperar(consultas, k, interpretada, filtro=self._filtro_vectorial(filtros))
             tiempos["contexto"] += (time.perf_counter() - marca) * 1000
             suficientes = [r for r in resultados if r["coseno_imagen"] >= tau]
             if suficientes or iteraciones >= max_iter or not tau:
@@ -135,7 +135,7 @@ class FlujoBusqueda:
         relevantes = [r for r in resultados if r["coseno_imagen"] >= tau] if tau else resultados
         salida = self._responder(relevantes, interpretada, ruta, modelo, guardrails, iteraciones, t0, tiempos, version)
         if not sin_cache:
-            self.cache.guardar(limpio, filtros, version_archivo, version, v_consulta, salida)
+            self.cache.guardar(limpio, filtros, version_archivo, version, None if filtros else v_consulta, salida)
         self._registrar_cierre(salida)
         return salida
 
@@ -146,12 +146,18 @@ class FlujoBusqueda:
                   modelo=m.get("modelo"), tiempos_por_capa_ms=m["tiempos_por_capa_ms"], guardrails=m["guardrails"],
                   iteraciones_agente=m["iteraciones_agente"], resultados=len(respuesta["resultados"]))
 
-    def _recuperar(self, consultas: list[str], k: int, interpretada: dict) -> list[dict]:
+    @staticmethod
+    def _filtro_vectorial(filtros: dict | None) -> dict | None:
+        """Filtros de la petición que se aplican en la base vectorial: `particion` = archivo | subida."""
+        particion = (filtros or {}).get("particion")
+        return {"particion": particion} if particion else None
+
+    def _recuperar(self, consultas: list[str], k: int, interpretada: dict, filtro: dict | None = None) -> list[dict]:
         vectores = self.embebedor.embeber_textos(consultas, rol="consulta")
         listas = []
         for v in vectores:
-            listas.append(self.vectorial.buscar(col.FOTOS_IMG, v, k * 2))
-            listas.append(self.vectorial.buscar(col.FOTOS_TXT, v, k * 2))
+            listas.append(self.vectorial.buscar(col.FOTOS_IMG, v, k * 2, filtro))
+            listas.append(self.vectorial.buscar(col.FOTOS_TXT, v, k * 2, filtro))
         fusion = rrf(listas, limite=k * 2)
         excluir = interpretada.get("excluir") or []
         v_excluir = self.embebedor.embeber_textos(excluir, rol="consulta") if excluir else None

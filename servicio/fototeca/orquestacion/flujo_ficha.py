@@ -236,6 +236,10 @@ class FlujoFicha:
                                       "fotos similares.")
                 registrar("C6", "p1_fallo", error=type(ex).__name__)
         if e.p1 is not None:
+            if [t for t in e.p1.get("texto_visible", []) if isinstance(t, str) and t.strip()]:
+                # P1 vio texto escrito (p. ej. durante el ciclo de agente, antes de enrutar): la ficha va por la ruta
+                # completa, donde ese texto entra a P3 aislado como dato, nunca por la rápida (Qwen lo «leería»).
+                e.texto_visible_detectado = True
             r = self.verificador_imagen.inyeccion_en_texto_visible(e.p1.get("texto_visible", []))
             e.guardrails_entrada.append(r.a_dict())
             if r.resultado == "marcada":
@@ -429,9 +433,17 @@ class FlujoFicha:
         return "RESPONDER"
 
     def _guardar(self, e: EstadoFicha) -> str:
-        registro = FichaRegistrada(documento_id=e.documento_id, ficha=e.ficha, fuentes=e.fuentes, origen="modelo",
-                                   traza_id=traza_actual())
-        self.documentos.guardar_ficha(e.documento_id, registro)
+        previa = self.documentos.obtener_ficha(e.documento_id)
+        if previa is not None and previa.ficha.estado == "validada":
+            # Una ficha validada (por el archivista o de referencia humana) nunca se sobrescribe con una propuesta del
+            # modelo: la nueva se entrega en la respuesta, pero no se guarda.
+            e.advertencias.append("La foto ya tiene una ficha validada; esta propuesta no la reemplazó.")
+            e.ficha = e.ficha.model_copy(update={"advertencias": list(dict.fromkeys(e.advertencias))})
+            registrar("C2", "ficha_no_guardada", motivo="ya existe una ficha validada", documento_id=e.documento_id)
+        else:
+            registro = FichaRegistrada(documento_id=e.documento_id, ficha=e.ficha, fuentes=e.fuentes, origen="modelo",
+                                       traza_id=traza_actual())
+            self.documentos.guardar_ficha(e.documento_id, registro)
         if not e.opciones.sin_cache and e.ruta != "degradada":
             respuesta = {"documento_id": e.documento_id, "ficha": e.ficha.model_dump(),
                          "fuentes": {k: [f.model_dump() for f in v] for k, v in e.fuentes.items()},
@@ -449,7 +461,10 @@ class FlujoFicha:
             por_id[id_foto(v.documento_id)] = Fuente(tipo="foto_similar", id=v.documento_id, puntaje=v.similitud_imagen,
                                                      titulo=v.ficha.ficha.titular if v.ficha else None)
         for r in ctx.reglas:
-            por_id[id_regla(r)] = Fuente(tipo="regla", id=r.id, titulo=r.carga.get("seccion"), puntaje=round(r.puntaje, 4))
+            texto = (r.carga.get("texto") or "").strip()
+            por_id[id_regla(r)] = Fuente(tipo="regla", id=r.id, titulo=r.carga.get("seccion"), puntaje=round(r.puntaje, 4),
+                                         url=r.carga.get("url"),
+                                         extracto=(texto[:280].rsplit(" ", 1)[0] + "…") if len(texto) > 280 else texto or None)
         for t in ctx.terminos:
             por_id[id_tesauro(t)] = Fuente(tipo="tesauro", id=t.carga.get("uri", t.id), titulo=t.carga.get("etiqueta_es"),
                                            puntaje=round(t.puntaje, 4))

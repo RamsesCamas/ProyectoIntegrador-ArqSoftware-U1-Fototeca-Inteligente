@@ -32,7 +32,8 @@ class ServicioRetroalimentacion:
                 continue
             clave = "util" if r.util else "no_util"
             por_ruta[r.ruta or "desconocida"][clave] += 1
-            for modelo in sorted(set((r.modelos or {}).values())):
+            # Modelos que generaron la ficha o interpretaron la búsqueda (los embeddings no redactan nada)
+            for modelo in sorted({m for rol, m in (r.modelos or {}).items() if not rol.startswith("embedding")}):
                 por_modelo[modelo][clave] += 1
         calificados = [r for r in registros if r.util is not None]
         return {

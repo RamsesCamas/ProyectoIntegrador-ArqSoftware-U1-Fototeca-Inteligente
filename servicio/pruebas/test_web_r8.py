@@ -1,6 +1,6 @@
 """R8 · La web solo consume la API por HTTP: no puede referirse al servidor de modelos ni a la base vectorial.
 
-docs/specs/10-web.md: el test busca en web/ cualquier referencia a 11434, 6333, ollama o qdrant.
+El test busca en web/ cualquier referencia a 11434, 6333, ollama o qdrant, y revisa que todo `fetch` vaya a /api.
 La carpeta web/ se monta de solo lectura en el contenedor `servicio` (docker-compose.yml).
 """
 from __future__ import annotations
@@ -41,6 +41,10 @@ def test_proxy_solo_hacia_el_servicio(archivos_web):
     assert set(re.findall(r"http://([\w.-]+):\d+", conf)) == {"servicio"}
 
 
+# Identificadores de espacio de nombres XML: son constantes, no direcciones a las que se conecte el navegador.
+ESPACIOS_DE_NOMBRES = ("http://www.w3.org/2000/svg", "http://www.w3.org/1999/xlink")
+
+
 def test_fetch_solo_a_la_api(archivos_web):
     for ruta in archivos_web:
         if ruta.suffix != ".js":
@@ -48,4 +52,6 @@ def test_fetch_solo_a_la_api(archivos_web):
         texto = ruta.read_text(encoding="utf-8")
         for url in re.findall(r"fetch\(\s*[`'\"]([^`'\"]+)", texto):
             assert url.startswith("/api"), f"{ruta.name}: fetch a {url}"
+        for ns in ESPACIOS_DE_NOMBRES:
+            texto = texto.replace(ns, "")
         assert "http://" not in texto and "https://" not in texto, f"{ruta.name} usa una URL absoluta"
