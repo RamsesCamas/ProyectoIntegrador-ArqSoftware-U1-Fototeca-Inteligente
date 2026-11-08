@@ -37,3 +37,9 @@ Thumbs.db
 node_modules/
 
 # Nota: los .docx de docs/curso/originales/ SÍ se versionan (no se ignoran).
+
+# ── Instrucciones y seguimiento del asistente de IA (no se publican) ──
+# Se conservan en la copia local de trabajo. Al cerrar el proyecto, su contenido se sintetiza en AI_USAGE.md.
+CLAUDE.md
+PROMPT_INICIAL.md
+PROGRESO.md
