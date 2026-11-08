@@ -1,0 +1,2037 @@
+{
+  "verificaciones": {
+    "0.7": {
+      "descripciones": {
+        "estructura": {
+          "miembros": [
+            "captions.jsonl"
+          ],
+          "archivo_analizado": "captions.jsonl",
+          "claves_primer_registro": [
+            "ar",
+            "bn",
+            "cs",
+            "da",
+            "de",
+            "el",
+            "en",
+            "es",
+            "fa",
+            "fi",
+            "fil",
+            "fr",
+            "he",
+            "hi",
+            "hr",
+            "hu",
+            "id",
+            "image/key",
+            "image/locale",
+            "it",
+            "ja",
+            "ko",
+            "mi",
+            "nl",
+            "no",
+            "pl",
+            "pt",
+            "quz",
+            "ro",
+            "ru",
+            "sv",
+            "sw",
+            "te",
+            "th",
+            "tr",
+            "uk",
+            "vi",
+            "zh"
+          ],
+          "ejemplo_es": {
+            "caption": [
+              "Un gallo y una gallina entre rocas y hierbas",
+              "Gallo y gallina caminando por el pasto."
+            ],
+            "caption/tokenized": [
+              "Un gallo y una gallina entre rocas y hierbas",
+              "Gallo y gallina caminando por el pasto ."
+            ],
+            "caption/tokenized/lowercase": [
+              "un gallo y una gallina entre rocas y hierbas",
+              "gallo y gallina caminando por el pasto ."
+            ]
+          }
+        },
+        "registros": 3600,
+        "con_es": 3600,
+        "es_por_imagen": {
+          "min": 2,
+          "media": 2.39,
+          "max": 4,
+          "distribucion": {
+            "2": 2201,
+            "3": 1384,
+            "4": 15
+          }
+        },
+        "existe_clave_es": true
+      },
+      "imagenes": {
+        "extraidas": 3600,
+        "registros_sin_archivo": 0
+      },
+      "locale": {
+        "existe": true,
+        "n_locales": 36,
+        "imagenes_por_locale": {
+          "ar": 100,
+          "bn": 100,
+          "cs": 100,
+          "da": 100,
+          "de": 100,
+          "el": 100,
+          "en": 100,
+          "es": 100,
+          "fa": 100,
+          "fi": 100,
+          "fil": 100,
+          "fr": 100,
+          "he": 100,
+          "hi": 100,
+          "hr": 100,
+          "hu": 100,
+          "id": 100,
+          "it": 100,
+          "ja": 100,
+          "ko": 100,
+          "mi": 100,
+          "nl": 100,
+          "no": 100,
+          "pl": 100,
+          "pt": 100,
+          "quz": 100,
+          "ro": 100,
+          "ru": 100,
+          "sv": 100,
+          "sw": 100,
+          "te": 100,
+          "th": 100,
+          "tr": 100,
+          "uk": 100,
+          "vi": 100,
+          "zh": 100
+        }
+      },
+      "open_images": {
+        "archivo_filtrado": "procesados/oi_etiquetas_xm3600.csv",
+        "originales": [
+          {
+            "url": "https://storage.googleapis.com/openimages/v7/oidv7-train-annotations-human-imagelabels.csv",
+            "fecha": "2026-11-07T23:43:14+00:00",
+            "tamano_bytes": 2735816020,
+            "sha256": "0237e1e4080291b959ceb99484a8f2d723aeeb7d15b2adf60337f2c027174116",
+            "filas": 58783034,
+            "filas_guardadas": 1222,
+            "segundos": 197.5
+          },
+          {
+            "url": "https://storage.googleapis.com/openimages/v7/oidv7-val-annotations-human-imagelabels.csv",
+            "fecha": "2026-11-07T23:43:18+00:00",
+            "tamano_bytes": 28392297,
+            "sha256": "92ddbdfceb3626e044df5e89100b24f6c22a79c1888a4bddd00a6f231d86d56a",
+            "filas": 618184,
+            "filas_guardadas": 6623,
+            "segundos": 4.0
+          },
+          {
+            "url": "https://storage.googleapis.com/openimages/v7/oidv7-test-annotations-human-imagelabels.csv",
+            "fecha": "2026-11-07T23:43:28+00:00",
+            "tamano_bytes": 93606939,
+            "sha256": "917d3ca8c0a2e09d652fb3148e9264df6117bfcaccf425a60a29b23269487953",
+            "filas": 2003748,
+            "filas_guardadas": 21907,
+            "segundos": 10.5
+          }
+        ],
+        "imagenes_con_alguna_etiqueta": 2584,
+        "imagenes_con_etiqueta_positiva": 2357,
+        "porcentaje_con_etiqueta_positiva": 0.6547,
+        "filas_por_archivo": {
+          "oidv7-train-annotations-human-imagelabels.csv": 1222,
+          "oidv7-val-annotations-human-imagelabels.csv": 6623,
+          "oidv7-test-annotations-human-imagelabels.csv": 21907
+        },
+        "decision": "la evaluación de palabras clave usará solo el subconjunto con etiquetas"
+      },
+      "exif": {
+        "imagenes_con_exif": 0,
+        "con_gps": 0,
+        "con_numero_serie": 0,
+        "con_autor_o_copyright": 0,
+        "decision": "ninguna imagen tiene GPS: el guardrail EXIF se prueba con 20 copias con GPS sintético (piexif)"
+      },
+      "estado": "ok",
+      "segundos": 267.2,
+      "nombre": "Datos"
+    },
+    "0.8": {
+      "estado": "ok",
+      "fuentes": [
+        {
+          "fuente": "Crossmodal-3600 (descripciones)",
+          "url": "https://google.github.io/crossmodal-3600/",
+          "esperada": "CC BY 4.0",
+          "fecha": "2026-11-07T23:43:29+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "CC BY 4.0",
+              "contexto": "y Google LLC under CC BY 4.0 license. Machine Translations of Other"
+            },
+            {
+              "patron": "licensed by Google",
+              "contexto": "ge Attributions (1.3 MB) * The annotations are licensed by Google LLC under CC BY 4."
+            }
+          ],
+          "confirmada": true
+        },
+        {
+          "fuente": "Open Images V7 (anotaciones e imágenes)",
+          "url": "https://storage.googleapis.com/openimages/web/factsfigures_v7.html",
+          "esperada": "Anotaciones CC BY 4.0; imágenes listadas como CC BY 2.0",
+          "fecha": "2026-11-07T23:43:30+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "CC BY 4.0",
+              "contexto": "s are licensed by Google LLC under CC BY 4.0 license. The images are listed as having a <a href=\"https://creativecommons.org/licen"
+            },
+            {
+              "patron": "CC BY 2.0",
+              "contexto": "eople/vike/\">Vique , both under CC BY 2.0 license ). <a class=\"title-anchor\" id=\"oid-extended\" href="
+            },
+            {
+              "patron": "Creative Commons",
+              "contexto": "Note: while we tried to identify images that are licensed under a Creative Commons Attribution license, we make no representations or warranties regarding the license statu"
+            }
+          ],
+          "confirmada": true
+        },
+        {
+          "fuente": "IPTC Photo Metadata Standard 2025.1",
+          "url": "http://iptc.org/std/photometadata/specification/IPTC-PhotoMetadata-2025.1.html",
+          "esperada": "CC BY 4.0",
+          "fecha": "2026-11-07T23:43:30+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "Creative Commons Attribution 4.0",
+              "contexto": "iv class=\"paragraph\"> The IPTC Photo Metadata Standard document is published under the Creative Commons Attribution 4.0 license - see the full license agreement at <a href=\"http://creativecommons.org/licenses/"
+            },
+            {
+              "patron": "creativecommons.org/licenses/by/4.0",
+              "contexto": "ative Commons Attribution 4.0 license - see the full license agreement at http://creativecommons.org/licenses/by/4.0/ . By obtaining, using and/o"
+            }
+          ],
+          "confirmada": true
+        },
+        {
+          "fuente": "Tesauro de la UNESCO",
+          "url": "https://vocabularies.unesco.org/browser/thesaurus/es/",
+          "esperada": "CC BY-SA 3.0 IGO",
+          "fecha": "2026-11-07T23:43:31+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "CC BY-SA 3.0 IGO",
+              "contexto": "vices_intro\"> The full Thesaurus is available for download in open data formats under a CC BY-SA 3.0 IGO licence, and can be queried through a REST API and a SPARQL endpoint. <div clas"
+            },
+            {
+              "patron": "by-sa/3.0/igo",
+              "contexto": "l class=\"u-facts\"> Licence CC BY-SA 3.0 IGO Standard <d"
+            }
+          ],
+          "confirmada": true
+        },
+        {
+          "fuente": "W3C WAI Images Tutorial",
+          "url": "https://www.w3.org/WAI/tutorials/images/",
+          "esperada": "W3C Document License",
+          "fecha": "2026-11-07T23:43:32+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "Permission to Use WAI Material",
+              "contexto": "ense rules apply unless otherwise noted. See Permission to Use WAI Material . <script src=\"/WAI/assets/scripts/deta"
+            },
+            {
+              "patron": "copyright",
+              "contexto": "Resources for roles Copyright &copy; 2026 World Wide Web Consor"
+            }
+          ],
+          "confirmada": true
+        },
+        {
+          "fuente": "WCAG 2.2 Understanding 1.1.1",
+          "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-content",
+          "esperada": "W3C Document License",
+          "fecha": "2026-11-07T23:43:32+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "Permission to Use WAI Material",
+              "contexto": "ly unless otherwise noted. See Permission to Use WAI Material . var tran"
+            },
+            {
+              "patron": "copyright",
+              "contexto": "s://www.w3.org/WAI/roles/\">Resources for roles Copyright © 2026 World Wide Web Consortium<"
+            }
+          ],
+          "confirmada": true
+        },
+        {
+          "fuente": "DCMI Metadata Terms",
+          "url": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/",
+          "esperada": "CC BY 4.0 (por verificar)",
+          "fecha": "2026-11-07T23:43:32+00:00",
+          "http": 200,
+          "hallazgos": [
+            {
+              "patron": "Creative Commons Attribution 4.0",
+              "contexto": "0 hover:text-blue-900\" rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/\"> Creative Commons Attribution 4.0 International License . Please see the <a class=\"text-blue-800 underline visited:tex"
+            },
+            {
+              "patron": "creativecommons.org/licenses/by/4.0",
+              "contexto": "blue-800 underline visited:text-blue-700 hover:text-blue-900\" rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/\"> Creative Commons Attribution 4.0 International License . Please see the <a class="
+            },
+            {
+              "patron": "licensed under",
+              "contexto": "text-xs text-gray-500 xl:text-center\"> Unless indicated otherwise, DCMI documents are licensed under a <a class=\"text-blue-800 underline visited:text-blue-700 hover:text-blue-900\" rel=\"licen"
+            }
+          ],
+          "confirmada": true
+        }
+      ],
+      "licencias_modelos_ollama": {
+        "qwen3.5:0.8b": " Apache License Version 2.0, January 2004 http://www.apache.org/licenses/ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION 1. Definitions. \"License\" shall mean the terms and conditions for use, reproduction, and distribution as ",
+        "lfm3:1.7b-q4_K_M": "LFM Open License v1.0 TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION 1. Definitions. \"License\" shall mean the terms and conditions for use, reproduction, and distribution as defined by this document. \"Licensor\" shall mean Liqu",
+        "granite-embedding:278m": " Apache License Version 2.0, January 2004 http://www.apache.org/licenses/ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION 1. Definitions. \"License\" shall mean the terms and conditions for use, reproduction, and distribution as ",
+        "embeddinggemma-2:270m": "",
+        "embeddinggemma-2:440m": ""
+      },
+      "nota": "La decisión final por fuente se escribe en docs/LICENCIAS-Y-CORPUS.md (H2).",
+      "segundos": 3.5,
+      "nombre": "Licencias"
+    },
+    "0.1": {
+      "estado": "ok",
+      "modelo": "lfm3:1.7b-q4_K_M",
+      "respuesta_ejemplo": {
+        "titular": "Puesto de frutas en mercado",
+        "descripcion": "Un puesto de frutas en un mercado al aire libre, con cajas de mangos y piñas bajo un toldo azul. Al fondo hay personas caminando entre otros puestos.",
+        "texto_alternativo": "Puesto de frutas al aire libre con cajas de mangos y piñas bajo toldo azul; personas caminan alrededor.",
+        "descripcion_extendida": "",
+        "palabras_clave": [],
+        "advertencias": [
+          "No se identificó ninguna persona ni se inferió etnia, religión, salud, discapacidad u orientación."
+        ],
+        "fuentes": {
+          "foto": [
+            "xm-320a8e80036f6f4c"
+          ],
+          "regla": [
+            "iptc-2025.1#alt-text"
+          ],
+          "tesauro": [
+            "h0-6"
+          ]
+        }
+      },
+      "valido": true,
+      "errores": [],
+      "think_en_contenido": false,
+      "thinking_no_vacio": false,
+      "eval_count": 202,
+      "prompt_eval_count": 919,
+      "latencia_s": 45.005,
+      "carga_s": 3.349,
+      "done_reason": "stop",
+      "segundos": 45.0,
+      "nombre": "LFM3 en CPU con format"
+    },
+    "0.2": {
+      "estado": "ok",
+      "modelo": "qwen3.5:0.8b",
+      "validos": 5,
+      "con_think_en_contenido": 0,
+      "plan_b_aplicado": false,
+      "casos": [
+        {
+          "clave": "7f6b9e354d3969be",
+          "referencia_es": "Dos huevos estrellados con forma de sonrisa en un plato blanco",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una foto de un plato blanco con dos huevos fritos visibles.",
+            "elementos": [
+              "huevos fritos",
+              "plato blanco",
+              "huevos fritos",
+              "huevos fritos",
+              "huevos fritos",
+              "huevos fritos",
+              "huevos fritos",
+              "huevos fritos"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.75,
+          "contenido_chars": 423,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 164,
+          "prompt_eval_count": 498,
+          "latencia_s": 46.511,
+          "carga_s": 3.746,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            640,
+            480
+          ],
+          "prompt_eval_s": 24.96,
+          "eval_s": 17.77,
+          "tokens_por_s": 9.23
+        },
+        {
+          "clave": "f52e3f9a5bcd9cdb",
+          "referencia_es": "Vista de una ciudad lejana, nubes y cielo azul desde las montañas rocosas",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una vista panorámica desde una altura elevada que muestra un valle entre dos montañas rocosas de tonos oscuros y secos, con el cielo en el fondo lleno de nubes grises y blancas dispersas sobre un azul claro.",
+            "elementos": [
+              "montañas",
+              "ciudad",
+              "nubes",
+              "cielo",
+              "valle",
+              "rocas",
+              "altitud"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 501,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 181,
+          "prompt_eval_count": 484,
+          "latencia_s": 39.451,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            716,
+            428
+          ],
+          "prompt_eval_s": 23.55,
+          "eval_s": 15.84,
+          "tokens_por_s": 11.43
+        },
+        {
+          "clave": "4a82af2f402f4b55",
+          "referencia_es": "Vieja construcción abandonada en blanco y negro",
+          "p1": {
+            "tipo": "documento",
+            "descripcion_visual": "Una fachada antigua y deteriorada de concreto que presenta múltiples ventanas cerradas por muros metálicos con textura vertical, paredes con manchas de pintura y escamas, y una estructura superior con cables eléctricos superpuestos.",
+            "elementos": [
+              "fachada de concreto",
+              "ventanas cerradas",
+              "muros metálicos",
+              "cables eléctricos",
+              "paredes con manchas",
+              "escamas",
+              "textura vertical"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 594,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 184,
+          "prompt_eval_count": 492,
+          "latencia_s": 46.405,
+          "carga_s": 0.003,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            680,
+            451
+          ],
+          "prompt_eval_s": 24.74,
+          "eval_s": 21.6,
+          "tokens_por_s": 8.52
+        },
+        {
+          "clave": "d84270c074d0c907",
+          "referencia_es": "Perrita rottweiler con flor en el cuello cerca de un jardín",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una raza canina negra y marrón con collar de cadena y anillo, se encuentra sobre una superficie de baldosas negras en un patio o jardín.",
+            "elementos": [
+              "baldosas",
+              "canino",
+              "collar",
+              "anillo",
+              "piedras",
+              "jardín",
+              "pared",
+              "correa"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "interior"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 440,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 163,
+          "prompt_eval_count": 498,
+          "latencia_s": 42.481,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            479,
+            641
+          ],
+          "prompt_eval_s": 25.68,
+          "eval_s": 16.73,
+          "tokens_por_s": 9.74
+        },
+        {
+          "clave": "0d710305021a46b5",
+          "referencia_es": "Palanca, teclado sobre la mesa",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Un dispositivo de control de joystick negro y rojo sobre una mesa de madera, conectado a un teclado blanco y una fuente de energía.",
+            "elementos": [
+              "joystick",
+              "teclado",
+              "fuente de energía",
+              "mesa",
+              "cable"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "interior"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 398,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 137,
+          "prompt_eval_count": 498,
+          "latencia_s": 40.718,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            640,
+            480
+          ],
+          "prompt_eval_s": 25.18,
+          "eval_s": 15.44,
+          "tokens_por_s": 8.87
+        }
+      ],
+      "segundos": 215.6,
+      "nombre": "Qwen con imágenes y think:false"
+    },
+    "0.3": {
+      "candidatos": {
+        "embeddinggemma-2:270m": {
+          "capacidades": [
+            "embedding"
+          ],
+          "detalles": {
+            "parent_model": "sha256-111e84992a0406bacb70d11dddd8874001c783cc56b82c462ec82a2f5b8d08b1",
+            "format": "gguf",
+            "family": "gemma-embedding2",
+            "families": [
+              "gemma-embedding2"
+            ],
+            "parameter_size": "271.00M",
+            "quantization_level": "Q8_0",
+            "runner": "llamacpp"
+          },
+          "model_info": {
+            "gemma-embedding2.block_count": 24,
+            "gemma-embedding2.context_length": 262144,
+            "gemma-embedding2.embedding_length": 512,
+            "gemma-embedding2.embedding_length_out": 768,
+            "gemma-embedding2.embedding_length_per_layer_input": 512,
+            "gemma-embedding2.pooling_type": 1
+          },
+          "dimension_texto": 768,
+          "acepta_imagenes": false,
+          "error_imagen": "501: {\"error\":\"model does not support media embeddings\"}",
+          "pasa": false
+        },
+        "embeddinggemma-2:440m": {
+          "capacidades": [
+            "embedding",
+            "vision"
+          ],
+          "detalles": {
+            "parent_model": "models/blobs/sha256-111e84992a0406bacb70d11dddd8874001c783cc56b82c462ec82a2f5b8d08b1",
+            "format": "gguf",
+            "family": "gemma-embedding2",
+            "families": [
+              "gemma-embedding2"
+            ],
+            "parameter_size": "271.00M",
+            "quantization_level": "Q8_0",
+            "runner": "llamacpp"
+          },
+          "model_info": {
+            "gemma-embedding2.block_count": 24,
+            "gemma-embedding2.context_length": 262144,
+            "gemma-embedding2.embedding_length": 512,
+            "gemma-embedding2.embedding_length_out": 768,
+            "gemma-embedding2.embedding_length_per_layer_input": 512,
+            "gemma-embedding2.pooling_type": 1
+          },
+          "dimension_texto": 768,
+          "coseno_texto_vs_270m": 1.0,
+          "acepta_imagenes": true,
+          "dimension_imagen": 768,
+          "prueba_50_pares": {
+            "n_pares": 50,
+            "segundos_embeber_50_imagenes": 192.56,
+            "sin_prefijo": {
+              "tasa_par_correcto_gana": 1.0,
+              "r1_texto_a_imagen": 0.96,
+              "r5_texto_a_imagen": 1.0,
+              "r1_imagen_a_texto": 0.98,
+              "sim_media_correctos": 0.7203,
+              "sim_media_incorrectos": 0.5503
+            },
+            "consulta": {
+              "tasa_par_correcto_gana": 1.0,
+              "r1_texto_a_imagen": 0.96,
+              "r5_texto_a_imagen": 1.0,
+              "r1_imagen_a_texto": 0.96,
+              "sim_media_correctos": 0.7208,
+              "sim_media_incorrectos": 0.5437
+            },
+            "documento": {
+              "tasa_par_correcto_gana": 1.0,
+              "r1_texto_a_imagen": 0.96,
+              "r5_texto_a_imagen": 1.0,
+              "r1_imagen_a_texto": 0.94,
+              "sim_media_correctos": 0.7263,
+              "sim_media_incorrectos": 0.5869
+            }
+          },
+          "pasa": true
+        }
+      },
+      "criterio": "par correcto gana en ≥80 % de 50 pares (variante «consulta»)",
+      "prefijos": {
+        "consulta": "task: search result | query: ",
+        "documento": "title: none | text: ",
+        "fuente": "https://huggingface.co/google/embeddinggemma-2 (Best Practices §1)"
+      },
+      "elegido": "embeddinggemma-2:440m",
+      "estado": "plan_b",
+      "justificacion": "embeddinggemma-2:270m no entrega embeddings de imagen; embeddinggemma-2:440m es el tag más pequeño de Ollama que los entrega y pasa la prueba (05 §2, plan B). Ver ADR-10.",
+      "segundos": 220.6,
+      "nombre": "EmbeddingGemma-2 con imágenes"
+    },
+    "0.4": {
+      "estado": "ok",
+      "modelo": "granite-embedding:278m",
+      "dimension": 768,
+      "similitud_parafrasis_es": 0.8173,
+      "similitud_no_relacionada_es": 0.4067,
+      "tokens_procesados_texto_largo": 512,
+      "error_sin_truncar": "400: {\"error\":\"the input length exceeds the context length\"}",
+      "model_info": {
+        "bert.context_length": 512,
+        "bert.embedding_length": 768
+      },
+      "detalles": {
+        "parent_model": "/Users/administrator/.ollama/models/blobs/sha256-a658c903bf83a9d84fe1b9869874229ddfdfc1c88b04f958f17dd24e243d262c",
+        "format": "gguf",
+        "family": "bert",
+        "families": [
+          "bert"
+        ],
+        "parameter_size": "277.45M",
+        "quantization_level": "F16"
+      },
+      "longitud_maxima_medida_tokens": 512,
+      "embeddinggemma_tokens_texto_largo": {
+        "modelo": "embeddinggemma-2:440m",
+        "tokens": 1802
+      },
+      "segundos": 14.8,
+      "nombre": "granite-embedding"
+    },
+    "0.3b": {
+      "modelo": "embeddinggemma-2:440m",
+      "por_lado": {
+        "256": {
+          "segundos_por_imagen": 2.308,
+          "tasa_par_correcto_gana": 1.0,
+          "r1_texto_a_imagen": 0.98,
+          "r5_texto_a_imagen": 1.0
+        },
+        "384": {
+          "segundos_por_imagen": 2.198,
+          "tasa_par_correcto_gana": 1.0,
+          "r1_texto_a_imagen": 0.96,
+          "r5_texto_a_imagen": 1.0
+        },
+        "512": {
+          "segundos_por_imagen": 2.434,
+          "tasa_par_correcto_gana": 1.0,
+          "r1_texto_a_imagen": 0.98,
+          "r5_texto_a_imagen": 1.0
+        },
+        "768": {
+          "segundos_por_imagen": 3.978,
+          "tasa_par_correcto_gana": 1.0,
+          "r1_texto_a_imagen": 0.96,
+          "r5_texto_a_imagen": 1.0
+        }
+      },
+      "lado_elegido": {
+        "px": 384,
+        "regla": "entre los lados con calidad equivalente (R@5 a ≤0.04 del mejor y tasa de acierto ≥0.80), el de menor tiempo por imagen",
+        "nota": "recalculado con la regla corregida; la regla original («el lado más pequeño de calidad equivalente») daba 256 px"
+      },
+      "estado": "ok",
+      "segundos": 553.4,
+      "nombre": "Tamaño de imagen para el embedding"
+    },
+    "0.6b": {
+      "lado_px": 768,
+      "qwen_p1": {
+        "presence 0 (corrida 1)": {
+          "n": 4,
+          "validos": 2,
+          "truncados_por_longitud": 2,
+          "repeticion_media_en_listas": 0.182,
+          "ejemplos_invalidos": [
+            "{\n  \"tipo\": \"fotografia\",\n  \"descripcion_visual\": \"Una foto de comida en una mesa de madera oscura. En primer plano, hay una porción grande de comida en forma de olla o frito, que parece ser un huevo frito con verduras y carne. La comida ti",
+            "{\n  \"tipo\": \"fotografia\",\n  \"descripcion_visual\": \"Una fotografía nocturna de la ciudad de Belgrado, mostrando un puente de acero suspendido con luces amarillas que se extienden desde la izquierda hacia la derecha, con su estructura de cabl"
+          ],
+          "latencia": {
+            "n": 4,
+            "p50_s": 66.781,
+            "p95_s": 74.767,
+            "media_s": 63.755,
+            "max_s": 75.709
+          },
+          "prompt_eval": {
+            "n": 4,
+            "p50_s": 21.75,
+            "p95_s": 24.122,
+            "media_s": 16.965,
+            "max_s": 24.18
+          },
+          "generacion": {
+            "n": 4,
+            "p50_s": 45.565,
+            "p95_s": 54.369,
+            "media_s": 46.73,
+            "max_s": 55.92
+          },
+          "tokens_salida": {
+            "n": 4,
+            "p50_tokens": 315.5,
+            "p95_tokens": 350.0,
+            "media_tokens": 310.25,
+            "max_tokens": 350.0
+          },
+          "tokens_por_s_medio": 6.66,
+          "calidad_media_granite": 0.7026
+        },
+        "presence 1.5 (valor del modelo)": {
+          "n": 4,
+          "validos": 4,
+          "truncados_por_longitud": 0,
+          "repeticion_media_en_listas": 0.0,
+          "ejemplos_invalidos": [],
+          "latencia": {
+            "n": 4,
+            "p50_s": 36.906,
+            "p95_s": 48.707,
+            "media_s": 38.617,
+            "max_s": 49.791
+          },
+          "prompt_eval": {
+            "n": 4,
+            "p50_s": 0.25,
+            "p95_s": 0.349,
+            "media_s": 0.265,
+            "max_s": 0.36
+          },
+          "generacion": {
+            "n": 4,
+            "p50_s": 36.54,
+            "p95_s": 48.392,
+            "media_s": 38.27,
+            "max_s": 49.5
+          },
+          "tokens_salida": {
+            "n": 4,
+            "p50_tokens": 223.0,
+            "p95_tokens": 269.75,
+            "media_tokens": 228.75,
+            "max_tokens": 275.0
+          },
+          "tokens_por_s_medio": 6.07,
+          "calidad_media_granite": 0.7268
+        },
+        "presence 1.5 + sin draft": {
+          "n": 4,
+          "validos": 4,
+          "truncados_por_longitud": 0,
+          "repeticion_media_en_listas": 0.0,
+          "ejemplos_invalidos": [],
+          "latencia": {
+            "n": 4,
+            "p50_s": 44.238,
+            "p95_s": 47.92,
+            "media_s": 44.181,
+            "max_s": 48.318
+          },
+          "prompt_eval": {
+            "n": 4,
+            "p50_s": 23.085,
+            "p95_s": 23.659,
+            "media_s": 22.303,
+            "max_s": 23.71
+          },
+          "generacion": {
+            "n": 4,
+            "p50_s": 19.425,
+            "p95_s": 27.553,
+            "media_s": 21.072,
+            "max_s": 28.92
+          },
+          "tokens_salida": {
+            "n": 4,
+            "p50_tokens": 228.0,
+            "p95_tokens": 303.85,
+            "media_tokens": 241.75,
+            "max_tokens": 316.0
+          },
+          "tokens_por_s_medio": 11.55,
+          "calidad_media_granite": 0.7098
+        },
+        "presence 1.5 + num_predict 500": {
+          "n": 4,
+          "validos": 4,
+          "truncados_por_longitud": 0,
+          "repeticion_media_en_listas": 0.263,
+          "ejemplos_invalidos": [],
+          "latencia": {
+            "n": 4,
+            "p50_s": 65.907,
+            "p95_s": 83.494,
+            "media_s": 67.665,
+            "max_s": 85.523
+          },
+          "prompt_eval": {
+            "n": 4,
+            "p50_s": 23.845,
+            "p95_s": 24.41,
+            "media_s": 22.975,
+            "max_s": 24.44
+          },
+          "generacion": {
+            "n": 4,
+            "p50_s": 43.72,
+            "p95_s": 57.166,
+            "media_s": 43.623,
+            "max_s": 58.05
+          },
+          "tokens_salida": {
+            "n": 4,
+            "p50_tokens": 272.0,
+            "p95_tokens": 353.05,
+            "media_tokens": 266.0,
+            "max_tokens": 355.0
+          },
+          "tokens_por_s_medio": 6.03,
+          "calidad_media_granite": 0.7082
+        },
+        "presence 1.5 + sin format": {
+          "n": 4,
+          "validos": 0,
+          "truncados_por_longitud": 0,
+          "repeticion_media_en_listas": null,
+          "ejemplos_invalidos": [
+            "```json\n[\n  {\n    \"texto_visible\": \"no se distingue\",\n    \"descripcion\": \"La imagen muestra una escena de un entorno urbano o rural con edificios de varios pisos y árboles en el fondo. En primer plano, hay una persona con cabello oscuro que",
+            "```json\n[\n  {\n    \"text_visible\": \"Una platanera blanca con una comida que parece ser un frito de huevo y carne. La comida está cubierta por una capa de masa amarilla y tiene ingredientes visibles como verduras, especias y quizás algún tipo"
+          ],
+          "latencia": {
+            "n": 4,
+            "p50_s": 27.01,
+            "p95_s": 30.251,
+            "media_s": 25.007,
+            "max_s": 30.397
+          },
+          "prompt_eval": {
+            "n": 4,
+            "p50_s": 0.265,
+            "p95_s": 0.357,
+            "media_s": 0.265,
+            "max_s": 0.36
+          },
+          "generacion": {
+            "n": 4,
+            "p50_s": 26.575,
+            "p95_s": 29.979,
+            "media_s": 24.668,
+            "max_s": 30.15
+          },
+          "tokens_salida": {
+            "n": 4,
+            "p50_tokens": 149.5,
+            "p95_tokens": 253.45,
+            "media_tokens": 164.5,
+            "max_tokens": 268.0
+          },
+          "tokens_por_s_medio": 6.5,
+          "calidad_media_granite": null
+        }
+      },
+      "lfm3_p3": {
+        "base": {
+          "n": 3,
+          "validos": 3,
+          "truncados_por_longitud": 0,
+          "repeticion_media_en_listas": null,
+          "ejemplos_invalidos": [],
+          "latencia": {
+            "n": 3,
+            "p50_s": 29.817,
+            "p95_s": 40.142,
+            "media_s": 32.822,
+            "max_s": 41.289
+          },
+          "prompt_eval": {
+            "n": 3,
+            "p50_s": 8.9,
+            "p95_s": 17.063,
+            "media_s": 11.863,
+            "max_s": 17.97
+          },
+          "generacion": {
+            "n": 3,
+            "p50_s": 21.09,
+            "p95_s": 22.917,
+            "media_s": 20.847,
+            "max_s": 23.12
+          },
+          "tokens_salida": {
+            "n": 3,
+            "p50_tokens": 234.0,
+            "p95_tokens": 240.3,
+            "media_tokens": 224.667,
+            "max_tokens": 241.0
+          },
+          "tokens_por_s_medio": 10.79
+        },
+        "sin draft (draft_num_predict 0)": {
+          "n": 3,
+          "validos": 3,
+          "truncados_por_longitud": 0,
+          "repeticion_media_en_listas": null,
+          "ejemplos_invalidos": [],
+          "latencia": {
+            "n": 3,
+            "p50_s": 28.785,
+            "p95_s": 29.716,
+            "media_s": 28.806,
+            "max_s": 29.819
+          },
+          "prompt_eval": {
+            "n": 3,
+            "p50_s": 8.89,
+            "p95_s": 8.917,
+            "media_s": 8.723,
+            "max_s": 8.92
+          },
+          "generacion": {
+            "n": 3,
+            "p50_s": 19.85,
+            "p95_s": 21.29,
+            "media_s": 20.067,
+            "max_s": 21.45
+          },
+          "tokens_salida": {
+            "n": 3,
+            "p50_tokens": 204.0,
+            "p95_tokens": 217.5,
+            "media_tokens": 205.333,
+            "max_tokens": 219.0
+          },
+          "tokens_por_s_medio": 10.23
+        }
+      },
+      "estado": "ok",
+      "segundos": 1221.2,
+      "nombre": "Opciones de rendimiento en CPU",
+      "analisis": {
+        "cache_de_prompt": {
+          "presence 0 (corrida 1)": 21.75,
+          "presence 1.5 (valor del modelo)": 0.25,
+          "presence 1.5 + sin draft": 23.085,
+          "presence 1.5 + num_predict 500": 23.845,
+          "presence 1.5 + sin format": 0.265
+        },
+        "tokens_por_s_generacion": {
+          "presence 0 (corrida 1)": 6.66,
+          "presence 1.5 (valor del modelo)": 6.07,
+          "presence 1.5 + sin draft": 11.55,
+          "presence 1.5 + num_predict 500": 6.03,
+          "presence 1.5 + sin format": 6.5
+        },
+        "conclusion": "La latencia total de las configuraciones que repitieron exactamente el prompt anterior con la misma imagen está sesgada: Ollama reutilizó la caché de prompt (prefill de ~0.25 s en lugar de ~23 s). Por eso el efecto del draft se decide con la velocidad de generación: sin draft Qwen genera más tokens por segundo. Decisión: draft_num_predict 0 para Qwen. presence_penalty 1.5 elimina la repetición; sin `format` no hay JSON válido; num_predict 500 alarga la salida."
+      }
+    },
+    "0.2_corrida1": {
+      "estado": "bloqueo",
+      "modelo": "qwen3.5:0.8b",
+      "validos": 3,
+      "con_think_en_contenido": 0,
+      "plan_b_aplicado": false,
+      "casos": [
+        {
+          "clave": "7f6b9e354d3969be",
+          "referencia_es": "Dos huevos estrellados con forma de sonrisa en un plato blanco",
+          "p1": null,
+          "valido": false,
+          "errores": [
+            "JSON inválido: Unterminated string starting at: line 25 column 5 (char 1176)"
+          ],
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 350,
+          "prompt_eval_count": 437,
+          "latencia_s": 76.672,
+          "carga_s": 4.685,
+          "done_reason": "length",
+          "tamano_enviado": [
+            640,
+            480
+          ]
+        },
+        {
+          "clave": "f52e3f9a5bcd9cdb",
+          "referencia_es": "Vista de una ciudad lejana, nubes y cielo azul desde las montañas rocosas",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una vista panorámica de un paisaje montañoso con un cielo parcialmente nublado. En primer plano, se observan dos montañas con pendientes pronunciadas y vegetación seca, que se extienden desde los bordes izquierdo y derecho de la imagen. El cielo, que ocupa la parte superior de la composición, muestra nubes blancas y grises sobre un azul claro. A través de la brecha entre las montañas, se aprecia una ciudad o densa masa urbana en el horizonte lejano, que se ve difuminada por la atmósfera y el aire. La iluminación parece ser natural y difusa, sin sombras duras.",
+            "elementos": [
+              "montañas",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad"
+            ],
+            "texto_visible": [
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad",
+              "ciudad"
+            ],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 343,
+          "prompt_eval_count": 423,
+          "latencia_s": 81.808,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            716,
+            428
+          ]
+        },
+        {
+          "clave": "4a82af2f402f4b55",
+          "referencia_es": "Vieja construcción abandonada en blanco y negro",
+          "p1": null,
+          "valido": false,
+          "errores": [
+            "JSON inválido: Expecting value: line 23 column 27 (char 1327)"
+          ],
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 350,
+          "prompt_eval_count": 431,
+          "latencia_s": 74.115,
+          "carga_s": 0.003,
+          "done_reason": "length",
+          "tamano_enviado": [
+            680,
+            451
+          ]
+        },
+        {
+          "clave": "d84270c074d0c907",
+          "referencia_es": "Perrita rottweiler con flor en el cuello cerca de un jardín",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una fotografía de una raza de perro de raza Rottweiler. El perro tiene un cuerpo negro con manchas marrones en las patas y la cola. Está mirando hacia la izquierda, con su cola levantada. El perro tiene un collar con un anillo de metal y un anillo de cadena. La foto está tomada en un patio con suelo de baldosas de piedra oscura. En el fondo hay un muro de concreto, una grama verde, un árbol de hoja enano y una casa con ventanas con persianas marrones.",
+            "elementos": [
+              "Perro de raza Rottweiler",
+              "Collar con anillo de metal y cadena",
+              "Suelo de baldosas de piedra",
+              "Muro de concreto",
+              "Grama verde",
+              "Árbol de hoja enano",
+              "Casa con ventanas con persianas marrones"
+            ],
+            "texto_visible": [
+              "Perro de raza Rottweiler",
+              "Collar con anillo de metal y cadena",
+              "Suelo de baldosas de piedra",
+              "Muro de concreto",
+              "Grama verde",
+              "Árbol de hoja enano",
+              "Casa con ventanas con persianas marrones"
+            ],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "interior"
+          },
+          "valido": true,
+          "errores": [],
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 345,
+          "prompt_eval_count": 437,
+          "latencia_s": 69.301,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            479,
+            641
+          ]
+        },
+        {
+          "clave": "0d710305021a46b5",
+          "referencia_es": "Palanca, teclado sobre la mesa",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una foto de una impresora de teclado (padstick) de color rojo y negro, colocada sobre una mesa de madera. El teclado es blanco y se ve parcialmente oculto detrás de la impresora. La impresora tiene un botón rojo en la parte superior y una base redondeada. La impresora está conectada a una fuente de energía gris con cables.",
+            "elementos": [
+              "impresora de teclado",
+              "teclado",
+              "mesa",
+              "cables",
+              "fuente de energía"
+            ],
+            "texto_visible": [
+              "impresora de teclado"
+            ],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "interior"
+          },
+          "valido": true,
+          "errores": [],
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 207,
+          "prompt_eval_count": 437,
+          "latencia_s": 53.534,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            640,
+            480
+          ]
+        }
+      ],
+      "segundos": 355.5,
+      "nombre": "Qwen con imágenes y think:false",
+      "nota": "1ª corrida con presence_penalty 0 (sobrescrito por nosotros); se conserva como evidencia. La corrida 3 repite 0.2 con 1.5."
+    },
+    "0.2_corrida3": {
+      "estado": "bloqueo",
+      "modelo": "qwen3.5:0.8b",
+      "validos": 4,
+      "con_think_en_contenido": 0,
+      "plan_b_aplicado": false,
+      "casos": [
+        {
+          "clave": "7f6b9e354d3969be",
+          "referencia_es": "Dos huevos estrellados con forma de sonrisa en un plato blanco",
+          "p1": null,
+          "valido": false,
+          "errores": [
+            "JSON inválido: Unterminated string starting at: line 20 column 5 (char 1311)"
+          ],
+          "repeticion_en_listas": null,
+          "contenido_chars": 1369,
+          "inicio_si_invalido": "{\n  \"tipo\": \"fotografia\",\n  \"descripcion_visual\": \"Una foto de una comida que parece ser huevos fritos o crepes. En la parte superior hay un plato blanco con un borde redondeado, y en el centro se encuentran dos huevos fritos con claras bla",
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 350,
+          "prompt_eval_count": 437,
+          "latencia_s": 87.667,
+          "carga_s": 0.003,
+          "done_reason": "length",
+          "tamano_enviado": [
+            640,
+            480
+          ],
+          "prompt_eval_s": 25.17,
+          "eval_s": 62.39,
+          "tokens_por_s": 5.61
+        },
+        {
+          "clave": "f52e3f9a5bcd9cdb",
+          "referencia_es": "Vista de una ciudad lejana, nubes y cielo azul desde las montañas rocosas",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una vista panorámica desde una altura elevada que muestra un valle o valle entre dos montañas rocosas de tonos marrones y oscuros en primer plano. En el horizonte, se observa la ciudad de Tokio con sus edificios urbanos dispersos bajo un cielo parcialmente nublado con nubes blancas y grises.",
+            "elementos": [
+              "montañas rocosas",
+              "valle entre montañas",
+              "ciudad de Tokio en el fondo"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 576,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 181,
+          "prompt_eval_count": 423,
+          "latencia_s": 58.841,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            716,
+            428
+          ],
+          "prompt_eval_s": 23.1,
+          "eval_s": 35.68,
+          "tokens_por_s": 5.07
+        },
+        {
+          "clave": "4a82af2f402f4b55",
+          "referencia_es": "Vieja construcción abandonada en blanco y negro",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una fotografía en blanco y negro que muestra una fachada de edificio antiguo o deteriorado. La parte superior presenta dos ventanas con vidrios oscuros, mientras que la parte inferior está cubierta por grandes puertas metálicas con textura vertical. El muro parece estar deteriorado, con manchas de humedad, pintura quemada o descascarada, y líneas de cables eléctricos superpuestos sobre el techo. La imagen es en blanco y negro.",
+            "elementos": [
+              "fachada de edificio",
+              "pareds deterioradas",
+              "vidrios oscuros",
+              "puertas metálicas con textura vertical",
+              "cables eléctricos",
+              "manchas de humedad o pintura quemada"
+            ],
+            "texto_visible": [
+              "no se distingue"
+            ],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 844,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 237,
+          "prompt_eval_count": 431,
+          "latencia_s": 63.791,
+          "carga_s": 0.004,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            680,
+            451
+          ],
+          "prompt_eval_s": 24.45,
+          "eval_s": 39.27,
+          "tokens_por_s": 6.04
+        },
+        {
+          "clave": "d84270c074d0c907",
+          "referencia_es": "Perrita rottweiler con flor en el cuello cerca de un jardín",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una fotografía de un perro de raza Rottweiler (Russeto) de color negro con manchas marrones en las patas y la cola, que se encuentra de pie sobre una superficie de baldosas grises. El perro lleva un collar con anillos metálicos y una pequeña cadena rosa. La escena está ubicada en un patio o jardín exterior, donde hay una pared de concreto gris claro, un césped verde, una semilla de árbol y una casa blanca con ventanas con persianas marrones. La iluminación parece ser natural y difusa.",
+            "elementos": [
+              "Perro Rottweiler",
+              "Collar con anillos metálicos y cadena rosa",
+              "Pared de concreto gris claro",
+              "Césped verde",
+              "Semilla de árbol",
+              "Casa blanca con ventanas con persianas marrones",
+              "Baldosas grises"
+            ],
+            "texto_visible": [
+              "Perro Rottweiler",
+              "Collar con anillos metálicos y cadena rosa",
+              "Pared de concreto gris claro",
+              "Césped verde",
+              "Semilla de árbol",
+              "Casa blanca con ventanas con persianas marrones",
+              "Baldosas grises"
+            ],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "interior"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.5,
+          "contenido_chars": 1145,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 343,
+          "prompt_eval_count": 437,
+          "latencia_s": 77.319,
+          "carga_s": 0.003,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            479,
+            641
+          ],
+          "prompt_eval_s": 24.39,
+          "eval_s": 52.86,
+          "tokens_por_s": 6.49
+        },
+        {
+          "clave": "0d710305021a46b5",
+          "referencia_es": "Palanca, teclado sobre la mesa",
+          "p1": {
+            "tipo": "fotografia",
+            "descripcion_visual": "Una fotografía de un dispositivo electrónico sobre una mesa de madera clara. El dispositivo principal es un mando de joystick o controlador con base roja y cuerpo negro, que tiene un botón rojo en la parte superior. Está conectado a una cable negra que se extiende hacia el fondo. Al lado del mando, hay un interruptor eléctrico blanco con varios interruptores individuales. En el fondo, parcialmente visible, está una computadora portátil blanca con teclado de estilo clásico.",
+            "elementos": [
+              "manjo de joystick",
+              "interruptor eléctrico",
+              "teclado de computadora",
+              "mesa de madera"
+            ],
+            "texto_visible": [],
+            "personas": {
+              "hay_personas": false,
+              "cantidad": "0"
+            },
+            "escena": "no_se_distingue"
+          },
+          "valido": true,
+          "errores": [],
+          "repeticion_en_listas": 0.0,
+          "contenido_chars": 780,
+          "inicio_si_invalido": null,
+          "think_en_contenido": false,
+          "thinking_no_vacio": false,
+          "eval_count": 206,
+          "prompt_eval_count": 437,
+          "latencia_s": 58.753,
+          "carga_s": 0.002,
+          "done_reason": "stop",
+          "tamano_enviado": [
+            640,
+            480
+          ],
+          "prompt_eval_s": 24.16,
+          "eval_s": 34.53,
+          "tokens_por_s": 5.97
+        }
+      ],
+      "segundos": 346.4,
+      "nombre": "Qwen con imágenes y think:false",
+      "nota": "3ª corrida: presence_penalty 1.5, draft activo y P1 v1 (spec 07). 4/5 válidos: una foto rebasó num_predict. Motivó P1 v2 (más breve)."
+    },
+    "0.6": {
+      "embedding_principal": "embeddinggemma-2:440m",
+      "embedding_imagen": {
+        "n": 20,
+        "p50_s": 2.464,
+        "p95_s": 2.775,
+        "media_s": 2.406,
+        "max_s": 3.185,
+        "lado_px": 384
+      },
+      "embedding_texto": {
+        "n": 20,
+        "p50_s": 0.159,
+        "p95_s": 0.297,
+        "media_s": 0.19,
+        "max_s": 0.615
+      },
+      "embedding_texto_granite": {
+        "n": 20,
+        "p50_s": 0.051,
+        "p95_s": 0.129,
+        "media_s": 0.068,
+        "max_s": 0.24
+      },
+      "p1_por_lado": {
+        "512": {
+          "latencia": {
+            "n": 8,
+            "p50_s": 34.28,
+            "p95_s": 38.499,
+            "media_s": 34.52,
+            "max_s": 38.622
+          },
+          "validos": 8,
+          "n": 8,
+          "calidad_media_granite": 0.6835,
+          "prompt_eval_count_medio": 388,
+          "tamanos_enviados": [
+            [
+              512,
+              384
+            ],
+            [
+              512,
+              383
+            ],
+            [
+              378,
+              512
+            ],
+            [
+              512,
+              384
+            ],
+            [
+              512,
+              384
+            ],
+            [
+              512,
+              340
+            ],
+            [
+              512,
+              384
+            ],
+            [
+              512,
+              384
+            ]
+          ]
+        },
+        "768": {
+          "latencia": {
+            "n": 8,
+            "p50_s": 43.37,
+            "p95_s": 48.977,
+            "media_s": 43.973,
+            "max_s": 49.578
+          },
+          "validos": 8,
+          "n": 8,
+          "calidad_media_granite": 0.696,
+          "prompt_eval_count_medio": 497.2,
+          "tamanos_enviados": [
+            [
+              640,
+              480
+            ],
+            [
+              641,
+              479
+            ],
+            [
+              476,
+              644
+            ],
+            [
+              640,
+              480
+            ],
+            [
+              640,
+              480
+            ],
+            [
+              679,
+              451
+            ],
+            [
+              640,
+              480
+            ],
+            [
+              640,
+              480
+            ]
+          ]
+        },
+        "1024": {
+          "latencia": {
+            "n": 8,
+            "p50_s": 40.414,
+            "p95_s": 50.736,
+            "media_s": 42.186,
+            "max_s": 51.707
+          },
+          "validos": 8,
+          "n": 8,
+          "calidad_media_granite": 0.6973,
+          "prompt_eval_count_medio": 497.2,
+          "tamanos_enviados": [
+            [
+              640,
+              480
+            ],
+            [
+              641,
+              479
+            ],
+            [
+              476,
+              644
+            ],
+            [
+              640,
+              480
+            ],
+            [
+              640,
+              480
+            ],
+            [
+              679,
+              451
+            ],
+            [
+              640,
+              480
+            ],
+            [
+              640,
+              480
+            ]
+          ]
+        }
+      },
+      "lado_elegido": {
+        "px": 512,
+        "regla": "el lado más pequeño cuya calidad media esté a ≤0.02 de la mejor"
+      },
+      "p3_lfm3": {
+        "latencia": {
+          "n": 8,
+          "p50_s": 39.351,
+          "p95_s": 59.444,
+          "media_s": 42.764,
+          "max_s": 63.208
+        },
+        "validos": 8,
+        "n": 8,
+        "tokens_salida": {
+          "n": 8,
+          "p50_tokens": 263.0,
+          "p95_tokens": 430.2,
+          "media_tokens": 280.125,
+          "max_tokens": 475.0
+        },
+        "prompt_eval_count_medio": 924.1
+      },
+      "p3_qwen_texto": {
+        "latencia": {
+          "n": 5,
+          "p50_s": 35.583,
+          "p95_s": 42.178,
+          "media_s": 34.953,
+          "max_s": 43.068
+        },
+        "validos": 5,
+        "n": 5
+      },
+      "adr11_think_y_format": {
+        "think_true": {
+          "p1_qwen": {
+            "latencia": {
+              "n": 3,
+              "p50_s": 66.206,
+              "p95_s": 106.56,
+              "media_s": 78.465,
+              "max_s": 111.044
+            },
+            "validos": 2,
+            "n": 3,
+            "con_thinking": 3
+          },
+          "p3_lfm3": {
+            "latencia": {
+              "n": 3,
+              "p50_s": 107.411,
+              "p95_s": 113.143,
+              "media_s": 107.524,
+              "max_s": 113.78
+            },
+            "validos": 0,
+            "n": 3,
+            "con_thinking": 3
+          }
+        },
+        "think_false": {
+          "p1_qwen": {
+            "latencia": {
+              "n": 3,
+              "p50_s": 41.893,
+              "p95_s": 43.26,
+              "media_s": 41.362,
+              "max_s": 43.412
+            },
+            "validos": 3,
+            "n": 3,
+            "con_thinking": 0
+          },
+          "p3_lfm3": {
+            "latencia": {
+              "n": 3,
+              "p50_s": 51.896,
+              "p95_s": 55.925,
+              "media_s": 50.547,
+              "max_s": 56.373
+            },
+            "validos": 3,
+            "n": 3,
+            "con_thinking": 0
+          }
+        },
+        "p3_lfm3_sin_format": {
+          "latencia": {
+            "n": 3,
+            "p50_s": 29.9,
+            "p95_s": 34.656,
+            "media_s": 31.483,
+            "max_s": 35.184
+          },
+          "validos": 0,
+          "n": 3
+        }
+      },
+      "tiempos_limite_sugeridos_s": {
+        "qwen_imagen": 58,
+        "qwen_texto": 64,
+        "lfm3": 90,
+        "embedding": 5,
+        "regla": "1.5 × p95 medido, redondeado hacia arriba (mínimo 10 s para LLM y 5 s para embeddings); None = no se pudo medir"
+      },
+      "errores": {},
+      "estado": "ok",
+      "segundos": 2516.2,
+      "nombre": "Latencias en CPU"
+    },
+    "0.5": {
+      "estado": "ok",
+      "ventana": {
+        "inicio": "2026-11-08T01:45:21+00:00",
+        "fin": "2026-11-08T01:49:24+00:00"
+      },
+      "ciclos_ficha": [
+        {
+          "p1_s": 37.908,
+          "p3_s": 47.841
+        },
+        {
+          "p1_s": 39.618,
+          "p3_s": 41.789
+        },
+        {
+          "p1_s": 30.709,
+          "p3_s": 33.297
+        }
+      ],
+      "modelos_cargados": [
+        {
+          "modelo": "granite-embedding:278m",
+          "tamano_bytes": 573204068,
+          "tamano_vram_bytes": 0,
+          "contexto": 512,
+          "expira": "2319-02-18T01:36:41.052722107Z"
+        },
+        {
+          "modelo": "embeddinggemma-2:440m",
+          "tamano_bytes": 634535279,
+          "tamano_vram_bytes": 0,
+          "contexto": 4096,
+          "expira": "2319-02-18T01:36:40.816292482Z"
+        },
+        {
+          "modelo": "lfm3:1.7b-q4_K_M",
+          "tamano_bytes": 1388650166,
+          "tamano_vram_bytes": 0,
+          "contexto": 4096,
+          "expira": "2319-02-18T01:36:38.054817981Z"
+        },
+        {
+          "modelo": "qwen3.5:0.8b",
+          "tamano_bytes": 1352652551,
+          "tamano_vram_bytes": 0,
+          "contexto": 4096,
+          "expira": "2319-02-18T01:36:04.759400354Z"
+        }
+      ],
+      "cuatro_cargados_a_la_vez": true,
+      "suma_tamano_modelos_bytes": 3949042064,
+      "suma_tamano_modelos_gib": 3.678,
+      "nota": "El uso real por contenedor se toma de `docker stats` (h0_docker_stats.jsonl, --incorporar-memoria).",
+      "segundos": 244.0,
+      "nombre": "Memoria",
+      "docker_stats": {
+        "fuentes": [
+          "h0_docker_stats.jsonl",
+          "h0_cgroup_ollama.txt"
+        ],
+        "cgroup_ollama_al_final": {
+          "memory_current": 5359644672,
+          "memory_peak": 5368733696,
+          "memory_max": 5368709120,
+          "anon": 4883509248,
+          "file": 457580544,
+          "inactive_file": 457240576,
+          "active_file": 339968,
+          "max": 2398,
+          "oom": 0,
+          "oom_kill": 0,
+          "memory_current_gib": 4.992,
+          "memory_peak_gib": 5.0,
+          "anon_gib": 4.548,
+          "file_gib": 0.426,
+          "inactive_file_gib": 0.426,
+          "nota": "anon = memoria anónima (modelos, KV cache y búferes); file = caché de archivos recuperable; memory_peak = pico desde que arrancó el contenedor; max = veces que el uso tocó el límite (el kernel recupera caché de archivos); oom_kill > 0 = el kernel mató un proceso por memoria."
+        },
+        "estado": "ok",
+        "pico_por_contenedor_gib": {
+          "fototeca-viva-ollama-1": 4.592,
+          "fototeca-viva-qdrant-1": 0.21,
+          "fototeca-viva-servicio-run-11a201e51211": 0.053
+        },
+        "pico_en_ventana_0_5_gib": {
+          "fototeca-viva-ollama-1": 4.565,
+          "fototeca-viva-qdrant-1": 0.21,
+          "fototeca-viva-servicio-run-11a201e51211": 0.05
+        },
+        "limite_por_contenedor_gib": {
+          "fototeca-viva-ollama-1": 5.0,
+          "fototeca-viva-qdrant-1": 0.5,
+          "fototeca-viva-servicio-run-11a201e51211": 1.5
+        },
+        "pico_suma_en_ventana_gib": 4.813,
+        "contenedores_que_alcanzan_su_limite": {},
+        "muestras": 1495
+      }
+    },
+    "0.5_sin_limite_cache": {
+      "estado": "ok",
+      "ventana": {
+        "inicio": "2026-11-08T00:56:00+00:00",
+        "fin": "2026-11-08T01:01:26+00:00"
+      },
+      "ciclos_ficha": [
+        {
+          "p1_s": 53.078,
+          "p3_s": 52.759
+        },
+        {
+          "p1_s": 62.209,
+          "p3_s": 53.501
+        },
+        {
+          "p1_s": 49.418,
+          "p3_s": 42.228
+        }
+      ],
+      "modelos_cargados": [
+        {
+          "modelo": "embeddinggemma-2:440m",
+          "tamano_bytes": 634535279,
+          "tamano_vram_bytes": 0,
+          "contexto": 4096,
+          "expira": "2319-02-18T00:48:43.014584859Z"
+        },
+        {
+          "modelo": "granite-embedding:278m",
+          "tamano_bytes": 573204068,
+          "tamano_vram_bytes": 0,
+          "contexto": 512,
+          "expira": "2319-02-18T00:48:43.198241359Z"
+        },
+        {
+          "modelo": "lfm3:1.7b-q4_K_M",
+          "tamano_bytes": 1388650166,
+          "tamano_vram_bytes": 0,
+          "contexto": 4096,
+          "expira": "2319-02-18T00:48:40.573261649Z"
+        },
+        {
+          "modelo": "qwen3.5:0.8b",
+          "tamano_bytes": 1352652551,
+          "tamano_vram_bytes": 0,
+          "contexto": 4096,
+          "expira": "2319-02-18T00:47:58.340196894Z"
+        }
+      ],
+      "cuatro_cargados_a_la_vez": true,
+      "suma_tamano_modelos_bytes": 3949042064,
+      "suma_tamano_modelos_gib": 3.678,
+      "nota": "Corrida 4, con la caché de prompts de llama-server en su valor por defecto (8192 MiB por modelo). El contenedor ollama llegó a su límite de 5g y el kernel mató un proceso del modelo durante 0.6 (memory.events: oom_kill). Las latencias de estos ciclos se tomaron con el contenedor en su límite de memoria. ADR-12.",
+      "segundos": 328.2,
+      "nombre": "Memoria",
+      "docker_stats": {
+        "fuentes": [
+          "h0_docker_stats_antes.jsonl",
+          "h0_cgroup_ollama_antes.txt"
+        ],
+        "cgroup_ollama_al_final": {
+          "memory_current": 5358129152,
+          "memory_peak": 5368725504,
+          "memory_max": 5368709120,
+          "anon": 4221181952,
+          "file": 1103986688,
+          "inactive_file": 1095942144,
+          "active_file": 8044544,
+          "max": 12365,
+          "oom": 1,
+          "oom_kill": 1,
+          "memory_current_gib": 4.99,
+          "memory_peak_gib": 5.0,
+          "anon_gib": 3.931,
+          "file_gib": 1.028,
+          "inactive_file_gib": 1.021,
+          "nota": "anon = memoria anónima (modelos, KV cache y búferes); file = caché de archivos recuperable; memory_peak = pico desde que arrancó el contenedor; max = veces que el uso tocó el límite (el kernel recupera caché de archivos); oom_kill > 0 = el kernel mató un proceso por memoria."
+        },
+        "estado": "revisar",
+        "pico_por_contenedor_gib": {
+          "fototeca-viva-ollama-1": 5.0,
+          "fototeca-viva-qdrant-1": 0.21,
+          "fototeca-viva-servicio-1": 0.054,
+          "fototeca-viva-servicio-run-3072d7f13cd0": 0.057,
+          "fototeca-viva-servicio-run-6d3592fbd059": 0.039,
+          "fototeca-viva-servicio-run-984cf062a30a": 0.066,
+          "fototeca-viva-servicio-run-e9e9f9f2dbef": 0.055,
+          "fototeca-viva-servicio-run-f5fb58091ba5": 0.08,
+          "fototeca-viva-web-1": 0.007
+        },
+        "pico_en_ventana_0_5_gib": {
+          "fototeca-viva-ollama-1": 4.189,
+          "fototeca-viva-qdrant-1": 0.21,
+          "fototeca-viva-servicio-run-e9e9f9f2dbef": 0.055
+        },
+        "limite_por_contenedor_gib": {
+          "fototeca-viva-ollama-1": 5.0,
+          "fototeca-viva-qdrant-1": 0.5,
+          "fototeca-viva-servicio-1": 1.5,
+          "fototeca-viva-servicio-run-3072d7f13cd0": 1.5,
+          "fototeca-viva-servicio-run-6d3592fbd059": 1.5,
+          "fototeca-viva-servicio-run-984cf062a30a": 1.5,
+          "fototeca-viva-servicio-run-e9e9f9f2dbef": 1.5,
+          "fototeca-viva-servicio-run-f5fb58091ba5": 1.5,
+          "fototeca-viva-web-1": 0.062
+        },
+        "pico_suma_en_ventana_gib": 4.435,
+        "contenedores_que_alcanzan_su_limite": {
+          "fototeca-viva-ollama-1": 5.0
+        },
+        "muestras": 2673
+      }
+    },
+    "0.6_corrida4": {
+      "estado": "error",
+      "error": "ErrorOllama: 500: {\"error\":\"an error was encountered while running the model: unexpected EOF\"}",
+      "traza": "Traceback (most recent call last):\n  File \"/app/scripts/verificar_h0.py\", line 965, in main\n    resultado = funcion(oll)\n                ^^^^^^^^^^^^\n  File \"/app/scripts/verificar_h0.py\", line 775, in v06_latencias\n    a = _p3(oll, QWEN, o, vecinos)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/scripts/verificar_h0.py\", line 456, in _p3\n    resp = oll.chat(modelo, [{\"role\": \"system\", \"content\": P3_SISTEMA}, {\"role\": \"user\", \"content\": usuario}],\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/scripts/verificar_h0.py\", line 158, in chat\n    raise ErrorOllama(f\"{r.status_code}: {r.text[:300]}\")\nErrorOllama: 500: {\"error\":\"an error was encountered while running the model: unexpected EOF\"}\n",
+      "segundos": 1190.5,
+      "nombre": "Latencias en CPU",
+      "p1_por_lado_segun_log": {
+        "512": {
+          "n": 8,
+          "p50_s": 31.104,
+          "p95_s": 37.501,
+          "media_s": 30.714,
+          "max_s": 37.651
+        },
+        "768": {
+          "n": 8,
+          "p50_s": 42.698,
+          "p95_s": 52.311,
+          "media_s": 44.307,
+          "max_s": 52.637
+        },
+        "1024": {
+          "n": 8,
+          "p50_s": 16.988,
+          "p95_s": 20.864,
+          "media_s": 17.64,
+          "max_s": 20.9
+        }
+      },
+      "log": "verificar_h0_corrida4.log",
+      "nota": "La corrida 4 terminó en error cuando el kernel mató el proceso de Qwen por memoria (P3 de Qwen solo texto). Las latencias de P1 a 1024 px NO son válidas: muchas fotos de XM3600 miden menos de 1024 px, la petición resultaba idéntica a la de 768 px y la caché de prompts la respondió sin recalcular la imagen. 0.6 se repite completa en la corrida 5 con la caché desactivada."
+    }
+  },
+  "fecha": "2026-11-08T01:03:23+00:00",
+  "ollama_version": "0.40.15",
+  "hardware_contenedor": {
+    "maquina": "aarch64",
+    "python": "3.12.16",
+    "nproc": 8,
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "lscpu_Thread(s) per core": "1",
+    "lscpu_Flags": "asimd",
+    "limite_memoria_contenedor_bytes": 1610612736,
+    "memoria_total_vm_bytes": 8574103552
+  },
+  "modelos_descargados": {
+    "embeddinggemma-2:440m": {
+      "digest": "7d8dc01c0a05",
+      "tamano_bytes": 671046782
+    },
+    "granite-embedding:278m": {
+      "digest": "1a37926bf842",
+      "tamano_bytes": 562777301
+    },
+    "embeddinggemma-2:270m": {
+      "digest": "c21dd30c1e38",
+      "tamano_bytes": 303957438
+    },
+    "lfm3:1.7b-q4_K_M": {
+      "digest": "b36a103fe2f8",
+      "tamano_bytes": 1099638680
+    },
+    "qwen3.5:0.8b": {
+      "digest": "de63045f2975",
+      "tamano_bytes": 1322069277
+    }
+  },
+  "opciones_generacion": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "presence_penalty": 0.0,
+    "num_ctx": 4096
+  },
+  "semilla": 2026,
+  "decisiones": {
+    "emb_principal": "embeddinggemma-2:440m",
+    "lado_max_imagen_px": 512,
+    "tiempos_limite_s": {
+      "qwen_imagen": 58,
+      "qwen_texto": 64,
+      "lfm3": 90,
+      "embedding": 5,
+      "regla": "1.5 × p95 medido, redondeado hacia arriba (mínimo 10 s para LLM y 5 s para embeddings); None = no se pudo medir"
+    },
+    "estados": {
+      "0.7": "ok",
+      "0.8": "ok",
+      "0.1": "ok",
+      "0.2": "ok",
+      "0.3": "plan_b",
+      "0.4": "ok",
+      "0.6": "ok",
+      "0.5": "ok",
+      "0.3b": "ok",
+      "0.6b": "ok"
+    },
+    "evidencia_historica": [
+      "0.2_corrida1",
+      "0.2_corrida3",
+      "0.5_sin_limite_cache",
+      "0.6_corrida4"
+    ]
+  },
+  "opciones_por_modelo": {
+    "qwen3.5:0.8b": {
+      "presence_penalty": 1.5,
+      "draft_num_predict": 0
+    },
+    "lfm3:1.7b-q4_K_M": {}
+  },
+  "prompt_p1_version": 2
+}

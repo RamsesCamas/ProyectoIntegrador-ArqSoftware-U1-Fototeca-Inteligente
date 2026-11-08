@@ -1,0 +1,113 @@
+name: fototeca-viva
+
+# Versiones fijadas: nunca `latest` (ver docs/bitacora.md y ADR-10).
+# Los valores por defecto de las variables son los de .env.ejemplo; crear .env es opcional.
+
+services:
+  ollama:
+    image: ollama/ollama:0.40.15
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"          # evitar recargas en CPU (ADR-12)
+      OLLAMA_MAX_LOADED_MODELS: "4"
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_CONTEXT_LENGTH: "4096"
+      OLLAMA_NO_CLOUD: "1"             # sin funciones en la nube de Ollama (R2)
+      # llama-server (el motor de Ollama) guarda por defecto hasta 8192 MiB de estados de prompt POR modelo cargado;
+      # con 4 modelos rebasó el límite de 5g y el kernel mató un proceso (H0 0.6, h0_cgroup_ollama_antes.txt). ADR-12.
+      LLAMA_ARG_CACHE_RAM: "0"
+    volumes:
+      - ollama_modelos:/root/.ollama
+    ports:
+      # Solo para diagnóstico. Si el host ya usa 11434 (p. ej. Ollama nativo), define OLLAMA_PUERTO_HOST en .env
+      - "127.0.0.1:${OLLAMA_PUERTO_HOST:-11434}:11434"
+    deploy:
+      resources:
+        limits:
+          memory: 5g
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+
+  # Perfil de preparación: descarga los 4 modelos contra ollama:11434 y termina.
+  modelos:
+    image: ollama/ollama:0.40.15
+    profiles: ["preparacion"]
+    environment:
+      OLLAMA_HOST: "http://ollama:11434"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        ollama pull ${MODELO_RAPIDO:-qwen3.5:0.8b} &&
+        ollama pull ${MODELO_CAPAZ:-lfm3:1.7b-q4_K_M} &&
+        ollama pull ${EMB_PRINCIPAL:-embeddinggemma-2:440m} &&
+        ollama pull ${EMB_SECUNDARIO:-granite-embedding:278m}
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+  qdrant:
+    image: qdrant/qdrant:v1.19.2
+    environment:
+      QDRANT__TELEMETRY_DISABLED: "true"
+    volumes:
+      - qdrant_datos:/qdrant/storage
+    ports:
+      - "127.0.0.1:${QDRANT_PUERTO_HOST:-6333}:6333"   # solo para diagnóstico
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  servicio:
+    build: ./servicio
+    environment:
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+      MODELO_RAPIDO: ${MODELO_RAPIDO:-qwen3.5:0.8b}
+      MODELO_CAPAZ: ${MODELO_CAPAZ:-lfm3:1.7b-q4_K_M}
+      EMB_PRINCIPAL: ${EMB_PRINCIPAL:-embeddinggemma-2:440m}
+      EMB_SECUNDARIO: ${EMB_SECUNDARIO:-granite-embedding:278m}
+    volumes:
+      - ./data:/app/data
+      - ./evaluacion:/app/evaluacion_datos
+      - sqlite_datos:/app/data/sqlite   # SQLite en volumen con nombre (bitácora 2026-11-07)
+      - ./web:/app/web_estatica:ro      # solo para la prueba de R8 (pruebas/test_web_r8.py)
+    ports:
+      - "8000:8000"
+    depends_on:
+      ollama:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 1536m
+
+  web:
+    image: nginx:1.30.6-alpine
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+      - ./web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - servicio
+    deploy:
+      resources:
+        limits:
+          memory: 64m
+
+volumes:
+  ollama_modelos: {}
+  qdrant_datos: {}
+  sqlite_datos: {}

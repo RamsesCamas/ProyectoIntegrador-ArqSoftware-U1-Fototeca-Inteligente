@@ -1,0 +1,63 @@
+# Parámetros de Fototeca Viva (se exponen en GET /configuracion).
+# La versión de configuración (hash de estos parámetros, los modelos, las versiones de los prompts y la
+# versión del corpus) forma parte de las claves de la caché: cambiar un valor invalida las fichas en caché.
+# Cada valor indica de dónde sale o cómo se calibra. Los valores se recalibran en H0, H4 y H7.
+version: 1
+
+generacion:
+  # Se sobrescriben SIEMPRE los valores por defecto de los modelos (Qwen trae temperature 1 y presence_penalty 1.5).
+  temperatura_fichas: 0.2
+  temperatura_clasificacion: 0.0     # jueces y clasificaciones
+  top_p: 0.9
+  presence_penalty: 0.0
+  num_ctx: 4096                      # H0 0.5: con 4096 los 4 modelos caben en el límite de 5g (ADR-12)
+  think: false                       # ADR-11 (H0 0.6: con think, P3 de LFM3 0/3 JSON válidos)
+  num_predict: {P1: 350, P2: 200, P3: 600, P4: 200, P5: 150, P6: 80, P7: 120}
+  # H0 0.6 (h0.json): calidad media (granite contra las descripciones humanas) 0.6835 a 512 px, 0.696 a 768 y
+  # 0.6973 a 1024; regla «el lado más pequeño a ≤0.02 de la mejor calidad» → 512 px (P1 p50 34.28 s contra 43.37 s).
+  lado_max_imagen_px: 512
+  # Opciones por modelo (H0, verificación 0.6b; evaluacion/resultados/h0.json). Se envían SIEMPRE explícitas.
+  por_modelo:
+    "qwen3.5:0.8b":
+      presence_penalty: 1.5          # con 0 cae en repetición degenerada (JSON truncado); 1.5 es el valor del modelo
+      extra:
+        draft_num_predict: 0         # sin decodificación especulativa: en esta CPU genera ~2× más tokens/s (0.6b)
+    "lfm3:1.7b-q4_K_M":
+      presence_penalty: 0.0
+
+tiempos_limite_s:                    # H0 0.6: 1.5 × p95 medido, redondeado hacia arriba (h0.json → decisiones)
+  qwen_imagen: 58                    # P1 a 512 px: p95 38.499 s
+  qwen_texto: 64                     # P3 con Qwen solo texto (respaldo): p95 42.178 s
+  lfm3: 90                           # P3 con LFM3 (600 tokens máx.): p95 59.444 s
+  embedding: 5                       # por elemento; imagen a 384 px p95 2.775 s (mínimo 5 s)
+
+gateway:
+  reintentos: 1
+  espera_reintento_s: 1
+
+guardrails:
+  tamano_max_mb: 10                  # archivo_valido (06, C3)
+  lado_min_px: 64
+  lado_max_px: 12000
+  tau_tesauro: 0.75                  # inicial (06, C3 salida); se calibra en H7 con 50 pares revisados
+
+cache:
+  fichas:
+    tau_dup: 0.97                    # inicial (06, C4); barrido de 0.90 a 0.99 en H7 (ADR-04)
+    ttl_s: 604800                    # 7 días
+  busquedas:
+    tau_busq: 0.95
+    ttl_s: 86400                     # 24 h
+
+embeddings:
+  lado_imagen_px: 384                # H0 0.3b: misma calidad que 256–768 px y el menor tiempo (2.2 s/imagen)
+  lote: 8                            # imágenes por petición a /api/embed
+  lote_texto: 32
+  # Prefijos de tarea de la ficha oficial de EmbeddingGemma-2 (huggingface.co/google/embeddinggemma-2,
+  # «Best Practices» §1). Solo se aplican a textos; las imágenes van sin prefijo. granite no usa prefijos.
+  prefijos:
+    embeddinggemma-2:
+      consulta: "task: search result | query: "
+      documento: "title: none | text: "
+      simetrico: "task: sentence similarity | query: "
+    granite-embedding: {}

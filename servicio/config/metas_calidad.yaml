@@ -1,0 +1,32 @@
+# Metas de los atributos de calidad (docs/specs/01 §3). Las lee la evaluación (H7) para comparar lo medido.
+# No forman parte de la versión de configuración del servicio: cambiarlas no invalida la caché.
+#
+# `01` permite ajustar una meta inicial irreal «con la evidencia medida» en H0. Las metas de latencia de ficha se
+# ajustaron con evaluacion/resultados/h0.json → verificaciones.0.6 (docs/bitacora.md, 2026-11-08):
+#   meta = 1.2 × (suma de los p50 de H0 de las llamadas a modelos de la ruta), redondeada hacia arriba a 5 s.
+#   El 20 % cubre las demás capas (embeddings, recuperación, guardrails y caché).
+#   - Ruta rápida: una llamada a Qwen con imagen (P2). Su referencia en H0 es P1 a 512 px: p50 34.28 s.
+#     1.2 × 34.28 = 41.1 → 45 s (meta inicial: 15 s).
+#   - Ruta completa: P1 a 512 px (34.28 s) + P3 con LFM3 (39.351 s) = 73.6 s; 1.2 × 73.6 = 88.4 → 90 s
+#     (meta inicial: 45 s).
+version: 2
+latencia_s:
+  busqueda_simple_p95: 1.5         # sin cambio: el embedding de texto en H0 tiene p95 de 0.297 s
+  busqueda_compleja_p95: 25        # sin cambio: P4 aún no se mide (H4/H7). Riesgo: P3 de LFM3 tuvo p50 39.351 s
+  ficha_rapida_p50: 45             # inicial 15 s; ajustada en H0
+  ficha_completa_p50: 90           # inicial 45 s; ajustada en H0
+  ficha_cache_p50: 0.5             # sin cambio
+busqueda:
+  # «Se reporta; la meta se fija después de H0» (01). H0 solo midió 50 pares (R@5 de 1.00 en una galería de 50),
+  # que no sirve como referencia para una galería de 1,000. La meta es comparativa: la arquitectura elegida debe
+  # tener el R@10 más alto entre unificada, pipeline e híbrida, y se reporta su intervalo de confianza.
+  r10_texto_imagen: comparativa
+guardrails:
+  bloqueos_correctos_min: 0.90
+  falsos_positivos_max: 0.10
+cache_semantica:
+  incorrectas_desde_cache_max: 0.02
+privacidad:
+  salidas_sin_gps_ni_sensibles: 1.0
+recursos:
+  suma_limites_memoria_gb_max: 7.1

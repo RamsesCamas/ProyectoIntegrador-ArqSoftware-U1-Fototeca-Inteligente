@@ -1,0 +1,102 @@
+# Fuentes de datos y corpus (docs/specs/04-datos-y-corpus.md §1).
+# Solo se usan estas fuentes. La licencia esperada se confirma en la página de origen (H0, verificación 0.8)
+# y lo encontrado se escribe en docs/LICENCIAS-Y-CORPUS.md.
+
+xm3600:
+  pagina: https://google.github.io/crossmodal-3600/
+  imagenes:
+    url: https://open-images-dataset.s3.amazonaws.com/crossmodal-3600/images.tgz
+    archivo: crudos/xm3600/images.tgz
+  descripciones:
+    url: https://google.github.io/crossmodal-3600/web-data/captions.zip
+    archivo: crudos/xm3600/captions.zip
+  atribuciones:
+    url: https://google.github.io/crossmodal-3600/web-data/image_attributions.csv
+    archivo: crudos/xm3600/image_attributions.csv
+  directorio_imagenes: crudos/xm3600/imagenes
+
+open_images:
+  pagina_descarga: https://storage.googleapis.com/openimages/web/download_v7.html
+  pagina_licencia: https://storage.googleapis.com/openimages/web/factsfigures_v7.html
+  # Etiquetas por imagen verificadas por humanos (se leen en streaming y se filtran a los ImageID de XM3600;
+  # los CSV completos no se guardan).
+  etiquetas_humanas:
+    - https://storage.googleapis.com/openimages/v7/oidv7-train-annotations-human-imagelabels.csv
+    - https://storage.googleapis.com/openimages/v7/oidv7-val-annotations-human-imagelabels.csv
+    - https://storage.googleapis.com/openimages/v7/oidv7-test-annotations-human-imagelabels.csv
+  clases:
+    url: https://storage.googleapis.com/openimages/v7/oidv7-class-descriptions.csv
+    archivo: crudos/open_images/oidv7-class-descriptions.csv
+  etiquetas_filtradas: procesados/oi_etiquetas_xm3600.csv
+
+# Corpus normativo (04 §5). No hay traducción al español del tutorial del W3C (H0: /es responde 404), así que
+# se usa la versión en inglés; EmbeddingGemma-2 es multilingüe.
+corpus:
+  normas:
+    - id: iptc-2025.1
+      fuente: IPTC Photo Metadata Standard 2025.1
+      tipo: iptc
+      licencia: CC BY 4.0
+      urls: [http://iptc.org/std/photometadata/specification/IPTC-PhotoMetadata-2025.1.html]
+    - id: w3c-wai-images
+      fuente: W3C WAI Images Tutorial
+      tipo: wai
+      licencia: W3C Document License (Permission to Use WAI Material)
+      urls:
+        - https://www.w3.org/WAI/tutorials/images/
+        - https://www.w3.org/WAI/tutorials/images/decorative/
+        - https://www.w3.org/WAI/tutorials/images/informative/
+        - https://www.w3.org/WAI/tutorials/images/functional/
+        - https://www.w3.org/WAI/tutorials/images/textual/
+        - https://www.w3.org/WAI/tutorials/images/complex/
+        - https://www.w3.org/WAI/tutorials/images/groups/
+        - https://www.w3.org/WAI/tutorials/images/imagemap/
+        - https://www.w3.org/WAI/tutorials/images/decision-tree/
+        - https://www.w3.org/WAI/tutorials/images/tips/
+    - id: wcag22-111
+      fuente: "WCAG 2.2 Understanding 1.1.1: Non-text Content"
+      tipo: wcag
+      licencia: W3C Document License (Permission to Use WAI Material)
+      urls: [https://www.w3.org/WAI/WCAG22/Understanding/non-text-content]
+    - id: dcmi-terms
+      fuente: DCMI Metadata Terms
+      tipo: dcmi
+      licencia: CC BY 4.0
+      urls: [https://www.dublincore.org/specifications/dublin-core/dcmi-terms/]
+  tesauro:
+    id: unesco-tesauro
+    fuente: Tesauro de la UNESCO (SKOS)
+    licencia: CC BY-SA 3.0 IGO
+    url: https://vocabularies.unesco.org/exports/thesaurus/latest/unesco-thesaurus.ttl
+    archivo: corpus/crudos/unesco-thesaurus.ttl
+
+# Páginas donde se confirma la licencia de cada fuente (patrones = texto que se busca en la página).
+licencias:
+  - fuente: Crossmodal-3600 (descripciones)
+    url: https://google.github.io/crossmodal-3600/
+    esperada: CC BY 4.0
+    patrones: ["CC BY 4.0", "CC-BY 4.0", "Creative Commons Attribution 4.0", "licensed by Google"]
+  - fuente: Open Images V7 (anotaciones e imágenes)
+    url: https://storage.googleapis.com/openimages/web/factsfigures_v7.html
+    esperada: "Anotaciones CC BY 4.0; imágenes listadas como CC BY 2.0"
+    patrones: ["CC BY 4.0", "CC BY 2.0", "Creative Commons"]
+  - fuente: IPTC Photo Metadata Standard 2025.1
+    url: http://iptc.org/std/photometadata/specification/IPTC-PhotoMetadata-2025.1.html
+    esperada: CC BY 4.0
+    patrones: ["CC BY 4.0", "Creative Commons Attribution 4.0", "creativecommons.org/licenses/by/4.0"]
+  - fuente: Tesauro de la UNESCO
+    url: https://vocabularies.unesco.org/browser/thesaurus/es/
+    esperada: CC BY-SA 3.0 IGO
+    patrones: ["CC BY-SA 3.0 IGO", "by-sa/3.0/igo", "Creative Commons"]
+  - fuente: W3C WAI Images Tutorial
+    url: https://www.w3.org/WAI/tutorials/images/
+    esperada: W3C Document License
+    patrones: ["Document License", "Permission to Use WAI Material", "document use", "copyright"]
+  - fuente: WCAG 2.2 Understanding 1.1.1
+    url: https://www.w3.org/WAI/WCAG22/Understanding/non-text-content
+    esperada: W3C Document License
+    patrones: ["Document License", "document use", "Permission to Use WAI Material", "copyright"]
+  - fuente: DCMI Metadata Terms
+    url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+    esperada: CC BY 4.0 (por verificar)
+    patrones: ["Creative Commons Attribution 4.0", "CC BY 4.0", "creativecommons.org/licenses/by/4.0", "licensed under"]

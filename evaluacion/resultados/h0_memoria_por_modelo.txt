@@ -1,0 +1,25 @@
+# Desglose de memoria del contenedor ollama durante la corrida 5 (caché de prompts desactivada), 2026-11-08T01:08:06Z
+memory_current 5359366144
+memory_max 5368709120
+anon 4746723328
+file 594690048
+kernel 13840384
+inactive_file 594530304
+active_file 159744
+low 0
+high 0
+max 1783
+oom 0
+oom_kill 0
+oom_group_kill 0
+## RSS por proceso llama-server (blob del modelo → VmRSS)
+sha256-111e84992a04 VmRSS:	 924168 kB
+sha256-a658c903bf83 VmRSS:	 699712 kB
+sha256-889ea3b9143c VmRSS:	 1617684 kB
+sha256-3793e1e6e226 VmRSS:	 1438764 kB
+ VmRSS:	 1432 kB
+## blobs → modelo (ollama show --modelfile)
+qwen3.5:0.8b sha256-889ea3b9143c sha256-b0108ebdcf5a sha256-5ba2eb9bf28c 
+lfm3:1.7b-q4_K_M sha256-3793e1e6e226 
+embeddinggemma-2:440m sha256-111e84992a04 sha256-335889700034 
+granite-embedding:278m sha256-a658c903bf83 
