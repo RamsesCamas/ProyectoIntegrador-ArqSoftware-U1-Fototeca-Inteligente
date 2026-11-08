@@ -170,7 +170,25 @@ docker compose run --rm servicio python -m scripts.verificar_contratos
   nginx (`demo_sin_red.json`). Mide la memoria con `docker stats` en otra terminal mientras corre.
 - `verificar_contratos` deja la evidencia del contrato de capas (`contrato_capas.json`, ADR-13).
 
-## 9. Después de la evaluación
+## 9. Preparar el equipo de la demostración
+
+`data/` y los volúmenes de Docker no se versionan, así que el equipo de la demo debe prepararse con internet **antes**
+del día de la presentación. Los embeddings de las fotos son el paso más largo.
+
+1. Clona el repositorio y ejecuta los pasos 1 a 3 de esta guía: modelos, datos, corpus e índice. `preparar_datos`
+   reutiliza los conjuntos versionados.
+2. Umbrales:
+   - Si `servicio/config/calibracion.yaml` ya está versionado (lo deja la evaluación del paso 6), no hace falta
+     recalibrar.
+   - Si no está, ejecuta el paso 4. Los pasos 4 y 5 de la demo (bloqueo de una captura y ciclo de agente) dependen de
+     esos umbrales.
+3. `python -m scripts.preparar_demo` y un ensayo completo sin red (paso 8). En ese equipo también se miden la latencia
+   y la memoria reales de la demo.
+4. Opcional, para ahorrar tiempo: copia de un equipo ya preparado la carpeta `data/` y los volúmenes `ollama_modelos`,
+   `qdrant_datos` y `sqlite_datos` (por ejemplo, con `docker run --rm -v <volumen>:/v -v "$PWD:/r" alpine tar czf
+   /r/<volumen>.tgz -C /v .`, y lo inverso para restaurar).
+
+## 10. Después de la evaluación
 
 1. Revisa `evaluacion/resultados/RESUMEN.md`.
 2. Pasa a «Aceptada» los ADR que estaban como «Propuesta», con las cifras y la ruta de su archivo de resultados.
