@@ -121,14 +121,19 @@ busca esa descripción como texto y fusiona los resultados.
   latencias.
 - Se detectó y las mediciones se repitieron con la caché desactivada.
 - En los documentos, cada cifra sale de un archivo de resultados del repositorio.
+- Los umbrales se calibran con conjuntos propios de calibración, separados de los de evaluación, para que la
+  evaluación quede fuera de muestra. Por ejemplo, la heurística que detecta instrucciones escritas dentro de una
+  imagen no se ajustó con los casos de evaluación: lo que no detecta lo cubre una segunda capa por similitud
+  semántica, y la eficacia de ambas se mide en la evaluación.
 
 **Dos idiomas.** Las etiquetas de Open Images están en inglés y el Tesauro de la UNESCO se usa en español. El cruce se
 hace por embeddings, con un umbral calibrado a partir de las etiquetas cuya traducción se conoce.
 
 ## 4. Estado actual
 
-**Implementado y verificado con pruebas automáticas** (unitarias, de API con modelos simulados y de contrato de
-capas). La web tiene además pruebas de punta a punta con Playwright:
+**Implementado y verificado con pruebas automáticas** (unitarias, de API con modelos simulados, de contrato de capas y
+de guardrails con los casos reales de los conjuntos de evaluación). Todas pasan. La web tiene además pruebas de punta a
+punta con Playwright:
 - Catalogación (sencilla y por lotes), búsqueda por texto y por foto, carga y eliminación de documentos,
   retroalimentación con validación de fichas, métricas y reporte de duplicados.
 - Aplicación web de seis páginas, accesible.
@@ -137,8 +142,17 @@ capas). La web tiene además pruebas de punta a punta con Playwright:
 **Viabilidad en CPU, medida.** Los cuatro modelos están cargados a la vez dentro del límite de memoria. Las latencias y
 los ajustes se documentan en los ADR-10 a ADR-12.
 
-**Datos y corpus.**
-- Archivo fotográfico: Crossmodal-3600, con 3,600 fotos de 36 regiones y descripciones humanas en español.
+**Datos y corpus, preparados.**
+- Archivo fotográfico: Crossmodal-3600, con 3,600 fotos de 36 regiones y descripciones humanas en español. Ya están
+  calculados los embeddings de imagen de las 3,600 fotos.
+- Particiones con semilla fija: archivo ya catalogado (2,600 fotos), fotos nuevas por catalogar (700) y regiones que el
+  archivo no tiene (300 fotos de las locales `ja`, `ko` y `sv`, elegidas por tener la menor similitud media con el
+  resto; sirven para probar el ciclo de agente).
+- De ellas salen la galería de búsqueda (1,000 fotos) y las 60 fotos de evaluación de fichas.
+- Conjuntos de evaluación versionados en el repositorio, para que cualquier equipo evalúe exactamente los mismos
+  casos: casi duplicados, inyección de instrucciones en imágenes, capturas fuera de dominio, fotos con GPS sintético,
+  consultas complejas y consultas para los guardrails, más conjuntos separados para calibrar.
+- Los datos descargados ocupan 0.71 GB.
 - Corpus normativo: 13 documentos, que suman 412 fragmentos y unas 88.6 páginas.
 - Tesauro de la UNESCO: 4,500 conceptos.
 
@@ -161,5 +175,6 @@ los ajustes se documentan en los ADR-10 a ADR-12.
 El repositorio incluye la guía para reproducirlo todo (`docs/EJECUCION.md`).
 
 ---
-*Fuentes de las cifras: `evaluacion/resultados/h0.json`, `h0_llama_server_cache_ram.txt` y `corpus_r1.json`. Los
-límites de memoria están en `docker-compose.yml`.*
+*Fuentes de las cifras: en `evaluacion/resultados/`, `h0.json`, `h0_llama_server_cache_ram.txt`, `corpus_r1.json` y
+`datos.json`; las particiones, en `evaluacion/conjuntos/particiones.json`; los límites de memoria, en
+`docker-compose.yml`.*
