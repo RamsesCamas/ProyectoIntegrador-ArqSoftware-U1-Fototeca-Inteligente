@@ -19,20 +19,33 @@ from fastapi.staticfiles import StaticFiles
 from fototeca import __version__
 from fototeca.api.errores import instalar_manejadores
 from fototeca.api.middleware import MiddlewareTraza
+from fototeca.api.rutas import busquedas as rutas_busquedas
 from fototeca.api.rutas import documentos as rutas_documentos
+from fototeca.api.rutas import fichas as rutas_fichas
 from fototeca.api.rutas import sistema
+from fototeca.cache.cache_busquedas import CacheBusquedas
+from fototeca.cache.cache_fichas import CacheFichas
 from fototeca.datos.cache_sqlite import CacheSqlite
 from fototeca.datos.documentos_sqlite import DocumentosSqlite
 from fototeca.datos.embebedor_ollama import EmbebedorOllama
 from fototeca.datos.eventos_sqlite import EventosSqlite
+from fototeca.datos.lotes_sqlite import LotesSqlite
 from fototeca.datos.ollama_cliente import OllamaCliente
-from fototeca.datos.puertos import AlmacenCache, AlmacenDocumentos, AlmacenVectorial, ClienteLLM, Embebedor
+from fototeca.datos.puertos import (AlmacenCache, AlmacenDocumentos, AlmacenLotes, AlmacenVectorial, ClienteLLM,
+                                    Embebedor)
 from fototeca.datos.qdrant_almacen import QdrantAlmacen
 from fototeca.datos.retroalimentacion_sqlite import RetroalimentacionSqlite
 from fototeca.dominio.configuracion import Configuracion
+from fototeca.guardrails.entrada.imagen import VerificadorImagen
+from fototeca.modelos.enrutador_busquedas import EnrutadorBusquedas
+from fototeca.modelos.gateway import Gateway
+from fototeca.modelos.plantillas import cargar_plantillas
 from fototeca.observabilidad.puertos import SumideroEventos
 from fototeca.observabilidad.registro import configurar_sumidero
+from fototeca.orquestacion.flujo_busqueda import FlujoBusqueda
+from fototeca.orquestacion.flujo_ficha import FlujoFicha
 from fototeca.orquestacion.ingesta import FlujoIngesta
+from fototeca.orquestacion.lotes import GestorLotes
 from fototeca.orquestacion.salud import FlujoSalud
 from fototeca.retroalimentacion.puertos import AlmacenRetroalimentacion
 
@@ -53,8 +66,10 @@ Todas las respuestas llevan la cabecera `X-Traza-Id`. Los errores tienen la form
 """
 
 ETIQUETAS = [
-    {"name": "Sistema", "description": "Salud del servicio y configuración activa"},
+    {"name": "Fichas", "description": "Catalogación de fotos (ficha IPTC con fuentes) y lotes asíncronos"},
+    {"name": "Búsquedas", "description": "Búsqueda por texto en español o por foto, con razones"},
     {"name": "Documentos", "description": "Carga de fotos y normas, listado, eliminación y miniaturas"},
+    {"name": "Sistema", "description": "Salud del servicio y configuración activa"},
 ]
 
 
@@ -118,11 +133,17 @@ class Contenedor:
     embebedor_secundario: Embebedor
     salud: FlujoSalud
     ingesta: FlujoIngesta
+    gateway: Gateway
+    verificador_imagen: VerificadorImagen
+    cache_fichas: CacheFichas
+    fichas: FlujoFicha
+    busquedas: FlujoBusqueda
+    lotes: GestorLotes
 
 
 def ensamblar(config: Configuracion, *, cliente_llm: ClienteLLM, almacen_vectorial: AlmacenVectorial,
               almacen_documentos: AlmacenDocumentos, almacen_cache: AlmacenCache, sumidero_eventos: SumideroEventos,
-              almacen_retroalimentacion: AlmacenRetroalimentacion, embebedor: Embebedor,
+              almacen_retroalimentacion: AlmacenRetroalimentacion, almacen_lotes: AlmacenLotes, embebedor: Embebedor,
               embebedor_secundario: Embebedor) -> Contenedor:
     """Conecta los flujos de C2 con los adaptadores dados (reales o falsos en las pruebas)."""
     configurar_sumidero(sumidero_eventos)
@@ -132,11 +153,28 @@ def ensamblar(config: Configuracion, *, cliente_llm: ClienteLLM, almacen_vectori
 
     salud = FlujoSalud(config, cliente_llm, almacen_vectorial, almacen_documentos, almacen_cache,
                        version_corpus=version_corpus)
-    ingesta = FlujoIngesta(config, almacen_documentos, almacen_vectorial, embebedor, cache=None)
+    # C3 y C4 que usan los flujos (sus umbrales se calibran en H5; sin calibrar, las verificaciones de imagen
+    # solo registran y no bloquean)
+    verificador_imagen = VerificadorImagen(config, almacen_vectorial, embebedor)
+    # `fuera_de_dominio` corre ya al cargar la foto: una captura de documento no entra al archivo (422)
+    ingesta = FlujoIngesta(config, almacen_documentos, almacen_vectorial, embebedor, cache=almacen_cache,
+                           verificador_dominio=verificador_imagen.fuera_de_dominio)
+    # C6: una sola interfaz hacia los modelos (tabla de tareas P1–P6, tiempo límite, reintento y respaldo)
+    gateway = Gateway(cliente_llm, config, cargar_plantillas())
+    cache_fichas = CacheFichas(config, almacen_cache, almacen_vectorial, almacen_documentos)
+    fichas = FlujoFicha(config, almacen_documentos, almacen_vectorial, embebedor, embebedor_secundario, gateway,
+                        cache_fichas, verificador_imagen, version_corpus)
+    busquedas = FlujoBusqueda(config, almacen_documentos, almacen_vectorial, embebedor, gateway,
+                              CacheBusquedas(config, almacen_cache),
+                              EnrutadorBusquedas(config, almacen_vectorial, embebedor), verificador_imagen,
+                              version_corpus)
+    lotes = GestorLotes(fichas, almacen_lotes)
     return Contenedor(config=config, cliente_llm=cliente_llm, almacen_vectorial=almacen_vectorial,
                       almacen_documentos=almacen_documentos, almacen_cache=almacen_cache,
                       sumidero_eventos=sumidero_eventos, almacen_retroalimentacion=almacen_retroalimentacion,
-                      embebedor=embebedor, embebedor_secundario=embebedor_secundario, salud=salud, ingesta=ingesta)
+                      embebedor=embebedor, embebedor_secundario=embebedor_secundario, salud=salud, ingesta=ingesta,
+                      gateway=gateway, verificador_imagen=verificador_imagen, cache_fichas=cache_fichas,
+                      fichas=fichas, busquedas=busquedas, lotes=lotes)
 
 
 def construir_contenedor(config: Configuracion) -> Contenedor:
@@ -144,12 +182,15 @@ def construir_contenedor(config: Configuracion) -> Contenedor:
     principal, secundario = construir_embebedores(config)
     return ensamblar(
         config,
-        cliente_llm=OllamaCliente(config.urls["ollama"], list(config.modelos.values())),
+        # Qwen recibe las imágenes al lado calibrado en H0 (generacion.lado_max_imagen_px)
+        cliente_llm=OllamaCliente(config.urls["ollama"], list(config.modelos.values()),
+                                  lado_imagen_px=int(config.parametro("generacion.lado_max_imagen_px", 768))),
         almacen_vectorial=QdrantAlmacen(config.urls["qdrant"]),
         almacen_documentos=DocumentosSqlite(sqlite, config.rutas["fotos"], config.rutas["datos"]),
         almacen_cache=CacheSqlite(sqlite),
         sumidero_eventos=EventosSqlite(sqlite),
         almacen_retroalimentacion=RetroalimentacionSqlite(sqlite),
+        almacen_lotes=LotesSqlite(sqlite),
         embebedor=principal,
         embebedor_secundario=secundario,
     )
@@ -164,6 +205,7 @@ def crear_app(contenedor: Contenedor | None = None, precalentar: bool | None = N
     async def ciclo_de_vida(_: FastAPI):
         if precalentar:
             contenedor.salud.precalentar_en_segundo_plano()
+            contenedor.lotes.reanudar_pendientes()   # lotes que quedaron a medias si el servicio se reinició
         yield
 
     app = FastAPI(title="Fototeca Viva · API", version=__version__, description=DESCRIPCION,
@@ -171,8 +213,10 @@ def crear_app(contenedor: Contenedor | None = None, precalentar: bool | None = N
     app.state.contenedor = contenedor
     app.add_middleware(MiddlewareTraza)
     instalar_manejadores(app)
-    app.include_router(sistema.router)
+    app.include_router(rutas_fichas.router)
+    app.include_router(rutas_busquedas.router)
     app.include_router(rutas_documentos.router)
+    app.include_router(sistema.router)
 
     # Swagger UI servido con assets locales (sin CDN): la demo funciona sin red.
     app.mount("/estaticos", StaticFiles(directory=ESTATICOS), name="estaticos")

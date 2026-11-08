@@ -44,6 +44,6 @@ class FichaRegistrada(BaseModel):
     documento_id: str
     ficha: Ficha
     fuentes: dict[str, list[Fuente]] = Field(default_factory=dict)
-    origen: str = "modelo"           # modelo | referencia_humana | archivista
+    origen: str = "modelo"           # modelo | referencia_humana | archivista | cache (copia de un posible duplicado)
     traza_id: str | None = None
     actualizada: str | None = None

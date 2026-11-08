@@ -73,7 +73,9 @@ class FlujoIngesta:
             documento_id = self.documentos.guardar_foto(limpio, {
                 **(metadatos or {}), "nombre": nombre, "formato": imagen.formato, "ancho": imagen.ancho,
                 "alto": imagen.alto, "tamano_bytes": len(limpio), "particion": "subida",
-                "exif_eliminado": r_exif.detalle.get("eliminado", [])})
+                "exif_eliminado": r_exif.detalle.get("eliminado", []),
+                # se repiten en meta.guardrails.entrada de su ficha (trazabilidad de la ingesta)
+                "guardrails_ingesta": guardrails})
         tau = float(p("cache.fichas.tau_dup", 0.97))
         self.vectorial.asegurar_coleccion(col.FOTOS_IMG, len(vector))
         with medir("C5", "detectar_duplicados") as d:

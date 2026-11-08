@@ -12,6 +12,7 @@ from fototeca.api.arranque import cargar_configuracion, crear_app, ensamblar
 from fototeca.datos.cache_sqlite import CacheSqlite
 from fototeca.datos.documentos_sqlite import DocumentosSqlite
 from fototeca.datos.eventos_sqlite import EventosSqlite
+from fototeca.datos.lotes_sqlite import LotesSqlite
 from fototeca.datos.retroalimentacion_sqlite import RetroalimentacionSqlite
 from fototeca.observabilidad.registro import configurar_sumidero
 from pruebas.falsos import AlmacenVectorialFalso, ClienteLLMFalso, EmbebedorFalso
@@ -36,6 +37,7 @@ def contenedor(config):
         almacen_cache=CacheSqlite(sqlite),
         sumidero_eventos=EventosSqlite(sqlite),
         almacen_retroalimentacion=RetroalimentacionSqlite(sqlite),
+        almacen_lotes=LotesSqlite(sqlite),
         embebedor=EmbebedorFalso(),
         embebedor_secundario=EmbebedorFalso("granite-falso", acepta_imagenes=False),
     )
