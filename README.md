@@ -96,6 +96,17 @@ responde 422 con un `mensaje_seguro`.
 
 `embeddinggemma-2:270m` no acepta imágenes en Ollama; por eso se usa `440m` (ver `docs/adr/ADR-10-*.md`).
 
+## Evaluación completa y estado de los resultados
+
+La guía [`docs/EJECUCION.md`](docs/EJECUCION.md) reproduce todo en un equipo nuevo, en orden: datos, índice,
+calibración de umbrales (`scripts/calibrar.py` y `scripts/aplicar_calibracion.py`), aceptación con los modelos reales,
+evaluación en dos pasadas y demo sin red (`scripts/demo_sin_red.py`). Incluye una estimación del tiempo de CPU
+calculada con las latencias medidas en H0.
+
+La evaluación completa con los modelos reales todavía **no se ha ejecutado**: requiere del orden de 20 h de CPU en el
+equipo de desarrollo y se correrá en un equipo más potente. Mientras tanto, las cifras de evaluación del informe y de
+los ADR que siguen como «Propuesta» aparecen como *pendiente*. Toda cifra publicada sale de `evaluacion/resultados/`.
+
 ## Solución de problemas
 
 - **El contenedor `ollama` no arranca: «ports are not available … 11434».** El equipo ya tiene Ollama instalado de

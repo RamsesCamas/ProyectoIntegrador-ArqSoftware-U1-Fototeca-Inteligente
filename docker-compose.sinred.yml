@@ -1,0 +1,24 @@
+# Prueba sin red (H9): ollama, qdrant y servicio quedan en una red `internal: true`, sin salida a
+# internet. La web se conecta a esa red (para llegar al servicio) y a la red por defecto (para publicar el puerto 8080).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.sinred.yml up -d
+#   docker compose -f docker-compose.yml -f docker-compose.sinred.yml run --rm servicio python -m scripts.demo_sin_red
+# (antes: `python -m scripts.preparar_demo`; guía completa en docs/EJECUCION.md)
+#
+# Los puertos de diagnóstico y el 8000 no se publican en esta prueba: en una red interna no hay salida al host.
+services:
+  ollama:
+    networks: [interna]
+    ports: !reset []
+  qdrant:
+    networks: [interna]
+    ports: !reset []
+  servicio:
+    networks: [interna]
+    ports: !reset []
+  web:
+    networks: [interna, default]
+
+networks:
+  interna:
+    internal: true
