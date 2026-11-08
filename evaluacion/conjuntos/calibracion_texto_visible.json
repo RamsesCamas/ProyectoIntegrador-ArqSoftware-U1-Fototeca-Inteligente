@@ -1,0 +1,127 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "uso": "solo calibración (H5)",
+  "items": [
+    {
+      "id": "cal-txt-01",
+      "origen": "xm-f137ca05cecaad40",
+      "texto": "Tienda La Esperanza",
+      "posicion": "arriba",
+      "escala": 0.064,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-01.jpg"
+    },
+    {
+      "id": "cal-txt-02",
+      "origen": "xm-52aae425a91f09a9",
+      "texto": "Parque Central",
+      "posicion": "centro",
+      "escala": 0.047,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-02.jpg"
+    },
+    {
+      "id": "cal-txt-03",
+      "origen": "xm-6d83931118ed888e",
+      "texto": "Zona Escolar",
+      "posicion": "arriba",
+      "escala": 0.049,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-03.jpg"
+    },
+    {
+      "id": "cal-txt-04",
+      "origen": "xm-f6fbfc894f496a88",
+      "texto": "Hotel Real",
+      "posicion": "arriba",
+      "escala": 0.06,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-04.jpg"
+    },
+    {
+      "id": "cal-txt-05",
+      "origen": "xm-f0f8578e48df4d42",
+      "texto": "Taller Mecánico",
+      "posicion": "abajo",
+      "escala": 0.054,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-05.jpg"
+    },
+    {
+      "id": "cal-txt-06",
+      "origen": "xm-c9f3d21199fffa69",
+      "texto": "Panadería",
+      "posicion": "arriba",
+      "escala": 0.06,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-06.jpg"
+    },
+    {
+      "id": "cal-txt-07",
+      "origen": "xm-09a9a9d1fe0a592a",
+      "texto": "Correos",
+      "posicion": "centro",
+      "escala": 0.051,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-07.jpg"
+    },
+    {
+      "id": "cal-txt-08",
+      "origen": "xm-1b73aad62a517097",
+      "texto": "Mercado de Flores",
+      "posicion": "abajo",
+      "escala": 0.048,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-08.jpg"
+    },
+    {
+      "id": "cal-txt-09",
+      "origen": "xm-bf8c86f5ba284a66",
+      "texto": "Estacionamiento",
+      "posicion": "centro",
+      "escala": 0.055,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-09.jpg"
+    },
+    {
+      "id": "cal-txt-10",
+      "origen": "xm-825c6b8b4f8ea84d",
+      "texto": "Calle Hidalgo",
+      "posicion": "centro",
+      "escala": 0.063,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-10.jpg"
+    },
+    {
+      "id": "cal-txt-11",
+      "origen": "xm-62ef71b7dc0b7f9d",
+      "texto": "Escuela Primaria",
+      "posicion": "arriba",
+      "escala": 0.054,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-11.jpg"
+    },
+    {
+      "id": "cal-txt-12",
+      "origen": "xm-6c2d44f9a68bbe96",
+      "texto": "Clínica",
+      "posicion": "arriba",
+      "escala": 0.067,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-12.jpg"
+    },
+    {
+      "id": "cal-txt-13",
+      "origen": "xm-6cf3b0c0a69d49ec",
+      "texto": "Ferretería",
+      "posicion": "abajo",
+      "escala": 0.057,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-13.jpg"
+    },
+    {
+      "id": "cal-txt-14",
+      "origen": "xm-2a26333210fc9b43",
+      "texto": "Biblioteca Pública",
+      "posicion": "arriba",
+      "escala": 0.049,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-14.jpg"
+    },
+    {
+      "id": "cal-txt-15",
+      "origen": "xm-8dcd3272c9122b6b",
+      "texto": "Centro Cultural",
+      "posicion": "centro",
+      "escala": 0.053,
+      "archivo": "sinteticos/calibracion_texto_visible/cal-txt-15.jpg"
+    }
+  ]
+}

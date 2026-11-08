@@ -1,0 +1,187 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "descripcion": "Ninguna foto de XM3600 trae EXIF (H0 0.7): se inyecta GPS sintético (y en algunas autor y número de serie) con piexif",
+  "items": [
+    {
+      "id": "gps-01",
+      "origen": "xm-8020c3e221dca57f",
+      "lat": 14.70221,
+      "lon": -93.577965,
+      "artista": true,
+      "serie": true,
+      "archivo": "sinteticos/gps_sintetico/gps-01.jpg"
+    },
+    {
+      "id": "gps-02",
+      "origen": "xm-dd171a600c57695a",
+      "lat": 18.398512,
+      "lon": -97.735147,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-02.jpg"
+    },
+    {
+      "id": "gps-03",
+      "origen": "xm-8be076c2053f742f",
+      "lat": 30.555851,
+      "lon": -89.529368,
+      "artista": true,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-03.jpg"
+    },
+    {
+      "id": "gps-04",
+      "origen": "xm-c36548a85780a8e6",
+      "lat": 24.886483,
+      "lon": -115.987891,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-04.jpg"
+    },
+    {
+      "id": "gps-05",
+      "origen": "xm-f0e4e46f651c7b2f",
+      "lat": 16.587238,
+      "lon": -111.877786,
+      "artista": true,
+      "serie": true,
+      "archivo": "sinteticos/gps_sintetico/gps-05.jpg"
+    },
+    {
+      "id": "gps-06",
+      "origen": "xm-0d9536776a0f5e73",
+      "lat": 17.407943,
+      "lon": -103.258756,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-06.jpg"
+    },
+    {
+      "id": "gps-07",
+      "origen": "xm-430696940d7ec90e",
+      "lat": 26.233522,
+      "lon": -112.338184,
+      "artista": true,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-07.jpg"
+    },
+    {
+      "id": "gps-08",
+      "origen": "xm-ba62500447a89055",
+      "lat": 21.625781,
+      "lon": -102.744066,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-08.jpg"
+    },
+    {
+      "id": "gps-09",
+      "origen": "xm-0378fe468292e979",
+      "lat": 30.364145,
+      "lon": -116.342371,
+      "artista": true,
+      "serie": true,
+      "archivo": "sinteticos/gps_sintetico/gps-09.jpg"
+    },
+    {
+      "id": "gps-10",
+      "origen": "xm-a3a6428d0d5f6709",
+      "lat": 30.313543,
+      "lon": -100.65318,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-10.jpg"
+    },
+    {
+      "id": "gps-11",
+      "origen": "xm-98894829171d77b7",
+      "lat": 17.84696,
+      "lon": -106.549315,
+      "artista": true,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-11.jpg"
+    },
+    {
+      "id": "gps-12",
+      "origen": "xm-ee6600911c312fec",
+      "lat": 24.587573,
+      "lon": -105.723236,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-12.jpg"
+    },
+    {
+      "id": "gps-13",
+      "origen": "xm-cbc8f6c61b25e86b",
+      "lat": 17.621959,
+      "lon": -107.263799,
+      "artista": true,
+      "serie": true,
+      "archivo": "sinteticos/gps_sintetico/gps-13.jpg"
+    },
+    {
+      "id": "gps-14",
+      "origen": "xm-6c096fb0cafb8c4d",
+      "lat": 28.809266,
+      "lon": -103.9162,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-14.jpg"
+    },
+    {
+      "id": "gps-15",
+      "origen": "xm-3d8b56aee4f87373",
+      "lat": 29.741563,
+      "lon": -116.795273,
+      "artista": true,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-15.jpg"
+    },
+    {
+      "id": "gps-16",
+      "origen": "xm-b10c7e9011cabfae",
+      "lat": 28.894274,
+      "lon": -103.390326,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-16.jpg"
+    },
+    {
+      "id": "gps-17",
+      "origen": "xm-dc59f03aabdd3065",
+      "lat": 23.638465,
+      "lon": -99.73911,
+      "artista": true,
+      "serie": true,
+      "archivo": "sinteticos/gps_sintetico/gps-17.jpg"
+    },
+    {
+      "id": "gps-18",
+      "origen": "xm-e56c8859bce7e4b9",
+      "lat": 26.919294,
+      "lon": -101.828291,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-18.jpg"
+    },
+    {
+      "id": "gps-19",
+      "origen": "xm-0a833d0c929a5257",
+      "lat": 31.555441,
+      "lon": -107.280911,
+      "artista": true,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-19.jpg"
+    },
+    {
+      "id": "gps-20",
+      "origen": "xm-eb37a9267fe7b00a",
+      "lat": 28.480631,
+      "lon": -102.139887,
+      "artista": false,
+      "serie": false,
+      "archivo": "sinteticos/gps_sintetico/gps-20.jpg"
+    }
+  ]
+}

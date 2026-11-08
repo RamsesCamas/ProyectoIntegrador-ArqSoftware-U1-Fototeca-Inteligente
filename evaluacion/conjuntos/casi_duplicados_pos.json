@@ -1,0 +1,2881 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "descripcion": "150 fotos del archivo × 2 transformaciones al azar",
+  "items": [
+    {
+      "id": "dup-pos-001",
+      "origen": "xm-0004886b7d043cfd",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-001.jpg"
+    },
+    {
+      "id": "dup-pos-002",
+      "origen": "xm-0004886b7d043cfd",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 40
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-002.jpg"
+    },
+    {
+      "id": "dup-pos-003",
+      "origen": "xm-00fe1cf6d7237787",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 60
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-003.jpg"
+    },
+    {
+      "id": "dup-pos-004",
+      "origen": "xm-00fe1cf6d7237787",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-004.jpg"
+    },
+    {
+      "id": "dup-pos-005",
+      "origen": "xm-08dbfb19f7bd3c2b",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.72
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-005.jpg"
+    },
+    {
+      "id": "dup-pos-006",
+      "origen": "xm-08dbfb19f7bd3c2b",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.163,
+        "saturacion": 0.605
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-006.jpg"
+    },
+    {
+      "id": "dup-pos-007",
+      "origen": "xm-09657edae4f69497",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.744,
+        "saturacion": 0.992
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-007.jpg"
+    },
+    {
+      "id": "dup-pos-008",
+      "origen": "xm-09657edae4f69497",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 54
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-008.jpg"
+    },
+    {
+      "id": "dup-pos-009",
+      "origen": "xm-0a883b2736f3cd27",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.874,
+        "x": 0.175,
+        "y": 0.442
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-009.jpg"
+    },
+    {
+      "id": "dup-pos-010",
+      "origen": "xm-0a883b2736f3cd27",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 34
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-010.jpg"
+    },
+    {
+      "id": "dup-pos-011",
+      "origen": "xm-0cd79336747bd7cc",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.16,
+        "saturacion": 1.124
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-011.jpg"
+    },
+    {
+      "id": "dup-pos-012",
+      "origen": "xm-0cd79336747bd7cc",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 32
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-012.jpg"
+    },
+    {
+      "id": "dup-pos-013",
+      "origen": "xm-0e59eab29bb975eb",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 4.72
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-013.jpg"
+    },
+    {
+      "id": "dup-pos-014",
+      "origen": "xm-0e59eab29bb975eb",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-014.jpg"
+    },
+    {
+      "id": "dup-pos-015",
+      "origen": "xm-120366298e4ebe93",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.084,
+        "saturacion": 1.226
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-015.jpg"
+    },
+    {
+      "id": "dup-pos-016",
+      "origen": "xm-120366298e4ebe93",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.763,
+        "x": 0.177,
+        "y": 0.014
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-016.jpg"
+    },
+    {
+      "id": "dup-pos-017",
+      "origen": "xm-146a017e61c7d073",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.2
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-017.jpg"
+    },
+    {
+      "id": "dup-pos-018",
+      "origen": "xm-146a017e61c7d073",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-018.jpg"
+    },
+    {
+      "id": "dup-pos-019",
+      "origen": "xm-1af752b509c87694",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.35
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-019.jpg"
+    },
+    {
+      "id": "dup-pos-020",
+      "origen": "xm-1af752b509c87694",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.731,
+        "x": 0.959,
+        "y": 0.185
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-020.jpg"
+    },
+    {
+      "id": "dup-pos-021",
+      "origen": "xm-1d2651922a41ce31",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.71
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-021.jpg"
+    },
+    {
+      "id": "dup-pos-022",
+      "origen": "xm-1d2651922a41ce31",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 38
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-022.jpg"
+    },
+    {
+      "id": "dup-pos-023",
+      "origen": "xm-2299c4d21f6fe798",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 34
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-023.jpg"
+    },
+    {
+      "id": "dup-pos-024",
+      "origen": "xm-2299c4d21f6fe798",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.12
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-024.jpg"
+    },
+    {
+      "id": "dup-pos-025",
+      "origen": "xm-25ffd901a9b89185",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.754,
+        "saturacion": 1.003
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-025.jpg"
+    },
+    {
+      "id": "dup-pos-026",
+      "origen": "xm-25ffd901a9b89185",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.759,
+        "x": 0.806,
+        "y": 0.31
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-026.jpg"
+    },
+    {
+      "id": "dup-pos-027",
+      "origen": "xm-26dd794a4d2bcedd",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.945,
+        "saturacion": 1.339
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-027.jpg"
+    },
+    {
+      "id": "dup-pos-028",
+      "origen": "xm-26dd794a4d2bcedd",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 4.69
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-028.jpg"
+    },
+    {
+      "id": "dup-pos-029",
+      "origen": "xm-28cd47011eabb00e",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.789,
+        "saturacion": 0.844
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-029.jpg"
+    },
+    {
+      "id": "dup-pos-030",
+      "origen": "xm-28cd47011eabb00e",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 29,
+        "borde_px": 16,
+        "tono": 137
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-030.jpg"
+    },
+    {
+      "id": "dup-pos-031",
+      "origen": "xm-2a14db3a0316bc65",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 48
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-031.jpg"
+    },
+    {
+      "id": "dup-pos-032",
+      "origen": "xm-2a14db3a0316bc65",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.779,
+        "x": 0.039,
+        "y": 0.692
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-032.jpg"
+    },
+    {
+      "id": "dup-pos-033",
+      "origen": "xm-2aaf990adc8a5c20",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 39,
+        "borde_px": 18,
+        "tono": 80
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-033.jpg"
+    },
+    {
+      "id": "dup-pos-034",
+      "origen": "xm-2aaf990adc8a5c20",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 52
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-034.jpg"
+    },
+    {
+      "id": "dup-pos-035",
+      "origen": "xm-32e98043f06ffb28",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.25,
+        "saturacion": 0.869
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-035.jpg"
+    },
+    {
+      "id": "dup-pos-036",
+      "origen": "xm-32e98043f06ffb28",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-036.jpg"
+    },
+    {
+      "id": "dup-pos-037",
+      "origen": "xm-364a5583d79ef608",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.784,
+        "x": 0.809,
+        "y": 0.627
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-037.jpg"
+    },
+    {
+      "id": "dup-pos-038",
+      "origen": "xm-364a5583d79ef608",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.34
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-038.jpg"
+    },
+    {
+      "id": "dup-pos-039",
+      "origen": "xm-39a4cb342871bde0",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-039.jpg"
+    },
+    {
+      "id": "dup-pos-040",
+      "origen": "xm-39a4cb342871bde0",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -4.44
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-040.jpg"
+    },
+    {
+      "id": "dup-pos-041",
+      "origen": "xm-3af2bd1dd1f8f837",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.199,
+        "saturacion": 1.167
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-041.jpg"
+    },
+    {
+      "id": "dup-pos-042",
+      "origen": "xm-3af2bd1dd1f8f837",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 53
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-042.jpg"
+    },
+    {
+      "id": "dup-pos-043",
+      "origen": "xm-3b481f7bf1be9c11",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.6
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-043.jpg"
+    },
+    {
+      "id": "dup-pos-044",
+      "origen": "xm-3b481f7bf1be9c11",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-044.jpg"
+    },
+    {
+      "id": "dup-pos-045",
+      "origen": "xm-3c6c6ce8aad32d04",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.863,
+        "x": 0.602,
+        "y": 0.292
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-045.jpg"
+    },
+    {
+      "id": "dup-pos-046",
+      "origen": "xm-3c6c6ce8aad32d04",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 54
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-046.jpg"
+    },
+    {
+      "id": "dup-pos-047",
+      "origen": "xm-3d10469999653ce9",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.865,
+        "x": 0.005,
+        "y": 0.563
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-047.jpg"
+    },
+    {
+      "id": "dup-pos-048",
+      "origen": "xm-3d10469999653ce9",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 48,
+        "borde_px": 24,
+        "tono": 204
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-048.jpg"
+    },
+    {
+      "id": "dup-pos-049",
+      "origen": "xm-3d7a9b76e4a14db1",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.766,
+        "x": 0.832,
+        "y": 0.256
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-049.jpg"
+    },
+    {
+      "id": "dup-pos-050",
+      "origen": "xm-3d7a9b76e4a14db1",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-050.jpg"
+    },
+    {
+      "id": "dup-pos-051",
+      "origen": "xm-412f85a91d5fb9e9",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 53,
+        "borde_px": 14,
+        "tono": 188
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-051.jpg"
+    },
+    {
+      "id": "dup-pos-052",
+      "origen": "xm-412f85a91d5fb9e9",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-052.jpg"
+    },
+    {
+      "id": "dup-pos-053",
+      "origen": "xm-41c9a881abbd32d6",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.297,
+        "saturacion": 1.372
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-053.jpg"
+    },
+    {
+      "id": "dup-pos-054",
+      "origen": "xm-41c9a881abbd32d6",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 50,
+        "borde_px": 14,
+        "tono": 131
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-054.jpg"
+    },
+    {
+      "id": "dup-pos-055",
+      "origen": "xm-421d21e008200bd9",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.78,
+        "x": 0.587,
+        "y": 0.277
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-055.jpg"
+    },
+    {
+      "id": "dup-pos-056",
+      "origen": "xm-421d21e008200bd9",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-056.jpg"
+    },
+    {
+      "id": "dup-pos-057",
+      "origen": "xm-436541dd8bfa9c70",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-057.jpg"
+    },
+    {
+      "id": "dup-pos-058",
+      "origen": "xm-436541dd8bfa9c70",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 50,
+        "borde_px": 9,
+        "tono": 65
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-058.jpg"
+    },
+    {
+      "id": "dup-pos-059",
+      "origen": "xm-454c68f0cec1a8da",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.75
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-059.jpg"
+    },
+    {
+      "id": "dup-pos-060",
+      "origen": "xm-454c68f0cec1a8da",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.877,
+        "x": 0.872,
+        "y": 0.541
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-060.jpg"
+    },
+    {
+      "id": "dup-pos-061",
+      "origen": "xm-496fa2685bbb86ee",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 56,
+        "borde_px": 8,
+        "tono": 173
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-061.jpg"
+    },
+    {
+      "id": "dup-pos-062",
+      "origen": "xm-496fa2685bbb86ee",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-062.jpg"
+    },
+    {
+      "id": "dup-pos-063",
+      "origen": "xm-4acbf9e942907ccc",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.062,
+        "saturacion": 0.955
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-063.jpg"
+    },
+    {
+      "id": "dup-pos-064",
+      "origen": "xm-4acbf9e942907ccc",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.737,
+        "x": 0.093,
+        "y": 0.563
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-064.jpg"
+    },
+    {
+      "id": "dup-pos-065",
+      "origen": "xm-4cca0331051eb601",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.793,
+        "x": 0.15,
+        "y": 0.675
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-065.jpg"
+    },
+    {
+      "id": "dup-pos-066",
+      "origen": "xm-4cca0331051eb601",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 40
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-066.jpg"
+    },
+    {
+      "id": "dup-pos-067",
+      "origen": "xm-4dc5d6c869f367a8",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.11
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-067.jpg"
+    },
+    {
+      "id": "dup-pos-068",
+      "origen": "xm-4dc5d6c869f367a8",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.759,
+        "x": 0.005,
+        "y": 0.834
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-068.jpg"
+    },
+    {
+      "id": "dup-pos-069",
+      "origen": "xm-5297bfb5391fcd37",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-069.jpg"
+    },
+    {
+      "id": "dup-pos-070",
+      "origen": "xm-5297bfb5391fcd37",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 48,
+        "borde_px": 17,
+        "tono": 153
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-070.jpg"
+    },
+    {
+      "id": "dup-pos-071",
+      "origen": "xm-5453e0e7b4bfffa7",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-071.jpg"
+    },
+    {
+      "id": "dup-pos-072",
+      "origen": "xm-5453e0e7b4bfffa7",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.247,
+        "saturacion": 1.361
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-072.jpg"
+    },
+    {
+      "id": "dup-pos-073",
+      "origen": "xm-55275b6d928e7503",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.816,
+        "x": 0.448,
+        "y": 0.117
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-073.jpg"
+    },
+    {
+      "id": "dup-pos-074",
+      "origen": "xm-55275b6d928e7503",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.952,
+        "saturacion": 1.105
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-074.jpg"
+    },
+    {
+      "id": "dup-pos-075",
+      "origen": "xm-555e05b577d72ccc",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 55
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-075.jpg"
+    },
+    {
+      "id": "dup-pos-076",
+      "origen": "xm-555e05b577d72ccc",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-076.jpg"
+    },
+    {
+      "id": "dup-pos-077",
+      "origen": "xm-56145db9bd2ff3a1",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-077.jpg"
+    },
+    {
+      "id": "dup-pos-078",
+      "origen": "xm-56145db9bd2ff3a1",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.875,
+        "saturacion": 0.797
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-078.jpg"
+    },
+    {
+      "id": "dup-pos-079",
+      "origen": "xm-5b037fc9857cae49",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-079.jpg"
+    },
+    {
+      "id": "dup-pos-080",
+      "origen": "xm-5b037fc9857cae49",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 47,
+        "borde_px": 22,
+        "tono": 89
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-080.jpg"
+    },
+    {
+      "id": "dup-pos-081",
+      "origen": "xm-5b9e663a6831ec69",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 4.31
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-081.jpg"
+    },
+    {
+      "id": "dup-pos-082",
+      "origen": "xm-5b9e663a6831ec69",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.16,
+        "saturacion": 1.334
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-082.jpg"
+    },
+    {
+      "id": "dup-pos-083",
+      "origen": "xm-608a31ce4a82c202",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 35,
+        "borde_px": 12,
+        "tono": 114
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-083.jpg"
+    },
+    {
+      "id": "dup-pos-084",
+      "origen": "xm-608a31ce4a82c202",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.81
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-084.jpg"
+    },
+    {
+      "id": "dup-pos-085",
+      "origen": "xm-646e2f224466b8f1",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -4.67
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-085.jpg"
+    },
+    {
+      "id": "dup-pos-086",
+      "origen": "xm-646e2f224466b8f1",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-086.jpg"
+    },
+    {
+      "id": "dup-pos-087",
+      "origen": "xm-6548732ddd48efee",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 38,
+        "borde_px": 15,
+        "tono": 106
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-087.jpg"
+    },
+    {
+      "id": "dup-pos-088",
+      "origen": "xm-6548732ddd48efee",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-088.jpg"
+    },
+    {
+      "id": "dup-pos-089",
+      "origen": "xm-65937f11a6a76c12",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.981,
+        "saturacion": 1.202
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-089.jpg"
+    },
+    {
+      "id": "dup-pos-090",
+      "origen": "xm-65937f11a6a76c12",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-090.jpg"
+    },
+    {
+      "id": "dup-pos-091",
+      "origen": "xm-6b3e65c6e4c16bfd",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 39
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-091.jpg"
+    },
+    {
+      "id": "dup-pos-092",
+      "origen": "xm-6b3e65c6e4c16bfd",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 46,
+        "borde_px": 15,
+        "tono": 64
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-092.jpg"
+    },
+    {
+      "id": "dup-pos-093",
+      "origen": "xm-6e65246a225f255d",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.04
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-093.jpg"
+    },
+    {
+      "id": "dup-pos-094",
+      "origen": "xm-6e65246a225f255d",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-094.jpg"
+    },
+    {
+      "id": "dup-pos-095",
+      "origen": "xm-700684f98978c720",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.044,
+        "saturacion": 1.108
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-095.jpg"
+    },
+    {
+      "id": "dup-pos-096",
+      "origen": "xm-700684f98978c720",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.43
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-096.jpg"
+    },
+    {
+      "id": "dup-pos-097",
+      "origen": "xm-70372d9f4212fca0",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.956,
+        "saturacion": 1.284
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-097.jpg"
+    },
+    {
+      "id": "dup-pos-098",
+      "origen": "xm-70372d9f4212fca0",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 51
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-098.jpg"
+    },
+    {
+      "id": "dup-pos-099",
+      "origen": "xm-70bb1955b1461606",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.978,
+        "saturacion": 0.968
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-099.jpg"
+    },
+    {
+      "id": "dup-pos-100",
+      "origen": "xm-70bb1955b1461606",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 47
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-100.jpg"
+    },
+    {
+      "id": "dup-pos-101",
+      "origen": "xm-74ba32c5227b2dbc",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-101.jpg"
+    },
+    {
+      "id": "dup-pos-102",
+      "origen": "xm-74ba32c5227b2dbc",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.813,
+        "x": 0.916,
+        "y": 0.328
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-102.jpg"
+    },
+    {
+      "id": "dup-pos-103",
+      "origen": "xm-776ba3431927af9a",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-103.jpg"
+    },
+    {
+      "id": "dup-pos-104",
+      "origen": "xm-776ba3431927af9a",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 48,
+        "borde_px": 17,
+        "tono": 114
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-104.jpg"
+    },
+    {
+      "id": "dup-pos-105",
+      "origen": "xm-78830cfb2efba89f",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 60
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-105.jpg"
+    },
+    {
+      "id": "dup-pos-106",
+      "origen": "xm-78830cfb2efba89f",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 44,
+        "borde_px": 6,
+        "tono": 122
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-106.jpg"
+    },
+    {
+      "id": "dup-pos-107",
+      "origen": "xm-79d1756ccfdfd14f",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.82,
+        "x": 0.33,
+        "y": 0.54
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-107.jpg"
+    },
+    {
+      "id": "dup-pos-108",
+      "origen": "xm-79d1756ccfdfd14f",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.04
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-108.jpg"
+    },
+    {
+      "id": "dup-pos-109",
+      "origen": "xm-7b714f87e7948e02",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.57
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-109.jpg"
+    },
+    {
+      "id": "dup-pos-110",
+      "origen": "xm-7b714f87e7948e02",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.876,
+        "saturacion": 0.627
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-110.jpg"
+    },
+    {
+      "id": "dup-pos-111",
+      "origen": "xm-7b9c7839f28f6a24",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.861,
+        "x": 0.855,
+        "y": 0.095
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-111.jpg"
+    },
+    {
+      "id": "dup-pos-112",
+      "origen": "xm-7b9c7839f28f6a24",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-112.jpg"
+    },
+    {
+      "id": "dup-pos-113",
+      "origen": "xm-7ba496c0a26e5e34",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.56
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-113.jpg"
+    },
+    {
+      "id": "dup-pos-114",
+      "origen": "xm-7ba496c0a26e5e34",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 42,
+        "borde_px": 19,
+        "tono": 91
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-114.jpg"
+    },
+    {
+      "id": "dup-pos-115",
+      "origen": "xm-7d10b8e054adf99a",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 34
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-115.jpg"
+    },
+    {
+      "id": "dup-pos-116",
+      "origen": "xm-7d10b8e054adf99a",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-116.jpg"
+    },
+    {
+      "id": "dup-pos-117",
+      "origen": "xm-7d4a22b3d34dbd79",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.7
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-117.jpg"
+    },
+    {
+      "id": "dup-pos-118",
+      "origen": "xm-7d4a22b3d34dbd79",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.283,
+        "saturacion": 1.355
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-118.jpg"
+    },
+    {
+      "id": "dup-pos-119",
+      "origen": "xm-7f643602cfadc83d",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.82
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-119.jpg"
+    },
+    {
+      "id": "dup-pos-120",
+      "origen": "xm-7f643602cfadc83d",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-120.jpg"
+    },
+    {
+      "id": "dup-pos-121",
+      "origen": "xm-7f8bf3a6eb66f9de",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-121.jpg"
+    },
+    {
+      "id": "dup-pos-122",
+      "origen": "xm-7f8bf3a6eb66f9de",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.88,
+        "x": 0.888,
+        "y": 0.035
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-122.jpg"
+    },
+    {
+      "id": "dup-pos-123",
+      "origen": "xm-803a09ebc20c01c3",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.86,
+        "x": 0.733,
+        "y": 0.968
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-123.jpg"
+    },
+    {
+      "id": "dup-pos-124",
+      "origen": "xm-803a09ebc20c01c3",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.91
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-124.jpg"
+    },
+    {
+      "id": "dup-pos-125",
+      "origen": "xm-81a540a8b12bff0d",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.94
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-125.jpg"
+    },
+    {
+      "id": "dup-pos-126",
+      "origen": "xm-81a540a8b12bff0d",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-126.jpg"
+    },
+    {
+      "id": "dup-pos-127",
+      "origen": "xm-8255bcf627e2382e",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 43
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-127.jpg"
+    },
+    {
+      "id": "dup-pos-128",
+      "origen": "xm-8255bcf627e2382e",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 30,
+        "borde_px": 14,
+        "tono": 170
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-128.jpg"
+    },
+    {
+      "id": "dup-pos-129",
+      "origen": "xm-86272b97d6ce8713",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 52,
+        "borde_px": 11,
+        "tono": 50
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-129.jpg"
+    },
+    {
+      "id": "dup-pos-130",
+      "origen": "xm-86272b97d6ce8713",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.896,
+        "x": 0.943,
+        "y": 0.211
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-130.jpg"
+    },
+    {
+      "id": "dup-pos-131",
+      "origen": "xm-86af90e19ef983e2",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.253,
+        "saturacion": 1.224
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-131.jpg"
+    },
+    {
+      "id": "dup-pos-132",
+      "origen": "xm-86af90e19ef983e2",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 31,
+        "borde_px": 11,
+        "tono": 203
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-132.jpg"
+    },
+    {
+      "id": "dup-pos-133",
+      "origen": "xm-873906fe44ae2051",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.13
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-133.jpg"
+    },
+    {
+      "id": "dup-pos-134",
+      "origen": "xm-873906fe44ae2051",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-134.jpg"
+    },
+    {
+      "id": "dup-pos-135",
+      "origen": "xm-87e11c01af941ca0",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.718,
+        "x": 0.327,
+        "y": 0.299
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-135.jpg"
+    },
+    {
+      "id": "dup-pos-136",
+      "origen": "xm-87e11c01af941ca0",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 30
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-136.jpg"
+    },
+    {
+      "id": "dup-pos-137",
+      "origen": "xm-87f3010ded4bb742",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 53
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-137.jpg"
+    },
+    {
+      "id": "dup-pos-138",
+      "origen": "xm-87f3010ded4bb742",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 3.33
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-138.jpg"
+    },
+    {
+      "id": "dup-pos-139",
+      "origen": "xm-8aa50f80a4cc3fb3",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.721,
+        "x": 0.731,
+        "y": 0.841
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-139.jpg"
+    },
+    {
+      "id": "dup-pos-140",
+      "origen": "xm-8aa50f80a4cc3fb3",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 3.3
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-140.jpg"
+    },
+    {
+      "id": "dup-pos-141",
+      "origen": "xm-8e9364a0587125d5",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.735,
+        "saturacion": 0.881
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-141.jpg"
+    },
+    {
+      "id": "dup-pos-142",
+      "origen": "xm-8e9364a0587125d5",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 4.83
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-142.jpg"
+    },
+    {
+      "id": "dup-pos-143",
+      "origen": "xm-91f6883f5c76750c",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.256,
+        "saturacion": 0.755
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-143.jpg"
+    },
+    {
+      "id": "dup-pos-144",
+      "origen": "xm-91f6883f5c76750c",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.57
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-144.jpg"
+    },
+    {
+      "id": "dup-pos-145",
+      "origen": "xm-93cee5e418ad8454",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.55
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-145.jpg"
+    },
+    {
+      "id": "dup-pos-146",
+      "origen": "xm-93cee5e418ad8454",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.215,
+        "saturacion": 1.052
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-146.jpg"
+    },
+    {
+      "id": "dup-pos-147",
+      "origen": "xm-9501f235b5661445",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.802,
+        "x": 0.894,
+        "y": 0.812
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-147.jpg"
+    },
+    {
+      "id": "dup-pos-148",
+      "origen": "xm-9501f235b5661445",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 3.35
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-148.jpg"
+    },
+    {
+      "id": "dup-pos-149",
+      "origen": "xm-952e2811f9d62b08",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 54,
+        "borde_px": 9,
+        "tono": 202
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-149.jpg"
+    },
+    {
+      "id": "dup-pos-150",
+      "origen": "xm-952e2811f9d62b08",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-150.jpg"
+    },
+    {
+      "id": "dup-pos-151",
+      "origen": "xm-95bd72f156768b42",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.808,
+        "x": 0.258,
+        "y": 0.029
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-151.jpg"
+    },
+    {
+      "id": "dup-pos-152",
+      "origen": "xm-95bd72f156768b42",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 3.36
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-152.jpg"
+    },
+    {
+      "id": "dup-pos-153",
+      "origen": "xm-95e1de7e3601b4fb",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 48,
+        "borde_px": 20,
+        "tono": 120
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-153.jpg"
+    },
+    {
+      "id": "dup-pos-154",
+      "origen": "xm-95e1de7e3601b4fb",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.749,
+        "x": 0.006,
+        "y": 0.045
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-154.jpg"
+    },
+    {
+      "id": "dup-pos-155",
+      "origen": "xm-9756dc817a007bf4",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 42,
+        "borde_px": 8,
+        "tono": 65
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-155.jpg"
+    },
+    {
+      "id": "dup-pos-156",
+      "origen": "xm-9756dc817a007bf4",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.899,
+        "x": 0.284,
+        "y": 0.816
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-156.jpg"
+    },
+    {
+      "id": "dup-pos-157",
+      "origen": "xm-9829812868693ff7",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 57
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-157.jpg"
+    },
+    {
+      "id": "dup-pos-158",
+      "origen": "xm-9829812868693ff7",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.92
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-158.jpg"
+    },
+    {
+      "id": "dup-pos-159",
+      "origen": "xm-991eb076e64e04d1",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.86
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-159.jpg"
+    },
+    {
+      "id": "dup-pos-160",
+      "origen": "xm-991eb076e64e04d1",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.833,
+        "x": 0.509,
+        "y": 0.599
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-160.jpg"
+    },
+    {
+      "id": "dup-pos-161",
+      "origen": "xm-9965001cc88c944a",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.56
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-161.jpg"
+    },
+    {
+      "id": "dup-pos-162",
+      "origen": "xm-9965001cc88c944a",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 52,
+        "borde_px": 14,
+        "tono": 169
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-162.jpg"
+    },
+    {
+      "id": "dup-pos-163",
+      "origen": "xm-99f9dfb2d8d2b15c",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 3.2
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-163.jpg"
+    },
+    {
+      "id": "dup-pos-164",
+      "origen": "xm-99f9dfb2d8d2b15c",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 37
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-164.jpg"
+    },
+    {
+      "id": "dup-pos-165",
+      "origen": "xm-9b667ef7660ebc9f",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-165.jpg"
+    },
+    {
+      "id": "dup-pos-166",
+      "origen": "xm-9b667ef7660ebc9f",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 47,
+        "borde_px": 16,
+        "tono": 70
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-166.jpg"
+    },
+    {
+      "id": "dup-pos-167",
+      "origen": "xm-9b6b3df50872a2f9",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 41
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-167.jpg"
+    },
+    {
+      "id": "dup-pos-168",
+      "origen": "xm-9b6b3df50872a2f9",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 36,
+        "borde_px": 9,
+        "tono": 208
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-168.jpg"
+    },
+    {
+      "id": "dup-pos-169",
+      "origen": "xm-9bb04bdbf4d049bf",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.867,
+        "x": 0.474,
+        "y": 0.575
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-169.jpg"
+    },
+    {
+      "id": "dup-pos-170",
+      "origen": "xm-9bb04bdbf4d049bf",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 37
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-170.jpg"
+    },
+    {
+      "id": "dup-pos-171",
+      "origen": "xm-9d29766d5f615d7e",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 4.82
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-171.jpg"
+    },
+    {
+      "id": "dup-pos-172",
+      "origen": "xm-9d29766d5f615d7e",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-172.jpg"
+    },
+    {
+      "id": "dup-pos-173",
+      "origen": "xm-9f57f1aa7e8ac223",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-173.jpg"
+    },
+    {
+      "id": "dup-pos-174",
+      "origen": "xm-9f57f1aa7e8ac223",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.744,
+        "x": 0.124,
+        "y": 0.43
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-174.jpg"
+    },
+    {
+      "id": "dup-pos-175",
+      "origen": "xm-9f69b5646009b1a5",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 40
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-175.jpg"
+    },
+    {
+      "id": "dup-pos-176",
+      "origen": "xm-9f69b5646009b1a5",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 40,
+        "borde_px": 7,
+        "tono": 125
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-176.jpg"
+    },
+    {
+      "id": "dup-pos-177",
+      "origen": "xm-a24cb5b83c466cb5",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 44
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-177.jpg"
+    },
+    {
+      "id": "dup-pos-178",
+      "origen": "xm-a24cb5b83c466cb5",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 54,
+        "borde_px": 21,
+        "tono": 200
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-178.jpg"
+    },
+    {
+      "id": "dup-pos-179",
+      "origen": "xm-a2e0cacc7330e540",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.713,
+        "x": 0.531,
+        "y": 0.015
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-179.jpg"
+    },
+    {
+      "id": "dup-pos-180",
+      "origen": "xm-a2e0cacc7330e540",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-180.jpg"
+    },
+    {
+      "id": "dup-pos-181",
+      "origen": "xm-a2e784b06b927501",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-181.jpg"
+    },
+    {
+      "id": "dup-pos-182",
+      "origen": "xm-a2e784b06b927501",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 44
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-182.jpg"
+    },
+    {
+      "id": "dup-pos-183",
+      "origen": "xm-a2e9f9f2322871d8",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.755,
+        "saturacion": 1.371
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-183.jpg"
+    },
+    {
+      "id": "dup-pos-184",
+      "origen": "xm-a2e9f9f2322871d8",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 60
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-184.jpg"
+    },
+    {
+      "id": "dup-pos-185",
+      "origen": "xm-a6e7bc6d391ac27a",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.166,
+        "saturacion": 0.942
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-185.jpg"
+    },
+    {
+      "id": "dup-pos-186",
+      "origen": "xm-a6e7bc6d391ac27a",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.887,
+        "x": 0.715,
+        "y": 0.84
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-186.jpg"
+    },
+    {
+      "id": "dup-pos-187",
+      "origen": "xm-ab127af363a15ae8",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 47,
+        "borde_px": 24,
+        "tono": 83
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-187.jpg"
+    },
+    {
+      "id": "dup-pos-188",
+      "origen": "xm-ab127af363a15ae8",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 35
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-188.jpg"
+    },
+    {
+      "id": "dup-pos-189",
+      "origen": "xm-ab23bc35fbe1891c",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.943,
+        "saturacion": 0.82
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-189.jpg"
+    },
+    {
+      "id": "dup-pos-190",
+      "origen": "xm-ab23bc35fbe1891c",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.722,
+        "x": 0.159,
+        "y": 0.781
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-190.jpg"
+    },
+    {
+      "id": "dup-pos-191",
+      "origen": "xm-ad7093bf507f4b98",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.78
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-191.jpg"
+    },
+    {
+      "id": "dup-pos-192",
+      "origen": "xm-ad7093bf507f4b98",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.768,
+        "x": 0.025,
+        "y": 0.308
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-192.jpg"
+    },
+    {
+      "id": "dup-pos-193",
+      "origen": "xm-ad9d3d0b5006aab2",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.78,
+        "x": 0.56,
+        "y": 0.25
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-193.jpg"
+    },
+    {
+      "id": "dup-pos-194",
+      "origen": "xm-ad9d3d0b5006aab2",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-194.jpg"
+    },
+    {
+      "id": "dup-pos-195",
+      "origen": "xm-add4a414399a8900",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 40,
+        "borde_px": 23,
+        "tono": 159
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-195.jpg"
+    },
+    {
+      "id": "dup-pos-196",
+      "origen": "xm-add4a414399a8900",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.712,
+        "x": 0.17,
+        "y": 0.566
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-196.jpg"
+    },
+    {
+      "id": "dup-pos-197",
+      "origen": "xm-b12384ea4a13a141",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.32
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-197.jpg"
+    },
+    {
+      "id": "dup-pos-198",
+      "origen": "xm-b12384ea4a13a141",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 60
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-198.jpg"
+    },
+    {
+      "id": "dup-pos-199",
+      "origen": "xm-b29f76e1a5f672ec",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.839,
+        "x": 0.988,
+        "y": 0.979
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-199.jpg"
+    },
+    {
+      "id": "dup-pos-200",
+      "origen": "xm-b29f76e1a5f672ec",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 59
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-200.jpg"
+    },
+    {
+      "id": "dup-pos-201",
+      "origen": "xm-b41f3d60bbba282d",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 58
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-201.jpg"
+    },
+    {
+      "id": "dup-pos-202",
+      "origen": "xm-b41f3d60bbba282d",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 53,
+        "borde_px": 11,
+        "tono": 196
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-202.jpg"
+    },
+    {
+      "id": "dup-pos-203",
+      "origen": "xm-b4c80c6bef114e5b",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.197,
+        "saturacion": 1.184
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-203.jpg"
+    },
+    {
+      "id": "dup-pos-204",
+      "origen": "xm-b4c80c6bef114e5b",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.01
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-204.jpg"
+    },
+    {
+      "id": "dup-pos-205",
+      "origen": "xm-b58504383f3c9d57",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-205.jpg"
+    },
+    {
+      "id": "dup-pos-206",
+      "origen": "xm-b58504383f3c9d57",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 41
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-206.jpg"
+    },
+    {
+      "id": "dup-pos-207",
+      "origen": "xm-b686acb15bb3c2e7",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.049,
+        "saturacion": 0.715
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-207.jpg"
+    },
+    {
+      "id": "dup-pos-208",
+      "origen": "xm-b686acb15bb3c2e7",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.58
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-208.jpg"
+    },
+    {
+      "id": "dup-pos-209",
+      "origen": "xm-b9a94018290ec347",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 32
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-209.jpg"
+    },
+    {
+      "id": "dup-pos-210",
+      "origen": "xm-b9a94018290ec347",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 37,
+        "borde_px": 12,
+        "tono": 203
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-210.jpg"
+    },
+    {
+      "id": "dup-pos-211",
+      "origen": "xm-ba2c5b3e2f33ace3",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-211.jpg"
+    },
+    {
+      "id": "dup-pos-212",
+      "origen": "xm-ba2c5b3e2f33ace3",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.49
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-212.jpg"
+    },
+    {
+      "id": "dup-pos-213",
+      "origen": "xm-bb8a297d4767a726",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.107,
+        "saturacion": 0.727
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-213.jpg"
+    },
+    {
+      "id": "dup-pos-214",
+      "origen": "xm-bb8a297d4767a726",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-214.jpg"
+    },
+    {
+      "id": "dup-pos-215",
+      "origen": "xm-bdc0ecfc2fe8c9cc",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 37,
+        "borde_px": 21,
+        "tono": 75
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-215.jpg"
+    },
+    {
+      "id": "dup-pos-216",
+      "origen": "xm-bdc0ecfc2fe8c9cc",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 3.6
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-216.jpg"
+    },
+    {
+      "id": "dup-pos-217",
+      "origen": "xm-bedebc56bbae02ea",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-217.jpg"
+    },
+    {
+      "id": "dup-pos-218",
+      "origen": "xm-bedebc56bbae02ea",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 55,
+        "borde_px": 13,
+        "tono": 50
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-218.jpg"
+    },
+    {
+      "id": "dup-pos-219",
+      "origen": "xm-c1cba160342bdd01",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.166,
+        "saturacion": 1.296
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-219.jpg"
+    },
+    {
+      "id": "dup-pos-220",
+      "origen": "xm-c1cba160342bdd01",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 55
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-220.jpg"
+    },
+    {
+      "id": "dup-pos-221",
+      "origen": "xm-c2cfbb8ae3ab8fa1",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 54,
+        "borde_px": 13,
+        "tono": 204
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-221.jpg"
+    },
+    {
+      "id": "dup-pos-222",
+      "origen": "xm-c2cfbb8ae3ab8fa1",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.751,
+        "saturacion": 0.685
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-222.jpg"
+    },
+    {
+      "id": "dup-pos-223",
+      "origen": "xm-c3e70c6b44f16bff",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.792,
+        "x": 0.251,
+        "y": 0.617
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-223.jpg"
+    },
+    {
+      "id": "dup-pos-224",
+      "origen": "xm-c3e70c6b44f16bff",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.788,
+        "saturacion": 0.66
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-224.jpg"
+    },
+    {
+      "id": "dup-pos-225",
+      "origen": "xm-c59adfcc3b31fa9d",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -4.64
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-225.jpg"
+    },
+    {
+      "id": "dup-pos-226",
+      "origen": "xm-c59adfcc3b31fa9d",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.764,
+        "x": 0.565,
+        "y": 0.121
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-226.jpg"
+    },
+    {
+      "id": "dup-pos-227",
+      "origen": "xm-c6eae1040e7bc7da",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 46
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-227.jpg"
+    },
+    {
+      "id": "dup-pos-228",
+      "origen": "xm-c6eae1040e7bc7da",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-228.jpg"
+    },
+    {
+      "id": "dup-pos-229",
+      "origen": "xm-c7fa0a5cc7e48100",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.58
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-229.jpg"
+    },
+    {
+      "id": "dup-pos-230",
+      "origen": "xm-c7fa0a5cc7e48100",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 59
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-230.jpg"
+    },
+    {
+      "id": "dup-pos-231",
+      "origen": "xm-c966b7c0ccf8dfcc",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 49
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-231.jpg"
+    },
+    {
+      "id": "dup-pos-232",
+      "origen": "xm-c966b7c0ccf8dfcc",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.7,
+        "x": 0.271,
+        "y": 0.017
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-232.jpg"
+    },
+    {
+      "id": "dup-pos-233",
+      "origen": "xm-cc01e3226696fa74",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -4.25
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-233.jpg"
+    },
+    {
+      "id": "dup-pos-234",
+      "origen": "xm-cc01e3226696fa74",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.174,
+        "saturacion": 1.129
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-234.jpg"
+    },
+    {
+      "id": "dup-pos-235",
+      "origen": "xm-cd5b7306e023b259",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 41,
+        "borde_px": 22,
+        "tono": 188
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-235.jpg"
+    },
+    {
+      "id": "dup-pos-236",
+      "origen": "xm-cd5b7306e023b259",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 47
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-236.jpg"
+    },
+    {
+      "id": "dup-pos-237",
+      "origen": "xm-d12d8a8cd81b6ca6",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.993,
+        "saturacion": 0.925
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-237.jpg"
+    },
+    {
+      "id": "dup-pos-238",
+      "origen": "xm-d12d8a8cd81b6ca6",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-238.jpg"
+    },
+    {
+      "id": "dup-pos-239",
+      "origen": "xm-d1be9716b3f16f35",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.23
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-239.jpg"
+    },
+    {
+      "id": "dup-pos-240",
+      "origen": "xm-d1be9716b3f16f35",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 37
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-240.jpg"
+    },
+    {
+      "id": "dup-pos-241",
+      "origen": "xm-d2121862187c111f",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -4.76
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-241.jpg"
+    },
+    {
+      "id": "dup-pos-242",
+      "origen": "xm-d2121862187c111f",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.984,
+        "saturacion": 1.168
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-242.jpg"
+    },
+    {
+      "id": "dup-pos-243",
+      "origen": "xm-d2816bb05dacd8c7",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-243.jpg"
+    },
+    {
+      "id": "dup-pos-244",
+      "origen": "xm-d2816bb05dacd8c7",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.793,
+        "x": 0.98,
+        "y": 0.499
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-244.jpg"
+    },
+    {
+      "id": "dup-pos-245",
+      "origen": "xm-d282773b4822c67f",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.713,
+        "x": 0.468,
+        "y": 0.748
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-245.jpg"
+    },
+    {
+      "id": "dup-pos-246",
+      "origen": "xm-d282773b4822c67f",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 50
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-246.jpg"
+    },
+    {
+      "id": "dup-pos-247",
+      "origen": "xm-d36aef7f8224a0ec",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 50
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-247.jpg"
+    },
+    {
+      "id": "dup-pos-248",
+      "origen": "xm-d36aef7f8224a0ec",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.154,
+        "saturacion": 0.881
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-248.jpg"
+    },
+    {
+      "id": "dup-pos-249",
+      "origen": "xm-d490df2079e32bc4",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 2.18
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-249.jpg"
+    },
+    {
+      "id": "dup-pos-250",
+      "origen": "xm-d490df2079e32bc4",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.783,
+        "x": 0.477,
+        "y": 0.552
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-250.jpg"
+    },
+    {
+      "id": "dup-pos-251",
+      "origen": "xm-d49eccd223ed16f1",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-251.jpg"
+    },
+    {
+      "id": "dup-pos-252",
+      "origen": "xm-d49eccd223ed16f1",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.156,
+        "saturacion": 0.811
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-252.jpg"
+    },
+    {
+      "id": "dup-pos-253",
+      "origen": "xm-d659c7ebafce8858",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 38,
+        "borde_px": 6,
+        "tono": 203
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-253.jpg"
+    },
+    {
+      "id": "dup-pos-254",
+      "origen": "xm-d659c7ebafce8858",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.12
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-254.jpg"
+    },
+    {
+      "id": "dup-pos-255",
+      "origen": "xm-dbb59a058870e62d",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-255.jpg"
+    },
+    {
+      "id": "dup-pos-256",
+      "origen": "xm-dbb59a058870e62d",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 39,
+        "borde_px": 23,
+        "tono": 175
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-256.jpg"
+    },
+    {
+      "id": "dup-pos-257",
+      "origen": "xm-dcaaf48fcc6acf42",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 50,
+        "borde_px": 24,
+        "tono": 159
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-257.jpg"
+    },
+    {
+      "id": "dup-pos-258",
+      "origen": "xm-dcaaf48fcc6acf42",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.6
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-258.jpg"
+    },
+    {
+      "id": "dup-pos-259",
+      "origen": "xm-de76338b0de27fcf",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.9
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-259.jpg"
+    },
+    {
+      "id": "dup-pos-260",
+      "origen": "xm-de76338b0de27fcf",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.785,
+        "saturacion": 0.982
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-260.jpg"
+    },
+    {
+      "id": "dup-pos-261",
+      "origen": "xm-df9fc4fddbdb9813",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.91
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-261.jpg"
+    },
+    {
+      "id": "dup-pos-262",
+      "origen": "xm-df9fc4fddbdb9813",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 30,
+        "borde_px": 10,
+        "tono": 40
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-262.jpg"
+    },
+    {
+      "id": "dup-pos-263",
+      "origen": "xm-e24bf52b53c16328",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.07
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-263.jpg"
+    },
+    {
+      "id": "dup-pos-264",
+      "origen": "xm-e24bf52b53c16328",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 39,
+        "borde_px": 21,
+        "tono": 91
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-264.jpg"
+    },
+    {
+      "id": "dup-pos-265",
+      "origen": "xm-e31e79ab178400e9",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.33
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-265.jpg"
+    },
+    {
+      "id": "dup-pos-266",
+      "origen": "xm-e31e79ab178400e9",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.054,
+        "saturacion": 1.131
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-266.jpg"
+    },
+    {
+      "id": "dup-pos-267",
+      "origen": "xm-e36d9e91481be290",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-267.jpg"
+    },
+    {
+      "id": "dup-pos-268",
+      "origen": "xm-e36d9e91481be290",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": 1.12
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-268.jpg"
+    },
+    {
+      "id": "dup-pos-269",
+      "origen": "xm-e44594aebd881436",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 31
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-269.jpg"
+    },
+    {
+      "id": "dup-pos-270",
+      "origen": "xm-e44594aebd881436",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.703,
+        "x": 0.1,
+        "y": 0.069
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-270.jpg"
+    },
+    {
+      "id": "dup-pos-271",
+      "origen": "xm-e46e940affeb181a",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.838,
+        "x": 0.586,
+        "y": 0.367
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-271.jpg"
+    },
+    {
+      "id": "dup-pos-272",
+      "origen": "xm-e46e940affeb181a",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.01
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-272.jpg"
+    },
+    {
+      "id": "dup-pos-273",
+      "origen": "xm-e6c87396308b1105",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 35
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-273.jpg"
+    },
+    {
+      "id": "dup-pos-274",
+      "origen": "xm-e6c87396308b1105",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.38
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-274.jpg"
+    },
+    {
+      "id": "dup-pos-275",
+      "origen": "xm-e9b781944b676783",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.191,
+        "saturacion": 0.742
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-275.jpg"
+    },
+    {
+      "id": "dup-pos-276",
+      "origen": "xm-e9b781944b676783",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 44,
+        "borde_px": 18,
+        "tono": 62
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-276.jpg"
+    },
+    {
+      "id": "dup-pos-277",
+      "origen": "xm-eac90e04b286ec66",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-277.jpg"
+    },
+    {
+      "id": "dup-pos-278",
+      "origen": "xm-eac90e04b286ec66",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -1.35
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-278.jpg"
+    },
+    {
+      "id": "dup-pos-279",
+      "origen": "xm-ed01728ef132a7ae",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-279.jpg"
+    },
+    {
+      "id": "dup-pos-280",
+      "origen": "xm-ed01728ef132a7ae",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.702,
+        "x": 0.737,
+        "y": 0.053
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-280.jpg"
+    },
+    {
+      "id": "dup-pos-281",
+      "origen": "xm-eeec81508b289b3e",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -3.17
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-281.jpg"
+    },
+    {
+      "id": "dup-pos-282",
+      "origen": "xm-eeec81508b289b3e",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-282.jpg"
+    },
+    {
+      "id": "dup-pos-283",
+      "origen": "xm-f0b43b657df2e645",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.703,
+        "x": 0.708,
+        "y": 0.009
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-283.jpg"
+    },
+    {
+      "id": "dup-pos-284",
+      "origen": "xm-f0b43b657df2e645",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-284.jpg"
+    },
+    {
+      "id": "dup-pos-285",
+      "origen": "xm-f0d2a0bf82a9fb8f",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-285.jpg"
+    },
+    {
+      "id": "dup-pos-286",
+      "origen": "xm-f0d2a0bf82a9fb8f",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.9
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-286.jpg"
+    },
+    {
+      "id": "dup-pos-287",
+      "origen": "xm-f3412193a3bb9d6d",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.824,
+        "saturacion": 1.177
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-287.jpg"
+    },
+    {
+      "id": "dup-pos-288",
+      "origen": "xm-f3412193a3bb9d6d",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.859,
+        "x": 0.141,
+        "y": 0.225
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-288.jpg"
+    },
+    {
+      "id": "dup-pos-289",
+      "origen": "xm-f36e7dedc4c7c04e",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 1.203,
+        "saturacion": 0.846
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-289.jpg"
+    },
+    {
+      "id": "dup-pos-290",
+      "origen": "xm-f36e7dedc4c7c04e",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-290.jpg"
+    },
+    {
+      "id": "dup-pos-291",
+      "origen": "xm-f9ab64522f4992b7",
+      "transformacion": {
+        "tipo": "recompresion",
+        "calidad": 39
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-291.jpg"
+    },
+    {
+      "id": "dup-pos-292",
+      "origen": "xm-f9ab64522f4992b7",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-292.jpg"
+    },
+    {
+      "id": "dup-pos-293",
+      "origen": "xm-fc539ef0ba423083",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 54,
+        "borde_px": 16,
+        "tono": 208
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-293.jpg"
+    },
+    {
+      "id": "dup-pos-294",
+      "origen": "xm-fc539ef0ba423083",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-294.jpg"
+    },
+    {
+      "id": "dup-pos-295",
+      "origen": "xm-fc7a39684edd2ae2",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 37,
+        "borde_px": 14,
+        "tono": 121
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-295.jpg"
+    },
+    {
+      "id": "dup-pos-296",
+      "origen": "xm-fc7a39684edd2ae2",
+      "transformacion": {
+        "tipo": "brillo_saturacion",
+        "brillo": 0.84,
+        "saturacion": 1.329
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-296.jpg"
+    },
+    {
+      "id": "dup-pos-297",
+      "origen": "xm-fcd7bde25c97b165",
+      "transformacion": {
+        "tipo": "espejo"
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-297.jpg"
+    },
+    {
+      "id": "dup-pos-298",
+      "origen": "xm-fcd7bde25c97b165",
+      "transformacion": {
+        "tipo": "rotacion",
+        "grados": -2.61
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-298.jpg"
+    },
+    {
+      "id": "dup-pos-299",
+      "origen": "xm-fcee8ab7eadb4058",
+      "transformacion": {
+        "tipo": "marco_captura",
+        "barra_px": 45,
+        "borde_px": 23,
+        "tono": 198
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-299.jpg"
+    },
+    {
+      "id": "dup-pos-300",
+      "origen": "xm-fcee8ab7eadb4058",
+      "transformacion": {
+        "tipo": "recorte",
+        "fraccion": 0.749,
+        "x": 0.752,
+        "y": 0.443
+      },
+      "archivo": "sinteticos/casi_duplicados_pos/dup-pos-300.jpg"
+    }
+  ]
+}

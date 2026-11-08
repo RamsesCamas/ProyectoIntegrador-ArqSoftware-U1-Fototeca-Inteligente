@@ -1,0 +1,112 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "uso": "solo calibración (H5)",
+  "items": [
+    {
+      "id": "cal-fdd-01",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2526,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-01.png"
+    },
+    {
+      "id": "cal-fdd-02",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2527,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-02.png"
+    },
+    {
+      "id": "cal-fdd-03",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2528,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-03.png"
+    },
+    {
+      "id": "cal-fdd-04",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2529,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-04.png"
+    },
+    {
+      "id": "cal-fdd-05",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2530,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-05.png"
+    },
+    {
+      "id": "cal-fdd-06",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2531,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-06.png"
+    },
+    {
+      "id": "cal-fdd-07",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2532,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-07.png"
+    },
+    {
+      "id": "cal-fdd-08",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2533,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-08.png"
+    },
+    {
+      "id": "cal-fdd-09",
+      "tipo": "grafica",
+      "estilo": "lineas",
+      "semilla": 2534,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-09.png"
+    },
+    {
+      "id": "cal-fdd-10",
+      "tipo": "grafica",
+      "estilo": "barras",
+      "semilla": 2535,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-10.png"
+    },
+    {
+      "id": "cal-fdd-11",
+      "tipo": "grafica",
+      "estilo": "pastel",
+      "semilla": 2536,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-11.png"
+    },
+    {
+      "id": "cal-fdd-12",
+      "tipo": "grafica",
+      "estilo": "lineas",
+      "semilla": 2537,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-12.png"
+    },
+    {
+      "id": "cal-fdd-13",
+      "tipo": "interfaz",
+      "estilo": null,
+      "semilla": 2538,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-13.png"
+    },
+    {
+      "id": "cal-fdd-14",
+      "tipo": "interfaz",
+      "estilo": null,
+      "semilla": 2539,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-14.png"
+    },
+    {
+      "id": "cal-fdd-15",
+      "tipo": "interfaz",
+      "estilo": null,
+      "semilla": 2540,
+      "archivo": "sinteticos/calibracion_fuera_de_dominio/cal-fdd-15.png"
+    }
+  ]
+}

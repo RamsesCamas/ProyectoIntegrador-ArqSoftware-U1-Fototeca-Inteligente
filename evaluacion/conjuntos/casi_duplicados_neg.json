@@ -1,0 +1,907 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "descripcion": "Para cada una de las 150 fotos, su vecino más cercano distinto dentro del archivo (embedding de imagen)",
+  "items": [
+    {
+      "id": "dup-neg-001",
+      "origen": "xm-0004886b7d043cfd",
+      "vecino": "xm-d7dd84d0dd6c9f44",
+      "similitud": 0.81862
+    },
+    {
+      "id": "dup-neg-002",
+      "origen": "xm-00fe1cf6d7237787",
+      "vecino": "xm-bee7ac1b218409d9",
+      "similitud": 0.86146
+    },
+    {
+      "id": "dup-neg-003",
+      "origen": "xm-08dbfb19f7bd3c2b",
+      "vecino": "xm-6e458d9088a43169",
+      "similitud": 0.74572
+    },
+    {
+      "id": "dup-neg-004",
+      "origen": "xm-09657edae4f69497",
+      "vecino": "xm-73e4e1e2cdcaf152",
+      "similitud": 0.82855
+    },
+    {
+      "id": "dup-neg-005",
+      "origen": "xm-0a883b2736f3cd27",
+      "vecino": "xm-cb99cf287e954b5d",
+      "similitud": 0.8419
+    },
+    {
+      "id": "dup-neg-006",
+      "origen": "xm-0cd79336747bd7cc",
+      "vecino": "xm-9ffccdd892411732",
+      "similitud": 0.88276
+    },
+    {
+      "id": "dup-neg-007",
+      "origen": "xm-0e59eab29bb975eb",
+      "vecino": "xm-514a005c4fc9c132",
+      "similitud": 0.86873
+    },
+    {
+      "id": "dup-neg-008",
+      "origen": "xm-120366298e4ebe93",
+      "vecino": "xm-ed01728ef132a7ae",
+      "similitud": 0.81218
+    },
+    {
+      "id": "dup-neg-009",
+      "origen": "xm-146a017e61c7d073",
+      "vecino": "xm-18c2ca19151f97f8",
+      "similitud": 0.76963
+    },
+    {
+      "id": "dup-neg-010",
+      "origen": "xm-1af752b509c87694",
+      "vecino": "xm-535547a4f4459378",
+      "similitud": 0.80311
+    },
+    {
+      "id": "dup-neg-011",
+      "origen": "xm-1d2651922a41ce31",
+      "vecino": "xm-62d880ef8b10536d",
+      "similitud": 0.83109
+    },
+    {
+      "id": "dup-neg-012",
+      "origen": "xm-2299c4d21f6fe798",
+      "vecino": "xm-402af2b1d710c887",
+      "similitud": 0.81807
+    },
+    {
+      "id": "dup-neg-013",
+      "origen": "xm-25ffd901a9b89185",
+      "vecino": "xm-6306c49d3cfb7706",
+      "similitud": 0.85284
+    },
+    {
+      "id": "dup-neg-014",
+      "origen": "xm-26dd794a4d2bcedd",
+      "vecino": "xm-5692ed295e72346b",
+      "similitud": 0.7761
+    },
+    {
+      "id": "dup-neg-015",
+      "origen": "xm-28cd47011eabb00e",
+      "vecino": "xm-ea4eeca80707dd9a",
+      "similitud": 0.87826
+    },
+    {
+      "id": "dup-neg-016",
+      "origen": "xm-2a14db3a0316bc65",
+      "vecino": "xm-a917b38669bd7d71",
+      "similitud": 0.78338
+    },
+    {
+      "id": "dup-neg-017",
+      "origen": "xm-2aaf990adc8a5c20",
+      "vecino": "xm-c104fa9844cd56d6",
+      "similitud": 0.85138
+    },
+    {
+      "id": "dup-neg-018",
+      "origen": "xm-32e98043f06ffb28",
+      "vecino": "xm-d1c7bd7a88f1f4c5",
+      "similitud": 0.82341
+    },
+    {
+      "id": "dup-neg-019",
+      "origen": "xm-364a5583d79ef608",
+      "vecino": "xm-c2e100d8f93e7cf6",
+      "similitud": 0.85976
+    },
+    {
+      "id": "dup-neg-020",
+      "origen": "xm-39a4cb342871bde0",
+      "vecino": "xm-96b9579cd2e97de7",
+      "similitud": 0.86383
+    },
+    {
+      "id": "dup-neg-021",
+      "origen": "xm-3af2bd1dd1f8f837",
+      "vecino": "xm-ce5e636caa2a78af",
+      "similitud": 0.79856
+    },
+    {
+      "id": "dup-neg-022",
+      "origen": "xm-3b481f7bf1be9c11",
+      "vecino": "xm-28cd47011eabb00e",
+      "similitud": 0.86913
+    },
+    {
+      "id": "dup-neg-023",
+      "origen": "xm-3c6c6ce8aad32d04",
+      "vecino": "xm-9b667ef7660ebc9f",
+      "similitud": 0.81994
+    },
+    {
+      "id": "dup-neg-024",
+      "origen": "xm-3d10469999653ce9",
+      "vecino": "xm-3a3255202e45c0ff",
+      "similitud": 0.75994
+    },
+    {
+      "id": "dup-neg-025",
+      "origen": "xm-3d7a9b76e4a14db1",
+      "vecino": "xm-6e36814f093544b3",
+      "similitud": 0.75737
+    },
+    {
+      "id": "dup-neg-026",
+      "origen": "xm-412f85a91d5fb9e9",
+      "vecino": "xm-eaf2d8eaec06c8d2",
+      "similitud": 0.79271
+    },
+    {
+      "id": "dup-neg-027",
+      "origen": "xm-41c9a881abbd32d6",
+      "vecino": "xm-f07b7fdc63ba69a4",
+      "similitud": 0.83318
+    },
+    {
+      "id": "dup-neg-028",
+      "origen": "xm-421d21e008200bd9",
+      "vecino": "xm-5e441bb7f72fdade",
+      "similitud": 0.83378
+    },
+    {
+      "id": "dup-neg-029",
+      "origen": "xm-436541dd8bfa9c70",
+      "vecino": "xm-1fca4e8814de1ef8",
+      "similitud": 0.89877
+    },
+    {
+      "id": "dup-neg-030",
+      "origen": "xm-454c68f0cec1a8da",
+      "vecino": "xm-29f765107c757b49",
+      "similitud": 0.75507
+    },
+    {
+      "id": "dup-neg-031",
+      "origen": "xm-496fa2685bbb86ee",
+      "vecino": "xm-0d4d1169ecf7e56e",
+      "similitud": 0.79366
+    },
+    {
+      "id": "dup-neg-032",
+      "origen": "xm-4acbf9e942907ccc",
+      "vecino": "xm-d741bda6e9282f76",
+      "similitud": 0.80345
+    },
+    {
+      "id": "dup-neg-033",
+      "origen": "xm-4cca0331051eb601",
+      "vecino": "xm-77a6489e7182a545",
+      "similitud": 0.81545
+    },
+    {
+      "id": "dup-neg-034",
+      "origen": "xm-4dc5d6c869f367a8",
+      "vecino": "xm-986e489c675ab922",
+      "similitud": 0.82206
+    },
+    {
+      "id": "dup-neg-035",
+      "origen": "xm-5297bfb5391fcd37",
+      "vecino": "xm-cbc8f6c61b25e86b",
+      "similitud": 0.97124
+    },
+    {
+      "id": "dup-neg-036",
+      "origen": "xm-5453e0e7b4bfffa7",
+      "vecino": "xm-3accc1de7bb448ed",
+      "similitud": 0.84641
+    },
+    {
+      "id": "dup-neg-037",
+      "origen": "xm-55275b6d928e7503",
+      "vecino": "xm-f15e1a58ad8a1537",
+      "similitud": 0.8355
+    },
+    {
+      "id": "dup-neg-038",
+      "origen": "xm-555e05b577d72ccc",
+      "vecino": "xm-f05f9c71f6b0a2ef",
+      "similitud": 0.85921
+    },
+    {
+      "id": "dup-neg-039",
+      "origen": "xm-56145db9bd2ff3a1",
+      "vecino": "xm-a81f4f698ed913e8",
+      "similitud": 0.82979
+    },
+    {
+      "id": "dup-neg-040",
+      "origen": "xm-5b037fc9857cae49",
+      "vecino": "xm-81ae90958043ac70",
+      "similitud": 0.81185
+    },
+    {
+      "id": "dup-neg-041",
+      "origen": "xm-5b9e663a6831ec69",
+      "vecino": "xm-70a4f613cafddc27",
+      "similitud": 0.86975
+    },
+    {
+      "id": "dup-neg-042",
+      "origen": "xm-608a31ce4a82c202",
+      "vecino": "xm-016bc75fcfc8b2a4",
+      "similitud": 0.76058
+    },
+    {
+      "id": "dup-neg-043",
+      "origen": "xm-646e2f224466b8f1",
+      "vecino": "xm-aef73236856e88e4",
+      "similitud": 0.7686
+    },
+    {
+      "id": "dup-neg-044",
+      "origen": "xm-6548732ddd48efee",
+      "vecino": "xm-ab55c46d2276f323",
+      "similitud": 0.83748
+    },
+    {
+      "id": "dup-neg-045",
+      "origen": "xm-65937f11a6a76c12",
+      "vecino": "xm-b55ac7de9e6e5b3b",
+      "similitud": 0.81291
+    },
+    {
+      "id": "dup-neg-046",
+      "origen": "xm-6b3e65c6e4c16bfd",
+      "vecino": "xm-b728b44f8b70dcc6",
+      "similitud": 0.83643
+    },
+    {
+      "id": "dup-neg-047",
+      "origen": "xm-6e65246a225f255d",
+      "vecino": "xm-e9c3d89ea09ae9ee",
+      "similitud": 0.83078
+    },
+    {
+      "id": "dup-neg-048",
+      "origen": "xm-700684f98978c720",
+      "vecino": "xm-6fd3c162733814c2",
+      "similitud": 0.87624
+    },
+    {
+      "id": "dup-neg-049",
+      "origen": "xm-70372d9f4212fca0",
+      "vecino": "xm-7809a3b2a8482e1f",
+      "similitud": 0.75246
+    },
+    {
+      "id": "dup-neg-050",
+      "origen": "xm-70bb1955b1461606",
+      "vecino": "xm-d2dbb8bcc94d03d2",
+      "similitud": 0.86119
+    },
+    {
+      "id": "dup-neg-051",
+      "origen": "xm-74ba32c5227b2dbc",
+      "vecino": "xm-a963231df1909fcf",
+      "similitud": 0.89673
+    },
+    {
+      "id": "dup-neg-052",
+      "origen": "xm-776ba3431927af9a",
+      "vecino": "xm-d37f670d6c23dfa4",
+      "similitud": 0.82147
+    },
+    {
+      "id": "dup-neg-053",
+      "origen": "xm-78830cfb2efba89f",
+      "vecino": "xm-2a5101e8b9166d1b",
+      "similitud": 0.79444
+    },
+    {
+      "id": "dup-neg-054",
+      "origen": "xm-79d1756ccfdfd14f",
+      "vecino": "xm-709a0b6e58f6a035",
+      "similitud": 0.83615
+    },
+    {
+      "id": "dup-neg-055",
+      "origen": "xm-7b714f87e7948e02",
+      "vecino": "xm-a610b21a251ba8f9",
+      "similitud": 0.8046
+    },
+    {
+      "id": "dup-neg-056",
+      "origen": "xm-7b9c7839f28f6a24",
+      "vecino": "xm-9f69b5646009b1a5",
+      "similitud": 0.93429
+    },
+    {
+      "id": "dup-neg-057",
+      "origen": "xm-7ba496c0a26e5e34",
+      "vecino": "xm-1d224f496033e60d",
+      "similitud": 0.86691
+    },
+    {
+      "id": "dup-neg-058",
+      "origen": "xm-7d10b8e054adf99a",
+      "vecino": "xm-402af2b1d710c887",
+      "similitud": 0.81955
+    },
+    {
+      "id": "dup-neg-059",
+      "origen": "xm-7d4a22b3d34dbd79",
+      "vecino": "xm-724864ab6e213713",
+      "similitud": 0.8314
+    },
+    {
+      "id": "dup-neg-060",
+      "origen": "xm-7f643602cfadc83d",
+      "vecino": "xm-add4a414399a8900",
+      "similitud": 0.88392
+    },
+    {
+      "id": "dup-neg-061",
+      "origen": "xm-7f8bf3a6eb66f9de",
+      "vecino": "xm-dd351b03f2131bf5",
+      "similitud": 0.82571
+    },
+    {
+      "id": "dup-neg-062",
+      "origen": "xm-803a09ebc20c01c3",
+      "vecino": "xm-e495f745a1d866be",
+      "similitud": 0.73168
+    },
+    {
+      "id": "dup-neg-063",
+      "origen": "xm-81a540a8b12bff0d",
+      "vecino": "xm-cff5fd291afe1e07",
+      "similitud": 0.94975
+    },
+    {
+      "id": "dup-neg-064",
+      "origen": "xm-8255bcf627e2382e",
+      "vecino": "xm-d6b8b01e4ce6950a",
+      "similitud": 0.84715
+    },
+    {
+      "id": "dup-neg-065",
+      "origen": "xm-86272b97d6ce8713",
+      "vecino": "xm-af04ae2350cc12b5",
+      "similitud": 0.86237
+    },
+    {
+      "id": "dup-neg-066",
+      "origen": "xm-86af90e19ef983e2",
+      "vecino": "xm-8be076c2053f742f",
+      "similitud": 0.75272
+    },
+    {
+      "id": "dup-neg-067",
+      "origen": "xm-873906fe44ae2051",
+      "vecino": "xm-f3412193a3bb9d6d",
+      "similitud": 0.80603
+    },
+    {
+      "id": "dup-neg-068",
+      "origen": "xm-87e11c01af941ca0",
+      "vecino": "xm-86a857f0fad83f13",
+      "similitud": 0.87509
+    },
+    {
+      "id": "dup-neg-069",
+      "origen": "xm-87f3010ded4bb742",
+      "vecino": "xm-eb37a9267fe7b00a",
+      "similitud": 0.94242
+    },
+    {
+      "id": "dup-neg-070",
+      "origen": "xm-8aa50f80a4cc3fb3",
+      "vecino": "xm-78398d10a724e0cb",
+      "similitud": 0.87028
+    },
+    {
+      "id": "dup-neg-071",
+      "origen": "xm-8e9364a0587125d5",
+      "vecino": "xm-d9fc6a3aac6463ba",
+      "similitud": 0.83328
+    },
+    {
+      "id": "dup-neg-072",
+      "origen": "xm-91f6883f5c76750c",
+      "vecino": "xm-8fd024c48ed0f8e9",
+      "similitud": 0.79017
+    },
+    {
+      "id": "dup-neg-073",
+      "origen": "xm-93cee5e418ad8454",
+      "vecino": "xm-d0f0cdf882bc9e0a",
+      "similitud": 0.79096
+    },
+    {
+      "id": "dup-neg-074",
+      "origen": "xm-9501f235b5661445",
+      "vecino": "xm-97d5b32498d7565f",
+      "similitud": 0.85814
+    },
+    {
+      "id": "dup-neg-075",
+      "origen": "xm-952e2811f9d62b08",
+      "vecino": "xm-182edfabe72c2d5f",
+      "similitud": 0.83919
+    },
+    {
+      "id": "dup-neg-076",
+      "origen": "xm-95bd72f156768b42",
+      "vecino": "xm-1f0e7b8d37fec45b",
+      "similitud": 0.80296
+    },
+    {
+      "id": "dup-neg-077",
+      "origen": "xm-95e1de7e3601b4fb",
+      "vecino": "xm-c7123f1938909b1f",
+      "similitud": 0.83696
+    },
+    {
+      "id": "dup-neg-078",
+      "origen": "xm-9756dc817a007bf4",
+      "vecino": "xm-e8b78138572b6b5c",
+      "similitud": 0.79772
+    },
+    {
+      "id": "dup-neg-079",
+      "origen": "xm-9829812868693ff7",
+      "vecino": "xm-e733c8cbd160af9a",
+      "similitud": 0.84206
+    },
+    {
+      "id": "dup-neg-080",
+      "origen": "xm-991eb076e64e04d1",
+      "vecino": "xm-7f2bac407a8c6f95",
+      "similitud": 0.86672
+    },
+    {
+      "id": "dup-neg-081",
+      "origen": "xm-9965001cc88c944a",
+      "vecino": "xm-84e7e337d63ca0ab",
+      "similitud": 0.77123
+    },
+    {
+      "id": "dup-neg-082",
+      "origen": "xm-99f9dfb2d8d2b15c",
+      "vecino": "xm-a888b38ff1b569df",
+      "similitud": 0.85994
+    },
+    {
+      "id": "dup-neg-083",
+      "origen": "xm-9b667ef7660ebc9f",
+      "vecino": "xm-a2e9f9f2322871d8",
+      "similitud": 0.866
+    },
+    {
+      "id": "dup-neg-084",
+      "origen": "xm-9b6b3df50872a2f9",
+      "vecino": "xm-9b7d3bac487e21db",
+      "similitud": 0.76403
+    },
+    {
+      "id": "dup-neg-085",
+      "origen": "xm-9bb04bdbf4d049bf",
+      "vecino": "xm-78e9f08dbef50a55",
+      "similitud": 0.74139
+    },
+    {
+      "id": "dup-neg-086",
+      "origen": "xm-9d29766d5f615d7e",
+      "vecino": "xm-4bcd99e6ce9e05cb",
+      "similitud": 0.76349
+    },
+    {
+      "id": "dup-neg-087",
+      "origen": "xm-9f57f1aa7e8ac223",
+      "vecino": "xm-77a6489e7182a545",
+      "similitud": 0.7853
+    },
+    {
+      "id": "dup-neg-088",
+      "origen": "xm-9f69b5646009b1a5",
+      "vecino": "xm-fa76b6f331eb940f",
+      "similitud": 0.94193
+    },
+    {
+      "id": "dup-neg-089",
+      "origen": "xm-a24cb5b83c466cb5",
+      "vecino": "xm-ff27754d9e8b31b1",
+      "similitud": 0.90965
+    },
+    {
+      "id": "dup-neg-090",
+      "origen": "xm-a2e0cacc7330e540",
+      "vecino": "xm-3bc2b95b280acc81",
+      "similitud": 0.81088
+    },
+    {
+      "id": "dup-neg-091",
+      "origen": "xm-a2e784b06b927501",
+      "vecino": "xm-e4471145e939362b",
+      "similitud": 0.76278
+    },
+    {
+      "id": "dup-neg-092",
+      "origen": "xm-a2e9f9f2322871d8",
+      "vecino": "xm-9b667ef7660ebc9f",
+      "similitud": 0.866
+    },
+    {
+      "id": "dup-neg-093",
+      "origen": "xm-a6e7bc6d391ac27a",
+      "vecino": "xm-320399a7d886ad10",
+      "similitud": 0.83457
+    },
+    {
+      "id": "dup-neg-094",
+      "origen": "xm-ab127af363a15ae8",
+      "vecino": "xm-ec9f41520dcf16bb",
+      "similitud": 0.79557
+    },
+    {
+      "id": "dup-neg-095",
+      "origen": "xm-ab23bc35fbe1891c",
+      "vecino": "xm-535547a4f4459378",
+      "similitud": 0.82692
+    },
+    {
+      "id": "dup-neg-096",
+      "origen": "xm-ad7093bf507f4b98",
+      "vecino": "xm-7df6538ef8db7e25",
+      "similitud": 0.82422
+    },
+    {
+      "id": "dup-neg-097",
+      "origen": "xm-ad9d3d0b5006aab2",
+      "vecino": "xm-9436ca6714115ab8",
+      "similitud": 0.88059
+    },
+    {
+      "id": "dup-neg-098",
+      "origen": "xm-add4a414399a8900",
+      "vecino": "xm-7f643602cfadc83d",
+      "similitud": 0.88392
+    },
+    {
+      "id": "dup-neg-099",
+      "origen": "xm-b12384ea4a13a141",
+      "vecino": "xm-1b510a792faeff6d",
+      "similitud": 0.8106
+    },
+    {
+      "id": "dup-neg-100",
+      "origen": "xm-b29f76e1a5f672ec",
+      "vecino": "xm-a8a1e9c673f9f7a6",
+      "similitud": 0.93507
+    },
+    {
+      "id": "dup-neg-101",
+      "origen": "xm-b41f3d60bbba282d",
+      "vecino": "xm-da8384b9c141c049",
+      "similitud": 0.83195
+    },
+    {
+      "id": "dup-neg-102",
+      "origen": "xm-b4c80c6bef114e5b",
+      "vecino": "xm-72c62dadaef138a2",
+      "similitud": 0.90029
+    },
+    {
+      "id": "dup-neg-103",
+      "origen": "xm-b58504383f3c9d57",
+      "vecino": "xm-e0ec5647b1ff6731",
+      "similitud": 0.90769
+    },
+    {
+      "id": "dup-neg-104",
+      "origen": "xm-b686acb15bb3c2e7",
+      "vecino": "xm-3accc1de7bb448ed",
+      "similitud": 0.88718
+    },
+    {
+      "id": "dup-neg-105",
+      "origen": "xm-b9a94018290ec347",
+      "vecino": "xm-6a20677eee04fd08",
+      "similitud": 0.82389
+    },
+    {
+      "id": "dup-neg-106",
+      "origen": "xm-ba2c5b3e2f33ace3",
+      "vecino": "xm-24d292f5099ae522",
+      "similitud": 0.85435
+    },
+    {
+      "id": "dup-neg-107",
+      "origen": "xm-bb8a297d4767a726",
+      "vecino": "xm-fb548bd4e87c660b",
+      "similitud": 0.90383
+    },
+    {
+      "id": "dup-neg-108",
+      "origen": "xm-bdc0ecfc2fe8c9cc",
+      "vecino": "xm-0d5a9cfe6f7d27a3",
+      "similitud": 0.79133
+    },
+    {
+      "id": "dup-neg-109",
+      "origen": "xm-bedebc56bbae02ea",
+      "vecino": "xm-ab1cfb2411c27b11",
+      "similitud": 0.77578
+    },
+    {
+      "id": "dup-neg-110",
+      "origen": "xm-c1cba160342bdd01",
+      "vecino": "xm-1d2651922a41ce31",
+      "similitud": 0.8216
+    },
+    {
+      "id": "dup-neg-111",
+      "origen": "xm-c2cfbb8ae3ab8fa1",
+      "vecino": "xm-36b8f1adff01f1b8",
+      "similitud": 0.87915
+    },
+    {
+      "id": "dup-neg-112",
+      "origen": "xm-c3e70c6b44f16bff",
+      "vecino": "xm-cc5f7c04cf91f93b",
+      "similitud": 0.85405
+    },
+    {
+      "id": "dup-neg-113",
+      "origen": "xm-c59adfcc3b31fa9d",
+      "vecino": "xm-d5ae45239b54251a",
+      "similitud": 0.80003
+    },
+    {
+      "id": "dup-neg-114",
+      "origen": "xm-c6eae1040e7bc7da",
+      "vecino": "xm-4aab93002b968500",
+      "similitud": 0.89101
+    },
+    {
+      "id": "dup-neg-115",
+      "origen": "xm-c7fa0a5cc7e48100",
+      "vecino": "xm-5fc539471496cad1",
+      "similitud": 0.84795
+    },
+    {
+      "id": "dup-neg-116",
+      "origen": "xm-c966b7c0ccf8dfcc",
+      "vecino": "xm-6efacc82b2c21024",
+      "similitud": 0.86354
+    },
+    {
+      "id": "dup-neg-117",
+      "origen": "xm-cc01e3226696fa74",
+      "vecino": "xm-9b8d8c387f3a14df",
+      "similitud": 0.90005
+    },
+    {
+      "id": "dup-neg-118",
+      "origen": "xm-cd5b7306e023b259",
+      "vecino": "xm-2c8e0a0542313538",
+      "similitud": 0.84482
+    },
+    {
+      "id": "dup-neg-119",
+      "origen": "xm-d12d8a8cd81b6ca6",
+      "vecino": "xm-959d3873df042f56",
+      "similitud": 0.77908
+    },
+    {
+      "id": "dup-neg-120",
+      "origen": "xm-d1be9716b3f16f35",
+      "vecino": "xm-eb4cdfd93268c52c",
+      "similitud": 0.79489
+    },
+    {
+      "id": "dup-neg-121",
+      "origen": "xm-d2121862187c111f",
+      "vecino": "xm-ceb7baf5f269e632",
+      "similitud": 0.82823
+    },
+    {
+      "id": "dup-neg-122",
+      "origen": "xm-d2816bb05dacd8c7",
+      "vecino": "xm-bc528ee8ee0bc6e8",
+      "similitud": 0.88283
+    },
+    {
+      "id": "dup-neg-123",
+      "origen": "xm-d282773b4822c67f",
+      "vecino": "xm-ad60426d106799ec",
+      "similitud": 0.78999
+    },
+    {
+      "id": "dup-neg-124",
+      "origen": "xm-d36aef7f8224a0ec",
+      "vecino": "xm-ec7909e7e51b722f",
+      "similitud": 0.81526
+    },
+    {
+      "id": "dup-neg-125",
+      "origen": "xm-d490df2079e32bc4",
+      "vecino": "xm-3afa2fc6ffe00a29",
+      "similitud": 0.85376
+    },
+    {
+      "id": "dup-neg-126",
+      "origen": "xm-d49eccd223ed16f1",
+      "vecino": "xm-ee0f21b211f70907",
+      "similitud": 0.82404
+    },
+    {
+      "id": "dup-neg-127",
+      "origen": "xm-d659c7ebafce8858",
+      "vecino": "xm-ba87636f250d2c89",
+      "similitud": 0.80904
+    },
+    {
+      "id": "dup-neg-128",
+      "origen": "xm-dbb59a058870e62d",
+      "vecino": "xm-dc925fa6af4bffc2",
+      "similitud": 0.79536
+    },
+    {
+      "id": "dup-neg-129",
+      "origen": "xm-dcaaf48fcc6acf42",
+      "vecino": "xm-93510ea1dfb7d098",
+      "similitud": 0.86562
+    },
+    {
+      "id": "dup-neg-130",
+      "origen": "xm-de76338b0de27fcf",
+      "vecino": "xm-bc528ee8ee0bc6e8",
+      "similitud": 0.85326
+    },
+    {
+      "id": "dup-neg-131",
+      "origen": "xm-df9fc4fddbdb9813",
+      "vecino": "xm-69409713958604c2",
+      "similitud": 0.93823
+    },
+    {
+      "id": "dup-neg-132",
+      "origen": "xm-e24bf52b53c16328",
+      "vecino": "xm-c3557b1822278879",
+      "similitud": 0.76226
+    },
+    {
+      "id": "dup-neg-133",
+      "origen": "xm-e31e79ab178400e9",
+      "vecino": "xm-e01263c97c5382b0",
+      "similitud": 0.90464
+    },
+    {
+      "id": "dup-neg-134",
+      "origen": "xm-e36d9e91481be290",
+      "vecino": "xm-a4875f01c278a7b9",
+      "similitud": 0.83391
+    },
+    {
+      "id": "dup-neg-135",
+      "origen": "xm-e44594aebd881436",
+      "vecino": "xm-d1a86bc70daa3d75",
+      "similitud": 0.76971
+    },
+    {
+      "id": "dup-neg-136",
+      "origen": "xm-e46e940affeb181a",
+      "vecino": "xm-878137edb6667073",
+      "similitud": 0.75739
+    },
+    {
+      "id": "dup-neg-137",
+      "origen": "xm-e6c87396308b1105",
+      "vecino": "xm-0ec61ac8e279245e",
+      "similitud": 0.82204
+    },
+    {
+      "id": "dup-neg-138",
+      "origen": "xm-e9b781944b676783",
+      "vecino": "xm-f8b797ebcf61d8bd",
+      "similitud": 0.79081
+    },
+    {
+      "id": "dup-neg-139",
+      "origen": "xm-eac90e04b286ec66",
+      "vecino": "xm-d30623b92d4054bd",
+      "similitud": 0.78731
+    },
+    {
+      "id": "dup-neg-140",
+      "origen": "xm-ed01728ef132a7ae",
+      "vecino": "xm-35104ecae1859412",
+      "similitud": 0.92373
+    },
+    {
+      "id": "dup-neg-141",
+      "origen": "xm-eeec81508b289b3e",
+      "vecino": "xm-106172bf41099725",
+      "similitud": 0.81959
+    },
+    {
+      "id": "dup-neg-142",
+      "origen": "xm-f0b43b657df2e645",
+      "vecino": "xm-84cbb687f70825d3",
+      "similitud": 0.78656
+    },
+    {
+      "id": "dup-neg-143",
+      "origen": "xm-f0d2a0bf82a9fb8f",
+      "vecino": "xm-18958cb6f8523c8c",
+      "similitud": 0.79809
+    },
+    {
+      "id": "dup-neg-144",
+      "origen": "xm-f3412193a3bb9d6d",
+      "vecino": "xm-873906fe44ae2051",
+      "similitud": 0.80603
+    },
+    {
+      "id": "dup-neg-145",
+      "origen": "xm-f36e7dedc4c7c04e",
+      "vecino": "xm-b5c89db55b6c4d21",
+      "similitud": 0.8805
+    },
+    {
+      "id": "dup-neg-146",
+      "origen": "xm-f9ab64522f4992b7",
+      "vecino": "xm-06a5f3f53ded298b",
+      "similitud": 0.75575
+    },
+    {
+      "id": "dup-neg-147",
+      "origen": "xm-fc539ef0ba423083",
+      "vecino": "xm-1f0e7b8d37fec45b",
+      "similitud": 0.77035
+    },
+    {
+      "id": "dup-neg-148",
+      "origen": "xm-fc7a39684edd2ae2",
+      "vecino": "xm-06d478dedd964618",
+      "similitud": 0.8573
+    },
+    {
+      "id": "dup-neg-149",
+      "origen": "xm-fcd7bde25c97b165",
+      "vecino": "xm-a22753aab40d8b5c",
+      "similitud": 0.85459
+    },
+    {
+      "id": "dup-neg-150",
+      "origen": "xm-fcee8ab7eadb4058",
+      "vecino": "xm-dfa1a82bb977a87d",
+      "similitud": 0.88013
+    }
+  ]
+}

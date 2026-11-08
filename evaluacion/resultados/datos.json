@@ -1,0 +1,94 @@
+{
+  "fecha": "2026-11-08T04:42:06+00:00",
+  "imagenes": 3600,
+  "locales": 36,
+  "descripciones_es_por_imagen": {
+    "2": 2201,
+    "3": 1384,
+    "4": 15
+  },
+  "imagenes_con_etiquetas_open_images": 2357,
+  "porcentaje_con_etiquetas": 0.6547,
+  "exif": {
+    "imagenes": 3600,
+    "con_exif": 0,
+    "con_gps": 0
+  },
+  "embeddings_imagen": {
+    "modelo": "embeddinggemma-2:440m",
+    "lado_px": 384,
+    "dimension": 768,
+    "n": 3600
+  },
+  "particiones": {
+    "archivo": 2600,
+    "nuevas": 700,
+    "regiones_excluidas": 300,
+    "eval_fichas": 60,
+    "galeria_busqueda": 1000,
+    "ajuste_prompts": 10,
+    "aprendizaje": 100,
+    "agente_extra": 30
+  },
+  "locales_excluidas": [
+    "ja",
+    "ko",
+    "sv"
+  ],
+  "sinteticos": {
+    "casi_duplicados_pos": {
+      "items": 300,
+      "materializados_ahora": 300
+    },
+    "inyeccion_imagen": {
+      "items": 15,
+      "materializados_ahora": 15
+    },
+    "texto_benigno_imagen": {
+      "items": 15,
+      "materializados_ahora": 15
+    },
+    "fuera_de_dominio": {
+      "items": 15,
+      "materializados_ahora": 15
+    },
+    "gps_sintetico": {
+      "items": 20,
+      "materializados_ahora": 20
+    },
+    "calibracion_fuera_de_dominio": {
+      "items": 15,
+      "materializados_ahora": 15
+    },
+    "calibracion_texto_visible": {
+      "items": 15,
+      "materializados_ahora": 15
+    },
+    "casi_duplicados_neg": {
+      "items": 150
+    },
+    "consultas_complejas": {
+      "items": 30
+    },
+    "consultas_guardrail": {
+      "items": 25
+    },
+    "calibracion_inyeccion_texto": {
+      "items": 15
+    }
+  },
+  "manifiestos": {
+    "manifiesto_corpus.json": {
+      "entradas": 14,
+      "con_sha256": 14
+    },
+    "manifiesto_datos.json": {
+      "entradas": 5,
+      "con_sha256": 5
+    }
+  },
+  "data_bytes": 710496830,
+  "data_gb": 0.71,
+  "data_dentro_de_2gb": true,
+  "minutos": 122.2
+}

@@ -1,0 +1,370 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "metodo_relevantes": "La foto de origen más las fotos de la galería cuya primera descripción en español tiene similitud granite ≥ 0.85 con la de origen y que cumplen la restricción (reglas léxicas sobre las descripciones de referencia). 10 consultas se revisan a mano (plantilla_consultas.csv).",
+  "items": [
+    {
+      "id": "cc-01",
+      "consulta": "Busca fotos de llantas de avión enterradas en pavimento sin personas.",
+      "restriccion": "sin personas",
+      "origen": "xm-721a00048caeaf74",
+      "descripcion_base": "Llantas de avión empotradas en el pavimento",
+      "relevantes": [
+        "xm-721a00048caeaf74",
+        "xm-928071d8e61c49ef"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-02",
+      "consulta": "Buscar fotos de chimpancé sentado en una minivan roja y gris estacionada en nieve sin personas.",
+      "restriccion": "sin personas",
+      "origen": "xm-c29873aef44d74cd",
+      "descripcion_base": "Chimpancé sentado encima de una mini van color rojo con gris estacionada sobre la nieve en medio del bosque",
+      "relevantes": [
+        "xm-c29873aef44d74cd"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-03",
+      "consulta": "Busca fotos de casa a orilla del lago en la isla de Juist sin personas.",
+      "restriccion": "sin personas",
+      "origen": "xm-7fa47560ee92984d",
+      "descripcion_base": "Casa a la orilla del lago en la isla de Juist.",
+      "relevantes": [
+        "xm-7fa47560ee92984d"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-04",
+      "consulta": "Busca fotos de avión y carrito de trabajo en pista con nieve sin personas.",
+      "restriccion": "sin personas",
+      "origen": "xm-ed53e8a904237c5a",
+      "descripcion_base": "Avión y carrito de trabajo en la pista llena de nieve",
+      "relevantes": [
+        "xm-ed53e8a904237c5a"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-05",
+      "consulta": "Archivo fotográfico: mantarraya nadando en cautiverio sin personas",
+      "restriccion": "sin personas",
+      "origen": "xm-af259e0abcfba646",
+      "descripcion_base": "Acercamiento a mantarraya nadando en cautiverio",
+      "relevantes": [
+        "xm-af259e0abcfba646"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-06",
+      "consulta": "Buscar fotos de paisajes de montañas con cielo nublado sin personas.",
+      "restriccion": "sin personas",
+      "origen": "xm-ff7e40aa319b2e19",
+      "descripcion_base": "Hermoso paisaje de las montañas con cielo nublado",
+      "relevantes": [
+        "xm-a6d856deeb8e39a3",
+        "xm-bb3b6142a6580fa4",
+        "xm-ff7e40aa319b2e19"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-07",
+      "consulta": "Busca fotos de dos mujeres en un centro nocturno divirtiéndose de noche.",
+      "restriccion": "de noche",
+      "origen": "xm-8f9443d2228c2e6b",
+      "descripcion_base": "Dos mujeres en un centro nocturno divirtiéndose.",
+      "relevantes": [
+        "xm-8f9443d2228c2e6b"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-08",
+      "consulta": "Busca fotos de paisajes de amplio campo y pequeño pueblo de día soleado, también de noche.",
+      "restriccion": "de noche",
+      "origen": "xm-882ff232f29ff9ca",
+      "descripcion_base": "Paisaje de amplio campo y pequeño pueblo en día soleado",
+      "relevantes": [
+        "xm-882ff232f29ff9ca"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-09",
+      "consulta": "Busca fotos de grupo de mujeres con lámparas marchando de noche por una avenida.",
+      "restriccion": "de noche",
+      "origen": "xm-62d381e4cd553690",
+      "descripcion_base": "Grupo de mujeres con lámparas marchan de noche por una avenida",
+      "relevantes": [
+        "xm-62d381e4cd553690"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-10",
+      "consulta": "Fotos de concierto al aire libre de noche con iluminación roja",
+      "restriccion": "de noche",
+      "origen": "xm-764151de11b3e11a",
+      "descripcion_base": "Vista desde el público de un concierto al aire libre de noche con iluminación roja",
+      "relevantes": [
+        "xm-764151de11b3e11a"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": true
+    },
+    {
+      "id": "cc-11",
+      "consulta": "Fotos del pasaje de plaza con negocios y gente, bandera colgante, en un mercado.",
+      "restriccion": "en un mercado",
+      "origen": "xm-c2d86245fdc844bb",
+      "descripcion_base": "Pasaje de plaza con negocios y personas con bandera colgando como adorno.",
+      "relevantes": [
+        "xm-c2d86245fdc844bb"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-12",
+      "consulta": "Fotos de pasillos de tienda de artículos varios en un mercado.",
+      "restriccion": "en un mercado",
+      "origen": "xm-52f5fb78d15bbf92",
+      "descripcion_base": "Pasillos de tienda de artículos varios.",
+      "relevantes": [
+        "xm-52f5fb78d15bbf92"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-13",
+      "consulta": "Archivo fotográfico: mujer vendiendo frutos y semillas en el suelo junto a otro comerciante, en un mercado.",
+      "restriccion": "en un mercado",
+      "origen": "xm-3dc26c257e4d3d9a",
+      "descripcion_base": "Mujer vendiendo frutos y semillas en el suelo junto a otro comerciante",
+      "relevantes": [
+        "xm-3dc26c257e4d3d9a"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-14",
+      "consulta": "Busca fotos de albaricoques maduros en canastas sobre mesa blanca en un mercado.",
+      "restriccion": "en un mercado",
+      "origen": "xm-a4ccb6391f8e3aeb",
+      "descripcion_base": "Albaricoques maduros en canastas sobre mesa blanca",
+      "relevantes": [
+        "xm-a4ccb6391f8e3aeb"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-15",
+      "consulta": "Busca fotos de perrito salchicha en la playa.",
+      "restriccion": "en la playa",
+      "origen": "xm-4a273dd6ec3efc58",
+      "descripcion_base": "Retrato de perrito salchicha en el suelo",
+      "relevantes": [
+        "xm-4a273dd6ec3efc58"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-16",
+      "consulta": "Fotos de cactus en terraza bajo sol y cielo azul, específicamente en la playa.",
+      "restriccion": "en la playa",
+      "origen": "xm-f9794c43f38484de",
+      "descripcion_base": "Cactus en una terraza bajo el sol, cielo azul",
+      "relevantes": [
+        "xm-f9794c43f38484de"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-17",
+      "consulta": "Buscar fotos de construcción de recinto en obra egra en progreso junto a un parque de día y con la condición en la playa.",
+      "restriccion": "en la playa",
+      "origen": "xm-2424f519111f08ab",
+      "descripcion_base": "Construcción de recinto en obra egra en progreso al costado de un parque de día.",
+      "relevantes": [
+        "xm-2424f519111f08ab"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-18",
+      "consulta": "Busca fotos de taza de té y panecillo en la playa.",
+      "restriccion": "en la playa",
+      "origen": "xm-bb319cd1983106d1",
+      "descripcion_base": "Taza de té y panecillo servidos en mesa",
+      "relevantes": [
+        "xm-bb319cd1983106d1"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-19",
+      "consulta": "Busca fotos de caballo negro en potrero atado bajo sol con cielo azul y animal con animales",
+      "restriccion": "con animales",
+      "origen": "xm-501004da4062546c",
+      "descripcion_base": "Caballo negro en un potrero atado bajo el sol, cielo azul",
+      "relevantes": [
+        "xm-501004da4062546c"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-20",
+      "consulta": "Archivo fotográfico de tejido de lana sobre mesa de madera con animales",
+      "restriccion": "con animales",
+      "origen": "xm-2c651e1f83c6e106",
+      "descripcion_base": "Acercamiento de un tejido de lana sobre una mesa de madera.",
+      "relevantes": [
+        "xm-2c651e1f83c6e106"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-21",
+      "consulta": "Busca fotos de tres agachadizas caminando sobre un lago poco profundo a la luz del día con animales.",
+      "restriccion": "con animales",
+      "origen": "xm-80223b8182b66942",
+      "descripcion_base": "Tres agachadizas caminando sobre un lago poco profundo a la luz del día",
+      "relevantes": [
+        "xm-80223b8182b66942"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-22",
+      "consulta": "Busca fotos de perros atados con cuerdas sobre nieve blanca, incluyendo animales.",
+      "restriccion": "con animales",
+      "origen": "xm-49135f224973c24f",
+      "descripcion_base": "Perros atados con cuerdas recostados y de pie sobre la nieve blanca",
+      "relevantes": [
+        "xm-49135f224973c24f"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-23",
+      "consulta": "Busca fotos de hombre y mujer comerciantes junto a la acera con patos con animales",
+      "restriccion": "con animales",
+      "origen": "xm-ec3f33b50590ce6c",
+      "descripcion_base": "Hombre y mujer comerciantes junto a la acera con patos",
+      "relevantes": [
+        "xm-ec3f33b50590ce6c"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-24",
+      "consulta": "Fotos de auto negro clásico en sala de exposición, interiores.",
+      "restriccion": "en interiores",
+      "origen": "xm-6409f047ec4e520f",
+      "descripcion_base": "Auto negro clásico en sala de exposición.",
+      "relevantes": [
+        "xm-6409f047ec4e520f"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-25",
+      "consulta": "Archivo fotográfico: grupo de turistas dentro de construcción antigua, interiores.",
+      "restriccion": "en interiores",
+      "origen": "xm-50749863931007e6",
+      "descripcion_base": "Grupo de turistas al interior de construcción antigua",
+      "relevantes": [
+        "xm-50749863931007e6"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-26",
+      "consulta": "Fotos de soldados con casco y armas dentro de una camioneta en interiores",
+      "restriccion": "en interiores",
+      "origen": "xm-e1a897708d94ca8c",
+      "descripcion_base": "Soldados con casco y armas en una camioneta",
+      "relevantes": [
+        "xm-e1a897708d94ca8c"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-27",
+      "consulta": "Busca fotos de interiores con retrato de doctor y paciente en aula, mesas y pizarrones.",
+      "restriccion": "en interiores",
+      "origen": "xm-320ae541326b909a",
+      "descripcion_base": "Retrato de doctor y paciente en aula con mesas y pizarrones.",
+      "relevantes": [
+        "xm-320ae541326b909a"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-28",
+      "consulta": "Fotos de seis perros tirando de un trineo sobre nieve, cielo nublado",
+      "restriccion": "con nieve",
+      "origen": "xm-a36e11751b783026",
+      "descripcion_base": "Seis perros tirando de un trineo sobre la nieve, cielo nublado",
+      "relevantes": [
+        "xm-a36e11751b783026"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-29",
+      "consulta": "Busca fotos de manada de perros jalando trineo y hombre mirando en paisaje nevado con nieve.",
+      "restriccion": "con nieve",
+      "origen": "xm-75c0eaedfe8ab07b",
+      "descripcion_base": "Manada de perros jalando de un trineo y hombre mirando en paisaje nevado.",
+      "relevantes": [
+        "xm-75c0eaedfe8ab07b"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    },
+    {
+      "id": "cc-30",
+      "consulta": "Busca fotos de par de botas antiguas en banco y pared blanca con nieve.",
+      "restriccion": "con nieve",
+      "origen": "xm-3c27666c417ee021",
+      "descripcion_base": "Par de botas antiguas en banco y pared blanca",
+      "relevantes": [
+        "xm-3c27666c417ee021"
+      ],
+      "generador": "lfm3:1.7b-q4_K_M",
+      "revisar_a_mano": false
+    }
+  ]
+}

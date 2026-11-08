@@ -1,0 +1,11 @@
+id,consulta,restriccion,descripcion_base,relevantes_heuristica,consulta_es_natural (si/no),relevantes_correctos (si/no/parcial),comentario
+cc-01,Busca fotos de llantas de avión enterradas en pavimento sin personas.,sin personas,Llantas de avión empotradas en el pavimento,xm-721a00048caeaf74 xm-928071d8e61c49ef,,,
+cc-02,Buscar fotos de chimpancé sentado en una minivan roja y gris estacionada en nieve sin personas.,sin personas,Chimpancé sentado encima de una mini van color rojo con gris estacionada sobre la nieve en medio del bosque,xm-c29873aef44d74cd,,,
+cc-03,Busca fotos de casa a orilla del lago en la isla de Juist sin personas.,sin personas,Casa a la orilla del lago en la isla de Juist.,xm-7fa47560ee92984d,,,
+cc-04,Busca fotos de avión y carrito de trabajo en pista con nieve sin personas.,sin personas,Avión y carrito de trabajo en la pista llena de nieve,xm-ed53e8a904237c5a,,,
+cc-05,Archivo fotográfico: mantarraya nadando en cautiverio sin personas,sin personas,Acercamiento a mantarraya nadando en cautiverio,xm-af259e0abcfba646,,,
+cc-06,Buscar fotos de paisajes de montañas con cielo nublado sin personas.,sin personas,Hermoso paisaje de las montañas con cielo nublado,xm-a6d856deeb8e39a3 xm-bb3b6142a6580fa4 xm-ff7e40aa319b2e19,,,
+cc-07,Busca fotos de dos mujeres en un centro nocturno divirtiéndose de noche.,de noche,Dos mujeres en un centro nocturno divirtiéndose.,xm-8f9443d2228c2e6b,,,
+cc-08,"Busca fotos de paisajes de amplio campo y pequeño pueblo de día soleado, también de noche.",de noche,Paisaje de amplio campo y pequeño pueblo en día soleado,xm-882ff232f29ff9ca,,,
+cc-09,Busca fotos de grupo de mujeres con lámparas marchando de noche por una avenida.,de noche,Grupo de mujeres con lámparas marchan de noche por una avenida,xm-62d381e4cd553690,,,
+cc-10,Fotos de concierto al aire libre de noche con iluminación roja,de noche,Vista desde el público de un concierto al aire libre de noche con iluminación roja,xm-764151de11b3e11a,,,

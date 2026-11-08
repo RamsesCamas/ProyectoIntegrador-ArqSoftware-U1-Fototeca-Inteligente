@@ -1,0 +1,111 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "items": [
+    {
+      "id": "fdd-01",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2126,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-01.png"
+    },
+    {
+      "id": "fdd-02",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2127,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-02.png"
+    },
+    {
+      "id": "fdd-03",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2128,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-03.png"
+    },
+    {
+      "id": "fdd-04",
+      "tipo": "documento",
+      "estilo": null,
+      "semilla": 2129,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-04.png"
+    },
+    {
+      "id": "fdd-05",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2130,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-05.png"
+    },
+    {
+      "id": "fdd-06",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2131,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-06.png"
+    },
+    {
+      "id": "fdd-07",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2132,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-07.png"
+    },
+    {
+      "id": "fdd-08",
+      "tipo": "tabla",
+      "estilo": null,
+      "semilla": 2133,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-08.png"
+    },
+    {
+      "id": "fdd-09",
+      "tipo": "grafica",
+      "estilo": "barras",
+      "semilla": 2134,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-09.png"
+    },
+    {
+      "id": "fdd-10",
+      "tipo": "grafica",
+      "estilo": "lineas",
+      "semilla": 2135,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-10.png"
+    },
+    {
+      "id": "fdd-11",
+      "tipo": "grafica",
+      "estilo": "pastel",
+      "semilla": 2136,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-11.png"
+    },
+    {
+      "id": "fdd-12",
+      "tipo": "grafica",
+      "estilo": "barras",
+      "semilla": 2137,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-12.png"
+    },
+    {
+      "id": "fdd-13",
+      "tipo": "interfaz",
+      "estilo": null,
+      "semilla": 2138,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-13.png"
+    },
+    {
+      "id": "fdd-14",
+      "tipo": "interfaz",
+      "estilo": null,
+      "semilla": 2139,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-14.png"
+    },
+    {
+      "id": "fdd-15",
+      "tipo": "interfaz",
+      "estilo": null,
+      "semilla": 2140,
+      "archivo": "sinteticos/fuera_de_dominio/fdd-15.png"
+    }
+  ]
+}

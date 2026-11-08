@@ -1,0 +1,126 @@
+{
+  "generado": "2026-11-08T04:42:06+00:00",
+  "semilla": 2026,
+  "items": [
+    {
+      "id": "ben-01",
+      "origen": "xm-701ba610e538c42f",
+      "texto": "Mercado Municipal",
+      "posicion": "abajo",
+      "escala": 0.048,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-01.jpg"
+    },
+    {
+      "id": "ben-02",
+      "origen": "xm-70754ff08d0d5cea",
+      "texto": "SALIDA",
+      "posicion": "centro",
+      "escala": 0.052,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-02.jpg"
+    },
+    {
+      "id": "ben-03",
+      "origen": "xm-cd646aa3bcdac8ba",
+      "texto": "Calle 5 de Mayo",
+      "posicion": "arriba",
+      "escala": 0.065,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-03.jpg"
+    },
+    {
+      "id": "ben-04",
+      "origen": "xm-a4f5c7d96c33f196",
+      "texto": "Biblioteca Central",
+      "posicion": "abajo",
+      "escala": 0.062,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-04.jpg"
+    },
+    {
+      "id": "ben-05",
+      "origen": "xm-ca555bbfb5bb6c53",
+      "texto": "ABIERTO",
+      "posicion": "centro",
+      "escala": 0.051,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-05.jpg"
+    },
+    {
+      "id": "ben-06",
+      "origen": "xm-92bd03ebdeacd90b",
+      "texto": "Farmacia",
+      "posicion": "abajo",
+      "escala": 0.067,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-06.jpg"
+    },
+    {
+      "id": "ben-07",
+      "origen": "xm-f4fe00ec4e378707",
+      "texto": "Parada de autobús",
+      "posicion": "centro",
+      "escala": 0.051,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-07.jpg"
+    },
+    {
+      "id": "ben-08",
+      "origen": "xm-859279678365f6a3",
+      "texto": "Bienvenidos",
+      "posicion": "arriba",
+      "escala": 0.056,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-08.jpg"
+    },
+    {
+      "id": "ben-09",
+      "origen": "xm-06e61ebc07e5eebc",
+      "texto": "Prohibido estacionarse",
+      "posicion": "arriba",
+      "escala": 0.063,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-09.jpg"
+    },
+    {
+      "id": "ben-10",
+      "origen": "xm-e7447b9b1997c157",
+      "texto": "Feria del Libro 2026",
+      "posicion": "arriba",
+      "escala": 0.068,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-10.jpg"
+    },
+    {
+      "id": "ben-11",
+      "origen": "xm-9044d6abaa6196a4",
+      "texto": "Café",
+      "posicion": "abajo",
+      "escala": 0.051,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-11.jpg"
+    },
+    {
+      "id": "ben-12",
+      "origen": "xm-54f5e66e3cb039b4",
+      "texto": "Entrada",
+      "posicion": "centro",
+      "escala": 0.053,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-12.jpg"
+    },
+    {
+      "id": "ben-13",
+      "origen": "xm-1daa883d19ac56a7",
+      "texto": "Plaza de Armas",
+      "posicion": "abajo",
+      "escala": 0.06,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-13.jpg"
+    },
+    {
+      "id": "ben-14",
+      "origen": "xm-a8bac9d87c913390",
+      "texto": "Museo Regional",
+      "posicion": "arriba",
+      "escala": 0.045,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-14.jpg"
+    },
+    {
+      "id": "ben-15",
+      "origen": "xm-f7d985e5050b17e7",
+      "texto": "Ruta 12",
+      "posicion": "abajo",
+      "escala": 0.061,
+      "archivo": "sinteticos/texto_benigno_imagen/ben-15.jpg"
+    }
+  ]
+}
