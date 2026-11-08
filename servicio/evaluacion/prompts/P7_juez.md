@@ -7,7 +7,7 @@ modelo_respaldo: null
 num_predict: 120
 temperatura: 0.0
 con_imagen: false
-# Solo se usa en evaluacion/ (docs/specs/07, P7). Nunca forma parte del servicio en producción.
+# Juez P7: solo se usa en evaluacion/ (informe, §10.1). Nunca forma parte del servicio en producción.
 ---
 ## Sistema
 Evalúas fichas de catálogo fotográfico. Responde solo JSON.

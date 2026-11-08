@@ -6,13 +6,16 @@
 
 ## Contexto
 Fototeca Viva necesita un embedding que ponga **textos e imágenes en el mismo espacio** (búsqueda texto→imagen,
-duplicados, caché semántica y enrutadores) y que se sirva **solo desde Ollama**, en CPU y dentro de Docker. La
-spec fija `embeddinggemma-2:270m`, pero su ficha en ollama.com solo muestra ejemplos de texto. Además, LFM3 —el
-otro modelo fijo— exige una versión de Ollama reciente que lo ejecute en Linux.
+duplicados, caché semántica y enrutadores) y que se sirva **solo desde Ollama**, en CPU y dentro de Docker. El
+diseño del proyecto fija `embeddinggemma-2:270m` y prevé un plan B: si ese tag no acepta imágenes, se usa uno de sus
+tags hermanos en Ollama (`440m` o `740m`). La ficha de `270m` en ollama.com solo muestra ejemplos de texto. Además,
+LFM3 —el otro modelo fijo— exige una versión de Ollama reciente que lo ejecute en Linux.
 
 ## Decisión
-1. Se fija `ollama/ollama:0.40.15` (la estable más reciente; LFM3 corre en Linux desde 0.40.13).
-2. Se usa **`embeddinggemma-2:440m`** (plan B de `docs/specs/05` §2): el tag más pequeño de Ollama que entrega
+1. Se fija `ollama/ollama:0.40.15` (la estable más reciente; LFM3 corre en Linux desde 0.40.13). Como el resto de
+   las imágenes de `docker-compose.yml`, se fija con su versión exacta (nunca `latest`) y está publicada para
+   linux/amd64 y linux/arm64, porque se desarrolla en arm64 y la demo corre en Windows x86.
+2. Se usa **`embeddinggemma-2:440m`**, el plan B previsto: el tag más pequeño de Ollama que entrega
    embeddings de imagen y pasa la prueba de 50 pares.
 3. Las imágenes se envían reducidas a **384 px** de lado.
 4. Las capas superiores dependen solo del puerto `Embebedor` (C7); el adaptador `EmbebedorOllama` aplica los
@@ -24,7 +27,8 @@ otro modelo fijo— exige una versión de Ollama reciente que lo ejecute en Linu
 - **`embeddinggemma-2:740m`:** no hizo falta probarlo; agrega el codificador de audio (no se usa) y pesa más.
 - **Plan C (pipeline: Qwen describe y se embebe el texto):** innecesario; además costaría una llamada a Qwen
   por foto (decenas de segundos en esta CPU, H0 0.2) en lugar de unos 2 s.
-- **Embeddings fuera de Ollama (transformers, ONNX):** prohibido por la spec (todo desde Ollama).
+- **Embeddings fuera de Ollama (transformers, ONNX):** descartados por una restricción del proyecto: todos los
+  modelos se sirven desde Ollama.
 - **Enviar las imágenes a 256, 512 o 768 px:** misma calidad en la prueba; 768 px cuesta casi el doble.
 
 ## Evidencia
@@ -51,7 +55,8 @@ Fuente: `evaluacion/resultados/h0.json` (verificaciones `0.3` y `0.3b`; versión
 | 768 | 3.978 | 1.00 | 0.96 | 1.00 |
 
   Regla: entre los lados de calidad equivalente (R@5 a ≤0.04 del mejor y tasa de acierto ≥0.80), el de menor
-  tiempo por imagen → **384 px**.
+  tiempo por imagen → **384 px**. La regla se corrigió antes de aplicarla: su primera versión elegía el lado más
+  pequeño aunque no fuera el más rápido.
 
 ## Consecuencias
 - **Se gana:** búsqueda texto→imagen y duplicados con un solo modelo pequeño, sin pasar por un LLM; indexar las

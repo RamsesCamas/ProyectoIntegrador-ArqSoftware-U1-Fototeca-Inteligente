@@ -1,4 +1,5 @@
-"""Piezas compartidas por los módulos de evaluación que generan y califican fichas (docs/specs/08 §1a, §2, §5, §6, §8).
+"""Piezas compartidas por los módulos de evaluación que generan y califican fichas (informe, §10): R3 de modelos de
+lenguaje, fichas con y sin RAG, enrutador, ciclo de agente y curva de aprendizaje.
 
 Contrato para los módulos (todo es reanudable: cada resultado se guarda caso por caso en `resultados/casos/`):
 
@@ -6,7 +7,7 @@ Contrato para los módulos (todo es reanudable: cada resultado se guarda caso po
 - `asegurar_subidas(c, xm_ids)`: sube por la API (POST /documentos) las fotos de XM3600 que NO están en el archivo
   (`nuevas`, `regiones_excluidas`…) y devuelve `{xm_id: documento_id}`. Las subidas quedan con `validada=false`,
   así que nunca aparecen como vecinas en el RAG (el recuperador filtra `validada=true`).
-- `p1_unico(c, xm_id, documento_id)`: la descripción P1 de Qwen, calculada UNA sola vez por foto (08 §1a: las
+- `p1_unico(c, xm_id, documento_id)`: la descripción P1 de Qwen, calculada UNA sola vez por foto (R3, ADR-01: las
   composiciones con Qwen y con LFM3 reciben exactamente la misma entrada).
 - `ficha_evaluacion(c, config, xm_id, documento_id, **opciones)`: POST /fichas con opciones de evaluación
   (`forzar_ruta`, `sin_rag`, `sin_cache`, `max_iter`, `p1_previo`, `modelo_composicion`), guardada por
@@ -30,14 +31,14 @@ DIR_PROMPTS_EVAL = Path(__file__).resolve().parent / "prompts"
 
 # Configuraciones de ficha con nombre fijo: el mismo nombre = la misma generación compartida entre módulos.
 CONFIGURACIONES = {
-    # 08 §1a (R3) · las tres configuraciones de modelos de lenguaje
+    # R3 (ADR-01) · las tres configuraciones de modelos de lenguaje
     "qwen_rapida": {"forzar_ruta": "rapida", "sin_cache": True},
     "qwen_composicion": {"forzar_ruta": "completa", "modelo_composicion": "vision", "sin_cache": True},
     "lfm3_composicion": {"forzar_ruta": "completa", "modelo_composicion": "composicion", "sin_cache": True},
-    # 08 §2 · con RAG (el flujo de producción, con su enrutador) y sin RAG
+    # Resultados con RAG · con RAG (el flujo de producción, con su enrutador) y sin RAG
     "con_rag": {"sin_cache": True},
     "sin_rag": {"sin_rag": True, "sin_cache": True},
-    # 08 §6 · ciclo de agente: con el ciclo (producción) y sin él
+    # Ciclo de agente (ADR-07) · con el ciclo (producción) y sin él
     "agente_con_ciclo": {"sin_cache": True},
     "agente_sin_ciclo": {"max_iter": 0, "sin_cache": True},
 }
@@ -156,7 +157,7 @@ def chrf(texto: str, refs: list[str]) -> float | None:
 
 
 def calidad(c: ClienteEval, xm_id: str, ficha: dict, con_juez: bool = True) -> dict:
-    """Métricas de calidad de una ficha contra las referencias humanas de su foto (08 §1a y §2)."""
+    """Métricas de calidad de una ficha contra las referencias humanas de su foto (R3 y resultados con RAG)."""
     refs = referencias(xm_id)
     alt = (ficha or {}).get("texto_alternativo") or ""
     j = juez(c, xm_id, ficha or {}) if con_juez else {}

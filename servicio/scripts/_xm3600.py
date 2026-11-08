@@ -107,5 +107,5 @@ def muestra(regs: list[dict], n: int, semilla: int = SEMILLA) -> list[dict]:
 
 
 def id_documento(clave: str) -> str:
-    """Identificador estable de una foto de XM3600 en el archivo (docs/specs/03: `xm-<clave>`)."""
+    """Identificador estable de una foto de XM3600 en el archivo: `xm-<clave>` (el `documento_id` de la API)."""
     return f"xm-{clave}"

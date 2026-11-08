@@ -1,4 +1,4 @@
-"""C3 · Una prueba por verificación de guardrails (docs/specs/06; aceptación de H5).
+"""C3 · Una prueba por verificación de guardrails (ADR-05; aceptación de H5).
 
 Cuando existe el conjunto correspondiente en `evaluacion/conjuntos/` (montado en `/app/evaluacion_datos`), se usan
 sus casos reales; si no está (clon sin datos), esas pruebas se saltan. `archivo_valido` y `exif_privacidad` con

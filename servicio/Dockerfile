@@ -1,5 +1,6 @@
 # Imagen del servicio: API, lógica en capas, scripts de preparación y evaluación.
-# Dependencias gestionadas con uv (instrucción del autor, docs/bitacora.md 2026-11-07).
+# Dependencias gestionadas con uv por decisión del autor: se declaran con `==` en pyproject.toml, se resuelven en
+# uv.lock (multiplataforma y con hashes: sirve para arm64 y amd64) y la imagen las instala con `uv sync --frozen`.
 FROM ghcr.io/astral-sh/uv:0.13.5 AS uv
 
 # ── Etapa base: Python + uv + fuentes. También sirve para regenerar uv.lock:

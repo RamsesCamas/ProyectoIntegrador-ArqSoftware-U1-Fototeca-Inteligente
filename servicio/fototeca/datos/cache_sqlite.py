@@ -3,7 +3,7 @@
 - Entradas con espacio (`fichas` | `busquedas`), valor JSON, TTL y etiquetas para invalidar (`doc:<id>`,
   `corpus:<versión>`, `config:<versión>`).
 - Caché semántica: los vectores viven en la misma tabla; la búsqueda es lineal en numpy sobre las entradas
-  vigentes del espacio, suficiente para menos de 10,000 entradas (docs/specs/06, C4). Sin Redis: ahorra memoria.
+  vigentes del espacio, suficiente para menos de 10,000 entradas (ADR-04). Sin Redis: ahorra memoria.
 """
 from __future__ import annotations
 

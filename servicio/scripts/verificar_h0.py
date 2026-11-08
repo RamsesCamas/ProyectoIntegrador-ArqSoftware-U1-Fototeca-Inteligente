@@ -1,4 +1,4 @@
-"""H0 · Verificación de viabilidad (go/no-go) — docs/specs/12-plan-hitos.md.
+"""H0 · Verificación de viabilidad (go/no-go): modelos, memoria, latencias, datos y licencias.
 
 Ejecuta las verificaciones 0.1–0.8 y escribe `evaluacion/resultados/h0.json` de forma incremental
 (se guarda después de cada verificación, así que una interrupción no pierde lo ya medido).
@@ -8,8 +8,8 @@ Ejecuta las verificaciones 0.1–0.8 y escribe `evaluacion/resultados/h0.json` d
     python -m scripts.verificar_h0 --incorporar-memoria   # agrega el muestreo de `docker stats` del host
 
 Estados de cada verificación: ok · plan_b · bloqueo · revisar · error.
-Los prompts P1 y P3 que se usan aquí son los de docs/specs/07-prompts.md; sus versiones canónicas viven en
-`fototeca/modelos/prompts/` a partir de H4.
+Los prompts P1 y P3 que se usan aquí son los del diseño inicial; sus versiones canónicas viven en
+`fototeca/modelos/prompts/` a partir de H4 (P1 v2 ya se lee de ahí).
 """
 from __future__ import annotations
 
@@ -39,7 +39,8 @@ from scripts._descargas import (DATA, EVAL, Manifiesto, ahora_iso, cargar_fuente
 from scripts._xm3600 import asegurar_xm3600, cargar_indice, muestra  # compartido con H2
 
 RESULTADOS = EVAL / "resultados"
-H0_JSON = RESULTADOS / "h0.json"
+# FOTOTECA_H0_JSON permite medir en otra máquina sin sobrescribir la evidencia de H0 que citan los ADR
+H0_JSON = Path(os.environ["FOTOTECA_H0_JSON"]) if os.environ.get("FOTOTECA_H0_JSON") else RESULTADOS / "h0.json"
 STATS_JSONL = RESULTADOS / "h0_docker_stats.jsonl"
 INDICE_XM = DATA / "procesados" / "xm3600_indice.json"
 
@@ -56,7 +57,7 @@ PREFIJO_DOCUMENTO = "title: none | text: "
 
 OPCIONES_BASE = {"temperature": 0.2, "top_p": 0.9, "presence_penalty": 0.0, "num_ctx": 4096}
 # Opciones por modelo que se aplican encima de OPCIONES_BASE. Primera corrida de H0: presence_penalty 0 para
-# todos. La corrida 2 (tras 0.6b) usa los valores decididos con evidencia (docs/bitacora.md, ADR-11).
+# todos. La corrida 2 (tras 0.6b) usa los valores decididos con evidencia (ADR-11).
 OPCIONES_MODELO: dict[str, dict] = {
     m: json.loads(v) for m, v in (
         (QWEN, os.environ.get("H0_OPCIONES_QWEN", "{}")),
@@ -64,7 +65,7 @@ OPCIONES_MODELO: dict[str, dict] = {
     )
 }
 
-# ───────────────────────── Prompts y esquemas (docs/specs/07-prompts.md) ─────────────────────────
+# ───────────────────────── Prompts y esquemas (diseño inicial de P1 y P3) ─────────────────────────
 # P1 v2 (H0): se carga del archivo versionado del servicio para medir exactamente lo que usará producción.
 from fototeca.modelos.plantillas import DIR_PROMPTS, leer_plantilla  # noqa: E402
 
@@ -622,7 +623,7 @@ def v03_embeddinggemma(oll: Ollama) -> dict:
     elif elegido:
         resultado["estado"] = "plan_b"
         resultado["justificacion"] = (f"{EMB_CANDIDATOS[0]} no entrega embeddings de imagen; {elegido} es el tag más "
-                                      "pequeño de Ollama que los entrega y pasa la prueba (05 §2, plan B). Ver ADR-10.")
+                                      "pequeño de Ollama que los entrega y pasa la prueba (plan B). Ver ADR-10.")
     else:
         resultado["estado"] = "bloqueo"
         resultado["justificacion"] = "Ningún tag de Ollama entrega embeddings de imagen que pasen la prueba: plan C (pipeline)."
@@ -1016,7 +1017,7 @@ def main() -> None:
 
 
 def decisiones(v: dict) -> dict:
-    """Resumen de H0. Los estados son solo los de las verificaciones de `12` (0.1–0.8 y 0.3b/0.6b); las entradas
+    """Resumen de H0. Los estados son solo los de las verificaciones principales (0.1–0.8 y 0.3b/0.6b); las entradas
     con sufijo (`0.2_corrida1`, `0.5_sin_limite_cache`…) son evidencia histórica de corridas anteriores."""
     principales = [vid for vid, _, _ in VERIFICACIONES]
     return {

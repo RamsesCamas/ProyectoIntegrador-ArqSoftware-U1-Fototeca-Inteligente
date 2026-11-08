@@ -1,8 +1,9 @@
-"""Guardrails de entrada de la imagen que usan embeddings (docs/specs/06, C3; ADR-05).
+"""Guardrails de entrada de la imagen que usan embeddings (ADR-05).
 
 - `fuera_de_dominio`: similitud de la imagen con los prototipos «una fotografía de una escena real» contra «una
   captura de un documento, tabla o interfaz». Si la diferencia queda bajo el umbral calibrado → bloquear (422).
-- `inyeccion_en_imagen`, en dos etapas (decisión documentada en docs/bitacora.md):
+- `inyeccion_en_imagen`, en dos etapas. El enrutador necesita saber si hay texto visible ANTES de elegir la ruta
+  (ADR-03); si esa señal saliera de P1, la ruta rápida pagaría P1 y dejaría de ser rápida:
   1. antes de enrutar, `texto_visible`: la imagen se compara con prototipos de «foto con texto escrito»; si se
      detecta texto, el enrutador manda la foto por la ruta completa (Qwen nunca la «lee» como instrucción);
   2. en la ruta completa, P1 copia el texto visible y aquí se combinan heurísticas («ignora», «instrucciones»,

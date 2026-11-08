@@ -60,7 +60,7 @@ def test_listar_y_eliminar_borra_vectores(cliente_api, contenedor):
     assert cliente_api.get(f"/fotos/{doc}/miniatura").status_code == 404
 
 
-def test_rechazos_con_codigos_de_la_spec(cliente_api):
+def test_rechazos_con_codigos_documentados(cliente_api):
     assert subir(cliente_api, b"no soy una imagen", "x.jpg").status_code == 415
     r = subir(cliente_api, imagen_bytes(tam=(20, 20)), "chica.jpg")
     assert r.status_code == 422 and r.json()["error"]["codigo"] == "bloqueado_por_guardrail"

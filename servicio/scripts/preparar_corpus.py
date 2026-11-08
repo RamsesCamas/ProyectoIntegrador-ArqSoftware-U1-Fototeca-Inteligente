@@ -1,4 +1,4 @@
-"""Corpus normativo y tesauro (docs/specs/04-datos-y-corpus.md §5). Requiere internet solo la primera vez.
+"""Corpus normativo y tesauro (ADR-06). Requiere internet solo la primera vez.
 
     python -m scripts.preparar_corpus
 

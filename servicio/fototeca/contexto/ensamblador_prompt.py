@@ -1,4 +1,4 @@
-"""Armado del prompt (C5): ids estables y presupuesto de tokens (docs/specs/06, C5).
+"""Armado del prompt (C5): ids estables y presupuesto de tokens (informe, §8.1).
 
 - Cada elemento del contexto lleva un id estable: `foto:xm-…`, `regla:iptc-2025.1#…`, `tesauro:<uri>`. El modelo
   debe citar solo esos ids y el guardrail `fuentes` (C3) lo verifica.

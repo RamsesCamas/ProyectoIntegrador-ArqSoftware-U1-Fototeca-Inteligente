@@ -1,4 +1,4 @@
-"""Traducción de errores a HTTP con el formato de docs/specs/03-api.md:
+"""Traducción de errores a HTTP con el formato común de la API (informe, Anexo B):
 
     {"error": {"codigo": "...", "mensaje": "...", "traza_id": "..."}}
 

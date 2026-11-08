@@ -1,0 +1,311 @@
+{
+  "fecha": "2026-11-08T02:04:46+00:00",
+  "paquetes": [
+    {
+      "paquete": "annotated-doc",
+      "version": "0.0.5",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "annotated-types",
+      "version": "0.8.0",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "anyio",
+      "version": "4.15.1",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "beautifulsoup4",
+      "version": "4.15.0",
+      "licencia": "MIT License",
+      "campo": "License"
+    },
+    {
+      "paquete": "certifi",
+      "version": "2026.10.23",
+      "licencia": "MPL-2.0",
+      "campo": "License"
+    },
+    {
+      "paquete": "click",
+      "version": "8.5.0",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "colorama",
+      "version": "0.4.6",
+      "licencia": "BSD License",
+      "campo": "Classifier"
+    },
+    {
+      "paquete": "contourpy",
+      "version": "1.4.0",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "cycler",
+      "version": "0.12.1",
+      "licencia": "BSD License",
+      "campo": "Classifier"
+    },
+    {
+      "paquete": "fastapi",
+      "version": "0.162.0",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "fonttools",
+      "version": "4.67.0",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "grimp",
+      "version": "3.17",
+      "licencia": "BSD 2-Clause License",
+      "campo": "License"
+    },
+    {
+      "paquete": "h11",
+      "version": "0.16.0",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "httpcore",
+      "version": "1.0.9",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "httpx",
+      "version": "0.28.1",
+      "licencia": "BSD-3-Clause",
+      "campo": "License"
+    },
+    {
+      "paquete": "idna",
+      "version": "3.20",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "import-linter",
+      "version": "2.15",
+      "licencia": "BSD 2-Clause License",
+      "campo": "License"
+    },
+    {
+      "paquete": "iniconfig",
+      "version": "2.3.1",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "kiwisolver",
+      "version": "1.5.1",
+      "licencia": "BSD License",
+      "campo": "Classifier"
+    },
+    {
+      "paquete": "lxml",
+      "version": "6.1.3",
+      "licencia": "BSD-3-Clause",
+      "campo": "License"
+    },
+    {
+      "paquete": "markdown-it-py",
+      "version": "4.2.0",
+      "licencia": "MIT License",
+      "campo": "Classifier"
+    },
+    {
+      "paquete": "matplotlib",
+      "version": "3.11.2",
+      "licencia": "Python Software Foundation License",
+      "campo": "Classifier"
+    },
+    {
+      "paquete": "mdurl",
+      "version": "0.1.2",
+      "licencia": "MIT License",
+      "campo": "Classifier"
+    },
+    {
+      "paquete": "numpy",
+      "version": "2.5.4",
+      "licencia": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "opentelemetry-api",
+      "version": "1.45.1",
+      "licencia": "Apache-2.0",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "packaging",
+      "version": "26.3",
+      "licencia": "Apache-2.0 OR BSD-2-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "piexif",
+      "version": "1.1.3",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "pillow",
+      "version": "13.0.0",
+      "licencia": "MIT-CMU",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "pluggy",
+      "version": "1.7.0",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "portalocker",
+      "version": "4.4.1",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "pydantic",
+      "version": "2.14.1",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "pydantic_core",
+      "version": "2.50.1",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "Pygments",
+      "version": "2.21.0",
+      "licencia": "BSD-2-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "pyparsing",
+      "version": "3.3.3",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "pypdf",
+      "version": "6.21.2",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "pytest",
+      "version": "9.1.1",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "python-dateutil",
+      "version": "3.0.0",
+      "licencia": "Dual License",
+      "campo": "License"
+    },
+    {
+      "paquete": "python-multipart",
+      "version": "0.0.32",
+      "licencia": "Apache-2.0",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "PyYAML",
+      "version": "6.0.3",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "rdflib",
+      "version": "7.6.0",
+      "licencia": "BSD-3-Clause",
+      "campo": "License"
+    },
+    {
+      "paquete": "regex",
+      "version": "2026.9.29",
+      "licencia": "Apache-2.0 AND CNRI-Python",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "rich",
+      "version": "15.0.0",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "sacrebleu",
+      "version": "2.6.0",
+      "licencia": "Apache-2.0",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "six",
+      "version": "1.17.0",
+      "licencia": "MIT",
+      "campo": "License"
+    },
+    {
+      "paquete": "soupsieve",
+      "version": "3.0.4",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "starlette",
+      "version": "1.9.0",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "tabulate",
+      "version": "0.10.0",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "typing-inspection",
+      "version": "0.4.4",
+      "licencia": "MIT",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "typing_extensions",
+      "version": "4.16.0",
+      "licencia": "PSF-2.0",
+      "campo": "License-Expression"
+    },
+    {
+      "paquete": "tzdata",
+      "version": "2026.5",
+      "licencia": "Apache-2.0",
+      "campo": "License"
+    },
+    {
+      "paquete": "uvicorn",
+      "version": "0.54.0",
+      "licencia": "BSD-3-Clause",
+      "campo": "License-Expression"
+    }
+  ]
+}

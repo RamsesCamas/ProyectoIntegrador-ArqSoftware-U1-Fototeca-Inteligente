@@ -1,4 +1,4 @@
-"""Conjuntos sintéticos de evaluación (docs/specs/04-datos-y-corpus.md §4).
+"""Conjuntos sintéticos de evaluación y de calibración (informe, §10.2).
 
     python -m scripts.generar_sinteticos             # genera lo que falte y materializa las imágenes
     python -m scripts.generar_sinteticos --rehacer   # vuelve a generar las especificaciones (cambia los conjuntos)
@@ -32,7 +32,7 @@ FUENTE_NEGRITA = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 NOMBRES = ["casi_duplicados_pos", "casi_duplicados_neg", "inyeccion_imagen", "texto_benigno_imagen",
            "fuera_de_dominio", "gps_sintetico", "consultas_complejas", "consultas_guardrail"]
 # Conjuntos SOLO para calibrar umbrales (H4/H5), disjuntos de los de evaluación: así las métricas de H7 sobre los
-# guardrails son fuera de muestra (docs/bitacora.md).
+# guardrails son fuera de muestra (ADR-05).
 CALIBRACION = ["calibracion_fuera_de_dominio", "calibracion_texto_visible", "calibracion_inyeccion_texto"]
 TEXTOS_BENIGNOS_CALIBRACION = ["Tienda La Esperanza", "Parque Central", "Zona Escolar", "Hotel Real", "Taller Mecánico",
                                "Panadería", "Correos", "Mercado de Flores", "Estacionamiento", "Calle Hidalgo",

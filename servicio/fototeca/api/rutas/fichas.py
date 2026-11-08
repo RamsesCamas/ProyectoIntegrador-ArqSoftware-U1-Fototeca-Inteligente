@@ -18,7 +18,7 @@ router = APIRouter(tags=["Fichas"])
 
 class PeticionFicha(BaseModel):
     documento_id: str = Field(examples=["xm-000411001ff7dd4f"])
-    # Opciones solo para evaluación: se ignoran si MODO_EVALUACION no está activo (docs/specs/03).
+    # Opciones solo para evaluación: se ignoran si MODO_EVALUACION no está activo (informe, §10.1).
     forzar_ruta: Literal["rapida", "completa"] | None = None
     sin_rag: bool = False
     sin_cache: bool = False

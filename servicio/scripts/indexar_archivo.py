@@ -1,12 +1,12 @@
-"""Indexado del archivo (H3; docs/specs/04 §3 y 02 §3). Se ejecuta después de preparar_datos y preparar_corpus.
+"""Indexado del archivo (H3; colecciones de ADR-09). Se ejecuta después de preparar_datos y preparar_corpus.
 
     python -m scripts.indexar_archivo
 
 Reconstruye DESDE CERO las colecciones vectoriales y el estado del archivo (borra subidas, fichas y caché previas):
 1. `tesauro` (un concepto por entrada) y `normas` (fragmentos) con EmbeddingGemma-2, rol «documento».
-2. Fichas iniciales de las 2,600 fotos del archivo, SIN modelos de lenguaje (04 §3):
+2. Fichas iniciales de las 2,600 fotos del archivo, SIN modelos de lenguaje (escritas por humanos):
    descripción = 1ª descripción en español; texto alternativo = la más corta, recortada a 250 caracteres;
-   titular = la más corta, recortada a 120 (la spec no lo fija; se documenta); palabras clave = etiquetas de
+   titular = la más corta, recortada a 120 (decisión documentada aquí); palabras clave = etiquetas de
    Open Images normalizadas al tesauro por embeddings con umbral τ_tesauro (se reporta la tasa de mapeo y
    se deja una muestra de 50 pares para revisión).
 3. `fotos_img` (vectores de imagen calculados en preparar_datos), `fotos_txt` (EmbeddingGemma-2) y
@@ -159,7 +159,7 @@ def main() -> None:
     archivo = [d.removeprefix("xm-") for d in part["particiones"]["archivo"]]
     etiquetas = json.loads((PROCESADOS / "oi_etiquetas_por_imagen.json").read_text(encoding="utf-8"))
     nombres_unicos = sorted({e["nombre"] for k in archivo for e in etiquetas.get(k, [])})
-    # τ_tesauro con un proxy léxico (docs/bitacora.md): el mapeo es por embeddings (04 §3); el umbral se elige
+    # τ_tesauro con un proxy léxico (ADR-05): el mapeo es por embeddings; el umbral se elige
     # sobre las etiquetas cuya traducción esperada se conoce por coincidencia léxica en inglés.
     top1 = dict(Tesauro(vec, principal).normalizar(nombres_unicos, umbral=-1.0))
     calibracion = calibrar_tau_tesauro(top1, conceptos, tau_tesauro)

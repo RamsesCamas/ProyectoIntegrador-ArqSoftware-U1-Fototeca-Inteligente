@@ -57,6 +57,14 @@ latencia añadida y política aplicada, sobre `inyeccion_imagen` (15), `fuera_de
 90 % o más de bloqueos correctos y 10 % o menos de falsos positivos (`servicio/config/metas_calidad.yaml`). Los umbrales
 calibrados saldrán en `evaluacion/resultados/calibracion_h4.json` y `calibracion_h5.json`.
 
+**τ_tesauro.** El valor inicial (0.75, `servicio/config/parametros.yaml`) nunca se midió para el cruce de etiquetas de
+Open Images en inglés a conceptos del tesauro en español, así que se calibra al indexar el archivo con un **proxy
+léxico**: el concepto esperado de una etiqueta es el que la tiene, en singular o plural, entre sus etiquetas en inglés.
+Sobre esas etiquetas se elige el τ más bajo con precisión de 0.90 o más y al menos 20 mapeos aceptados (si ninguno
+llega, el de mayor F1). El mapeo sigue siendo por embeddings: el proxy solo define el esperado. La regla se fijó antes
+de ver los datos (`servicio/scripts/indexar_archivo.py`). **pendiente:** el τ elegido y su curva en
+`evaluacion/resultados/calibracion_tesauro.json`, y la recalibración cuando el autor revise los 50 pares.
+
 Dato que ya existe: ninguna de las fotos del corpus trae EXIF ni GPS (`evaluacion/resultados/h0.json` →
 `verificaciones.0.7.exif`: `imagenes_con_exif` 0 y `con_gps` 0); por eso el guardrail de EXIF se prueba con copias a las
 que se les inyecta un GPS sintético. Las pruebas unitarias de las verificaciones de entrada están en

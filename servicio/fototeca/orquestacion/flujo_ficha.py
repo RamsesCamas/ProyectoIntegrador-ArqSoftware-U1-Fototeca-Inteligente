@@ -1,4 +1,4 @@
-"""Flujo de la ficha (C2): máquina de estados explícita con ciclo de agente (docs/specs/06, C2; ADR-07).
+"""Flujo de la ficha (C2): máquina de estados explícita con ciclo de agente (ADR-07).
 
     RECIBIR → GUARDRAILS_ENTRADA ─(falla bloqueante)→ 422 con mensaje seguro
             → CACHE ─(acierto)→ GUARDRAILS_SALIDA_LIGEROS → RESPONDER
@@ -55,7 +55,7 @@ class OpcionesFicha:
     sin_rag: bool = False
     sin_cache: bool = False
     max_iter: int | None = None
-    p1_previo: dict | None = None             # R3 (08 §1a): misma descripción P1 para comparar composiciones
+    p1_previo: dict | None = None             # R3 (ADR-01): misma descripción P1 para comparar composiciones
     modelo_composicion: str | None = None     # R3: «vision» (Qwen) o «composicion» (LFM3) para P3
 
 

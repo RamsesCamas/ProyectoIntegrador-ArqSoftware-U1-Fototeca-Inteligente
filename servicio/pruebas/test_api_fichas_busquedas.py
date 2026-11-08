@@ -1,6 +1,6 @@
 """C1 · POST /fichas, GET /fichas/{id}, POST /lotes, GET /lotes/{id} y POST /busquedas (H4) con adaptadores falsos.
 
-Se verifica el contrato de `docs/specs/03`: los campos de la ficha, las fuentes y todo el bloque `meta`.
+Se verifica el contrato de la API (informe, Anexo B): los campos de la ficha, las fuentes y todo el bloque `meta`.
 """
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Aceptación de H4 con los modelos REALES (docs/specs/12 → H4).
+"""Aceptación de H4 (la ficha de principio a fin) con los modelos REALES.
 
     python -m scripts.verificar_h4
 

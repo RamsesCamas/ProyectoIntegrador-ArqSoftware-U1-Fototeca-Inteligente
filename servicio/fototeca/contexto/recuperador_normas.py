@@ -1,7 +1,7 @@
 """RAG normativo (C5): reglas de IPTC, W3C WAI, WCAG y DCMI para guiar la ficha (k=4).
 
 Consulta = «texto alternativo y descripción de imagen informativa» más las palabras clave de los vecinos
-(docs/specs/06, C5).
+(ADR-06; informe, §8.1).
 """
 from __future__ import annotations
 

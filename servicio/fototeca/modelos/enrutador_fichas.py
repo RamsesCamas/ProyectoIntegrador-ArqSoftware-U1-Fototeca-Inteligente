@@ -1,4 +1,4 @@
-"""Enrutador de fichas (C6; docs/specs/05 §4; ADR-03).
+"""Enrutador de fichas (C6; ADR-03).
 
 Señales (sobre los 5 vecinos que recuperó C5):
 - consenso = media del coseno imagen-imagen de los vecinos;

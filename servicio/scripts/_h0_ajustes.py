@@ -1,7 +1,8 @@
 """Ajustes documentados de h0.json entre corridas de H0 (se ejecuta dentro del contenedor).
 
 1. Conserva el resultado de la 1ª corrida de 0.2 (presence_penalty 0) como `0.2_corrida1`, porque la corrida 3
-   repite 0.2 con presence_penalty 1.5 y lo sobrescribiría. Es la evidencia del diagnóstico (docs/BLOQUEOS.md).
+   repite 0.2 con presence_penalty 1.5 y lo sobrescribiría. Es la evidencia del diagnóstico de ADR-11: los JSON
+   inválidos venían del muestreo (repetición degenerada en las listas), no de una falla del modelo.
 2. Recalcula la elección de lado de 0.3b con la regla corregida antes de usarla («el de menor tiempo entre los de
    calidad equivalente»; la regla original elegía el más pequeño aunque no fuera más rápido).
 3. Con `--conservar-corrida4 <log>`: conserva 0.5 y 0.6 de la corrida 4 (sin límite a la caché de prompts de
@@ -68,7 +69,7 @@ def main() -> None:
     if "--conservar-corrida4" in sys.argv:
         conservar_corrida4(datos, Path(sys.argv[sys.argv.index("--conservar-corrida4") + 1]))
     if "--conservar-corrida3" in sys.argv and "0.2" in v and "0.2_corrida3" not in v:
-        v["0.2_corrida3"] = {**v["0.2"], "nota": "3ª corrida: presence_penalty 1.5, draft activo y P1 v1 (spec 07). "
+        v["0.2_corrida3"] = {**v["0.2"], "nota": "3ª corrida: presence_penalty 1.5, draft activo y P1 v1. "
                                                   "4/5 válidos: una foto rebasó num_predict. Motivó P1 v2 (más breve)."}
         print("0.2 → 0.2_corrida3")
     if "0.2_corrida1" not in v and "0.2" in v:

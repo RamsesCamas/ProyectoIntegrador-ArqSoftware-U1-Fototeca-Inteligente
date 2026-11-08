@@ -1,6 +1,6 @@
 """Fragmentación de documentos normativos y extracción de texto de varios formatos (C5; ADR-06).
 
-Regla (docs/specs/04 §5): una regla o un campo por fragmento, porque son unidades atómicas; objetivo de
+Regla (ADR-06): una regla o un campo por fragmento, porque son unidades atómicas; objetivo de
 300–800 caracteres sin solapamiento. Si una sección supera 1,200 caracteres, se divide por párrafos con un
 solapamiento del 15 %. La usan `scripts/preparar_corpus.py` y la ingesta por la API (`POST /documentos`, tipo
 norma), así que hay una sola implementación.

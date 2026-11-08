@@ -1,4 +1,4 @@
-"""Nombres de las colecciones vectoriales (docs/specs/02-arquitectura.md §3). Las comparten C2, C4 y C5."""
+"""Nombres de las colecciones vectoriales (informe, Tabla 7; ADR-09). Las comparten C2, C4 y C5."""
 
 FOTOS_IMG = "fotos_img"                  # EmbeddingGemma-2, imagen: una entrada por foto
 FOTOS_TXT = "fotos_txt"                  # EmbeddingGemma-2, texto: ficha validada o descripción de referencia

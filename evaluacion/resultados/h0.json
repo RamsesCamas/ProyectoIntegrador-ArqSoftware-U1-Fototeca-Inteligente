@@ -677,7 +677,7 @@
       },
       "elegido": "embeddinggemma-2:440m",
       "estado": "plan_b",
-      "justificacion": "embeddinggemma-2:270m no entrega embeddings de imagen; embeddinggemma-2:440m es el tag más pequeño de Ollama que los entrega y pasa la prueba (05 §2, plan B). Ver ADR-10.",
+      "justificacion": "embeddinggemma-2:270m no entrega embeddings de imagen; embeddinggemma-2:440m es el tag más pequeño de Ollama que los entrega y pasa la prueba (plan B). Ver ADR-10.",
       "segundos": 220.6,
       "nombre": "EmbeddingGemma-2 con imágenes"
     },
@@ -1426,7 +1426,7 @@
       ],
       "segundos": 346.4,
       "nombre": "Qwen con imágenes y think:false",
-      "nota": "3ª corrida: presence_penalty 1.5, draft activo y P1 v1 (spec 07). 4/5 válidos: una foto rebasó num_predict. Motivó P1 v2 (más breve)."
+      "nota": "3ª corrida: presence_penalty 1.5, draft activo y P1 v1. 4/5 válidos: una foto rebasó num_predict. Motivó P1 v2 (más breve)."
     },
     "0.6": {
       "embedding_principal": "embeddinggemma-2:440m",

@@ -1,4 +1,4 @@
-"""Descargas idempotentes con SHA-256 y manifiestos (docs/specs/04-datos-y-corpus.md).
+"""Descargas idempotentes con SHA-256 y manifiestos de las fuentes de `config/fuentes.yaml`.
 
 - Si un archivo ya existe y su SHA-256 coincide con el registrado, no se vuelve a descargar.
 - Cada descarga queda en `data/manifiesto_<nombre>.json` con URL, fecha, tamaño y SHA-256.

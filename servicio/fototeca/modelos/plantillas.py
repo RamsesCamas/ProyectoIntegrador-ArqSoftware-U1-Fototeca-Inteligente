@@ -1,4 +1,4 @@
-"""Prompts versionados (docs/specs/07-prompts.md): `modelos/prompts/Pn_nombre.md` con encabezado YAML.
+"""Prompts versionados (informe, Tabla 11; ADR-11): `modelos/prompts/Pn_nombre.md` con encabezado YAML.
 
 Formato de cada archivo: encabezado YAML (version, tarea, modelo_preferido, modelo_respaldo, num_predict,
 temperatura, con_imagen) y las secciones «## Sistema», «## Usuario» y «## Esquema» (JSON en un bloque de código).

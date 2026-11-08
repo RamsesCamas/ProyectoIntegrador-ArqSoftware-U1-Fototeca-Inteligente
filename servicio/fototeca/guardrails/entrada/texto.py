@@ -1,4 +1,4 @@
-"""Guardrails de entrada para el texto de búsqueda (docs/specs/06, C3):
+"""Guardrails de entrada para el texto de búsqueda (ADR-05):
 
 - `pii_texto`: CURP, RFC, correo, teléfono y tarjeta con expresiones regulares → sanitizar (enmascarar) y seguir.
 - `inyeccion_texto`: heurística de patrones + similitud con los prototipos de inyección → bloquear con mensaje

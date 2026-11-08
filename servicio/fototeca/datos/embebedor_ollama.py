@@ -42,7 +42,7 @@ class EmbebedorOllama:
 
     @property
     def dimension(self) -> int:
-        """Se toma de la respuesta real del modelo (02 §3: no se escribe a mano)."""
+        """Se toma de la respuesta real del modelo; no se escribe a mano."""
         if self._dimension is None:
             self._dimension = int(self._embeber(["dimension"]).shape[1])
         return self._dimension

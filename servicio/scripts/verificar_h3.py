@@ -2,7 +2,7 @@
 
     python -m scripts.verificar_h3
 
-Criterios (docs/specs/12 → H3):
+Criterios de aceptación de H3:
 1. Qdrant tiene las colecciones con el número de puntos esperado.
 2. Al subir una foto con GPS, el GPS ya no aparece en el archivo guardado ni en la miniatura.
 3. `DELETE /documentos/{id}` elimina los vectores (y el documento).

@@ -1,8 +1,8 @@
 """Base común de los adaptadores SQLite: una conexión por operación, modo WAL y espera ante bloqueos.
 
-Todos los almacenes comparten un archivo (`data/sqlite/fototeca.db`, en un volumen con nombre; ver
-docs/bitacora.md). Abrir una conexión por operación es barato en SQLite y evita compartir conexiones entre
-el threadpool de FastAPI y el trabajador de lotes.
+Todos los almacenes comparten un archivo (`data/sqlite/fototeca.db`, en un volumen con nombre y no en una carpeta
+montada, donde SQLite puede fallar en Docker Desktop para Windows; ADR-09). Abrir una conexión por operación es
+barato en SQLite y evita compartir conexiones entre el threadpool de FastAPI y el trabajador de lotes.
 """
 from __future__ import annotations
 

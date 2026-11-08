@@ -36,14 +36,14 @@ gateway:
   espera_reintento_s: 1
 
 guardrails:
-  tamano_max_mb: 10                  # archivo_valido (06, C3)
+  tamano_max_mb: 10                  # archivo_valido (C3, ADR-05)
   lado_min_px: 64
   lado_max_px: 12000
-  tau_tesauro: 0.75                  # inicial (06, C3 salida); se calibra en H7 con 50 pares revisados
+  tau_tesauro: 0.75                  # valor inicial de diseño; se calibra en H7 con 50 pares revisados
 
 cache:
   fichas:
-    tau_dup: 0.97                    # inicial (06, C4); barrido de 0.90 a 0.99 en H7 (ADR-04)
+    tau_dup: 0.97                    # valor inicial de diseño; barrido de 0.90 a 0.99 en H7 (ADR-04)
     ttl_s: 604800                    # 7 días
   busquedas:
     tau_busq: 0.95

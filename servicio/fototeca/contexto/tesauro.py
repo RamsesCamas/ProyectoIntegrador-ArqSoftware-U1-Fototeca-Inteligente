@@ -2,7 +2,7 @@
 
 La usan el indexado (etiquetas de Open Images → tesauro), la construcción del contexto (términos candidatos) y
 el guardrail de salida `tesauro`. Un término se normaliza al concepto más cercano si la similitud supera
-`τ_tesauro`; si no, queda como término `libre` (docs/specs/06, C3 salida).
+`τ_tesauro`; si no, queda como término `libre` (guardrail de salida `tesauro`; ADR-05).
 """
 from __future__ import annotations
 

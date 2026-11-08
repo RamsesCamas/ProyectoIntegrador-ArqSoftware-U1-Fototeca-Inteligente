@@ -1,8 +1,8 @@
 """Verdad de referencia LÉXICA para el mapeo etiqueta de Open Images (inglés) → concepto del Tesauro UNESCO.
 
 La usan `indexar_archivo` (calibración de τ_tesauro con un proxy léxico, mientras el autor no revise los 50 pares)
-y `evaluacion/r3_embeddings` (exactitud top-1/top-3, docs/specs/08 §1b). El mapeo del sistema SIEMPRE es por
-embeddings (04 §3); esto solo decide cuál es el concepto «esperado» cuando la etiqueta coincide con una etiqueta en
+y `evaluacion/r3_embeddings` (exactitud top-1/top-3 de la asignación de términos). El mapeo del sistema SIEMPRE es por
+embeddings (ADR-05); esto solo decide cuál es el concepto «esperado» cuando la etiqueta coincide con una etiqueta en
 inglés del concepto (prefLabel o altLabel @en), aceptando la diferencia singular/plural del inglés.
 """
 from __future__ import annotations

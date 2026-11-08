@@ -2,8 +2,9 @@
 
 Origen, licencia y uso de cada fuente de datos, de cada modelo y de cada componente de terceros. Las licencias
 se confirmaron en la página de origen el **2026-11-07** (H0, verificación 0.8; evidencia textual en
-`evaluacion/resultados/h0.json` → `verificaciones.0.8`). Solo se usan las fuentes que lista
-`docs/specs/04-datos-y-corpus.md`. **Ninguna** fuente se descarga de YouTube ni de sitios fuera de esa lista.
+`evaluacion/resultados/h0.json` → `verificaciones.0.8`). Solo se usan las fuentes que lista este documento, las
+mismas que declara `servicio/config/fuentes.yaml`. **Ninguna** fuente se descarga de YouTube ni de sitios fuera de
+esa lista.
 
 ## 1. Corpus de fotos
 
@@ -59,4 +60,62 @@ etiqueta en español (ninguno descartado). El corpus de fotos (XM3600) se cuenta
 |---|---|---|---|
 | Swagger UI (`swagger-ui-dist`) | 5.34.0 | Apache 2.0 | `servicio/fototeca/api/estaticos/` (assets locales para `/docs` sin red; integridad sha512 verificada contra npm) |
 | Imágenes Docker | `ollama/ollama:0.40.15`, `qdrant/qdrant:v1.19.2`, `python:3.12.16-slim-bookworm`, `nginx:1.30.6-alpine`, `ghcr.io/astral-sh/uv:0.13.5` | Ollama: MIT · Qdrant: Apache 2.0 · uv: Apache 2.0 · nginx: BSD-2-Clause (campo `license` de la API de GitHub de cada repositorio, consultado el 2026-11-07) · CPython: licencia propia de la PSF (GitHub la reporta como «Other») | `docker-compose.yml`, `servicio/Dockerfile` |
-| Paquetes de Python | ver `servicio/uv.lock` y `servicio/requirements.txt` | Pendiente: la tabla por paquete se genera en H8 a partir de los metadatos instalados | Imagen `servicio` |
+| Paquetes de Python | ver `servicio/uv.lock` y `servicio/requirements.txt` | Tabla siguiente | Imagen `servicio` |
+
+### Paquetes de Python instalados en la imagen `servicio` (51)
+
+Generada con `docker compose run --rm servicio python -m scripts.licencias_paquetes` a partir de los metadatos de cada paquete instalado (`License-Expression`, `License` o los clasificadores «License ::»); el detalle, con el campo de origen, está en `evaluacion/resultados/licencias_paquetes.json`. Ninguna es copyleft fuerte: son MIT, BSD, Apache 2.0, PSF, MIT-CMU, CNRI-Python y, dentro de numpy, 0BSD, Zlib y CC0. La única de copyleft débil es MPL 2.0 (`certifi`, por archivo), que se usa sin modificar.
+
+| Paquete | Versión | Licencia (metadatos) |
+|---|---|---|
+| annotated-doc | 0.0.5 | MIT |
+| annotated-types | 0.8.0 | MIT |
+| anyio | 4.15.1 | MIT |
+| beautifulsoup4 | 4.15.0 | MIT License |
+| certifi | 2026.10.23 | MPL-2.0 |
+| click | 8.5.0 | BSD-3-Clause |
+| colorama | 0.4.6 | BSD License |
+| contourpy | 1.4.0 | BSD-3-Clause |
+| cycler | 0.12.1 | BSD License |
+| fastapi | 0.162.0 | MIT |
+| fonttools | 4.67.0 | MIT |
+| grimp | 3.17 | BSD 2-Clause License |
+| h11 | 0.16.0 | MIT |
+| httpcore | 1.0.9 | BSD-3-Clause |
+| httpx | 0.28.1 | BSD-3-Clause |
+| idna | 3.20 | BSD-3-Clause |
+| import-linter | 2.15 | BSD 2-Clause License |
+| iniconfig | 2.3.1 | MIT |
+| kiwisolver | 1.5.1 | BSD License |
+| lxml | 6.1.3 | BSD-3-Clause |
+| markdown-it-py | 4.2.0 | MIT License |
+| matplotlib | 3.11.2 | Python Software Foundation License |
+| mdurl | 0.1.2 | MIT License |
+| numpy | 2.5.4 | BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0 |
+| opentelemetry-api | 1.45.1 | Apache-2.0 |
+| packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
+| piexif | 1.1.3 | MIT |
+| pillow | 13.0.0 | MIT-CMU |
+| pluggy | 1.7.0 | MIT |
+| portalocker | 4.4.1 | BSD-3-Clause |
+| pydantic | 2.14.1 | MIT |
+| pydantic_core | 2.50.1 | MIT |
+| Pygments | 2.21.0 | BSD-2-Clause |
+| pyparsing | 3.3.3 | MIT |
+| pypdf | 6.21.2 | BSD-3-Clause |
+| pytest | 9.1.1 | MIT |
+| python-dateutil | 3.0.0 | Dual License |
+| python-multipart | 0.0.32 | Apache-2.0 |
+| PyYAML | 6.0.3 | MIT |
+| rdflib | 7.6.0 | BSD-3-Clause |
+| regex | 2026.9.29 | Apache-2.0 AND CNRI-Python |
+| rich | 15.0.0 | MIT |
+| sacrebleu | 2.6.0 | Apache-2.0 |
+| six | 1.17.0 | MIT |
+| soupsieve | 3.0.4 | MIT |
+| starlette | 1.9.0 | BSD-3-Clause |
+| tabulate | 0.10.0 | MIT |
+| typing-inspection | 0.4.4 | MIT |
+| typing_extensions | 4.16.0 | PSF-2.0 |
+| tzdata | 2026.5 | Apache-2.0 |
+| uvicorn | 0.54.0 | BSD-3-Clause |

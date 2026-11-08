@@ -132,5 +132,5 @@ los ADR que siguen como «Propuesta» aparecen como *pendiente*. Toda cifra publ
 servicio/            API y lógica en capas (C1–C7, T1, T2), scripts, evaluación y pruebas
 web/                 aplicación web estática (nginx) que solo consume /api/*
 evaluacion/          conjuntos de prueba, resultados, gráficas y plantillas de revisión manual
-docs/                especificaciones, ADR, diagramas, informe y presentación
+docs/                ADR, diagramas, guía de ejecución, licencias, informe y presentación
 ```

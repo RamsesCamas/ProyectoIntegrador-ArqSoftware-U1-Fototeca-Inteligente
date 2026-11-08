@@ -1,8 +1,9 @@
-# Metas de los atributos de calidad (docs/specs/01 §3). Las lee la evaluación (H7) para comparar lo medido.
+# Metas de los atributos de calidad (informe, §4.3, Tabla 5). Las lee la evaluación (H7) para comparar lo medido.
 # No forman parte de la versión de configuración del servicio: cambiarlas no invalida la caché.
 #
-# `01` permite ajustar una meta inicial irreal «con la evidencia medida» en H0. Las metas de latencia de ficha se
-# ajustaron con evaluacion/resultados/h0.json → verificaciones.0.6 (docs/bitacora.md, 2026-11-08):
+# Las metas iniciales se fijaron en el diseño, con una regla: una meta que resulte irreal se puede ajustar en H0
+# (verificación de viabilidad), pero solo con la evidencia medida. Las metas de latencia de ficha se ajustaron el
+# 2026-11-08 con evaluacion/resultados/h0.json → verificaciones.0.6:
 #   meta = 1.2 × (suma de los p50 de H0 de las llamadas a modelos de la ruta), redondeada hacia arriba a 5 s.
 #   El 20 % cubre las demás capas (embeddings, recuperación, guardrails y caché).
 #   - Ruta rápida: una llamada a Qwen con imagen (P2). Su referencia en H0 es P1 a 512 px: p50 34.28 s.
@@ -17,9 +18,10 @@ latencia_s:
   ficha_completa_p50: 90           # inicial 45 s; ajustada en H0
   ficha_cache_p50: 0.5             # sin cambio
 busqueda:
-  # «Se reporta; la meta se fija después de H0» (01). H0 solo midió 50 pares (R@5 de 1.00 en una galería de 50),
-  # que no sirve como referencia para una galería de 1,000. La meta es comparativa: la arquitectura elegida debe
-  # tener el R@10 más alto entre unificada, pipeline e híbrida, y se reporta su intervalo de confianza.
+  # En el diseño esta métrica solo se reportaba y su meta se fijaría después de H0. H0 solo midió 50 pares (R@5 de
+  # 1.00 en una galería de 50), que no sirve como referencia para una galería de 1,000. La meta es comparativa: la
+  # arquitectura elegida debe tener el R@10 más alto entre unificada, pipeline e híbrida, y se reporta su intervalo
+  # de confianza.
   r10_texto_imagen: comparativa
 guardrails:
   bloqueos_correctos_min: 0.90

@@ -30,7 +30,8 @@ dev = [
 ]
 
 [tool.uv]
-# Solo versiones publicadas al menos 14 días antes del corte (docs/bitacora.md, 2026-11-07).
+# Solo versiones publicadas hasta el 2026-10-24, 14 días antes de fijarlas (2026-11-07), también las transitivas:
+# así se evitan regresiones de versiones recién publicadas en una demo sin red.
 exclude-newer = "2026-10-24T00:00:00Z"
 
 [tool.pytest.ini_options]

@@ -1,6 +1,6 @@
-# Fuentes de datos y corpus (docs/specs/04-datos-y-corpus.md §1).
-# Solo se usan estas fuentes. La licencia esperada se confirma en la página de origen (H0, verificación 0.8)
-# y lo encontrado se escribe en docs/LICENCIAS-Y-CORPUS.md.
+# Fuentes de datos y corpus: el archivo fotográfico (Crossmodal-3600 con etiquetas de Open Images V7), el corpus
+# normativo y el Tesauro de la UNESCO (informe, §3.2). Solo se usan estas fuentes. La licencia esperada se
+# confirma en la página de origen (H0, verificación 0.8) y lo encontrado se escribe en docs/LICENCIAS-Y-CORPUS.md.
 
 xm3600:
   pagina: https://google.github.io/crossmodal-3600/
@@ -29,8 +29,8 @@ open_images:
     archivo: crudos/open_images/oidv7-class-descriptions.csv
   etiquetas_filtradas: procesados/oi_etiquetas_xm3600.csv
 
-# Corpus normativo (04 §5). No hay traducción al español del tutorial del W3C (H0: /es responde 404), así que
-# se usa la versión en inglés; EmbeddingGemma-2 es multilingüe.
+# Corpus normativo del RAG (su fragmentación está en ADR-06). No hay traducción al español del tutorial del W3C
+# (H0: /es responde 404), así que se usa la versión en inglés; EmbeddingGemma-2 es multilingüe.
 corpus:
   normas:
     - id: iptc-2025.1

@@ -1,4 +1,4 @@
-"""Verificaciones de salida que usan modelos (docs/specs/06, C3; ADR-05).
+"""Verificaciones de salida que usan modelos (ADR-05).
 
 - `apego_visual`: similitud en EmbeddingGemma-2 entre la IMAGEN y el texto alternativo, contra el percentil 5 de
   la similitud imagen–descripción humana en el archivo. Política: reintentar por la ruta completa si venía de la

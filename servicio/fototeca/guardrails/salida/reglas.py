@@ -44,7 +44,7 @@ NOMBRE_CAMBIO = {"titular": "titular_recortado", "texto_alternativo": "alt_recor
 
 def recortar_longitudes(datos: dict) -> tuple[dict, list[str]]:
     """Recorta por oración los campos de texto que exceden su límite ANTES de validar el esquema: la política de
-    `reglas_iptc` ante un texto largo es recortar, no reintentar (06). Devuelve los datos y los cambios hechos."""
+    `reglas_iptc` ante un texto largo es recortar, no reintentar (ADR-05). Devuelve los datos y los cambios hechos."""
     salida, cambios = dict(datos), []
     for campo, maximo in LIMITES.items():
         valor = salida.get(campo)

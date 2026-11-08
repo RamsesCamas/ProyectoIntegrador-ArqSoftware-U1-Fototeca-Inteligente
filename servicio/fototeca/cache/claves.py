@@ -1,4 +1,4 @@
-"""Claves de la caché exacta (docs/specs/06, C4)."""
+"""Claves de la caché exacta (C4; ADR-04)."""
 from __future__ import annotations
 
 import hashlib

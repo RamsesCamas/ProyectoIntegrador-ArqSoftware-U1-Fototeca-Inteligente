@@ -1,6 +1,6 @@
-"""Puertos de C7 (docs/specs/02-arquitectura.md §3). Las capas superiores solo conocen estas interfaces.
+"""Puertos de C7 (informe, §5.4; ADR-09). Las capas superiores solo conocen estas interfaces.
 
-Además de lo que pide la spec, cada recurso expone `estado()` para `GET /health`, y `Embebedor` recibe el
+Además de sus operaciones propias, cada recurso expone `estado()` para `GET /health`, y `Embebedor` recibe el
 `rol` del texto (consulta, documento o simétrico) para que cada adaptador aplique los prefijos de su modelo.
 """
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Esquema de la ficha catalográfica IPTC (docs/specs/03-api.md) y de sus fuentes."""
+"""Esquema de la ficha catalográfica IPTC (contrato de `POST /fichas`; informe, Anexo B) y de sus fuentes."""
 from __future__ import annotations
 
 from typing import Literal

@@ -3,7 +3,7 @@
     python -m scripts.calibrar h4    # τ_ret, τ_consenso, τ_busqueda, τ_apego_visual, τ_consistencia
     python -m scripts.calibrar h5    # τ_fuera_dominio, τ_texto_visible, τ_inyeccion
 
-Reglas (docs/specs/05, 06):
+Reglas (ADR-03, ADR-05 y ADR-07):
 - τ_ret = p10 del top-1 de la recuperación de ejemplos en `nuevas` (sin `eval_fichas` ni `regiones_excluidas`).
 - τ_consenso = p50 del consenso (media del coseno imagen-imagen de los 5 vecinos) en el mismo conjunto.
 - τ_apego_visual = p5 de la similitud imagen–texto alternativo humano (la descripción más corta) en el archivo.

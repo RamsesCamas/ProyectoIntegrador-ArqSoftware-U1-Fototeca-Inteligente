@@ -2,10 +2,10 @@
 
     python -m scripts.ajustar_prompts [--etiqueta v1]
 
-`ajuste_prompts` son 10 fotos de `nuevas` reservadas para este fin (nunca `eval_fichas`; docs/specs/12 → H4). Por
+`ajuste_prompts` son 10 fotos de `nuevas` reservadas para este fin (nunca `eval_fichas`, para que la evaluación quede fuera de muestra). Por
 cada foto y ruta guarda la ficha, las referencias humanas, la similitud granite del texto alternativo con ellas,
 si el JSON fue válido a la primera (eventos C6 de la traza), los guardrails de salida y la latencia. Sirve para
-decidir ajustes de redacción de P1–P3, que se anotan en docs/bitacora.md con la versión del prompt. Escribe
+decidir ajustes de redacción de P1–P3, que se registran subiendo la versión del prompt. Escribe
 `evaluacion/resultados/ajuste_prompts_<etiqueta>.json`; las fotos se eliminan al final.
 """
 from __future__ import annotations

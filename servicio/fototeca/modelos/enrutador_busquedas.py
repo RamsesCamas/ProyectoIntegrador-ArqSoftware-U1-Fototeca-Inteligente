@@ -1,4 +1,4 @@
-"""Enrutador de búsquedas (C6; docs/specs/05 §5; ADR-03).
+"""Enrutador de búsquedas (C6; ADR-03).
 
 - Búsqueda por imagen → ruta «imagen», sin modelo de lenguaje.
 - Búsqueda por texto → «simple» o «compleja» con dos señales:

@@ -1,4 +1,5 @@
-"""Preparación de datos (docs/specs/04-datos-y-corpus.md §1–§4). Requiere internet solo la primera vez.
+"""Preparación de datos: archivo fotográfico, particiones y conjuntos sintéticos (informe, §3.2). Requiere internet
+solo la primera vez.
 
     python -m scripts.preparar_datos
 
@@ -25,6 +26,7 @@ import numpy as np
 from PIL import Image
 
 from fototeca.api.arranque import cargar_configuracion, construir_embebedores
+from fototeca.dominio.errores import ServicioNoDisponible, TiempoAgotado
 from scripts._descargas import (DATA, EVAL, Manifiesto, ahora_iso, cargar_fuentes, descargar,
                                 filtrar_csv_remoto, json_guardar, registro)
 from scripts._xm3600 import SEMILLA, asegurar_xm3600, directorio_imagenes, id_documento
@@ -34,6 +36,8 @@ PARTICIONES = CONJUNTOS / "particiones.json"
 PROCESADOS = DATA / "procesados"
 TAM_ARCHIVO = 2600
 N_EXCLUIDAS = 3
+LIMITE_LOTE_POR_IMAGEN_S = 30.0
+REINTENTOS_LOTE = 2
 
 
 def slug(texto: str) -> str:
@@ -86,10 +90,22 @@ def embeddings_imagenes(regs: list[dict], dir_img: Path, embebedor, lote: int = 
     if pendientes:
         registro(f"embeddings de imagen: {len(hechos)} en caché, {len(pendientes)} pendientes "
                  f"({embebedor.nombre_modelo}, {embebedor.lado_imagen_px}px)")
+    # Proceso por lotes y sin usuario esperando: el tiempo límite interactivo de H0 (5 s por elemento) no aplica.
+    # Se usa uno holgado y se reintenta el lote, para que la contención de CPU no tire una corrida de horas.
+    embebedor.tiempo_limite_s = max(float(embebedor.tiempo_limite_s), LIMITE_LOTE_POR_IMAGEN_S)
     t0 = time.perf_counter()
     for i in range(0, len(pendientes), lote):
         parte = pendientes[i:i + lote]
-        vectores = embebedor.embeber_imagenes([(dir_img / r["archivo"]).read_bytes() for r in parte])
+        imagenes = [(dir_img / r["archivo"]).read_bytes() for r in parte]
+        for intento in range(1, REINTENTOS_LOTE + 2):
+            try:
+                vectores = embebedor.embeber_imagenes(imagenes)
+                break
+            except (TiempoAgotado, ServicioNoDisponible) as e:
+                if intento > REINTENTOS_LOTE:
+                    raise
+                registro(f"   lote {i // lote + 1}: {type(e).__name__}; reintento {intento} en 10 s")
+                time.sleep(10)
         for r, v in zip(parte, vectores):
             hechos[r["clave"]] = v
         ids = list(hechos)
@@ -141,10 +157,10 @@ def formar_particiones(regs: list[dict], sim_locale: dict[str, float], embebedor
     particiones = {
         "archivo": archivo, "nuevas": nuevas, "regiones_excluidas": regiones,
         "eval_fichas": eval_fichas, "galeria_busqueda": sorted(nuevas + regiones),
-        # Subconjuntos fijados de antemano para que los experimentos no se crucen (docs/specs/08):
+        # Subconjuntos fijados de antemano para que los experimentos no se crucen (informe, §10.2):
         "ajuste_prompts": ajuste_prompts,          # H4: refinamiento de prompts (nunca eval_fichas)
-        "aprendizaje": aprendizaje,                # H7 §8: curva de aprendizaje (sin solaparse con eval_fichas)
-        "agente_extra": agente_extra,              # H7 §6: 30 adicionales de regiones_excluidas
+        "aprendizaje": aprendizaje,                # H7: curva de aprendizaje (sin solaparse con eval_fichas)
+        "agente_extra": agente_extra,              # H7: ciclo de agente, 30 adicionales de regiones_excluidas
     }
     return {
         "generado": ahora_iso(), "semilla": SEMILLA,

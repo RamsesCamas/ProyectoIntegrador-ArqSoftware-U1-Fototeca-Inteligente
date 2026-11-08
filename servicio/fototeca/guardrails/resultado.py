@@ -1,4 +1,4 @@
-"""Resultado común de toda verificación de guardrail (docs/specs/06-capas-detalle.md, C3)."""
+"""Resultado común de toda verificación de guardrail (C3; ADR-05)."""
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field

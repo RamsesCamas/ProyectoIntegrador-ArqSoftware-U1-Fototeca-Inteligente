@@ -1,4 +1,4 @@
-"""Políticas ante cada falla de guardrail (docs/specs/06-capas-detalle.md, C3; ADR-05).
+"""Políticas ante cada falla de guardrail (C3; ADR-05).
 
 Cada verificación declara aquí qué se hace cuando falla. El flujo (C2) consulta esta tabla en lugar de decidir
 por su cuenta, para que la política sea explícita, única y documentable.

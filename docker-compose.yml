@@ -1,6 +1,7 @@
 name: fototeca-viva
 
-# Versiones fijadas: nunca `latest` (ver docs/bitacora.md y ADR-10).
+# Versiones fijadas: nunca `latest`. Todas las imágenes se publican para linux/amd64 y linux/arm64, porque se
+# desarrolla en arm64 y la demo corre en Windows x86. La versión de Ollama se justifica en ADR-10.
 # Los valores por defecto de las variables son los de .env.ejemplo; crear .env es opcional.
 
 services:
@@ -73,7 +74,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./evaluacion:/app/evaluacion_datos
-      - sqlite_datos:/app/data/sqlite   # SQLite en volumen con nombre (bitácora 2026-11-07)
+      - sqlite_datos:/app/data/sqlite   # SQLite en un volumen con nombre, no en ./data (ADR-09)
       - ./web:/app/web_estatica:ro      # solo para la prueba de R8 (pruebas/test_web_r8.py)
     ports:
       - "8000:8000"

@@ -1,4 +1,4 @@
-"""Flujo de búsqueda (C2; docs/specs/06, C2 «Búsqueda»):
+"""Flujo de búsqueda (C2; informe, §8.5; ADR-03 y ADR-07):
 
     GUARDRAILS_ENTRADA → CACHE → ENRUTAR (simple | compleja | imagen) → [P4] → RECUPERAR
       → EVALUAR (sin resultados ≥ τ_busqueda y iteración < 2 → P5 reformular → RECUPERAR)

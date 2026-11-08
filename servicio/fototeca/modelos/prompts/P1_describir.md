@@ -7,7 +7,7 @@ modelo_respaldo: null
 num_predict: 350
 temperatura: 0.2
 con_imagen: true
-# v2 (H0, docs/bitacora.md 2026-11-07): con v1 (docs/specs/07) Qwen llenaba las listas hasta el máximo y en fotos
+# v2 (H0, 2026-11-07; ADR-11): con la v1 original, Qwen llenaba las listas hasta el máximo y en fotos
 # ricas rebasaba num_predict (JSON truncado: 3/5 y 4/5 válidos). Se acota la extensión en el prompt y en el esquema.
 ---
 ## Sistema
