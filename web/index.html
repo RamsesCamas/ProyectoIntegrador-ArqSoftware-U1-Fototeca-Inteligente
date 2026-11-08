@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inicio · Fototeca Viva</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <script type="module" src="js/inicio.js"></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera">
+    <div class="contenedor">
+      <a class="marca" href="index.html">Fototeca Viva <span>Catalogación accesible y trazable</span></a>
+      <nav class="navegacion" aria-label="Principal">
+        <ul>
+          <li><a href="index.html" aria-current="page">Inicio</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="aviso-ia" role="note">
+    <p class="contenedor">Las fichas y resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.</p>
+  </div>
+
+  <main id="contenido" class="contenedor">
+    <h1>Estado del sistema</h1>
+    <p class="intro">Fototeca Viva genera fichas catalográficas IPTC con texto alternativo, detecta casi duplicados y busca
+      por texto o por foto. Todo corre en este equipo, sin servicios en la nube.</p>
+
+    <p id="estado-general" aria-live="polite">Consultando el estado…</p>
+    <p id="precalentamiento" class="intro"></p>
+    <section aria-labelledby="titulo-componentes">
+      <h2 id="titulo-componentes">Componentes</h2>
+      <div id="componentes" class="rejilla"></div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">Proyecto integrador · Tópicos Selectos de Arquitectura de Software · MCIT UPChiapas</div>
+  </footer>
+  <div id="anuncios" class="solo-lectores" aria-live="polite"></div>
+</body>
+</html>
