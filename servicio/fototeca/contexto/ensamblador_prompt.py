@@ -46,7 +46,8 @@ class Contexto:
                 | {id_tesauro(t) for t in self.terminos})
 
     # ── alias de citas ──
-    # Los modelos pequeños copian mal ids largos (`regla:w3c-wai-images#informative/…`, `foto:xm-…`) y gastan tokens en
+    # Las líneas del prompt empiezan con `F1:`, `R1:`, `T1:` (sin corchetes desde P2/P3 v3: con corchetes, LFM3 copiaba
+    # «[F1] titular del vecino» como palabra clave). Los modelos pequeños copian mal ids largos (`regla:w3c-wai-images#informative/…`, `foto:xm-…`) y gastan tokens en
     # ellos. En el prompt cada fuente lleva un alias corto (F1, R1, T1) y, antes del guardrail `fuentes`, el alias se
     # traduce al id real. Los alias se derivan del contenido actual del contexto, así que deben pedirse después de
     # recortarlo (variables_p2/variables_p3).
@@ -87,18 +88,22 @@ class Contexto:
             f = v.ficha.ficha
             palabras = ", ".join(p.termino for p in f.palabras_clave[:8])
             if estilo == "rapida":
-                lineas.append(f"[F{i}] titular: {_corto(f.titular, 120)} | texto_alternativo: "
+                lineas.append(f"F{i}: titular: {_corto(f.titular, 120)} | texto_alternativo: "
                               f"{_corto(f.texto_alternativo, 250)} | palabras_clave: {palabras}")
             else:
-                lineas.append(f"[F{i}] {_corto(f.titular, 120)} | {_corto(f.descripcion, 300)} | {palabras}")
+                lineas.append(f"F{i}: {_corto(f.titular, 120)} | {_corto(f.descripcion, 300)} | {palabras}")
         return lineas
 
     def lineas_reglas(self) -> list[str]:
-        return [f"[R{i}] {_corto(r.carga.get('texto', ''), 600)}" for i, r in enumerate(self.reglas, 1)]
+        return [f"R{i}: {_corto(r.carga.get('texto', ''), 600)}" for i, r in enumerate(self.reglas, 1)]
 
     def lineas_terminos(self) -> list[str]:
-        return [f"[T{i}] {t.carga.get('etiqueta_es', '')} — {_corto(t.carga.get('nota_alcance', ''), 120)}"
+        return [f"T{i}: {t.carga.get('etiqueta_es', '')} — {_corto(t.carga.get('nota_alcance', ''), 120)}"
                 for i, t in enumerate(self.terminos, 1)]
+
+    def titulares(self) -> list[str]:
+        """Titulares de las fotos similares que vio el modelo (para detectar copias en `copia_contexto`)."""
+        return [v.ficha.ficha.titular for v in self._fotos_con_ficha() if v.ficha.ficha.titular]
 
 
 def _tokens(texto: str, caracteres_por_token: float) -> int:

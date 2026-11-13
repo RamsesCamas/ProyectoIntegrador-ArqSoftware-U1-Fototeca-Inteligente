@@ -171,6 +171,42 @@ def calidad(c: ClienteEval, xm_id: str, ficha: dict, con_juez: bool = True) -> d
     }
 
 
+def copia_contexto_caso(respuesta: dict) -> dict:
+    """La verificación `copia_contexto` de un caso: la que registró el flujo (desde P2/P3 v3) o, en casos anteriores a
+    ella, la misma función aplicada a la ficha guardada (sin los titulares vecinos, que no quedaron en el caso; así se
+    detectan alias, corchetes, frases largas y titulares genéricos o copiados de las etiquetas del prompt)."""
+    from fototeca.guardrails.salida.reglas import verificar_copia_contexto
+
+    salida = (((respuesta or {}).get("meta") or {}).get("guardrails") or {}).get("salida") or []
+    registradas = [g for g in salida if g.get("verificacion") == "copia_contexto"]
+    if registradas:
+        g = registradas[-1]
+        return {"copia_titular": g.get("resultado") == "marcada", "copia_registrada": True,
+                "copia_palabras_quitadas": int((g.get("detalle") or {}).get("palabras_quitadas", 0))}
+    ficha = (respuesta or {}).get("ficha")
+    if not isinstance(ficha, dict):
+        return {"copia_titular": None, "copia_registrada": False, "copia_palabras_quitadas": None}
+    palabras = [p.get("termino") for p in ficha.get("palabras_clave") or [] if isinstance(p, dict)]
+    _, _, r = verificar_copia_contexto(ficha.get("titular") or "", palabras, [])
+    return {"copia_titular": r.resultado == "marcada", "copia_registrada": False,
+            "copia_palabras_quitadas": int(r.detalle.get("palabras_quitadas", 0))}
+
+
+def resumen_copia_contexto(casos: list[dict]) -> dict:
+    xs = [x for x in casos if x.get("copia_titular") is not None]
+    if not xs:
+        return {"n": 0}
+    con_copia = sum(1 for x in xs if x["copia_titular"] or x["copia_palabras_quitadas"])
+    registradas = sum(1 for x in xs if x.get("copia_registrada"))
+    return {"n": len(xs), "fichas_con_copia": con_copia, "tasa_fichas_con_copia": round(con_copia / len(xs), 4),
+            "titular_marcado": sum(1 for x in xs if x["copia_titular"]),
+            "fichas_con_palabras_quitadas": sum(1 for x in xs if x["copia_palabras_quitadas"]),
+            "palabras_quitadas": sum(x["copia_palabras_quitadas"] for x in xs),
+            "origen": ("registrada por el flujo" if registradas == len(xs) else
+                       "aplicada a la ficha guardada (casos anteriores a la verificación)" if not registradas else
+                       "mixto")}
+
+
 def resumen_numerico(valores: list[float | None]) -> dict:
     v = np.array([x for x in valores if x is not None], dtype=float)
     if not v.size:

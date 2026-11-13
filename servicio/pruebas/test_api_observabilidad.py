@@ -217,7 +217,7 @@ def test_ficha_validada_aparece_como_foto_similar_de_una_foto_parecida(cliente_a
     assert ficha_b["meta"]["cache"] == "ninguna"
     # La ficha validada entró al contexto del modelo, con la corrección del archivista
     prompt = _ultimo_prompt(contenedor)
-    assert f"[F1] {titular}" in prompt
+    assert f"F1: {titular}" in prompt
     # …y quedó como fuente `foto_similar` de los campos de la nueva ficha
     for campo in ("titular", "descripcion", "texto_alternativo"):
         similares = [f for f in ficha_b["fuentes"].get(campo, []) if f["tipo"] == "foto_similar"]

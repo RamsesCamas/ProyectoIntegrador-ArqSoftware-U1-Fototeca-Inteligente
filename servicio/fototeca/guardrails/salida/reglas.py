@@ -6,6 +6,9 @@
 - `atributos_sensibles` (etapa léxica): etnia, raza, religión, orientación, discapacidad, salud y nombres
   propios de personas. Si el léxico detecta algo, C2 consulta P6 (Qwen) y aplica la política.
 - `fuentes`: cada campo tiene al menos una fuente y todos los ids existen en el contexto entregado al modelo.
+- `copia_contexto`: el modelo no copia el contexto en lugar de describir la foto. De las palabras clave se quitan
+  los alias y corchetes, y se descartan las frases de más de 4 palabras y las copiadas de un titular vecino; un
+  titular genérico, copiado de una foto similar o de las etiquetas del prompt y las normas se vacía y se marca.
 """
 from __future__ import annotations
 
@@ -64,6 +67,73 @@ def limpiar_advertencias(advertencias) -> list[str]:
     if not isinstance(advertencias, list):
         return []
     return [a.strip() for a in advertencias if isinstance(a, str) and a.strip() and not _ALIAS_CITA.search(a)]
+
+
+_ALIAS_O_CORCHETE = re.compile(r"\b[FRT]\d{1,2}\b|[\[\]]")
+# Etiquetas del prompt y de las normas que LFM3 copió como titular en R3 («IPTC Image File», «Descripción objetiva de la
+# imagen»). Ninguna describe el contenido de una foto.
+_ETIQUETAS_PROMPT = re.compile(r"descripci[oó]n objetiva|\biptc\b|metadat|image file|\brecord\b|texto alternativo|"
+                               r"palabras clave|fotos similares", re.I)
+_TITULARES_GENERICOS = {"imagen", "foto", "fotografia", "fotografía", "sin titulo", "sin título", "titular",
+                        "descripcion", "descripción", "imagen de la foto", "descripcion de la imagen",
+                        "descripción de la imagen"}
+MAX_PALABRAS_TERMINO = 4
+
+
+def _normal(texto: str) -> str:
+    return " ".join(re.sub(r"[^\w\s]", " ", (texto or "").lower()).split())
+
+
+def depurar_palabras_clave(palabras: list[str], titulares_contexto: list[str]) -> tuple[list[str], list[str]]:
+    """Quita alias (`F1`, `[R2]`) y corchetes de cada palabra clave; descarta las vacías, las repetidas, las de más de
+    4 palabras (un término de catálogo no es una oración) y las que reproducen el titular de una foto similar."""
+    copias = {_normal(t) for t in titulares_contexto if t}
+    salida, quitadas, vistas = [], [], set()
+    for p in palabras:
+        if not isinstance(p, str):
+            continue
+        limpia = " ".join(_ALIAS_O_CORCHETE.sub(" ", p).split()).strip(" .,;:-–—|'\"")
+        n = _normal(limpia)
+        if n in vistas:
+            continue
+        if not n or len(n.split()) > MAX_PALABRAS_TERMINO or n in copias:
+            quitadas.append(p)
+            continue
+        vistas.add(n)
+        salida.append(limpia)
+    return salida, quitadas
+
+
+def revisar_titular(titular: str, titulares_contexto: list[str]) -> str | None:
+    """Motivo por el que el titular no describe la foto, o None si está bien. Un titular vacío no se marca aquí."""
+    n = _normal(titular)
+    if not n:
+        return None
+    if _ALIAS_CITA.search(titular) or "[" in titular:
+        return "contiene identificadores del contexto"
+    if n in _TITULARES_GENERICOS:
+        return "es genérico"
+    if _ETIQUETAS_PROMPT.search(titular):
+        return "copia una etiqueta del prompt o de las normas"
+    if n in {_normal(t) for t in titulares_contexto if t}:
+        return "copia el titular de una foto similar"
+    return None
+
+
+def verificar_copia_contexto(titular: str, palabras: list[str], titulares_contexto: list[str]
+                             ) -> tuple[str, list[str], ResultadoGuardrail]:
+    """Devuelve el titular (vacío si se marcó), las palabras clave depuradas y el resultado de `copia_contexto`."""
+    limpias, quitadas = depurar_palabras_clave(palabras, titulares_contexto)
+    motivo = revisar_titular(titular, titulares_contexto)
+    detalle = {"palabras_quitadas": len(quitadas)}
+    if motivo:
+        detalle["titular"] = motivo
+        return "", limpias, ResultadoGuardrail("copia_contexto", "marcada", valor=float(len(quitadas)),
+                                               politica_aplicada=politica("copia_contexto"), detalle=detalle)
+    if quitadas:
+        return titular, limpias, ResultadoGuardrail("copia_contexto", "sanitizado", valor=float(len(quitadas)),
+                                                    politica_aplicada=politica("copia_contexto"), detalle=detalle)
+    return titular, limpias, ResultadoGuardrail("copia_contexto", "aprobada", valor=0.0, detalle=detalle)
 
 
 def verificar_esquema(datos: dict) -> tuple[Ficha | None, ResultadoGuardrail]:

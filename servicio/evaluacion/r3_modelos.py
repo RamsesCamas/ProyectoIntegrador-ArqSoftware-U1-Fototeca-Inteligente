@@ -41,8 +41,8 @@ from collections import Counter
 
 import numpy as np
 
-from evaluacion.calidad import (CONFIGURACIONES, asegurar_subidas, calidad, ficha_evaluacion, intervalo_bootstrap,
-                                p1_unico, resumen_numerico)
+from evaluacion.calidad import (CONFIGURACIONES, asegurar_subidas, calidad, copia_contexto_caso, ficha_evaluacion,
+                                intervalo_bootstrap, p1_unico, resumen_copia_contexto, resumen_numerico)
 from evaluacion.comun import (RESULTADOS, ClienteEval, Incremental, ahora, guardar_grafica, guardar_resultado,
                               particiones, percentiles, plt, registro, tamano)
 
@@ -307,6 +307,7 @@ def caso(c: ClienteEval, config: str, xm_id: str, reg: dict, p1: dict | None = N
         "latencia_ruta_s": round(tiempo / 1000 + p1_aparte, 3) if tiempo is not None else None,
         **{f"capa_{k}_s": (round(capas[k] / 1000, 3) if capas.get(k) is not None else None) for k in CAPAS},
         **medir_calidad(c, xm_id, ficha),
+        **copia_contexto_caso(cuerpo if ok else {}),
         **{f"gen_{k}": v for k, v in gen.items()},
         "traza_id": traza, "ficha": ficha,
     }
@@ -342,6 +343,8 @@ def agregar(casos: list[dict]) -> dict:
                                    "sin_requiere_revision": sum(1 for v in columna("pasa_guardrails_salida") if v)},
         # Por qué quedó cada ficha en `requiere_revision` (una ficha puede tener varios motivos).
         "motivos_revision": dict(Counter(m for x in casos for m in (x.get("revision") or [])).most_common()),
+        # Titulares genéricos o copiados y palabras clave con alias o copiadas del contexto (verificación copia_contexto).
+        "copia_contexto": resumen_copia_contexto(casos),
         "latencia_ruta_s": percentiles([v for v in columna("latencia_ruta_s") if v is not None]),
         "latencia_ficha_s": percentiles([v for v in columna("latencia_ficha_s") if v is not None]),
         "latencia_por_capa_s": {k: percentiles([v for v in columna(f"capa_{k}_s") if v is not None]) for k in CAPAS},

@@ -32,6 +32,7 @@ valor, umbral y política aplicada) que viaja en `meta.guardrails` y en la traza
 | `apego_visual` | salida, ficha | similitud imagen–texto alternativo en EmbeddingGemma-2 contra un percentil bajo de imagen–descripción humana | **reintentar** por la ruta completa si venía de la rápida; si no, **marcar** |
 | `consistencia` | salida, ficha | similitud en granite entre el texto alternativo y la descripción de P1 | **marcar** |
 | `fuentes` | salida, ficha | cada campo cita ids que existían en el contexto | **sanitizar** (quitar las inválidas); campo sin fuentes: **marcar** |
+| `copia_contexto` | salida, ficha | reglas sin modelo: alias (`F1`, `[R2]`) y corchetes en las palabras clave, palabras clave de más de 4 palabras o iguales al titular de una foto similar, y titulares genéricos («Imagen») o copiados de una foto similar o de las etiquetas del prompt y de las normas («IPTC Image File») | **sanitizar** las palabras clave; titular copiado: vaciarlo y **marcar** |
 | `salida_busqueda` | salida, búsqueda | no exponer rutas internas, EXIF, GPS ni hashes | **sanitizar**, y siempre con el aviso de IA |
 
 Mientras un umbral no esté calibrado (τ_fuera_dominio, τ_texto_visible, τ_apego_visual, τ_consistencia), la verificación

@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import time
+from collections import Counter
 
 import numpy as np
 from fastapi.testclient import TestClient
@@ -82,6 +83,10 @@ def main() -> None:
             "granite_media": round(float(np.mean(sims)), 4) if sims else None,
             "alt_vacios": sum(1 for x in cs if not (x.get("ficha") or {}).get("texto_alternativo")),
             "requiere_revision": sum(1 for x in cs if (x.get("ficha") or {}).get("estado") == "requiere_revision"),
+            "copia_contexto": dict(Counter(r for x in cs for v, r in x["guardrails_salida"] if v == "copia_contexto")),
+            "titulares_vacios": sum(1 for x in cs if not (x.get("ficha") or {}).get("titular")),
+            "palabras_clave_media": round(float(np.mean([len((x.get("ficha") or {}).get("palabras_clave") or [])
+                                                         for x in cs])), 2) if cs else None,
             "segundos_p50": float(np.percentile([x["segundos"] for x in cs], 50)) if cs else None,
         }
     json_guardar(EVAL / "resultados" / f"ajuste_prompts_{args.etiqueta}.json",

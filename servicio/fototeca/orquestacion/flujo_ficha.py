@@ -35,7 +35,7 @@ from fototeca.dominio.esquemas_ficha import Ficha, FichaRegistrada, Fuente, Pala
 from fototeca.guardrails.entrada.imagen import VerificadorImagen
 from fototeca.guardrails.resultado import ResultadoGuardrail
 from fototeca.guardrails.salida.reglas import (aplicar_reglas_iptc, limpiar_advertencias, recortar_longitudes,
-                                              verificar_esquema, verificar_fuentes)
+                                               verificar_copia_contexto, verificar_esquema, verificar_fuentes)
 from fototeca.guardrails.salida.semanticas import GuardrailsSemanticos
 from fototeca.modelos.enrutador_fichas import DecisionRuta, EnrutadorFichas
 from fototeca.modelos.gateway import Gateway, SalidaTarea
@@ -354,6 +354,13 @@ class FlujoFicha:
             if r.resultado == "marcada":
                 e.guardrails_salida += [x.a_dict() for x in resultados]
                 return self._reintentar_o_degradar(e, "el texto alternativo quedó vacío; escribe uno de 250 caracteres o menos")
+            titular, palabras_crudas, r = verificar_copia_contexto(ficha.titular, palabras_crudas,
+                                                                   e.contexto.titulares() if e.contexto else [])
+            resultados.append(r)
+            if r.resultado == "marcada":
+                ficha = ficha.model_copy(update={"titular": titular})
+                e.revision.append(f"el titular generado {r.detalle['titular']}; se dejó vacío para el archivista")
+                e.advertencias.append("El titular generado no describía la foto y se dejó vacío: escríbelo al validar.")
             ficha, r = self.semanticos.atributos_sensibles(ficha)
             resultados.append(r)
             if r.resultado == "sanitizado" and e.reintentos_generacion == 0:

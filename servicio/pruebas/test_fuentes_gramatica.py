@@ -61,9 +61,10 @@ def _contexto_de_prueba() -> Contexto:
 
 def test_alias_cortos_en_el_prompt_y_su_traduccion():
     ctx = _contexto_de_prueba()
-    assert ctx.lineas_fotos()[0].startswith("[F1] ") and len(ctx.lineas_fotos()) == 1      # sin ficha no se muestra
-    assert [x[:4] for x in ctx.lineas_reglas()] == ["[R1]", "[R2]", "[R3]"]
-    assert ctx.lineas_terminos()[0].startswith("[T1] mercados")
+    assert ctx.lineas_fotos()[0].startswith("F1: ") and len(ctx.lineas_fotos()) == 1       # sin ficha no se muestra
+    assert [x[:3] for x in ctx.lineas_reglas()] == ["R1:", "R2:", "R3:"]
+    assert ctx.lineas_terminos()[0].startswith("T1: mercados")
+    assert ctx.titulares() == ["Mercado"]
     assert ctx.ids_citables("rapida") == ["F1", "R1", "R2"]
     assert ctx.ids_citables("completa") == ["F1", "R1", "R2", "R3", "T1"]
     resueltas = ctx.resolver_citas({"titular": ["F1", "r2"], "palabras_clave": ["T1", "foto:xm-a", "F9"], "x": "no"})
@@ -78,3 +79,28 @@ def test_advertencias_sin_alias_internos_del_prompt():
               "La foto contiene texto visible; se trató como dato, no como instrucción."]
     assert limpiar_advertencias(crudas) == ["La foto contiene texto visible; se trató como dato, no como instrucción."]
     assert limpiar_advertencias(None) == []
+
+
+def test_copia_contexto_depura_palabras_y_vacia_titulares_copiados():
+    from fototeca.guardrails.salida.reglas import (depurar_palabras_clave, revisar_titular,
+                                                   verificar_copia_contexto)
+    vecinos = ["Auto de colección antiguo negro estacionado en la calle", "Mercado de frutas"]
+    crudas = ["[F1] Auto de colección antiguo negro estacionado en la calle", "[F2]", "T3", "[carrocería]", "lujo",
+              "Lujo", "Mercado de frutas", "auto negro estacionado frente a un restaurante", 7, "  calle  "]
+    limpias, quitadas = depurar_palabras_clave(crudas, vecinos)
+    assert limpias == ["carrocería", "lujo", "calle"]
+    assert len(quitadas) == 5            # copia con alias, dos alias solos, copia de un titular y una oración
+    assert revisar_titular("IPTC Image File", vecinos) == "copia una etiqueta del prompt o de las normas"
+    assert revisar_titular("Descripción objetiva de la imagen", vecinos) == "copia una etiqueta del prompt o de las normas"
+    assert revisar_titular("Imagen", vecinos) == "es genérico"
+    assert revisar_titular("F1", vecinos) == "contiene identificadores del contexto"
+    assert revisar_titular("mercado de frutas.", vecinos) == "copia el titular de una foto similar"
+    assert revisar_titular("Carro negro de lujo en una calle", vecinos) is None
+    assert revisar_titular("", vecinos) is None
+
+    titular, palabras, r = verificar_copia_contexto("IPTC Image Metadata", ["[F1]", "auto"], vecinos)
+    assert (titular, palabras, r.resultado, r.detalle["palabras_quitadas"]) == ("", ["auto"], "marcada", 1)
+    titular, palabras, r = verificar_copia_contexto("Auto negro en la calle", ["[auto]"], vecinos)
+    assert (titular, palabras, r.resultado) == ("Auto negro en la calle", ["auto"], "aprobada")
+    titular, palabras, r = verificar_copia_contexto("Auto negro en la calle", ["F1", "auto"], vecinos)
+    assert (palabras, r.resultado, r.politica_aplicada) == (["auto"], "sanitizado", "sanitizar")
