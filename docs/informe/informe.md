@@ -436,7 +436,14 @@ Qwen); si no, por la **rápida** (P2 con Qwen y las fichas vecinas). Sin un umbr
 **enrutador de búsquedas** manda a la ruta compleja (P4 con LFM3) las consultas con negación, con más de dos
 restricciones, con más de doce palabras o más parecidas a los prototipos de consultas complejas; las demás se embeben y
 se buscan directo, y la búsqueda por foto no usa modelo de lenguaje. El detalle, las alternativas y la calibración están
-en ADR-03; pendiente (H7): exactitud de los enrutadores y costo de cada ruta en `evaluacion/resultados/enrutador.json`.
+en ADR-03. Resultados (`evaluacion/resultados/enrutador.json`, 30 fotos y 25 consultas):
+- **Fichas:** con τ_consenso 0.6768 y τ_acuerdo 0.0, elegidos por validación cruzada de 5 pliegues, el enrutador acierta
+  la ruta en 0.8333 de las fotos fuera de muestra y manda a la rápida el 0.8667, con latencia media de 43.2836 s contra
+  51.425 s de «siempre completa». Ningún par de umbrales cumplió la restricción de latencia, porque 8 de 30 fichas
+  rápidas escalaron a la completa. La etiqueta de ruta correcta depende de un juez que casi no distingue entre rutas, lo
+  cual es la principal limitación del criterio.
+- **Búsquedas:** exactitud 0.84 (0.7 en simples y 0.9333 en complejas). La ruta simple responde con p95 de 0.363 s y la
+  compleja de 6.733 s. P4 no cambia el R@10 de las complejas (0.8556 con y sin P4), pero sube el MRR de 0.7541 a 0.8262.
 
 # 8. Diseño de cada capa
 
@@ -444,10 +451,10 @@ Los parámetros que se mencionan aquí viven en `servicio/config/parametros.yaml
 cuando el archivo no los define) y se exponen en `GET /configuracion`. La versión de configuración (un hash de los
 parámetros, los modelos, las versiones de los prompts y la versión del corpus) forma parte de las claves de la caché.
 Los umbrales calibrados con datos se escriben en `servicio/config/calibracion.yaml`, que se mezcla sobre
-`parametros.yaml` y guarda el archivo de origen de cada valor: τ_ret 0.7634, τ_consenso 0.7864, τ_busqueda 0.6086,
+`parametros.yaml` y guarda el archivo de origen de cada valor: τ_ret 0.7634, τ_busqueda 0.6086,
 τ_apego_visual 0.6547 y τ_consistencia 0.5738 (`calibracion_h4.json`); τ_fuera_dominio −0.0719, τ_texto_visible 0.0139
-y τ_inyeccion 0.8392 (`calibracion_h5.json`); τ_tesauro 0.89 (`calibracion_tesauro.json`). pendiente (H7): τ_dup, y
-τ_consenso y τ_acuerdo finales, que salen de `cache.json` y `enrutador.json`.
+y τ_inyeccion 0.8392 (`calibracion_h5.json`); τ_tesauro 0.89 (`calibracion_tesauro.json`); τ_dup 0.95 (`cache.json`); y
+τ_consenso 0.6768 y τ_acuerdo 0.0 (`enrutador.json`), que sustituyen al τ_consenso inicial de H4 (0.7864).
 
 ## 8.1 Construcción de contexto (C5)
 
@@ -474,8 +481,9 @@ catalogar un letrero es legítimo), y un umbral sin calibrar **aprueba y lo anot
 
 ## 8.3 Caché (C4)
 
-Caché exacta (SHA-256 de la imagen + versión de configuración) y semántica (embedding de la imagen contra τ_dup, 0.97
-inicial) para las fichas, con TTL de 7 días y un segundo nivel formado por las fichas validadas del archivo; caché exacta
+Caché exacta (SHA-256 de la imagen + versión de configuración) y semántica (embedding de la imagen contra τ_dup: 0.97
+inicial y 0.95 calibrado, con recall 0.94 y FPR 0.0133 en 150 casi duplicados y 75 fotos distintas; `cache.json`) para
+las fichas, con TTL de 7 días y un segundo nivel formado por las fichas validadas del archivo; caché exacta
 y semántica (τ_busq 0.95) para las búsquedas, con TTL de 24 h. Se invalida por etiquetas (`doc:<id>`, `corpus:<versión>` y
 `config:<versión>`) y por `version_archivo`. Un acierto semántico de ficha es a la vez una detección de duplicado. Todo vive
 en SQLite, sin Redis (ADR-04 y ADR-09).
@@ -547,7 +555,7 @@ consecuencias). Los que dependen de la evaluación están en estado «Propuesta�
 |---|---|---|---|
 | ADR-01 | Qwen3.5-0.8B ve y compone las fichas; LFM3-1.7B interpreta las búsquedas y es el respaldo de P3 | Aceptada | `r3_modelos.json` (Tabla 8); viabilidad en `h0.json` |
 | ADR-02 | EmbeddingGemma-2 como memoria multimodal y granite como segundo modelo; arquitectura híbrida adaptativa | Aceptada | `r3_embeddings.json`; viabilidad en `h0.json` |
-| ADR-03 | Enrutador de fichas por consenso, acuerdo y texto visible; enrutador de búsquedas por reglas y prototipos | Propuesta | pendiente (H7): `enrutador.json` |
+| ADR-03 | Enrutador de fichas por consenso, acuerdo y texto visible; enrutador de búsquedas por reglas y prototipos | Aceptada | `enrutador.json` (exactitud 0.8333 en fichas y 0.84 en búsquedas) |
 | ADR-04 | Umbral τ_dup, TTL e invalidación por etiquetas de la caché semántica | Aceptada | `cache.json` (barrido de τ_dup: 0.95, recall 0.94 y FPR 0.0133) |
 | ADR-05 | Verificaciones de los guardrails y política de cada falla | Propuesta | pendiente (H7): `guardrails.json` |
 | ADR-06 | Una regla por fragmento en las normas y un concepto por documento en el tesauro | Aceptada | `corpus_r1.json`; recuperación de normas en `r3_embeddings.json` → `metricas.normas` |
