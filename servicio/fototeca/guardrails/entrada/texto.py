@@ -2,7 +2,10 @@
 
 - `pii_texto`: CURP, RFC, correo, teléfono y tarjeta con expresiones regulares → sanitizar (enmascarar) y seguir.
 - `inyeccion_texto`: heurística de patrones + similitud con los prototipos de inyección → bloquear con mensaje
-  seguro (422), sin repetir el contenido malicioso.
+  seguro (422), sin repetir el contenido malicioso. La similitud solo decide en consultas de `min_palabras` palabras
+  o más (5, el largo mínimo de las frases de inyección de calibración): en textos cortos la similitud de embeddings
+  es alta con casi todo y bloqueaba búsquedas normales como «personas»
+  (`evaluacion/resultados/inyeccion_consultas_cortas.json`). Las consultas cortas pasan solo por los patrones.
 """
 from __future__ import annotations
 
@@ -56,18 +59,28 @@ def sanitizar_pii(texto: str) -> tuple[str, ResultadoGuardrail]:
     return texto, ResultadoGuardrail("pii_texto", "aprobada")
 
 
+MIN_PALABRAS_SIMILITUD = 5
+
+
+def palabras(texto: str) -> int:
+    return len(re.findall(r"\w+", texto))
+
+
 def verificar_inyeccion(texto: str, vector_simetrico: np.ndarray | None, prototipos: np.ndarray | None,
-                        umbral: float) -> ResultadoGuardrail:
-    """Bloquea si coincide un patrón heurístico o si la similitud con los prototipos de inyección supera el umbral."""
+                        umbral: float, min_palabras: int = MIN_PALABRAS_SIMILITUD) -> ResultadoGuardrail:
+    """Bloquea si coincide un patrón heurístico o si, en una consulta de `min_palabras` palabras o más, la similitud
+    con los prototipos de inyección supera el umbral."""
     patrones = [p.pattern for p in _INYECCION if p.search(texto)]
     similitud = None
     if vector_simetrico is not None and prototipos is not None and len(prototipos):
         similitud = float(np.max(prototipos @ vector_simetrico))
-    por_similitud = similitud is not None and similitud >= umbral
+    similitud_aplica = palabras(texto) >= min_palabras
+    por_similitud = similitud_aplica and similitud is not None and similitud >= umbral
     if patrones or por_similitud:
         r = ResultadoGuardrail("inyeccion_texto", "bloqueada", valor=None if similitud is None else round(similitud, 4),
                                umbral=umbral, politica_aplicada=politica("inyeccion_texto"),
                                detalle={"patrones": len(patrones), "por_similitud": por_similitud})
         raise BloqueadoPorGuardrail(MENSAJES_SEGUROS["inyeccion_texto"], [r.a_dict()])
     return ResultadoGuardrail("inyeccion_texto", "aprobada", valor=None if similitud is None else round(similitud, 4),
-                              umbral=umbral)
+                              umbral=umbral, detalle={} if similitud_aplica else
+                              {"similitud_aplicada": False, "motivo": f"consulta de menos de {min_palabras} palabras"})

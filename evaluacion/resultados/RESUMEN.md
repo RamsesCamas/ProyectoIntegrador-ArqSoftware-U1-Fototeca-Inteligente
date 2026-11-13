@@ -1,6 +1,6 @@
 # Resumen de resultados de la evaluación
 
-> Generado automáticamente por `python -m evaluacion.resumen` el 2026-11-13T19:46:38+00:00. Cada cifra se copia tal cual de su archivo en `evaluacion/resultados/`; la columna «Fuente» indica el archivo y la clave dentro del JSON. «pendiente» significa que el archivo o la clave todavía no existe. Las gráficas están en `evaluacion/graficas/` y el detalle caso por caso en `evaluacion/resultados/<modulo>_detalle.csv`.
+> Generado automáticamente por `python -m evaluacion.resumen` el 2026-11-13T22:24:17+00:00. Cada cifra se copia tal cual de su archivo en `evaluacion/resultados/`; la columna «Fuente» indica el archivo y la clave dentro del JSON. «pendiente» significa que el archivo o la clave todavía no existe. Las gráficas están en `evaluacion/graficas/` y el detalle caso por caso en `evaluacion/resultados/<modulo>_detalle.csv`.
 
 ## 1. Estado de los módulos
 
@@ -12,12 +12,13 @@
 | enrutador | Enrutador de fichas y de búsquedas | `evaluacion/resultados/enrutador.json` | 2026-11-13T17:34:47+00:00 | parcial (50 % de cada conjunto) | 5dba96fab1c7 | ok (177.0 s) |
 | agente | Ciclo de agente | `evaluacion/resultados/agente.json` | 2026-11-13T18:15:30+00:00 | parcial (50 % de cada conjunto) | f01f9c6598b3 | ok (2274.7 s) |
 | guardrails | Guardrails de entrada y de salida | `evaluacion/resultados/guardrails.json` | 2026-11-13T19:45:51+00:00 | parcial (50 % de cada conjunto) | f01f9c6598b3 | ok (958.1 s) |
+| inyeccion_consultas_cortas | Falsos positivos de inyección en búsquedas cortas | `evaluacion/resultados/inyeccion_consultas_cortas.json` | 2026-11-13T22:22:49+00:00 | completo | 9edf360414cb | pendiente: sin registro |
 | cache | Caché exacta y semántica | `evaluacion/resultados/cache.json` | 2026-11-13T14:41:07+00:00 | parcial (50 % de cada conjunto) | 580643649771 | ok (2299.4 s) |
 | aprendizaje | Retroalimentación y curva de aprendizaje (simulación) | `evaluacion/resultados/aprendizaje.json` | 2026-11-13T19:12:14+00:00 | parcial (50 % de cada conjunto) | f01f9c6598b3 | ok (2177.6 s) |
-| desempeno | Desempeño por capa (trazas) | `evaluacion/resultados/desempeno.json` | 2026-11-13T19:45:52+00:00 | parcial (50 % de cada conjunto) | f01f9c6598b3 | ok (0.8 s) |
+| desempeno | Desempeño por capa (trazas) | `evaluacion/resultados/desempeno.json` | 2026-11-13T19:49:43+00:00 | completo | 39efdb56e30f | ok (1.0 s) |
 | revision_manual | Revisión manual del autor | `evaluacion/resultados/revision_manual.json` | 2026-11-13T19:12:15+00:00 | parcial (50 % de cada conjunto) | f01f9c6598b3 | ok (0.0 s) |
 
-Otros archivos de resultados: `ajuste_prompts_p2_v5.json`, `ajuste_prompts_p2p3_v3.json`, `ajuste_prompts_p2p3_v4.json`, `antes_despues_prompts.json`, `calibracion_h4.json`, `calibracion_h4_piso_busqueda.json`, `calibracion_h5.json`, `calibracion_tesauro.json`, `contrato_capas.json`, `corpus_r1.json`, `datos.json`, `demo_sin_red.json`, `ejecucion_evaluacion.json`, `enrutador_p2p3_v2.json`, `guardrails_antes_instrucciones.json`, `guardrails_solo_verificacion_salida.json`, `h0.json`, `h3_verificacion.json`, `h4_aceptacion.json`, `h4_aceptacion_intento2_antes_de_fuentes.json`, `h9_disco.json`, `h9_memoria.json`, `indexado.json`, `licencias_paquetes.json`, `r3_modelos_p2p3_v2.json`, `rag_fichas_p2p3_v2.json`.
+Otros archivos de resultados: `ajuste_prompts_p2_v5.json`, `ajuste_prompts_p2p3_v3.json`, `ajuste_prompts_p2p3_v4.json`, `antes_despues_prompts.json`, `calibracion_h4.json`, `calibracion_h4_piso_busqueda.json`, `calibracion_h5.json`, `calibracion_tesauro.json`, `contrato_capas.json`, `corpus_r1.json`, `datos.json`, `demo_sin_red.json`, `desempeno_todas_las_trazas.json`, `ejecucion_evaluacion.json`, `enrutador_p2p3_v2.json`, `guardrails_antes_instrucciones.json`, `guardrails_solo_verificacion_salida.json`, `h0.json`, `h3_verificacion.json`, `h4_aceptacion.json`, `h4_aceptacion_intento2_antes_de_fuentes.json`, `h9_disco.json`, `h9_memoria.json`, `indexado.json`, `licencias_paquetes.json`, `r3_modelos_p2p3_v2.json`, `rag_fichas_p2p3_v2.json`.
 
 ## 2. Cifras principales
 
@@ -77,6 +78,21 @@ Sus 398 cifras están en la sección 4 (`agente.json`).
 | Fichas con_rag donde se activó atributos_sensibles (tasa) | 0.0 | `evaluacion/resultados/guardrails.json` › metricas › salida_fichas › con_rag › por_verificacion › atributos_sensibles › tasa_activacion |
 | Fichas con_rag donde se activó fuentes (tasa) | 0.0 | `evaluacion/resultados/guardrails.json` › metricas › salida_fichas › con_rag › por_verificacion › fuentes › tasa_activacion |
 
+### Falsos positivos de inyección en búsquedas cortas
+
+| Métrica | Valor | Fuente |
+|---|---|---|
+| Frases completas: bloqueadas sin mínimo de palabras (tasa) | 0.0033 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › frase_completa › tasa_antes |
+| Consultas de 4 palabras: bloqueadas sin mínimo de palabras (tasa) | 0.0033 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › 4_palabras › tasa_antes |
+| Consultas de 2 palabras: bloqueadas sin mínimo de palabras (tasa) | 0.06 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › 2_palabras › tasa_antes |
+| Consultas de 1 palabra: bloqueadas sin mínimo de palabras (tasa) | 0.1033 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › 1_palabra › tasa_antes |
+| Frases completas: bloqueadas con el mínimo de 5 palabras (tasa) | 0.0033 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › frase_completa › tasa_despues |
+| Consultas de 4 palabras: bloqueadas con el mínimo de 5 palabras (tasa) | 0.0 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › 4_palabras › tasa_despues |
+| Consultas de 2 palabras: bloqueadas con el mínimo de 5 palabras (tasa) | 0.0 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › 2_palabras › tasa_despues |
+| Consultas de 1 palabra: bloqueadas con el mínimo de 5 palabras (tasa) | 0.0 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › negativos › 1_palabra › tasa_despues |
+| Inyecciones de calibración bloqueadas con el mínimo (tasa) | 0.9333 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › positivos › calibracion_inyeccion_texto › tasa_despues |
+| Inyecciones de consultas_guardrail bloqueadas con el mínimo (tasa) | 1.0 | `evaluacion/resultados/inyeccion_consultas_cortas.json` › metricas › positivos › consultas_guardrail_inyeccion › tasa_despues |
+
 ### Caché exacta y semántica
 
 | Métrica | Valor | Fuente |
@@ -127,17 +143,17 @@ Sus 398 cifras están en la sección 4 (`agente.json`).
 
 | Métrica | Valor | Fuente |
 |---|---|---|
-| Eventos considerados | 68519 | `evaluacion/resultados/desempeno.json` › metricas › ventana › eventos |
-| Fichas: n | 642 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › n |
-| Fichas: media (ms) | 47103.498 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › media_ms |
-| Fichas: p50 (ms) | 39109.4 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › p50_ms |
-| Fichas: p95 (ms) | 90376.86 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › p95_ms |
-| Fichas: máximo (ms) | 445264.4 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › max_ms |
-| Búsquedas: n | 160 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › n |
-| Búsquedas: media (ms) | 2853.032 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › media_ms |
-| Búsquedas: p50 (ms) | 407.35 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › p50_ms |
-| Búsquedas: p95 (ms) | 8092.035 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › p95_ms |
-| Búsquedas: máximo (ms) | 11610.5 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › max_ms |
+| Eventos considerados | 5625 | `evaluacion/resultados/desempeno.json` › metricas › ventana › eventos |
+| Fichas: n | 220 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › n |
+| Fichas: media (ms) | 44921.766 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › media_ms |
+| Fichas: p50 (ms) | 43135.0 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › p50_ms |
+| Fichas: p95 (ms) | 81771.425 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › p95_ms |
+| Fichas: máximo (ms) | 113533.1 | `evaluacion/resultados/desempeno.json` › metricas › total › fichas › max_ms |
+| Búsquedas: n | 56 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › n |
+| Búsquedas: media (ms) | 2977.78 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › media_ms |
+| Búsquedas: p50 (ms) | 387.6 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › p50_ms |
+| Búsquedas: p95 (ms) | 6727.325 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › p95_ms |
+| Búsquedas: máximo (ms) | 6863.9 | `evaluacion/resultados/desempeno.json` › metricas › total › busquedas › max_ms |
 
 ### Revisión manual del autor
 
@@ -158,11 +174,11 @@ Las metas se leen de `servicio/config/metas_calidad.yaml`; lo medido sale del ar
 
 | Meta | Valor meta | Medido | ¿Cumple? | Fuente |
 |---|---|---|---|---|
-| latencia_s.busqueda_simple_p95 | 1.5 | 0.635 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › busqueda_simple_p95 |
-| latencia_s.busqueda_compleja_p95 | 25 | 9.325 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › busqueda_compleja_p95 |
-| latencia_s.ficha_rapida_p50 | 45 | 28.523 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › ficha_rapida_p50 |
-| latencia_s.ficha_completa_p50 | 90 | 73.512 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › ficha_completa_p50 |
-| latencia_s.ficha_cache_p50 | 0.5 | 0.018 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › ficha_cache_p50 |
+| latencia_s.busqueda_simple_p95 | 1.5 | 0.359 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › busqueda_simple_p95 |
+| latencia_s.busqueda_compleja_p95 | 25 | 6.815 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › busqueda_compleja_p95 |
+| latencia_s.ficha_rapida_p50 | 45 | 25.996 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › ficha_rapida_p50 |
+| latencia_s.ficha_completa_p50 | 90 | 56.793 | sí | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › ficha_completa_p50 |
+| latencia_s.ficha_cache_p50 | 0.5 | pendiente: no hay trazas de fichas servidas desde la caché (exacta o semántica) | pendiente | `evaluacion/resultados/desempeno.json` › metricas › metas_latencia › ficha_cache_p50 |
 | busqueda.r10_texto_imagen | comparativa | ver «R3 · embeddings» en la sección 2 (R@10 de cada arquitectura sobre la misma sub-galería) | — | `evaluacion/resultados/r3_embeddings.json` |
 | guardrails.bloqueos_correctos_min | 0.9 | 0.8788 | no | `evaluacion/resultados/guardrails.json` › metricas › entrada › metas › bloqueos_correctos_min |
 | guardrails.falsos_positivos_max | 0.1 | 0.0435 | sí | `evaluacion/resultados/guardrails.json` › metricas › entrada › metas › falsos_positivos_max |
@@ -2663,15 +2679,15 @@ _(2 textos largos omitidos; ver el JSON)_
 
 ### `evaluacion/resultados/calibracion_tesauro.json`
 
-- fecha: 2026-11-13T06:34:21+00:00
+- fecha: 2026-11-13T20:00:39+00:00
 
 | Clave | Valor |
 |---|---|
-| fecha | 2026-11-13T06:34:21+00:00 |
+| fecha | 2026-11-13T20:00:39+00:00 |
 | etiquetas | 2634 |
 | con_esperado_lexico | 289 |
 | exactitud_top1_sin_umbral | 0.5225 |
-| tau_inicial | 0.75 |
+| tau_inicial | 0.89 |
 | tau_elegido | 0.89 |
 | criterio | el τ más bajo con precisión ≥ 0.9 y ≥ 20 mapeos aceptados |
 | curva › [0] › tau | 0.5 |
@@ -2956,11 +2972,11 @@ _(1 textos largos omitidos; ver el JSON)_
 
 ### `evaluacion/resultados/contrato_capas.json`
 
-- fecha: 2026-11-13T06:42:04+00:00
+- fecha: 2026-11-13T20:10:14+00:00
 
 | Clave | Valor |
 |---|---|
-| fecha | 2026-11-13T06:42:04+00:00 |
+| fecha | 2026-11-13T20:10:14+00:00 |
 | configuracion | servicio/pyproject.toml [tool.importlinter] |
 | codigo_real › codigo_salida | 0 |
 | codigo_real › resumen | Contracts: 3 kept, 0 broken. |
@@ -3113,11 +3129,11 @@ _(3 textos largos omitidos; ver el JSON)_
 
 ### `evaluacion/resultados/demo_sin_red.json`
 
-- fecha: 2026-11-13T08:56:28+00:00
+- fecha: 2026-11-13T20:08:44+00:00
 
 | Clave | Valor |
 |---|---|
-| fecha | 2026-11-13T08:56:28+00:00 |
+| fecha | 2026-11-13T20:08:44+00:00 |
 | url_web | http://web |
 | pasos › [0] › paso | 0 |
 | pasos › [0] › nombre | Sin acceso a internet |
@@ -3129,7 +3145,7 @@ _(3 textos largos omitidos; ver el JSON)_
 | pasos › [1] › paso | 1 |
 | pasos › [1] › nombre | Todo local: /health en verde |
 | pasos › [1] › ok | true |
-| pasos › [1] › segundos | 0.34 |
+| pasos › [1] › segundos | 0.36 |
 | pasos › [1] › observado › estado | ok |
 | pasos › [1] › observado › modelos_cargados | ["embeddinggemma-2:440m", "granite-embedding:278m", "lfm3:1.7b-q4_K_M", "qwen3.5:0.8b"] |
 | pasos › [1] › observado › componentes › servicio | ok |
@@ -3140,108 +3156,97 @@ _(3 textos largos omitidos; ver el JSON)_
 | pasos › [2] › paso | 2 |
 | pasos › [2] › nombre | Catalogar una foto nueva |
 | pasos › [2] › ok | true |
-| pasos › [2] › segundos | 82.39 |
+| pasos › [2] › segundos | 37.24 |
 | pasos › [2] › observado › http | 200 |
-| pasos › [2] › observado › ruta | completa |
-| pasos › [2] › observado › tiempo_ms | 78932.6 |
-| pasos › [2] › observado › campos_con_fuente | ["descripcion", "palabras_clave", "texto_alternativo", "titular"] |
-| pasos › [2] › observado › estado_ficha | borrador |
+| pasos › [2] › observado › ruta | rapida |
+| pasos › [2] › observado › tiempo_ms | 34459.1 |
+| pasos › [2] › observado › campos_con_fuente | ["palabras_clave", "texto_alternativo", "titular"] |
+| pasos › [2] › observado › estado_ficha | requiere_revision |
 | pasos › [2] › observado › iteraciones_agente | 0 |
 | pasos › [3] › paso | 3 |
 | pasos › [3] › nombre | La misma foto recortada: caché semántica |
 | pasos › [3] › ok | true |
-| pasos › [3] › segundos | 2.77 |
+| pasos › [3] › segundos | 2.96 |
 | pasos › [3] › observado › http | 200 |
 | pasos › [3] › observado › cache | semantica |
 | pasos › [3] › observado › duplicado_de › documento_id | up-5be808014d800398 |
 | pasos › [3] › observado › duplicado_de › similitud | 0.9705 |
-| pasos › [3] › observado › tiempo_ms | 18.0 |
+| pasos › [3] › observado › tiempo_ms | 17.8 |
 | pasos › [4] › paso | 4 |
 | pasos › [4] › nombre | Captura de un documento: 422 con mensaje seguro |
 | pasos › [4] › ok | true |
-| pasos › [4] › segundos | 2.09 |
+| pasos › [4] › segundos | 2.43 |
 | pasos › [4] › observado › http | 422 |
 | pasos › [4] › observado › mensaje | Esto no parece una fotografía: parece un documento, una tabla o una captura de pantalla. Fototeca Viva cataloga fotografías. |
 | pasos › [5] › paso | 4b |
 | pasos › [5] › nombre | Inyección en la imagen: se aísla y se marca |
 | pasos › [5] › ok | true |
-| pasos › [5] › segundos | 112.24 |
+| pasos › [5] › segundos | 63.77 |
 | pasos › [5] › observado › http | 200 |
 | pasos › [5] › observado › ruta | completa |
 | pasos › [5] › observado › inyeccion_marcada | true |
-| pasos › [5] › observado › advertencias › [0] | La foto contiene texto visible; se trató como dato, no como instrucción. |
-| pasos › [5] › observado › advertencias › [1] | No hay información suficiente para 'Fotos similares' (F1-F5). |
-| pasos › [5] › observado › advertencias › [2] | No hay información suficiente para 'Reglas' (R1-R4). |
-| pasos › [5] › observado › advertencias › [3] | No hay información suficiente para 'Términos del tesauro' (T1-T2). |
+| pasos › [5] › observado › ficha_obedece_el_letrero | false |
+| pasos › [5] › observado › estado | requiere_revision |
+| pasos › [5] › observado › titular | Manzanas y verduras en un mercado |
+| pasos › [5] › observado › texto_alternativo | Manzana verde, bolsas de verduras con raíces blancas y tienda |
+| pasos › [5] › observado › advertencias | ["La foto contiene texto que parecía una instrucción; no se usó para redactar la ficha."] |
 | pasos › [6] › paso | 5 |
 | pasos › [6] › nombre | Región que el archivo no tiene: ciclo de agente |
 | pasos › [6] › ok | true |
-| pasos › [6] › segundos | 78.88 |
+| pasos › [6] › segundos | 68.37 |
 | pasos › [6] › observado › http | 200 |
 | pasos › [6] › observado › iteraciones_agente | 2 |
 | pasos › [6] › observado › reformulo | true |
 | pasos › [6] › observado › recuperacion › top1 | 0.7012 |
-| pasos › [6] › observado › recuperacion › top5 | 0.6432 |
+| pasos › [6] › observado › recuperacion › top5 | 0.6599 |
 | pasos › [7] › paso | 6 |
 | pasos › [7] › nombre | Corregir y validar (aprende sin fine-tuning) |
 | pasos › [7] › ok | true |
-| pasos › [7] › segundos | 0.74 |
+| pasos › [7] › segundos | 0.41 |
 | pasos › [7] › observado › http | 200 |
 | pasos › [7] › observado › respuesta › registrado | true |
-| pasos › [7] › observado › respuesta › id | 1 |
-| pasos › [7] › observado › respuesta › traza_id | 48398e84 |
+| pasos › [7] › observado › respuesta › id | 52 |
+| pasos › [7] › observado › respuesta › traza_id | efd84161 |
 | pasos › [7] › observado › respuesta › documento_id | up-5be808014d800398 |
 | pasos › [7] › observado › respuesta › ficha_validada | true |
-| pasos › [7] › observado › respuesta › version_archivo | 90 |
+| pasos › [7] › observado › respuesta › version_archivo | 6 |
 | pasos › [7] › observado › respuesta › entradas_cache_invalidadas | 1 |
-| pasos › [7] › observado › respuesta › ficha › titular | Descripción objetiva de la imagen |
-| pasos › [7] › observado › respuesta › ficha › descripcion | Una fotografía de una caja negra rectangular sobre un fondo de madera clara y brillante. |
-| pasos › [7] › observado › respuesta › ficha › texto_alternativo | Caja negra rectangular sobre fondo de madera clara y brillante. |
+| pasos › [7] › observado › respuesta › ficha › titular |  |
+| pasos › [7] › observado › respuesta › ficha › descripcion |  |
+| pasos › [7] › observado › respuesta › ficha › texto_alternativo | Máquina antigua con un medidor al aire libre. |
 | pasos › [7] › observado › respuesta › ficha › descripcion_extendida |  |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [0] › termino | caja |
+| pasos › [7] › observado › respuesta › ficha › palabras_clave › [0] › termino | medidor |
 | pasos › [7] › observado › respuesta › ficha › palabras_clave › [0] › uri | null |
 | pasos › [7] › observado › respuesta › ficha › palabras_clave › [0] › origen | libre |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [0] › similitud | 0.7966 |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [1] › termino | madera |
+| pasos › [7] › observado › respuesta › ficha › palabras_clave › [0] › similitud | 0.8827 |
+| pasos › [7] › observado › respuesta › ficha › palabras_clave › [1] › termino | aire libre |
 | pasos › [7] › observado › respuesta › ficha › palabras_clave › [1] › uri | null |
 | pasos › [7] › observado › respuesta › ficha › palabras_clave › [1] › origen | libre |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [1] › similitud | 0.8569 |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [2] › termino | paredes |
+| pasos › [7] › observado › respuesta › ficha › palabras_clave › [1] › similitud | 0.8023 |
+| pasos › [7] › observado › respuesta › ficha › palabras_clave › [2] › termino | máquina |
 | pasos › [7] › observado › respuesta › ficha › palabras_clave › [2] › uri | null |
 | pasos › [7] › observado › respuesta › ficha › palabras_clave › [2] › origen | libre |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [2] › similitud | 0.7803 |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [3] › termino | luz |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [3] › uri | null |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [3] › origen | libre |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [3] › similitud | 0.8732 |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [4] › termino | suelo |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [4] › uri | null |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [4] › origen | libre |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [4] › similitud | 0.8459 |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [5] › termino | fondo |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [5] › uri | null |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [5] › origen | libre |
-| pasos › [7] › observado › respuesta › ficha › palabras_clave › [5] › similitud | 0.7978 |
-| pasos › [7] › observado › respuesta › ficha › advertencias | [] |
+| pasos › [7] › observado › respuesta › ficha › palabras_clave › [2] › similitud | 0.8769 |
+| pasos › [7] › observado › respuesta › ficha › advertencias | ["El titular generado no describía la foto y se dejó vacío: escríbelo al validar."] |
 | pasos › [7] › observado › respuesta › ficha › estado | validada |
 | pasos › [8] › paso | 7 |
 | pasos › [8] › nombre | Buscar: simple y compleja |
 | pasos › [8] › ok | true |
-| pasos › [8] › segundos | 11.95 |
+| pasos › [8] › segundos | 9.06 |
 | pasos › [8] › observado › simple › http | 200 |
 | pasos › [8] › observado › simple › ruta | simple |
 | pasos › [8] › observado › simple › resultados | 12 |
 | pasos › [8] › observado › simple › con_razones | true |
-| pasos › [8] › observado › simple › tiempo_ms | 320.6 |
+| pasos › [8] › observado › simple › tiempo_ms | 212.7 |
 | pasos › [8] › observado › compleja › http | 200 |
 | pasos › [8] › observado › compleja › ruta | compleja |
 | pasos › [8] › observado › compleja › resultados | 12 |
 | pasos › [8] › observado › compleja › con_razones | true |
-| pasos › [8] › observado › compleja › tiempo_ms | 11603.1 |
+| pasos › [8] › observado › compleja › tiempo_ms | 8825.2 |
 | pasos › [9] › paso | 8 |
 | pasos › [9] › nombre | Panel de métricas |
 | pasos › [9] › ok | true |
-| pasos › [9] › segundos | 0.37 |
+| pasos › [9] › segundos | 0.6 |
 | pasos › [9] › observado › http | 200 |
 | pasos › [9] › observado › secciones › [0] | accesibilidad |
 | pasos › [9] › observado › secciones › [1] | bloqueos |
@@ -3272,6 +3277,419 @@ _(3 textos largos omitidos; ver el JSON)_
 | documentos_eliminados_al_final › up-f16176ace2523a82 | 200 |
 
 ### `evaluacion/resultados/desempeno.json`
+
+- fecha: 2026-11-13T19:49:43+00:00
+- rapido: false
+- fraccion: 1.0
+- version_configuracion: 39efdb56e30f
+- hardware: maquina=aarch64, nproc=8, python=3.12.16, lscpu_Architecture=aarch64, lscpu_CPU(s)=8, lscpu_Vendor ID=Apple, lscpu_Model name=-, limite_memoria_contenedor_bytes=1610612736
+
+| Clave | Valor |
+|---|---|
+| metricas › ventana › desde | 2026-11-13T16:35:00+00:00 |
+| metricas › ventana › eventos | 5625 |
+| metricas › ventana › primer_evento | 2026-11-13T16:35:01.949+00:00 |
+| metricas › ventana › ultimo_evento | 2026-11-13T19:47:39.131+00:00 |
+| metricas › ventana › trazas | 1148 |
+| metricas › peticiones_clasificadas › fichas | 220 |
+| metricas › peticiones_clasificadas › busquedas | 56 |
+| metricas › peticiones_clasificadas › por_variante › fichas · produccion | 165 |
+| metricas › peticiones_clasificadas › por_variante › fichas · experimento: sin RAG | 30 |
+| metricas › peticiones_clasificadas › por_variante › busquedas · produccion | 56 |
+| metricas › peticiones_clasificadas › por_variante › fichas · experimento: sin ciclo de agente | 25 |
+| metricas › total › fichas › n | 220 |
+| metricas › total › fichas › media_ms | 44921.766 |
+| metricas › total › fichas › p50_ms | 43135.0 |
+| metricas › total › fichas › p95_ms | 81771.425 |
+| metricas › total › fichas › max_ms | 113533.1 |
+| metricas › total › busquedas › n | 56 |
+| metricas › total › busquedas › media_ms | 2977.78 |
+| metricas › total › busquedas › p50_ms | 387.6 |
+| metricas › total › busquedas › p95_ms | 6727.325 |
+| metricas › total › busquedas › max_ms | 6863.9 |
+| metricas › por_ruta › fichas › completa › total › n | 95 |
+| metricas › por_ruta › fichas › completa › total › media_ms | 60907.197 |
+| metricas › por_ruta › fichas › completa › total › p50_ms | 56792.6 |
+| metricas › por_ruta › fichas › completa › total › p95_ms | 96423.15 |
+| metricas › por_ruta › fichas › completa › total › max_ms | 113533.1 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_entrada › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_entrada › media_ms | 6.158 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_entrada › p50_ms | 0.2 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_entrada › p95_ms | 1.11 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_entrada › max_ms | 189.5 |
+| metricas › por_ruta › fichas › completa › por_capa › cache › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › cache › media_ms | 0.0 |
+| metricas › por_ruta › fichas › completa › por_capa › cache › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › completa › por_capa › cache › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › completa › por_capa › cache › max_ms | 0.0 |
+| metricas › por_ruta › fichas › completa › por_capa › contexto › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › contexto › media_ms | 652.584 |
+| metricas › por_ruta › fichas › completa › por_capa › contexto › p50_ms | 533.0 |
+| metricas › por_ruta › fichas › completa › por_capa › contexto › p95_ms | 1464.49 |
+| metricas › por_ruta › fichas › completa › por_capa › contexto › max_ms | 1983.3 |
+| metricas › por_ruta › fichas › completa › por_capa › enrutador › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › enrutador › media_ms | 0.273 |
+| metricas › por_ruta › fichas › completa › por_capa › enrutador › p50_ms | 0.3 |
+| metricas › por_ruta › fichas › completa › por_capa › enrutador › p95_ms | 0.43 |
+| metricas › por_ruta › fichas › completa › por_capa › enrutador › max_ms | 1.9 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_vision › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_vision › media_ms | 32615.795 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_vision › p50_ms | 28237.9 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_vision › p95_ms | 54802.75 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_vision › max_ms | 74612.1 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_composicion › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_composicion › media_ms | 26188.632 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_composicion › p50_ms | 23493.1 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_composicion › p95_ms | 40030.74 |
+| metricas › por_ruta › fichas › completa › por_capa › modelo_composicion › max_ms | 66977.7 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_salida › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_salida › media_ms | 1293.179 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_salida › p50_ms | 648.0 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_salida › p95_ms | 4337.06 |
+| metricas › por_ruta › fichas › completa › por_capa › guardrails_salida › max_ms | 11558.6 |
+| metricas › por_ruta › fichas › completa › por_capa › otros › n | 95 |
+| metricas › por_ruta › fichas › completa › por_capa › otros › media_ms | 150.576 |
+| metricas › por_ruta › fichas › completa › por_capa › otros › p50_ms | 122.6 |
+| metricas › por_ruta › fichas › completa › por_capa › otros › p95_ms | 320.12 |
+| metricas › por_ruta › fichas › completa › por_capa › otros › max_ms | 737.0 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › guardrails_entrada | 0.0001 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › cache | 0.0 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › contexto | 0.0107 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › enrutador | 0.0 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › modelo_vision | 0.5355 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › modelo_composicion | 0.43 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › guardrails_salida | 0.0212 |
+| metricas › por_ruta › fichas › completa › proporcion_media_por_capa › otros | 0.0025 |
+| metricas › por_ruta › fichas › completa › variante | produccion |
+| metricas › por_ruta › fichas › completa › rutas › completa | 95 |
+| metricas › por_ruta › fichas › completa › iteraciones_agente › 0 | 81 |
+| metricas › por_ruta › fichas › completa › iteraciones_agente › 2 | 14 |
+| metricas › por_ruta › fichas › rapida › total › n | 70 |
+| metricas › por_ruta › fichas › rapida › total › media_ms | 28572.651 |
+| metricas › por_ruta › fichas › rapida › total › p50_ms | 25995.9 |
+| metricas › por_ruta › fichas › rapida › total › p95_ms | 36944.79 |
+| metricas › por_ruta › fichas › rapida › total › max_ms | 94442.1 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_entrada › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_entrada › media_ms | 3.08 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_entrada › p50_ms | 0.1 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_entrada › p95_ms | 0.4 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_entrada › max_ms | 201.9 |
+| metricas › por_ruta › fichas › rapida › por_capa › cache › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › cache › media_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › cache › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › cache › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › cache › max_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › contexto › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › contexto › media_ms | 380.506 |
+| metricas › por_ruta › fichas › rapida › por_capa › contexto › p50_ms | 319.55 |
+| metricas › por_ruta › fichas › rapida › por_capa › contexto › p95_ms | 732.665 |
+| metricas › por_ruta › fichas › rapida › por_capa › contexto › max_ms | 1313.8 |
+| metricas › por_ruta › fichas › rapida › por_capa › enrutador › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › enrutador › media_ms | 0.251 |
+| metricas › por_ruta › fichas › rapida › por_capa › enrutador › p50_ms | 0.2 |
+| metricas › por_ruta › fichas › rapida › por_capa › enrutador › p95_ms | 0.4 |
+| metricas › por_ruta › fichas › rapida › por_capa › enrutador › max_ms | 1.1 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_vision › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_vision › media_ms | 27821.479 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_vision › p50_ms | 25427.75 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_vision › p95_ms | 35680.03 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_vision › max_ms | 93833.8 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_composicion › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_composicion › media_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_composicion › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_composicion › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › modelo_composicion › max_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_salida › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_salida › media_ms | 322.457 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_salida › p50_ms | 257.75 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_salida › p95_ms | 718.215 |
+| metricas › por_ruta › fichas › rapida › por_capa › guardrails_salida › max_ms | 1107.6 |
+| metricas › por_ruta › fichas › rapida › por_capa › otros › n | 70 |
+| metricas › por_ruta › fichas › rapida › por_capa › otros › media_ms | 44.877 |
+| metricas › por_ruta › fichas › rapida › por_capa › otros › p50_ms | 42.9 |
+| metricas › por_ruta › fichas › rapida › por_capa › otros › p95_ms | 61.185 |
+| metricas › por_ruta › fichas › rapida › por_capa › otros › max_ms | 69.9 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › guardrails_entrada | 0.0001 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › cache | 0.0 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › contexto | 0.0133 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › enrutador | 0.0 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › modelo_vision | 0.9737 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › modelo_composicion | 0.0 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › guardrails_salida | 0.0113 |
+| metricas › por_ruta › fichas › rapida › proporcion_media_por_capa › otros | 0.0016 |
+| metricas › por_ruta › fichas › rapida › variante | produccion |
+| metricas › por_ruta › fichas › rapida › rutas › rapida | 70 |
+| metricas › por_ruta › fichas › rapida › iteraciones_agente › 0 | 69 |
+| metricas › por_ruta › fichas › rapida › iteraciones_agente › 2 | 1 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › total › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › total › media_ms | 45414.027 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › total › p50_ms | 44246.6 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › total › p95_ms | 54171.06 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › total › max_ms | 55170.7 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_entrada › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_entrada › media_ms | 0.243 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_entrada › p50_ms | 0.3 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_entrada › p95_ms | 0.4 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_entrada › max_ms | 0.4 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › cache › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › cache › media_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › cache › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › cache › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › cache › max_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › contexto › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › contexto › media_ms | 348.143 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › contexto › p50_ms | 277.9 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › contexto › p95_ms | 649.96 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › contexto › max_ms | 978.9 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › enrutador › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › enrutador › media_ms | 0.073 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › enrutador › p50_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › enrutador › p95_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › enrutador › max_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_vision › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_vision › media_ms | 24206.103 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_vision › p50_ms | 23146.55 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_vision › p95_ms | 29891.97 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_vision › max_ms | 31309.3 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_composicion › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_composicion › media_ms | 19694.443 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_composicion › p50_ms | 19206.2 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_composicion › p95_ms | 24103.16 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › modelo_composicion › max_ms | 26881.9 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_salida › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_salida › media_ms | 1082.07 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_salida › p50_ms | 502.8 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_salida › p95_ms | 2926.81 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › guardrails_salida › max_ms | 4801.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › otros › n | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › otros › media_ms | 82.95 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › otros › p50_ms | 41.35 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › otros › p95_ms | 264.63 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › por_capa › otros › max_ms | 455.2 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › guardrails_entrada | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › cache | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › contexto | 0.0077 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › enrutador | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › modelo_vision | 0.533 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › modelo_composicion | 0.4337 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › guardrails_salida | 0.0238 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › proporcion_media_por_capa › otros | 0.0018 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › variante | experimento: sin RAG |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › rutas › completa | 30 |
+| metricas › por_ruta › fichas › completa · experimento: sin RAG › iteraciones_agente › 0 | 30 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › total › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › total › media_ms | 23599.95 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › total › p50_ms | 23851.15 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › total › p95_ms | 25563.24 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › total › max_ms | 27130.8 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_entrada › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_entrada › media_ms | 0.155 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_entrada › p50_ms | 0.1 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_entrada › p95_ms | 0.3 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_entrada › max_ms | 0.3 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › cache › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › cache › media_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › cache › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › cache › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › cache › max_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › contexto › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › contexto › media_ms | 290.891 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › contexto › p50_ms | 270.85 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › contexto › p95_ms | 388.125 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › contexto › max_ms | 453.6 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › enrutador › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › enrutador › media_ms | 0.155 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › enrutador › p50_ms | 0.1 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › enrutador › p95_ms | 0.3 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › enrutador › max_ms | 0.3 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_vision › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_vision › media_ms | 22930.264 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_vision › p50_ms | 23301.65 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_vision › p95_ms | 24384.16 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_vision › max_ms | 26516.8 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_composicion › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_composicion › media_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_composicion › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_composicion › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › modelo_composicion › max_ms | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_salida › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_salida › media_ms | 339.155 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_salida › p50_ms | 204.15 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_salida › p95_ms | 260.15 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › guardrails_salida › max_ms | 3281.5 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › otros › n | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › otros › media_ms | 39.336 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › otros › p50_ms | 38.4 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › otros › p95_ms | 44.49 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › por_capa › otros › max_ms | 45.6 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › guardrails_entrada | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › cache | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › contexto | 0.0123 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › enrutador | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › modelo_vision | 0.9716 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › modelo_composicion | 0.0 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › guardrails_salida | 0.0144 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › proporcion_media_por_capa › otros | 0.0017 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › variante | experimento: sin ciclo de agente |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › rutas › rapida | 22 |
+| metricas › por_ruta › fichas › rapida · experimento: sin ciclo de agente › iteraciones_agente › 0 | 22 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › total › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › total › media_ms | 71633.2 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › total › p50_ms | 70264.6 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › total › p95_ms | 75830.11 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › total › max_ms | 76448.5 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_entrada › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_entrada › media_ms | 0.133 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_entrada › p50_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_entrada › p95_ms | 0.19 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_entrada › max_ms | 0.2 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › cache › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › cache › media_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › cache › p50_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › cache › p95_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › cache › max_ms | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › contexto › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › contexto › media_ms | 597.9 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › contexto › p50_ms | 452.5 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › contexto › p95_ms | 858.58 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › contexto › max_ms | 903.7 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › enrutador › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › enrutador › media_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › enrutador › p50_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › enrutador › p95_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › enrutador › max_ms | 0.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_vision › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_vision › media_ms | 46904.033 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_vision › p50_ms | 45982.8 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_vision › p95_ms | 49218.12 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_vision › max_ms | 49577.6 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_composicion › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_composicion › media_ms | 22228.733 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_composicion › p50_ms | 21901.7 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_composicion › p95_ms | 24608.63 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › modelo_composicion › max_ms | 24909.4 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_salida › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_salida › media_ms | 1853.4 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_salida › p50_ms | 1009.1 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_salida › p95_ms | 3619.55 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › guardrails_salida › max_ms | 3909.6 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › otros › n | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › otros › media_ms | 48.9 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › otros › p50_ms | 48.4 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › otros › p95_ms | 53.35 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › por_capa › otros › max_ms | 53.9 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › guardrails_entrada | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › cache | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › contexto | 0.0083 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › enrutador | 0.0 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › modelo_vision | 0.6548 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › modelo_composicion | 0.3103 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › guardrails_salida | 0.0259 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › proporcion_media_por_capa › otros | 0.0007 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › variante | experimento: sin ciclo de agente |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › rutas › completa | 3 |
+| metricas › por_ruta › fichas › completa · experimento: sin ciclo de agente › iteraciones_agente › 0 | 3 |
+| metricas › por_ruta › busquedas › simple › total › n | 29 |
+| metricas › por_ruta › busquedas › simple › total › media_ms | 256.01 |
+| metricas › por_ruta › busquedas › simple › total › p50_ms | 262.5 |
+| metricas › por_ruta › busquedas › simple › total › p95_ms | 358.56 |
+| metricas › por_ruta › busquedas › simple › total › max_ms | 395.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_entrada › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_entrada › media_ms | 81.293 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_entrada › p50_ms | 83.4 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_entrada › p95_ms | 102.38 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_entrada › max_ms | 115.5 |
+| metricas › por_ruta › busquedas › simple › por_capa › cache › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › cache › media_ms | 76.431 |
+| metricas › por_ruta › busquedas › simple › por_capa › cache › p50_ms | 72.3 |
+| metricas › por_ruta › busquedas › simple › por_capa › cache › p95_ms | 112.8 |
+| metricas › por_ruta › busquedas › simple › por_capa › cache › max_ms | 126.3 |
+| metricas › por_ruta › busquedas › simple › por_capa › contexto › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › contexto › media_ms | 89.831 |
+| metricas › por_ruta › busquedas › simple › por_capa › contexto › p50_ms | 86.7 |
+| metricas › por_ruta › busquedas › simple › por_capa › contexto › p95_ms | 118.04 |
+| metricas › por_ruta › busquedas › simple › por_capa › contexto › max_ms | 161.1 |
+| metricas › por_ruta › busquedas › simple › por_capa › enrutador › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › enrutador › media_ms | 2.89 |
+| metricas › por_ruta › busquedas › simple › por_capa › enrutador › p50_ms | 0.1 |
+| metricas › por_ruta › busquedas › simple › por_capa › enrutador › p95_ms | 10.16 |
+| metricas › por_ruta › busquedas › simple › por_capa › enrutador › max_ms | 65.1 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_vision › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_vision › media_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_vision › p50_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_vision › p95_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_vision › max_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_composicion › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_composicion › media_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_composicion › p50_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_composicion › p95_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › modelo_composicion › max_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_salida › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_salida › media_ms | 0.028 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_salida › p50_ms | 0.0 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_salida › p95_ms | 0.16 |
+| metricas › por_ruta › busquedas › simple › por_capa › guardrails_salida › max_ms | 0.3 |
+| metricas › por_ruta › busquedas › simple › por_capa › otros › n | 29 |
+| metricas › por_ruta › busquedas › simple › por_capa › otros › media_ms | 5.531 |
+| metricas › por_ruta › busquedas › simple › por_capa › otros › p50_ms | 5.1 |
+| metricas › por_ruta › busquedas › simple › por_capa › otros › p95_ms | 8.18 |
+| metricas › por_ruta › busquedas › simple › por_capa › otros › max_ms | 8.6 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › guardrails_entrada | 0.3175 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › cache | 0.2985 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › contexto | 0.3509 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › enrutador | 0.0113 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › modelo_vision | 0.0 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › modelo_composicion | 0.0 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › guardrails_salida | 0.0001 |
+| metricas › por_ruta › busquedas › simple › proporcion_media_por_capa › otros | 0.0216 |
+| metricas › por_ruta › busquedas › simple › variante | produccion |
+| metricas › por_ruta › busquedas › simple › rutas › simple | 29 |
+| metricas › por_ruta › busquedas › simple › iteraciones_agente › 0 | 29 |
+| metricas › por_ruta › busquedas › compleja › total › n | 27 |
+| metricas › por_ruta › busquedas › compleja › total › media_ms | 5901.163 |
+| metricas › por_ruta › busquedas › compleja › total › p50_ms | 6006.9 |
+| metricas › por_ruta › busquedas › compleja › total › p95_ms | 6815.25 |
+| metricas › por_ruta › busquedas › compleja › total › max_ms | 6863.9 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_entrada › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_entrada › media_ms | 81.863 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_entrada › p50_ms | 76.2 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_entrada › p95_ms | 138.19 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_entrada › max_ms | 173.1 |
+| metricas › por_ruta › busquedas › compleja › por_capa › cache › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › cache › media_ms | 75.789 |
+| metricas › por_ruta › busquedas › compleja › por_capa › cache › p50_ms | 71.1 |
+| metricas › por_ruta › busquedas › compleja › por_capa › cache › p95_ms | 99.73 |
+| metricas › por_ruta › busquedas › compleja › por_capa › cache › max_ms | 119.5 |
+| metricas › por_ruta › busquedas › compleja › por_capa › contexto › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › contexto › media_ms | 121.619 |
+| metricas › por_ruta › busquedas › compleja › por_capa › contexto › p50_ms | 94.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › contexto › p95_ms | 272.74 |
+| metricas › por_ruta › busquedas › compleja › por_capa › contexto › max_ms | 326.3 |
+| metricas › por_ruta › busquedas › compleja › por_capa › enrutador › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › enrutador › media_ms | 0.067 |
+| metricas › por_ruta › busquedas › compleja › por_capa › enrutador › p50_ms | 0.1 |
+| metricas › por_ruta › busquedas › compleja › por_capa › enrutador › p95_ms | 0.2 |
+| metricas › por_ruta › busquedas › compleja › por_capa › enrutador › max_ms | 0.2 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_vision › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_vision › media_ms | 0.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_vision › p50_ms | 0.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_vision › p95_ms | 0.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_vision › max_ms | 0.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_composicion › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_composicion › media_ms | 5616.356 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_composicion › p50_ms | 5717.4 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_composicion › p95_ms | 6509.93 |
+| metricas › por_ruta › busquedas › compleja › por_capa › modelo_composicion › max_ms | 6609.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_salida › n | 27 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_salida › media_ms | 0.019 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_salida › p50_ms | 0.0 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_salida › p95_ms | 0.1 |
+| metricas › por_ruta › busquedas › compleja › por_capa › guardrails_salida › max_ms | 0.1 |
+| metricas › por_ruta › busquedas › compleja › por_capa › otros › n | 27 |
+
+_(133 filas más en el archivo; ver el JSON)_
+
+### `evaluacion/resultados/desempeno_todas_las_trazas.json`
 
 - fecha: 2026-11-13T19:45:52+00:00
 - rapido: false
@@ -3744,13 +4162,13 @@ _(411 filas más en el archivo; ver el JSON)_
 | modulos › aprendizaje › error | null |
 | modulos › aprendizaje › fin | 2026-11-13T19:12:14+00:00 |
 | modulos › aprendizaje › segundos | 2177.6 |
-| modulos › desempeno › inicio | 2026-11-13T19:45:51+00:00 |
+| modulos › desempeno › inicio | 2026-11-13T19:49:42+00:00 |
 | modulos › desempeno › rapido | false |
-| modulos › desempeno › fraccion | 0.5 |
+| modulos › desempeno › fraccion | 1.0 |
 | modulos › desempeno › estado | ok |
 | modulos › desempeno › error | null |
-| modulos › desempeno › fin | 2026-11-13T19:45:52+00:00 |
-| modulos › desempeno › segundos | 0.8 |
+| modulos › desempeno › fin | 2026-11-13T19:49:43+00:00 |
+| modulos › desempeno › segundos | 1.0 |
 | modulos › analizar_revision_manual › inicio | 2026-11-13T19:12:15+00:00 |
 | modulos › analizar_revision_manual › rapido | false |
 | modulos › analizar_revision_manual › fraccion | 0.5 |
@@ -3758,14 +4176,14 @@ _(411 filas más en el archivo; ver el JSON)_
 | modulos › analizar_revision_manual › error | null |
 | modulos › analizar_revision_manual › fin | 2026-11-13T19:12:15+00:00 |
 | modulos › analizar_revision_manual › segundos | 0.0 |
-| modulos › resumen › inicio | 2026-11-13T19:45:52+00:00 |
+| modulos › resumen › inicio | 2026-11-13T19:46:38+00:00 |
 | modulos › resumen › rapido | false |
-| modulos › resumen › fraccion | 0.5 |
+| modulos › resumen › fraccion | 1.0 |
 | modulos › resumen › estado | ok |
 | modulos › resumen › error | null |
-| modulos › resumen › fin | 2026-11-13T19:45:52+00:00 |
+| modulos › resumen › fin | 2026-11-13T19:46:38+00:00 |
 | modulos › resumen › segundos | 0.1 |
-| actualizado | 2026-11-13T19:45:52+00:00 |
+| actualizado | 2026-11-13T19:49:43+00:00 |
 
 ### `evaluacion/resultados/enrutador.json`
 
@@ -5782,12 +6200,13 @@ _(1 textos largos omitidos; ver el JSON)_
 | Clave | Valor |
 |---|---|
 | fecha | 2026-11-13 |
-| fuente | evaluacion/resultados/h9_docker_stats.jsonl (docker stats cada ~2 s durante demo_sin_red) |
-| muestras | 335 |
+| ventana › desde | 2026-11-13T20:05:36Z |
+| ventana › hasta | 2026-11-13T20:08:42Z |
+| muestras | 259 |
 | pico_gib › web | 0.009 |
-| pico_gib › servicio | 0.075 |
-| pico_gib › ollama | 4.452 |
-| pico_gib › qdrant | 0.409 |
+| pico_gib › servicio | 0.081 |
+| pico_gib › ollama | 4.429 |
+| pico_gib › qdrant | 0.443 |
 | pico_gib › servicio-run (cliente de la demo) | 0.027 |
 | limite_gib › web | 0.0625 |
 | limite_gib › servicio | 1.5 |
@@ -5795,16 +6214,18 @@ _(1 textos largos omitidos; ver el JSON)_
 | limite_gib › qdrant | 0.5 |
 | limite_gib › servicio-run (cliente de la demo) | 1.5 |
 | suma_limites_servicios_gib | 7.0625 |
-| suma_picos_servicios_gib | 4.945 |
+| suma_picos_servicios_gib | 4.962 |
+
+_(1 textos largos omitidos; ver el JSON)_
 
 ### `evaluacion/resultados/indexado.json`
 
-- fecha: 2026-11-13T06:38:43+00:00
+- fecha: 2026-11-13T20:04:39+00:00
 
 | Clave | Valor |
 |---|---|
-| fecha | 2026-11-13T06:38:43+00:00 |
-| segundos | 978.8 |
+| fecha | 2026-11-13T20:04:39+00:00 |
+| segundos | 1006.6 |
 | modelos › principal | embeddinggemma-2:440m |
 | modelos › secundario | granite-embedding:278m |
 | modelos › lado_imagen_px | 384 |
@@ -5830,6 +6251,103 @@ _(1 textos largos omitidos; ver el JSON)_
 | mapeo_open_images_tesauro › similitud_top1 › p90 | 0.83284 |
 | mapeo_open_images_tesauro › muestra_revision | evaluacion/revision_manual/muestra_mapeo_oi_tesauro.csv |
 | version_corpus | e1879cf60262 |
+
+### `evaluacion/resultados/inyeccion_consultas_cortas.json`
+
+- fecha: 2026-11-13T22:22:49+00:00
+- rapido: false
+- fraccion: 1.0
+- version_configuracion: 9edf360414cb
+- hardware: maquina=aarch64, nproc=8, python=3.12.16, lscpu_Architecture=aarch64, lscpu_CPU(s)=8, lscpu_Vendor ID=Apple, lscpu_Model name=-, limite_memoria_contenedor_bytes=1610612736
+
+| Clave | Valor |
+|---|---|
+| metricas › negativos › frase_completa › n | 300 |
+| metricas › negativos › frase_completa › palabras_p50 | 10.0 |
+| metricas › negativos › frase_completa › similitud › p50 | 0.7981 |
+| metricas › negativos › frase_completa › similitud › p95 | 0.8168 |
+| metricas › negativos › frase_completa › similitud › max | 0.8411 |
+| metricas › negativos › frase_completa › bloqueadas_antes | 1 |
+| metricas › negativos › frase_completa › tasa_antes | 0.0033 |
+| metricas › negativos › frase_completa › bloqueadas_despues | 1 |
+| metricas › negativos › frase_completa › tasa_despues | 0.0033 |
+| metricas › negativos › frase_completa › bloqueadas_solo_por_patrones | 0 |
+| metricas › negativos › frase_completa › ejemplos_bloqueados_antes | ["Letrero de señalamiento de prohibición de incendios"] |
+| metricas › negativos › 4_palabras › n | 300 |
+| metricas › negativos › 4_palabras › palabras_p50 | 4.0 |
+| metricas › negativos › 4_palabras › similitud › p50 | 0.8036 |
+| metricas › negativos › 4_palabras › similitud › p95 | 0.8263 |
+| metricas › negativos › 4_palabras › similitud › max | 0.8392 |
+| metricas › negativos › 4_palabras › bloqueadas_antes | 1 |
+| metricas › negativos › 4_palabras › tasa_antes | 0.0033 |
+| metricas › negativos › 4_palabras › bloqueadas_despues | 0 |
+| metricas › negativos › 4_palabras › tasa_despues | 0.0 |
+| metricas › negativos › 4_palabras › bloqueadas_solo_por_patrones | 0 |
+| metricas › negativos › 4_palabras › ejemplos_bloqueados_antes | ["Teléfono celular pantalla aplicación"] |
+| metricas › negativos › 2_palabras › n | 300 |
+| metricas › negativos › 2_palabras › palabras_p50 | 2.0 |
+| metricas › negativos › 2_palabras › similitud › p50 | 0.8152 |
+| metricas › negativos › 2_palabras › similitud › p95 | 0.8405 |
+| metricas › negativos › 2_palabras › similitud › max | 0.8598 |
+| metricas › negativos › 2_palabras › bloqueadas_antes | 18 |
+| metricas › negativos › 2_palabras › tasa_antes | 0.06 |
+| metricas › negativos › 2_palabras › bloqueadas_despues | 0 |
+| metricas › negativos › 2_palabras › tasa_despues | 0.0 |
+| metricas › negativos › 2_palabras › bloqueadas_solo_por_patrones | 0 |
+| metricas › negativos › 2_palabras › ejemplos_bloqueados_antes | ["Ilustración informativa", "Primer plano", "Captura pantalla", "Caja router", "Auto nuevo"] |
+| metricas › negativos › 1_palabra › n | 300 |
+| metricas › negativos › 1_palabra › palabras_p50 | 1.0 |
+| metricas › negativos › 1_palabra › similitud › p50 | 0.822 |
+| metricas › negativos › 1_palabra › similitud › p95 | 0.8494 |
+| metricas › negativos › 1_palabra › similitud › max | 0.8672 |
+| metricas › negativos › 1_palabra › bloqueadas_antes | 31 |
+| metricas › negativos › 1_palabra › tasa_antes | 0.1033 |
+| metricas › negativos › 1_palabra › bloqueadas_despues | 0 |
+| metricas › negativos › 1_palabra › tasa_despues | 0.0 |
+| metricas › negativos › 1_palabra › bloqueadas_solo_por_patrones | 0 |
+| metricas › negativos › 1_palabra › ejemplos_bloqueados_antes | ["Personas", "Figura", "Personas", "Ilustración", "Figura"] |
+| metricas › negativos › consultas_normales_guardrail › n | 10 |
+| metricas › negativos › consultas_normales_guardrail › palabras_p50 | 4.0 |
+| metricas › negativos › consultas_normales_guardrail › similitud › p50 | 0.7971 |
+| metricas › negativos › consultas_normales_guardrail › similitud › p95 | 0.8165 |
+| metricas › negativos › consultas_normales_guardrail › similitud › max | 0.8204 |
+| metricas › negativos › consultas_normales_guardrail › bloqueadas_antes | 0 |
+| metricas › negativos › consultas_normales_guardrail › tasa_antes | 0.0 |
+| metricas › negativos › consultas_normales_guardrail › bloqueadas_despues | 0 |
+| metricas › negativos › consultas_normales_guardrail › tasa_despues | 0.0 |
+| metricas › negativos › consultas_normales_guardrail › bloqueadas_solo_por_patrones | 0 |
+| metricas › negativos › consultas_normales_guardrail › ejemplos_bloqueados_antes | [] |
+| metricas › negativos › consultas_demo › n | 2 |
+| metricas › negativos › consultas_demo › palabras_p50 | 5.5 |
+| metricas › negativos › consultas_demo › similitud › p50 | 0.7989 |
+| metricas › negativos › consultas_demo › similitud › p95 | 0.8018 |
+| metricas › negativos › consultas_demo › similitud › max | 0.8021 |
+| metricas › negativos › consultas_demo › bloqueadas_antes | 0 |
+| metricas › negativos › consultas_demo › tasa_antes | 0.0 |
+| metricas › negativos › consultas_demo › bloqueadas_despues | 0 |
+| metricas › negativos › consultas_demo › tasa_despues | 0.0 |
+| metricas › negativos › consultas_demo › bloqueadas_solo_por_patrones | 0 |
+| metricas › negativos › consultas_demo › ejemplos_bloqueados_antes | [] |
+| metricas › positivos › calibracion_inyeccion_texto › n | 15 |
+| metricas › positivos › calibracion_inyeccion_texto › palabras_p50 | 9.0 |
+| metricas › positivos › calibracion_inyeccion_texto › similitud › p50 | 0.8704 |
+| metricas › positivos › calibracion_inyeccion_texto › similitud › p95 | 0.9243 |
+| metricas › positivos › calibracion_inyeccion_texto › similitud › max | 0.9277 |
+| metricas › positivos › calibracion_inyeccion_texto › bloqueadas_antes | 14 |
+| metricas › positivos › calibracion_inyeccion_texto › tasa_antes | 0.9333 |
+| metricas › positivos › calibracion_inyeccion_texto › bloqueadas_despues | 14 |
+| metricas › positivos › calibracion_inyeccion_texto › tasa_despues | 0.9333 |
+| metricas › positivos › calibracion_inyeccion_texto › bloqueadas_solo_por_patrones | 6 |
+| metricas › positivos › consultas_guardrail_inyeccion › n | 10 |
+| metricas › positivos › consultas_guardrail_inyeccion › palabras_p50 | 10.5 |
+| metricas › positivos › consultas_guardrail_inyeccion › similitud › p50 | 0.8973 |
+| metricas › positivos › consultas_guardrail_inyeccion › similitud › p95 | 0.9168 |
+| metricas › positivos › consultas_guardrail_inyeccion › similitud › max | 0.9182 |
+| metricas › positivos › consultas_guardrail_inyeccion › bloqueadas_antes | 10 |
+| metricas › positivos › consultas_guardrail_inyeccion › tasa_antes | 1.0 |
+| metricas › positivos › consultas_guardrail_inyeccion › bloqueadas_despues | 10 |
+| metricas › positivos › consultas_guardrail_inyeccion › tasa_despues | 1.0 |
+| metricas › positivos › consultas_guardrail_inyeccion › bloqueadas_solo_por_patrones | 10 |
 
 ### `evaluacion/resultados/licencias_paquetes.json`
 

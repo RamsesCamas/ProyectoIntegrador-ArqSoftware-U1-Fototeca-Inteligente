@@ -24,7 +24,7 @@ valor, umbral y política aplicada) que viaja en `meta.guardrails` y en la traza
 | `texto_visible` | entrada, foto | similitud con prototipos de foto con texto escrito | **marcar**: la ficha va por la ruta completa (ADR-03) |
 | `inyeccion_en_imagen` | entrada, foto (ruta completa) | patrones («ignora», «instrucciones», «system», «olvida»…) y similitud con prototipos de inyección sobre el texto visible que copia P1 | **aislar**: no se bloquea la foto; P3 no recibe el texto marcado ni las oraciones o elementos de P1 que lo reproducen (el texto visible no marcado sí entra, entre delimitadores, como dato); se agrega una advertencia y, con confianza alta, la ficha queda `requiere_revision` |
 | `pii_texto` | entrada, búsqueda | expresiones regulares de CURP, RFC, correo, teléfono y tarjeta (con dígito de Luhn) | **sanitizar**: enmascarar y continuar |
-| `inyeccion_texto` | entrada, búsqueda | patrones y similitud con prototipos de inyección | **bloquear**: 422 con mensaje seguro que no repite el contenido |
+| `inyeccion_texto` | entrada, búsqueda | patrones y, desde 5 palabras, similitud con prototipos de inyección | **bloquear**: 422 con mensaje seguro que no repite el contenido |
 | `esquema` | salida, ficha | el JSON valida contra el esquema Pydantic | **reintentar** una vez con el error; después, respaldo o ficha degradada |
 | `reglas_iptc` | salida, ficha | texto alternativo no vacío y de 250 caracteres o menos, sin «imagen de»/«foto de»; titular de 120 o menos | **sanitizar** (recortar por oración y normalizar el inicio); si queda vacío, reintentar |
 | `atributos_sensibles` | salida, ficha | léxico en español y P6 con Qwen solo si el léxico detecta algo | **reintentar** una vez sin la frase; luego eliminarla y **marcar** |
@@ -113,6 +113,32 @@ El detector de texto visible por embeddings es débil (TPR 0.5333). Por eso no e
 `texto_visible` de P1 también fuerza la ruta completa. Los de salida salen de `nuevas` sin `eval_fichas`
 (`calibracion_h4.json`): `tau_apego_visual` = 0.6547 (p5 de la similitud imagen–texto alternativo humano) y
 `tau_consistencia` = 0.5738 (p5 de granite entre dos descripciones humanas de la misma foto).
+
+**Hallazgo y corrección: búsquedas cortas bloqueadas como inyección.** τ_inyeccion se calibró con descripciones
+completas como negativos. En textos cortos, en cambio, la similitud de embeddings con los prototipos sube. Una prueba
+E2E de la web bloqueó una búsqueda de 4 palabras armada con el titular generado. Se midió el componente
+(`verificar_inyeccion`, con los mismos embeddings, prototipos y umbral) sobre 300 descripciones del archivo que no se
+usaron al calibrar, en cuatro formas (`evaluacion/resultados/inyeccion_consultas_cortas.json`):
+
+| Forma de la búsqueda | p50 de similitud | Bloqueadas sin mínimo de palabras | Con el mínimo de 5 palabras |
+|---|---|---|---|
+| Frase completa (p50 de 10 palabras) | 0.7981 | 1 de 300 | 1 de 300 |
+| Sus 4 primeras palabras | 0.8036 | 1 de 300 | 0 de 300 |
+| Sus 2 primeras palabras | 0.8152 | 18 de 300 (0.06) | 0 de 300 |
+| Su primera palabra | 0.822 | 31 de 300 (0.1033), entre ellas «Personas» | 0 de 300 |
+
+- **Corrección:** la similitud solo decide en consultas de 5 palabras o más
+  (`guardrails.min_palabras_similitud_inyeccion`). Las más cortas pasan solo por los patrones, que siguen bloqueando
+  «jailbreak», «modo desarrollador» o «system:».
+- **Por qué 5:** es el largo mínimo de las 15 frases de inyección de calibración; se eligió por el largo de los
+  positivos, no por los falsos positivos. El defecto se encontró con una exploración sobre otra muestra del archivo, y
+  la medición de la tabla usa una tercera muestra, distinta de la de calibración y de la exploración.
+- **La detección no cambia:** 14 de 15 frases de calibración y 10 de 10 inyecciones de `consultas_guardrail`, antes y
+  después.
+- **Lo que queda:** la frase completa bloqueada («Letrero de señalamiento de prohibición de incendios», similitud
+  0.8411) muestra que τ_inyeccion sigue cerca de la cola de las frases normales.
+- **La tabla de evaluación de arriba se midió antes del cambio.** El cambio solo puede quitar bloqueos a consultas de
+  menos de 5 palabras, y ninguna de las consultas con inyección de ese conjunto tiene menos de 8.
 
 **τ_tesauro.** El valor inicial (0.75, `servicio/config/parametros.yaml`) nunca se midió para el cruce de etiquetas de
 Open Images en inglés a conceptos del tesauro en español, así que se calibra al indexar el archivo con un **proxy

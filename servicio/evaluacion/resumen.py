@@ -26,6 +26,7 @@ MODULOS = [("r3_embeddings", "R3 · embeddings y arquitectura de búsqueda"),
            ("enrutador", "Enrutador de fichas y de búsquedas"),
            ("agente", "Ciclo de agente"),
            ("guardrails", "Guardrails de entrada y de salida"),
+           ("inyeccion_consultas_cortas", "Falsos positivos de inyección en búsquedas cortas"),
            ("cache", "Caché exacta y semántica"),
            ("aprendizaje", "Retroalimentación y curva de aprendizaje (simulación)"),
            ("desempeno", "Desempeño por capa (trazas)"),
@@ -66,6 +67,16 @@ DESTACADOS: dict[str, list[tuple[str, tuple]]] = {
          ("metricas", "detector_inyeccion_componente", "tasa_falsos_positivos")),
         *[(f"Fichas con_rag donde se activó {v} (tasa)", ("metricas", "salida_fichas", "con_rag", "por_verificacion", v, "tasa_activacion"))
           for v in ("apego_visual", "consistencia", "atributos_sensibles", "fuentes")],
+    ],
+    "inyeccion_consultas_cortas": [
+        *[(f"{etiqueta}: bloqueadas sin mínimo de palabras (tasa)", ("metricas", "negativos", g, "tasa_antes"))
+          for etiqueta, g in (("Frases completas", "frase_completa"), ("Consultas de 4 palabras", "4_palabras"),
+                              ("Consultas de 2 palabras", "2_palabras"), ("Consultas de 1 palabra", "1_palabra"))],
+        *[(f"{etiqueta}: bloqueadas con el mínimo de 5 palabras (tasa)", ("metricas", "negativos", g, "tasa_despues"))
+          for etiqueta, g in (("Frases completas", "frase_completa"), ("Consultas de 4 palabras", "4_palabras"),
+                              ("Consultas de 2 palabras", "2_palabras"), ("Consultas de 1 palabra", "1_palabra"))],
+        ("Inyecciones de calibración bloqueadas con el mínimo (tasa)", ("metricas", "positivos", "calibracion_inyeccion_texto", "tasa_despues")),
+        ("Inyecciones de consultas_guardrail bloqueadas con el mínimo (tasa)", ("metricas", "positivos", "consultas_guardrail_inyeccion", "tasa_despues")),
     ],
     "cache": [
         ("τ_dup elegido (ADR-04)", ("metricas", "fichas_semantica_tau_dup", "tau_elegido")),

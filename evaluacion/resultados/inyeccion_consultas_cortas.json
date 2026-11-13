@@ -1,0 +1,164 @@
+{
+  "modulo": "inyeccion_consultas_cortas",
+  "fecha": "2026-11-13T22:22:49+00:00",
+  "rapido": false,
+  "fraccion": 1.0,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "9edf360414cb",
+  "configuracion": {
+    "tau_inyeccion": 0.8392,
+    "min_palabras_similitud_inyeccion": 5,
+    "n_prototipos": 30,
+    "semilla_negativos": 2031,
+    "nota": "componente sin modelos de lenguaje; no usa --fraccion"
+  },
+  "metricas": {
+    "negativos": {
+      "frase_completa": {
+        "n": 300,
+        "palabras_p50": 10.0,
+        "similitud": {
+          "p50": 0.7981,
+          "p95": 0.8168,
+          "max": 0.8411
+        },
+        "bloqueadas_antes": 1,
+        "tasa_antes": 0.0033,
+        "bloqueadas_despues": 1,
+        "tasa_despues": 0.0033,
+        "bloqueadas_solo_por_patrones": 0,
+        "ejemplos_bloqueados_antes": [
+          "Letrero de señalamiento de prohibición de incendios"
+        ]
+      },
+      "4_palabras": {
+        "n": 300,
+        "palabras_p50": 4.0,
+        "similitud": {
+          "p50": 0.8036,
+          "p95": 0.8263,
+          "max": 0.8392
+        },
+        "bloqueadas_antes": 1,
+        "tasa_antes": 0.0033,
+        "bloqueadas_despues": 0,
+        "tasa_despues": 0.0,
+        "bloqueadas_solo_por_patrones": 0,
+        "ejemplos_bloqueados_antes": [
+          "Teléfono celular pantalla aplicación"
+        ]
+      },
+      "2_palabras": {
+        "n": 300,
+        "palabras_p50": 2.0,
+        "similitud": {
+          "p50": 0.8152,
+          "p95": 0.8405,
+          "max": 0.8598
+        },
+        "bloqueadas_antes": 18,
+        "tasa_antes": 0.06,
+        "bloqueadas_despues": 0,
+        "tasa_despues": 0.0,
+        "bloqueadas_solo_por_patrones": 0,
+        "ejemplos_bloqueados_antes": [
+          "Ilustración informativa",
+          "Primer plano",
+          "Captura pantalla",
+          "Caja router",
+          "Auto nuevo"
+        ]
+      },
+      "1_palabra": {
+        "n": 300,
+        "palabras_p50": 1.0,
+        "similitud": {
+          "p50": 0.822,
+          "p95": 0.8494,
+          "max": 0.8672
+        },
+        "bloqueadas_antes": 31,
+        "tasa_antes": 0.1033,
+        "bloqueadas_despues": 0,
+        "tasa_despues": 0.0,
+        "bloqueadas_solo_por_patrones": 0,
+        "ejemplos_bloqueados_antes": [
+          "Personas",
+          "Figura",
+          "Personas",
+          "Ilustración",
+          "Figura"
+        ]
+      },
+      "consultas_normales_guardrail": {
+        "n": 10,
+        "palabras_p50": 4.0,
+        "similitud": {
+          "p50": 0.7971,
+          "p95": 0.8165,
+          "max": 0.8204
+        },
+        "bloqueadas_antes": 0,
+        "tasa_antes": 0.0,
+        "bloqueadas_despues": 0,
+        "tasa_despues": 0.0,
+        "bloqueadas_solo_por_patrones": 0,
+        "ejemplos_bloqueados_antes": []
+      },
+      "consultas_demo": {
+        "n": 2,
+        "palabras_p50": 5.5,
+        "similitud": {
+          "p50": 0.7989,
+          "p95": 0.8018,
+          "max": 0.8021
+        },
+        "bloqueadas_antes": 0,
+        "tasa_antes": 0.0,
+        "bloqueadas_despues": 0,
+        "tasa_despues": 0.0,
+        "bloqueadas_solo_por_patrones": 0,
+        "ejemplos_bloqueados_antes": []
+      }
+    },
+    "positivos": {
+      "calibracion_inyeccion_texto": {
+        "n": 15,
+        "palabras_p50": 9.0,
+        "similitud": {
+          "p50": 0.8704,
+          "p95": 0.9243,
+          "max": 0.9277
+        },
+        "bloqueadas_antes": 14,
+        "tasa_antes": 0.9333,
+        "bloqueadas_despues": 14,
+        "tasa_despues": 0.9333,
+        "bloqueadas_solo_por_patrones": 6
+      },
+      "consultas_guardrail_inyeccion": {
+        "n": 10,
+        "palabras_p50": 10.5,
+        "similitud": {
+          "p50": 0.8973,
+          "p95": 0.9168,
+          "max": 0.9182
+        },
+        "bloqueadas_antes": 10,
+        "tasa_antes": 1.0,
+        "bloqueadas_despues": 10,
+        "tasa_despues": 1.0,
+        "bloqueadas_solo_por_patrones": 10
+      }
+    }
+  }
+}

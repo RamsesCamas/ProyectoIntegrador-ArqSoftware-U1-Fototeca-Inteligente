@@ -5,7 +5,8 @@
     python -m evaluacion.ejecutar_todo --solo guardrails,cache  # solo esos módulos (en el orden de abajo)
     python -m evaluacion.ejecutar_todo --desde cache            # de ese módulo en adelante
 
-Orden: r3_embeddings, r3_modelos, rag_fichas, enrutador, agente, guardrails, cache, aprendizaje (el último que genera
+Orden: r3_embeddings, r3_modelos, rag_fichas, enrutador, agente, guardrails, inyeccion_consultas_cortas (solo el
+componente, sin modelos de lenguaje), cache, aprendizaje (el último que genera
 fichas: promueve ejemplos validados y cambiaría el RAG de los demás), desempeno (lee las trazas de todo lo anterior),
 analizar_revision_manual (solo lee las plantillas del autor) y resumen. Cada módulo expone `ejecutar(c)`; todos son
 reanudables, así que volver a correr retoma donde se quedó. Si un módulo falla, se anota con su error y se sigue con el
@@ -21,8 +22,8 @@ import sys
 import time
 import traceback
 
-ORDEN = ["r3_embeddings", "r3_modelos", "rag_fichas", "enrutador", "agente", "guardrails", "cache", "aprendizaje",
-         "desempeno", "analizar_revision_manual", "resumen"]
+ORDEN = ["r3_embeddings", "r3_modelos", "rag_fichas", "enrutador", "agente", "guardrails", "inyeccion_consultas_cortas",
+         "cache", "aprendizaje", "desempeno", "analizar_revision_manual", "resumen"]
 SIN_CLIENTE = {"analizar_revision_manual", "resumen"}     # no necesitan la API
 
 

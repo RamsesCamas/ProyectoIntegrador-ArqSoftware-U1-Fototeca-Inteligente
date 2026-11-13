@@ -126,7 +126,7 @@ Después de la pasada 1, `aplicar_calibracion` incorpora τ_dup (barrido de `cac
 **Pasada 2: el resto, con la configuración final.**
 
 ```bash
-docker compose run --rm servicio python -m evaluacion.ejecutar_todo --solo agente,guardrails,aprendizaje,desempeno,analizar_revision_manual,resumen
+docker compose run --rm servicio python -m evaluacion.ejecutar_todo --solo agente,guardrails,inyeccion_consultas_cortas,aprendizaje,desempeno,analizar_revision_manual,resumen
 ```
 
 `aprendizaje` corre después de `enrutador` porque valida fotos de la galería. Al terminar, `resumen` escribe

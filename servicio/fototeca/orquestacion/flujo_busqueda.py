@@ -68,7 +68,8 @@ class FlujoBusqueda:
         v_sim = self.embebedor.embeber_textos([limpio], rol="simetrico")[0]
         protos = self.verificador_imagen.prototipos("inyeccion")
         guardrails.append(verificar_inyeccion(limpio, v_sim, protos if len(protos) else None,
-                                              float(p("guardrails.tau_inyeccion", 0.80))).a_dict())
+                                              float(p("guardrails.tau_inyeccion", 0.80)),
+                                              int(p("guardrails.min_palabras_similitud_inyeccion", 5))).a_dict())
         tiempos["guardrails_entrada"] += (time.perf_counter() - marca) * 1000
 
         version_archivo = self.documentos.version_archivo()

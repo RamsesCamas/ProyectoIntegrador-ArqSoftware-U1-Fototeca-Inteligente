@@ -595,6 +595,7 @@ manual y reportar el acuerdo juez–humano.]
 |---|---|---|---|
 | Resultados con RAG (fichas) | 60 fotos de `eval_fichas` con sus descripciones en español y etiquetas de referencia | fidelidad y relevancia (juez), similitud con granite, chrF, recall de palabras clave, porcentaje de campos con fuente válida; con RAG contra sin RAG; acierto@5 de la recuperación de ejemplos (normales contra `regiones_excluidas`) | Tabla 14 (`rag_fichas.json`) |
 | Guardrails | 15 fotos con inyección, 15 fuera de dominio, 20 con GPS sintético y 25 consultas (10 con inyección, 5 con datos personales y 10 normales); como normales, 15 fotos con texto benigno y 20 fotos normales | bloqueos o marcas correctas, falsos positivos, latencia añadida; activaciones de salida en las 60 fichas | ADR-05 (`guardrails.json`) |
+| Inyección en búsquedas cortas | 300 descripciones del archivo que no se usaron al calibrar, completas y recortadas a 4, 2 y 1 palabras; 15 frases de inyección de calibración y las 10 consultas con inyección | búsquedas normales bloqueadas y detección, sin mínimo de palabras y con el mínimo de 5 | ADR-05 (`inyeccion_consultas_cortas.json`) |
 | Caché | 50 cargas repetidas; 300 casi duplicados positivos y 150 negativos; 30 búsquedas repetidas y 30 parafraseadas | tasa de aciertos, respuestas incorrectas desde la caché, curva de precisión y recall por τ_dup, reducción de latencia, invalidación | §10.3 y ADR-04 (`cache.json`) |
 | Enrutador | las dos rutas sobre `eval_fichas`; 40 búsquedas etiquetadas (20 simples y 20 complejas) | porcentaje enviado a la ruta correcta, costo de cada ruta, R@10 con y sin P4 | §7.3 y ADR-03 (`enrutador.json`) |
 | Ciclo de agente | 20 fotos de `regiones_excluidas` de `eval_fichas` más 30 de la misma partición | porcentaje que activa el ciclo, porcentaje que mejora, iteraciones promedio, latencia añadida, calidad con y sin ciclo | ADR-07 (`agente.json`) |
@@ -738,6 +739,14 @@ parecido.
    0.8392), sin que la heurística de patrones lo marcara. **Causa:** el umbral por similitud se calibró con frases, y un
    texto corto y repetitivo cae cerca. **Capa:** C3. **Costo:** se omite el texto para P3 y la ficha va a revisión. Es 1
    de 18 casos normales.
+   - **El mismo efecto en las búsquedas:** una prueba E2E bloqueó una búsqueda de 4 palabras. Al medirlo sobre 300
+     descripciones del archivo que no se usaron al calibrar, τ_inyeccion bloqueaba 31 de 300 búsquedas de una palabra
+     (entre ellas «Personas»), 18 de 300 de dos palabras y 1 de 300 frases completas
+     (`inyeccion_consultas_cortas.json`).
+   - **Corrección:** la similitud solo decide desde 5 palabras, el largo mínimo de las frases de inyección de
+     calibración; las consultas más cortas pasan solo por los patrones. Las de 1, 2 y 4 palabras bajaron a 0 de 300; la
+     frase completa sigue en 1 de 300. La detección quedó igual: 14 de 15 frases de calibración y 10 de 10 consultas con inyección
+     (ADR-05).
 4. **Una búsqueda compleja mal interpretada** (`cs-01`, traza `9c412cee`,
    `casos/enrutador_busquedas_subidas_antes_filtro_personas.jsonl`). Para el domo de una torre de telecomunicaciones,
    P4 fijó `contiene_personas: true` y la búsqueda penalizó los resultados sin personas. **Causa:** LFM3 nunca dejó el

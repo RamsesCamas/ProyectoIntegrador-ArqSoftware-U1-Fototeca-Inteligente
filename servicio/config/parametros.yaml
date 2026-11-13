@@ -41,6 +41,7 @@ guardrails:
   lado_min_px: 64
   lado_max_px: 12000
   tau_tesauro: 0.75                  # valor inicial de diseño; se calibra en H7 con 50 pares revisados
+  min_palabras_similitud_inyeccion: 5  # inyeccion_texto: la similitud solo decide desde 5 palabras (ADR-05)
 
 cache:
   fichas:
