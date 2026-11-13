@@ -44,7 +44,61 @@
       "error": null,
       "fin": "2026-11-13T14:41:07+00:00",
       "segundos": 2299.4
+    },
+    "agente": {
+      "inicio": "2026-11-13T17:37:35+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T18:15:30+00:00",
+      "segundos": 2274.7
+    },
+    "guardrails": {
+      "inicio": "2026-11-13T19:29:53+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T19:45:51+00:00",
+      "segundos": 958.1
+    },
+    "aprendizaje": {
+      "inicio": "2026-11-13T18:35:56+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T19:12:14+00:00",
+      "segundos": 2177.6
+    },
+    "desempeno": {
+      "inicio": "2026-11-13T19:45:51+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T19:45:52+00:00",
+      "segundos": 0.8
+    },
+    "analizar_revision_manual": {
+      "inicio": "2026-11-13T19:12:15+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T19:12:15+00:00",
+      "segundos": 0.0
+    },
+    "resumen": {
+      "inicio": "2026-11-13T19:46:38+00:00",
+      "rapido": false,
+      "fraccion": 1.0,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T19:46:38+00:00",
+      "segundos": 0.1
     }
   },
-  "actualizado": "2026-11-13T17:34:47+00:00"
+  "actualizado": "2026-11-13T19:46:38+00:00"
 }

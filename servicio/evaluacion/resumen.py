@@ -194,7 +194,9 @@ def seccion_estado(datos: dict) -> list[str]:
         if not isinstance(d, dict):
             lineas.append(f"| {modulo} | {descripcion} | pendiente: no existe `{archivo}` | — | — | — | {ultima} |")
             continue
-        modo = "rápido (prueba de humo)" if d.get("rapido") else "completo"
+        modo = ("rápido (prueba de humo)" if d.get("rapido") else
+                f"parcial ({round(float(d['fraccion']) * 100)} % de cada conjunto)" if d.get("fraccion") not in (None, 1, 1.0)
+                else "completo")
         lineas.append(f"| {modulo} | {descripcion} | `evaluacion/resultados/{archivo}` | {celda(d.get('fecha'))} | {modo} | "
                       f"{celda(d.get('version_configuracion'))} | {ultima} |")
     otros = [a for a in datos if a not in {f"{m}.json" for m, _ in MODULOS}]
@@ -278,7 +280,7 @@ def seccion_todas(datos: dict) -> list[str]:
     for archivo, d in datos.items():
         lineas += [f"### `evaluacion/resultados/{archivo}`", ""]
         if isinstance(d, dict):
-            meta = [f"{k}: {celda(d[k])}" for k in ("fecha", "rapido", "version_configuracion") if k in d]
+            meta = [f"{k}: {celda(d[k])}" for k in ("fecha", "rapido", "fraccion", "version_configuracion") if k in d]
             hw = d.get("hardware") or {}
             if hw:
                 meta.append("hardware: " + celda(", ".join(f"{k}={v}" for k, v in hw.items())))

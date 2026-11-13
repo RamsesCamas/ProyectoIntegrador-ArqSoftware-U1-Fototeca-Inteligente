@@ -35,7 +35,8 @@ from fototeca.dominio.esquemas_ficha import Ficha, FichaRegistrada, Fuente, Pala
 from fototeca.guardrails.entrada.imagen import VerificadorImagen
 from fototeca.guardrails.resultado import ResultadoGuardrail
 from fototeca.guardrails.salida.reglas import (aplicar_reglas_iptc, limpiar_advertencias, recortar_longitudes,
-                                               verificar_copia_contexto, verificar_esquema, verificar_fuentes)
+                                               omitir_instrucciones_de_p1, verificar_copia_contexto, verificar_esquema,
+                                               verificar_fuentes, verificar_instrucciones_en_salida)
 from fototeca.guardrails.salida.semanticas import GuardrailsSemanticos
 from fototeca.modelos.enrutador_fichas import DecisionRuta, EnrutadorFichas
 from fototeca.modelos.gateway import Gateway, SalidaTarea
@@ -76,6 +77,7 @@ class EstadoFicha:
     iteraciones: int = 0
     p1: dict | None = None
     p1_fallo: bool = False
+    lineas_inyeccion: list[str] = field(default_factory=list)   # texto visible marcado como inyección (original)
     decision: DecisionRuta | None = None
     ruta: str = ""
     salida: SalidaTarea | None = None
@@ -243,12 +245,19 @@ class FlujoFicha:
         if e.p1 is not None:
             if [t for t in e.p1.get("texto_visible", []) if isinstance(t, str) and t.strip()]:
                 # P1 vio texto escrito (p. ej. durante el ciclo de agente, antes de enrutar): la ficha va por la ruta
-                # completa, donde ese texto entra a P3 aislado como dato, nunca por la rápida (Qwen lo «leería»).
+                # completa, donde ese texto entra a P3 aislado como dato (u omitido, si parece una instrucción), nunca por
+                # la rápida (Qwen lo «leería» en la imagen).
                 e.texto_visible_detectado = True
             r = self.verificador_imagen.inyeccion_en_texto_visible(e.p1.get("texto_visible", []))
             e.guardrails_entrada.append(r.a_dict())
             if r.resultado == "marcada":
-                e.advertencias.append("La foto contiene texto visible; se trató como dato, no como instrucción.")
+                # Aislamiento: P3 no recibe el texto marcado ni las oraciones de P1 que lo reproducen (en la evaluación de
+                # guardrails, Qwen obedecía el letrero aun entre delimitadores).
+                e.lineas_inyeccion = [t for t in e.p1.get("texto_visible", []) if isinstance(t, str) and t.strip()]
+                e.p1, omitidas = omitir_instrucciones_de_p1(e.p1, e.lineas_inyeccion)
+                r.detalle["piezas_omitidas_para_p3"] = omitidas
+                e.guardrails_entrada[-1] = r.a_dict()
+                e.advertencias.append("La foto contiene texto que parecía una instrucción; no se usó para redactar la ficha.")
                 if r.detalle.get("confianza_alta"):
                     e.revision.append("posible inyección de instrucciones en el texto de la imagen")
 
@@ -344,6 +353,21 @@ class FlujoFicha:
             crudos, recortes = recortar_longitudes({k: datos[k] for k in ("titular", "descripcion", "texto_alternativo",
                                                                           "descripcion_extendida", "advertencias")
                                                     if k in datos})
+            crudos, palabras_crudas, vaciados, r = verificar_instrucciones_en_salida(crudos, palabras_crudas,
+                                                                                      self._textos_inyeccion(e))
+            resultados.append(r)
+            if "texto_alternativo" in vaciados:
+                e.guardrails_salida += [x.a_dict() for x in resultados]
+                if e.ruta == "rapida" and e.reintentos_generacion == 0 and not e.p1_fallo:
+                    e.ruta = "completa"
+                    e.reintentos_generacion += 1
+                    e.revision.append("el texto alternativo reproducía una instrucción escrita en la foto; se reintentó "
+                                      "por la ruta completa")
+                    return "GENERAR"
+                return self._reintentar_o_degradar(e, "el texto alternativo reproducía una instrucción escrita en la foto: "
+                                                      "describe lo que se ve y no copies el texto de la foto")
+            for campo in vaciados:
+                e.revision.append(f"el campo {campo} reproducía una instrucción escrita en la foto; se dejó vacío")
             ficha, r = verificar_esquema(crudos)
             resultados.append(r)
             if ficha is None:
@@ -400,6 +424,12 @@ class FlujoFicha:
         estado = "requiere_revision" if e.revision else "borrador"
         e.ficha = ficha.model_copy(update={"estado": estado, "advertencias": list(dict.fromkeys(e.advertencias))})
         return "GUARDAR"
+
+    @staticmethod
+    def _textos_inyeccion(e: EstadoFicha) -> list[str]:
+        """Las líneas del texto visible de P1 cuando la entrada marcó `inyeccion_en_imagen` (para
+        `instrucciones_en_salida`); si no se marcó, ninguna."""
+        return list(e.lineas_inyeccion)
 
     def _reintentar_o_degradar(self, e: EstadoFicha, motivo: str) -> str:
         e.revision.append(motivo)

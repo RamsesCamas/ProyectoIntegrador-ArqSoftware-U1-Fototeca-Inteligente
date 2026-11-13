@@ -29,6 +29,10 @@ POLITICAS: dict[str, tuple[Politica, str]] = {
     "fuentes": ("sanitizar", "Se quitan las fuentes inválidas; si un campo queda sin fuentes, se marca"),
     "copia_contexto": ("sanitizar", "Se quitan de las palabras clave los alias, los corchetes y las frases copiadas del "
                                     "contexto; un titular genérico o copiado se vacía y la ficha queda en revisión"),
+    "instrucciones_en_salida": ("sanitizar", "Se quitan los delimitadores del texto visible y se vacía el campo que "
+                                             "reproduce una instrucción escrita en la foto; si es el texto alternativo, "
+                                             "se regenera (desde la ruta rápida, por la completa) y la ficha queda en "
+                                             "revisión"),
     # Salida (búsquedas)
     "salida_busqueda": ("sanitizar", "No se exponen rutas internas, EXIF ni GPS; siempre va el aviso de IA"),
 }

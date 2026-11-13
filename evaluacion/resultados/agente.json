@@ -1,0 +1,677 @@
+{
+  "modulo": "agente",
+  "fecha": "2026-11-13T18:15:30+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "f01f9c6598b3",
+  "configuracion": {
+    "configuraciones": {
+      "agente_con_ciclo": {
+        "sin_cache": true
+      },
+      "agente_sin_ciclo": {
+        "max_iter": 0,
+        "sin_cache": true
+      }
+    },
+    "agente": {
+      "tau_ret": 0.7634,
+      "delta_margen": 0.02,
+      "max_iter": 2
+    }
+  },
+  "metricas": {
+    "configuracion_agente": {
+      "tau_ret": 0.7634,
+      "delta_margen": 0.02,
+      "max_iter": 2
+    },
+    "fotos": 25,
+    "con_dato": 25,
+    "n": 25,
+    "activa_ciclo": {
+      "tasa": 0.12,
+      "n": 25
+    },
+    "mejora_entre_los_que_activan": {
+      "tasa": 0.0,
+      "n": 3
+    },
+    "mejora_sobre_todos": {
+      "tasa": 0.0,
+      "n": 25
+    },
+    "iteraciones_media": 0.24,
+    "iteraciones_media_los_que_activan": 2.0,
+    "iteraciones_distribucion": {
+      "0": 22,
+      "2": 3
+    },
+    "latencia_anadida_s": {
+      "n": 25,
+      "media_s": 18.631,
+      "p50_s": 8.206,
+      "p95_s": 56.119,
+      "max_s": 89.751
+    },
+    "latencia_anadida_los_que_activan_s": {
+      "n": 3,
+      "media_s": 27.631,
+      "p50_s": 24.167,
+      "p95_s": 34.337,
+      "max_s": 35.467
+    },
+    "por_grupo": {
+      "agente_extra": {
+        "n": 15,
+        "activa_ciclo": {
+          "tasa": 0.1333,
+          "n": 15
+        },
+        "mejora_entre_los_que_activan": {
+          "tasa": 0.0,
+          "n": 2
+        },
+        "mejora_sobre_todos": {
+          "tasa": 0.0,
+          "n": 15
+        },
+        "iteraciones_media": 0.2667,
+        "iteraciones_media_los_que_activan": 2.0,
+        "iteraciones_distribucion": {
+          "0": 13,
+          "2": 2
+        },
+        "latencia_anadida_s": {
+          "n": 15,
+          "media_s": 18.905,
+          "p50_s": 7.587,
+          "p95_s": 62.346,
+          "max_s": 89.751
+        },
+        "latencia_anadida_los_que_activan_s": {
+          "n": 2,
+          "media_s": 23.713,
+          "p50_s": 23.713,
+          "p95_s": 24.122,
+          "max_s": 24.167
+        }
+      },
+      "eval_fichas_regiones": {
+        "n": 10,
+        "activa_ciclo": {
+          "tasa": 0.1,
+          "n": 10
+        },
+        "mejora_entre_los_que_activan": {
+          "tasa": 0.0,
+          "n": 1
+        },
+        "mejora_sobre_todos": {
+          "tasa": 0.0,
+          "n": 10
+        },
+        "iteraciones_media": 0.2,
+        "iteraciones_media_los_que_activan": 2.0,
+        "iteraciones_distribucion": {
+          "0": 9,
+          "2": 1
+        },
+        "latencia_anadida_s": {
+          "n": 10,
+          "media_s": 18.22,
+          "p50_s": 8.984,
+          "p95_s": 47.585,
+          "max_s": 57.499
+        },
+        "latencia_anadida_los_que_activan_s": {
+          "n": 1,
+          "media_s": 35.467,
+          "p50_s": 35.467,
+          "p95_s": 35.467,
+          "max_s": 35.467
+        }
+      }
+    },
+    "criterios_de_mejora_los_que_activan": {
+      "acierto5_de_0_a_1": 0,
+      "top1_sube_mas_que_delta": 0,
+      "ambos": 0
+    },
+    "acierto5_vecinos": {
+      "inicial_todos": {
+        "tasa": 1.0,
+        "n": 25
+      },
+      "final_todos": {
+        "tasa": 1.0,
+        "n": 25
+      },
+      "inicial_los_que_activan": {
+        "tasa": 1.0,
+        "n": 3
+      },
+      "final_los_que_activan": {
+        "tasa": 1.0,
+        "n": 3
+      }
+    },
+    "top1_imagen": {
+      "inicial": {
+        "n": 25,
+        "media": 0.8311,
+        "p50": 0.8267,
+        "p95": 0.9287,
+        "min": 0.721,
+        "max": 0.9567
+      },
+      "final": {
+        "n": 25,
+        "media": 0.8295,
+        "p50": 0.8267,
+        "p95": 0.9287,
+        "min": 0.6997,
+        "max": 0.9567
+      },
+      "cambio_los_que_activan": {
+        "n": 3,
+        "media": -0.0133,
+        "p50": -0.0184,
+        "p95": -0.0019,
+        "min": -0.0213,
+        "max": -0.0001
+      }
+    },
+    "latencia_con_ciclo_s": {
+      "n": 25,
+      "media_s": 47.991,
+      "p50_s": 33.769,
+      "p95_s": 100.568,
+      "max_s": 113.526
+    },
+    "latencia_sin_ciclo_s": {
+      "n": 25,
+      "media_s": 29.36,
+      "p50_s": 23.996,
+      "p95_s": 69.844,
+      "max_s": 76.442
+    },
+    "rutas": {
+      "con_ciclo": {
+        "rapida": 16,
+        "completa": 9
+      },
+      "sin_ciclo": {
+        "rapida": 22,
+        "completa": 3
+      }
+    },
+    "calidad": {
+      "con_ciclo": {
+        "n": 25,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 25,
+          "media": 4.96,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.88,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 25,
+          "media": 4.92,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 5.0,
+          "ic95": [
+            4.76,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 25,
+          "media": 4.94,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0,
+          "ic95": [
+            4.82,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 25,
+          "media": 4.94,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 25,
+          "media": 0.7184,
+          "p50": 0.7368,
+          "p95": 0.8285,
+          "min": 0.517,
+          "max": 0.893,
+          "ic95": [
+            0.684,
+            0.7508
+          ]
+        },
+        "chrf": {
+          "n": 25,
+          "media": 28.476,
+          "p50": 28.45,
+          "p95": 47.426,
+          "min": 6.02,
+          "max": 60.36,
+          "ic95": [
+            23.7268,
+            33.3061
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 25,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.56,
+          "n": 25,
+          "sin_requiere_revision": 14
+        },
+        "motivos_revision": {
+          "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa": 7,
+          "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista": 4,
+          "el texto alternativo no es consistente con la descripción objetiva": 1
+        },
+        "copia_contexto": {
+          "n": 25,
+          "fichas_con_copia": 3,
+          "tasa_fichas_con_copia": 0.12,
+          "titular_marcado": 3,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "latencia_ruta_s": {
+          "n": 25,
+          "media_s": 47.991,
+          "p50_s": 33.769,
+          "p95_s": 100.568,
+          "max_s": 113.526
+        },
+        "latencia_ficha_s": {
+          "n": 25,
+          "media_s": 47.991,
+          "p50_s": 33.769,
+          "p95_s": 100.568,
+          "max_s": 113.526
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 25,
+            "media_s": 0.008,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.202
+          },
+          "contexto": {
+            "n": 25,
+            "media_s": 0.608,
+            "p50_s": 0.491,
+            "p95_s": 1.3,
+            "max_s": 1.576
+          },
+          "enrutador": {
+            "n": 25,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.001,
+            "max_s": 0.001
+          },
+          "modelo_vision": {
+            "n": 25,
+            "media_s": 37.249,
+            "p50_s": 31.533,
+            "p95_s": 67.65,
+            "max_s": 74.612
+          },
+          "modelo_composicion": {
+            "n": 9,
+            "media_s": 25.203,
+            "p50_s": 23.118,
+            "p95_s": 33.577,
+            "max_s": 35.095
+          },
+          "guardrails_salida": {
+            "n": 25,
+            "media_s": 0.981,
+            "p50_s": 0.612,
+            "p95_s": 4.218,
+            "max_s": 5.168
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 25,
+          "media": 820.28,
+          "p50": 800.0,
+          "p95": 977.6,
+          "min": 717.0,
+          "max": 1101.0
+        },
+        "tokens_salida_primera": {
+          "n": 25,
+          "media": 132.4,
+          "p50": 125.0,
+          "p95": 192.2,
+          "min": 106.0,
+          "max": 236.0
+        },
+        "razon_fin_primera": {
+          "stop": 25
+        },
+        "ruta_final": {
+          "rapida": 16,
+          "completa": 9
+        },
+        "modelo_composicion_final": {
+          "qwen3.5:0.8b": 9
+        },
+        "iteraciones_agente_media": 0.24
+      },
+      "sin_ciclo": {
+        "n": 25,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 25,
+          "media": 4.96,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.88,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 25,
+          "media": 4.92,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 5.0,
+          "ic95": [
+            4.76,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 25,
+          "media": 4.94,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0,
+          "ic95": [
+            4.82,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 25,
+          "media": 4.94,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 25,
+          "media": 0.7239,
+          "p50": 0.7268,
+          "p95": 0.8679,
+          "min": 0.4373,
+          "max": 0.9123,
+          "ic95": [
+            0.6859,
+            0.7593
+          ]
+        },
+        "chrf": {
+          "n": 25,
+          "media": 28.6204,
+          "p50": 30.01,
+          "p95": 48.61,
+          "min": 0.56,
+          "max": 58.49,
+          "ic95": [
+            23.0272,
+            34.4338
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 25,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.6,
+          "n": 25,
+          "sin_requiere_revision": 15
+        },
+        "motivos_revision": {
+          "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista": 8,
+          "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa": 3,
+          "el texto alternativo tiene poco apego visual a la imagen": 1,
+          "el texto alternativo no es consistente con la descripción objetiva": 1
+        },
+        "copia_contexto": {
+          "n": 25,
+          "fichas_con_copia": 7,
+          "tasa_fichas_con_copia": 0.28,
+          "titular_marcado": 7,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "latencia_ruta_s": {
+          "n": 25,
+          "media_s": 29.36,
+          "p50_s": 23.996,
+          "p95_s": 69.844,
+          "max_s": 76.442
+        },
+        "latencia_ficha_s": {
+          "n": 25,
+          "media_s": 29.36,
+          "p50_s": 23.996,
+          "p95_s": 69.844,
+          "max_s": 76.442
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 25,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.0
+          },
+          "contexto": {
+            "n": 25,
+            "media_s": 0.328,
+            "p50_s": 0.279,
+            "p95_s": 0.454,
+            "max_s": 0.904
+          },
+          "enrutador": {
+            "n": 25,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.0
+          },
+          "modelo_vision": {
+            "n": 25,
+            "media_s": 25.807,
+            "p50_s": 23.321,
+            "p95_s": 45.817,
+            "max_s": 49.578
+          },
+          "modelo_composicion": {
+            "n": 3,
+            "media_s": 22.229,
+            "p50_s": 21.902,
+            "p95_s": 24.608,
+            "max_s": 24.909
+          },
+          "guardrails_salida": {
+            "n": 25,
+            "media_s": 0.521,
+            "p50_s": 0.208,
+            "p95_s": 2.827,
+            "max_s": 3.91
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 25,
+          "media": 800.48,
+          "p50": 799.0,
+          "p95": 841.6,
+          "min": 717.0,
+          "max": 848.0
+        },
+        "tokens_salida_primera": {
+          "n": 25,
+          "media": 123.0,
+          "p50": 121.0,
+          "p95": 139.8,
+          "min": 102.0,
+          "max": 148.0
+        },
+        "razon_fin_primera": {
+          "stop": 25
+        },
+        "ruta_final": {
+          "rapida": 22,
+          "completa": 3
+        },
+        "modelo_composicion_final": {
+          "qwen3.5:0.8b": 3
+        },
+        "iteraciones_agente_media": 0.0
+      },
+      "con_menos_sin": {
+        "juez_promedio": {
+          "campo": "juez_promedio",
+          "n": 25,
+          "media": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "a_mayor": 0,
+          "b_mayor": 0,
+          "empates": 25
+        },
+        "granite_max": {
+          "campo": "granite_max",
+          "n": 25,
+          "media": -0.0055,
+          "ic95": [
+            -0.0407,
+            0.0273
+          ],
+          "a_mayor": 9,
+          "b_mayor": 13,
+          "empates": 3
+        },
+        "chrf": {
+          "campo": "chrf",
+          "n": 25,
+          "media": -0.1444,
+          "ic95": [
+            -5.0384,
+            4.1312
+          ],
+          "a_mayor": 12,
+          "b_mayor": 9,
+          "empates": 4
+        }
+      },
+      "con_menos_sin_los_que_activan": {
+        "juez_promedio": {
+          "campo": "juez_promedio",
+          "n": 3,
+          "media": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "a_mayor": 0,
+          "b_mayor": 0,
+          "empates": 3
+        },
+        "granite_max": {
+          "campo": "granite_max",
+          "n": 3,
+          "media": -0.1082,
+          "ic95": [
+            -0.3104,
+            0.0135
+          ],
+          "a_mayor": 1,
+          "b_mayor": 2,
+          "empates": 0
+        },
+        "chrf": {
+          "campo": "chrf",
+          "n": 3,
+          "media": -9.1567,
+          "ic95": [
+            -33.72,
+            9.5
+          ],
+          "a_mayor": 1,
+          "b_mayor": 2,
+          "empates": 0
+        }
+      }
+    },
+    "metodos": {
+      "activa_ciclo": "meta.iteraciones_agente > 0 en la corrida con ciclo",
+      "mejora": "entre los que activan: acierto@5 de vecinos (criterio de rag_fichas, percentil 75) pasa de 0 a 1, o el top-1 imagen-imagen sube más que δ = agente.delta_margen",
+      "vecinos_antes_y_despues": "primer evento C5 recuperar_ejemplos y último evento C2 reformular de la traza",
+      "latencia_anadida": "meta.tiempo_ms con ciclo − sin ciclo, por foto",
+      "calidad": "juez P7, granite y chrF; ficha sin texto = 0; diferencias pareadas con IC95 bootstrap"
+    },
+    "no_subidas": [],
+    "graficas": [
+      "evaluacion/graficas/agente_ciclo.png"
+    ],
+    "detalle_fichas": "evaluacion/resultados/agente_fichas_detalle.csv"
+  }
+}

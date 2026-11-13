@@ -1,0 +1,312 @@
+{
+  "modulo": "aprendizaje",
+  "fecha": "2026-11-13T19:12:14+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "f01f9c6598b3",
+  "configuracion": {
+    "bloques": 5,
+    "fotos": 50,
+    "opciones_ficha": {
+      "sin_cache": true
+    },
+    "configuracion_fichas": "aprendizaje_f50",
+    "prefijo_comentario": "[simulación]",
+    "correcciones": "titular y texto alternativo = referencia más corta (120 y 250 caracteres); descripción = 1ª referencia (800)"
+  },
+  "metricas": {
+    "simulacion": true,
+    "estado": "completa",
+    "descripcion": "Simulación: las referencias humanas hacen de correcciones del archivista (validar_ficha=true); sin fine-tuning, el aprendizaje es la promoción de fichas validadas como ejemplos del RAG.",
+    "umbral_aceptable_sin_edicion": {
+      "umbral": 0.7462,
+      "n": 50,
+      "distribucion": {
+        "n": 50,
+        "media_coseno": 0.748,
+        "p50_coseno": 0.746,
+        "p95_coseno": 0.882,
+        "max_coseno": 0.916
+      },
+      "regla": "p50 de la similitud granite entre la 1ª referencia humana y las demás de la misma foto"
+    },
+    "bloques": [
+      {
+        "bloque": 1,
+        "fotos": 10,
+        "fichas_medidas": 10,
+        "texto_alternativo_vacio": 0,
+        "correcciones_acumuladas_antes": 0,
+        "granite_media": 0.6788,
+        "granite_p50": 0.6929,
+        "granite_ic95": [
+          0.6138,
+          0.7422
+        ],
+        "aceptables_sin_edicion": 4,
+        "tasa_aceptable": 0.4,
+        "tasa_aceptable_ic95": [
+          0.1,
+          0.7
+        ],
+        "rutas": {
+          "completa": 8,
+          "rapida": 2
+        },
+        "requiere_revision": 7,
+        "citan_un_ejemplo_promovido": 0,
+        "retro_enviadas": 10,
+        "fichas_validadas": 10
+      },
+      {
+        "bloque": 2,
+        "fotos": 10,
+        "fichas_medidas": 10,
+        "texto_alternativo_vacio": 0,
+        "correcciones_acumuladas_antes": 10,
+        "granite_media": 0.698,
+        "granite_p50": 0.68,
+        "granite_ic95": [
+          0.6391,
+          0.758
+        ],
+        "aceptables_sin_edicion": 4,
+        "tasa_aceptable": 0.4,
+        "tasa_aceptable_ic95": [
+          0.1,
+          0.7
+        ],
+        "rutas": {
+          "completa": 3,
+          "rapida": 7
+        },
+        "requiere_revision": 5,
+        "citan_un_ejemplo_promovido": 1,
+        "retro_enviadas": 10,
+        "fichas_validadas": 10
+      },
+      {
+        "bloque": 3,
+        "fotos": 10,
+        "fichas_medidas": 10,
+        "texto_alternativo_vacio": 0,
+        "correcciones_acumuladas_antes": 20,
+        "granite_media": 0.7573,
+        "granite_p50": 0.7569,
+        "granite_ic95": [
+          0.6983,
+          0.8254
+        ],
+        "aceptables_sin_edicion": 6,
+        "tasa_aceptable": 0.6,
+        "tasa_aceptable_ic95": [
+          0.3,
+          0.9
+        ],
+        "rutas": {
+          "completa": 3,
+          "rapida": 7
+        },
+        "requiere_revision": 5,
+        "citan_un_ejemplo_promovido": 0,
+        "retro_enviadas": 10,
+        "fichas_validadas": 10
+      },
+      {
+        "bloque": 4,
+        "fotos": 10,
+        "fichas_medidas": 10,
+        "texto_alternativo_vacio": 0,
+        "correcciones_acumuladas_antes": 30,
+        "granite_media": 0.7153,
+        "granite_p50": 0.7254,
+        "granite_ic95": [
+          0.6511,
+          0.7726
+        ],
+        "aceptables_sin_edicion": 4,
+        "tasa_aceptable": 0.4,
+        "tasa_aceptable_ic95": [
+          0.1,
+          0.7
+        ],
+        "rutas": {
+          "completa": 4,
+          "rapida": 6
+        },
+        "requiere_revision": 2,
+        "citan_un_ejemplo_promovido": 0,
+        "retro_enviadas": 10,
+        "fichas_validadas": 10
+      },
+      {
+        "bloque": 5,
+        "fotos": 10,
+        "fichas_medidas": 10,
+        "texto_alternativo_vacio": 0,
+        "correcciones_acumuladas_antes": 40,
+        "granite_media": 0.7396,
+        "granite_p50": 0.7231,
+        "granite_ic95": [
+          0.6898,
+          0.7905
+        ],
+        "aceptables_sin_edicion": 4,
+        "tasa_aceptable": 0.4,
+        "tasa_aceptable_ic95": [
+          0.1,
+          0.7
+        ],
+        "rutas": {
+          "completa": 3,
+          "rapida": 7
+        },
+        "requiere_revision": 3,
+        "citan_un_ejemplo_promovido": 0,
+        "retro_enviadas": 10,
+        "fichas_validadas": 10
+      }
+    ],
+    "tendencia": {
+      "granite_ultimo_menos_primero": 0.0608,
+      "aceptable_ultimo_menos_primero": 0.0,
+      "nota": "comparar con los IC95 de cada bloque antes de afirmar una mejora"
+    },
+    "retroalimentacion_t2": {
+      "simulacion": {
+        "registros": 50,
+        "calificados": 50,
+        "util": 22,
+        "no_util": 28,
+        "tasa_util": 0.44,
+        "con_validacion": 50,
+        "por_ruta": {
+          "completa": {
+            "util": 9,
+            "no_util": 12,
+            "tasa_util": 0.4286
+          },
+          "rapida": {
+            "util": 13,
+            "no_util": 16,
+            "tasa_util": 0.4483
+          }
+        },
+        "por_modelo": {
+          "embeddinggemma-2:440m": {
+            "util": 22,
+            "no_util": 28,
+            "tasa_util": 0.44
+          },
+          "qwen3.5:0.8b": {
+            "util": 22,
+            "no_util": 28,
+            "tasa_util": 0.44
+          }
+        }
+      },
+      "opiniones_reales": {
+        "registros": 1,
+        "calificados": 1,
+        "util": 1,
+        "no_util": 0,
+        "tasa_util": 1.0,
+        "con_validacion": 1,
+        "por_ruta": {
+          "completa": {
+            "util": 1,
+            "no_util": 0,
+            "tasa_util": 1.0
+          }
+        },
+        "por_modelo": {
+          "embeddinggemma-2:440m": {
+            "util": 1,
+            "no_util": 0,
+            "tasa_util": 1.0
+          },
+          "lfm3:1.7b-q4_K_M": {
+            "util": 1,
+            "no_util": 0,
+            "tasa_util": 1.0
+          },
+          "qwen3.5:0.8b": {
+            "util": 1,
+            "no_util": 0,
+            "tasa_util": 1.0
+          }
+        }
+      },
+      "nota": "En la simulación, «útil» = la ficha se aceptaría sin edición (regla del experimento, no una opinión)."
+    },
+    "estado_de_la_base": {
+      "documentos_promovidos": [
+        "up-062ffb29332709c5",
+        "up-06afbbb6338929b7",
+        "up-073ac0a935fe93d7",
+        "up-0d1bd18c36c47615",
+        "up-0ed63450658dbc28",
+        "up-128e8f76cab4b3cf",
+        "up-179d1a18df42649f",
+        "up-224802426109b877",
+        "up-23a9628648c7c3d2",
+        "up-282587624ab6083e",
+        "up-28dccf5631d65413",
+        "up-2907a2fc86a3549c",
+        "up-2c2013edb2d3d0a8",
+        "up-2ea8e8d197894a7f",
+        "up-2ec562d256899291",
+        "up-2ef24e9c58327e79",
+        "up-3ce06bee626ec039",
+        "up-4a87350d4d810d89",
+        "up-4c933e91f210bcc5",
+        "up-4eb03a606415dc7b",
+        "up-526d32d338c50d24",
+        "up-55e98ae8ae1ab930",
+        "up-5dc2859cecd18217",
+        "up-63b511cd50b9e8d5",
+        "up-66a8bddba2bd597a",
+        "up-6b91af74bd0f43c0",
+        "up-72336a10a19bc7c4",
+        "up-759505511967e876",
+        "up-7de8786f717ac4f5",
+        "up-7faf85eee3b0b1bf",
+        "up-83879e73ef3214c0",
+        "up-8cdfd71c3df8f0d4",
+        "up-9e9cc6fd68e76952",
+        "up-a2bf399788082488",
+        "up-a77dee81962d49c9",
+        "up-ab14cd91ce5d1c01",
+        "up-b451b58df50a862f",
+        "up-b8bf1da063374121",
+        "up-bb60e18c72a3bbff",
+        "up-bef75a21704843d7",
+        "up-c46c741f89459ddf",
+        "up-c4cfe2c67f613cfe",
+        "up-ca00d3e43c9af570",
+        "up-cd86c16b2f10f963",
+        "up-ce37c31bd30aec59",
+        "up-d5648af0687bc831",
+        "up-daa52ee915655796",
+        "up-dd5271c288c2ab5f",
+        "up-eb7c8e3a6821ad8b",
+        "up-fc1145c3f60e9941"
+      ],
+      "n_promovidos": 50,
+      "ejemplos_promovidos_en_fotos_txt": 50,
+      "version_archivo_inicial": 1184,
+      "version_archivo_final": 1234,
+      "nota": "Las fichas promovidas quedan como ejemplos validados del RAG y cambian el contexto de otros experimentos que se corran después; la limpieza la decide la sesión principal."
+    }
+  }
+}

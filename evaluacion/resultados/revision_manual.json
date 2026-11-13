@@ -1,0 +1,58 @@
+{
+  "modulo": "revision_manual",
+  "fecha": "2026-11-13T19:12:15+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "f01f9c6598b3",
+  "configuracion": {
+    "directorio": "evaluacion/revision_manual/",
+    "valores_aceptados": "si/sí/no/parcial (sin importar mayúsculas ni acentos); calificaciones 0–5 con punto o coma decimal"
+  },
+  "metricas": {
+    "fichas_juez_contra_humano": {
+      "estado": "pendiente: el autor no ha llenado las columnas humano_* de la plantilla",
+      "plantilla": "evaluacion/revision_manual/plantilla_fichas.csv",
+      "filas": 20,
+      "por_dimension": {
+        "fidelidad": {
+          "estado": "pendiente: el autor no ha calificado esta dimensión",
+          "revisadas_sin_juez": 0
+        },
+        "relevancia": {
+          "estado": "pendiente: el autor no ha calificado esta dimensión",
+          "revisadas_sin_juez": 0
+        }
+      }
+    },
+    "guardrails_activaciones": {
+      "estado": "pendiente: el autor no ha marcado ninguna activación",
+      "plantilla": "evaluacion/revision_manual/plantilla_guardrails.csv",
+      "filas": 10
+    },
+    "tesauro_esperado_lexico": {
+      "estado": "pendiente: el autor no ha revisado ningún par",
+      "plantilla": "evaluacion/revision_manual/plantilla_tesauro.csv",
+      "filas": 50
+    },
+    "tesauro_mapeo_sistema": {
+      "estado": "pendiente: el autor no ha revisado ningún par",
+      "plantilla": "evaluacion/revision_manual/muestra_mapeo_oi_tesauro.csv",
+      "filas": 50
+    },
+    "consultas_complejas": {
+      "estado": "pendiente: el autor no ha revisado ninguna consulta",
+      "plantilla": "evaluacion/revision_manual/plantilla_consultas.csv",
+      "filas": 10
+    }
+  }
+}

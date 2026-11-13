@@ -9,6 +9,11 @@
 - `copia_contexto`: el modelo no copia el contexto en lugar de describir la foto. De las palabras clave se quitan
   los alias y corchetes, y se descartan las frases de más de 4 palabras y las copiadas de un titular vecino; un
   titular genérico, copiado de una foto similar o de las etiquetas del prompt y las normas se vacía y se marca.
+- `instrucciones_en_salida`: la ficha no reproduce instrucciones escritas en la foto. Se quitan los delimitadores con
+  que P3 recibe el texto visible y se vacía el campo que coincide con los patrones de inyección de la entrada (los
+  mismos de `inyeccion_texto` e `inyeccion_en_imagen`, sin patrones nuevos), que trae los delimitadores (es el texto
+  de la foto copiado) o que contiene casi todas las palabras de una línea del texto visible que la entrada marcó como
+  inyección.
 """
 from __future__ import annotations
 
@@ -17,6 +22,7 @@ import re
 from pydantic import ValidationError
 
 from fototeca.dominio.esquemas_ficha import Ficha
+from fototeca.guardrails.entrada.texto import PATRONES_INYECCION
 from fototeca.guardrails.politicas import politica
 from fototeca.guardrails.resultado import ResultadoGuardrail
 
@@ -134,6 +140,79 @@ def verificar_copia_contexto(titular: str, palabras: list[str], titulares_contex
         return titular, limpias, ResultadoGuardrail("copia_contexto", "sanitizado", valor=float(len(quitadas)),
                                                     politica_aplicada=politica("copia_contexto"), detalle=detalle)
     return titular, limpias, ResultadoGuardrail("copia_contexto", "aprobada", valor=0.0, detalle=detalle)
+
+
+# Delimitadores con que P3 recibe el texto visible (<<<TEXTO_VISIBLE>>> … <<<FIN>>>) y sus variantes mal copiadas
+# («<-TEXTO_VISIBLE>>>», «<<-FIN>>»).
+_DELIMITADORES = re.compile(r"<+\s*-*\s*(TEXTO_VISIBLE|FIN)\s*-*\s*>+", re.I)
+_INSTRUCCION = [re.compile(p, re.I) for p in PATRONES_INYECCION]
+MIN_PALABRAS_LINEA = 4
+
+
+COBERTURA_LINEA = 0.75     # fracción de las palabras de una línea marcada que, presentes en el campo, cuentan como copia
+
+
+def _reproduce_instruccion(texto: str, lineas_inyeccion: list[str]) -> bool:
+    if any(p.search(texto) for p in _INSTRUCCION):
+        return True
+    palabras = set(_normal(texto).split())
+    for linea in lineas_inyeccion:
+        propias = linea.split()
+        if len(propias) >= MIN_PALABRAS_LINEA and sum(w in palabras for w in propias) / len(propias) >= COBERTURA_LINEA:
+            return True
+    return False
+
+
+def verificar_instrucciones_en_salida(datos: dict, palabras: list[str], textos_inyeccion: list[str] | None = None
+                                      ) -> tuple[dict, list[str], list[str], ResultadoGuardrail]:
+    """Devuelve los datos sin delimitadores y con los campos que reproducían una instrucción vacíos, las palabras clave
+    depuradas, los campos vaciados y el resultado de `instrucciones_en_salida`. `textos_inyeccion` son las líneas del
+    texto visible (P1) cuando la entrada marcó `inyeccion_en_imagen`; si no, solo se aplican los patrones."""
+    lineas = [_normal(t) for t in (textos_inyeccion or []) if isinstance(t, str) and t.strip()]
+    salida, vaciados, delimitadores = dict(datos), [], 0
+    for campo in CAMPOS_TEXTO:
+        valor = salida.get(campo)
+        if not isinstance(valor, str) or not valor:
+            continue
+        limpio, n = _DELIMITADORES.subn(" ", valor)
+        delimitadores += n
+        limpio = " ".join(limpio.split())
+        if n or _reproduce_instruccion(limpio, lineas):      # con delimitadores, el campo es el texto de la foto copiado
+            limpio = ""
+            vaciados.append(campo)
+        salida[campo] = limpio
+    palabras_limpias = [p for p in palabras if isinstance(p, str) and not _DELIMITADORES.search(p)
+                        and not _reproduce_instruccion(p, lineas)]
+    quitadas = len(palabras) - len(palabras_limpias)
+    detalle = {"campos_vaciados": vaciados, "delimitadores_quitados": delimitadores, "palabras_quitadas": quitadas}
+    if vaciados or delimitadores or quitadas:
+        return salida, palabras_limpias, vaciados, ResultadoGuardrail(
+            "instrucciones_en_salida", "marcada" if vaciados else "sanitizado", valor=float(len(vaciados)),
+            politica_aplicada=politica("instrucciones_en_salida"), detalle=detalle)
+    return salida, palabras_limpias, vaciados, ResultadoGuardrail("instrucciones_en_salida", "aprobada", detalle=detalle)
+
+
+OMITIDO = "[texto de la foto omitido: parecía una instrucción]"
+
+
+def omitir_instrucciones_de_p1(p1: dict, textos_inyeccion: list[str]) -> tuple[dict, int]:
+    """Aislamiento de `inyeccion_en_imagen`: copia de la salida de P1 sin el texto visible marcado ni las oraciones
+    o elementos que lo reproducen, para que el modelo que compone (P3) nunca lea la instrucción. Devuelve la copia y
+    cuántas piezas se omitieron."""
+    lineas = [_normal(t) for t in textos_inyeccion if isinstance(t, str) and t.strip()]
+    salida, omitidas = dict(p1), 0
+    if not lineas:
+        return salida, 0
+    salida["texto_visible"] = [OMITIDO]
+    omitidas += len(lineas)
+    oraciones = re.split(r"(?<=[.!?;])\s+", str(p1.get("descripcion_visual") or ""))
+    conservadas = [o for o in oraciones if not (o.strip() and _reproduce_instruccion(o, lineas))]
+    omitidas += len(oraciones) - len(conservadas)
+    salida["descripcion_visual"] = " ".join(conservadas).strip()
+    elementos = [x for x in (p1.get("elementos") or []) if not (isinstance(x, str) and _reproduce_instruccion(x, lineas))]
+    omitidas += len(p1.get("elementos") or []) - len(elementos)
+    salida["elementos"] = elementos
+    return salida, omitidas
 
 
 def verificar_esquema(datos: dict) -> tuple[Ficha | None, ResultadoGuardrail]:

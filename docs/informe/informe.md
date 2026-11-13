@@ -559,7 +559,7 @@ consecuencias). Los que dependen de la evaluación están en estado «Propuesta�
 | ADR-04 | Umbral τ_dup, TTL e invalidación por etiquetas de la caché semántica | Aceptada | `cache.json` (barrido de τ_dup: 0.95, recall 0.94 y FPR 0.0133) |
 | ADR-05 | Verificaciones de los guardrails y política de cada falla | Propuesta | pendiente (H7): `guardrails.json` |
 | ADR-06 | Una regla por fragmento en las normas y un concepto por documento en el tesauro | Aceptada | `corpus_r1.json`; recuperación de normas en `r3_embeddings.json` → `metricas.normas` |
-| ADR-07 | Ciclo de agente híbrido adaptativo con MAX_ITER = 2 | Propuesta | pendiente (H7): `agente.json` |
+| ADR-07 | Ciclo de agente híbrido adaptativo con MAX_ITER = 2 | Aceptada (beneficio no demostrado) | `agente.json` (activa en 3 de 25, mejora en 0 de 3) |
 | ADR-08 | Lotes asíncronos con un solo trabajador, sin Celery ni Redis | Propuesta | pendiente (H7): `desempeno.json` y memoria en H9 |
 | ADR-09 | Qdrant como base vectorial y SQLite para lo demás; un adaptador por recurso | Aceptada | `h0.json` → `verificaciones.0.5.docker_stats` |
 | ADR-10 | Ollama 0.40.15, `embeddinggemma-2:440m` y el puerto `Embebedor` | Aceptada | `h0.json` → `verificaciones.0.3` y `0.3b` |
