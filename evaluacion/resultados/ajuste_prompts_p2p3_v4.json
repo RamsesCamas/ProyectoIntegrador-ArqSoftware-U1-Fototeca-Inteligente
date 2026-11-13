@@ -1,0 +1,2684 @@
+{
+  "fecha": "2026-11-13T15:20:48+00:00",
+  "etiqueta": "p2p3_v4",
+  "versiones_prompts": {
+    "P1": "describir_imagen@v2#2371123f",
+    "P2": "ficha_rapida@v4#69c57085",
+    "P3": "ficha_completa@v4#1a9e0dae",
+    "P4": "descomponer_busqueda@v1#8c0962e5",
+    "P5": "reformular_busqueda@v1#bb305040",
+    "P6": "verificar_atributos_sensibles@v1#6ef7ead8"
+  },
+  "resumen": {
+    "rapida": {
+      "n": 10,
+      "http_200": 10,
+      "validos_a_la_primera": 10,
+      "granite_media": 0.7291,
+      "alt_vacios": 0,
+      "requiere_revision": 5,
+      "copia_contexto": {
+        "marcada": 4,
+        "aprobada": 7
+      },
+      "titulares_vacios": 4,
+      "palabras_clave_media": 3.5,
+      "segundos_p50": 30.14
+    },
+    "completa": {
+      "n": 10,
+      "http_200": 10,
+      "validos_a_la_primera": 10,
+      "granite_media": 0.6743,
+      "alt_vacios": 0,
+      "requiere_revision": 2,
+      "copia_contexto": {
+        "aprobada": 10
+      },
+      "titulares_vacios": 0,
+      "palabras_clave_media": 4.3,
+      "segundos_p50": 67.64
+    }
+  },
+  "casos": [
+    {
+      "xm": "xm-115872da580ac344",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 39.39,
+      "ficha": {
+        "titular": "",
+        "descripcion": "",
+        "texto_alternativo": "Loro parado en pierna velluda.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "Loro",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8229
+          },
+          {
+            "termino": "pierna",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.793
+          },
+          {
+            "termino": "velluda",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7862
+          }
+        ],
+        "advertencias": [
+          "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
+        ],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-5467dc4019314117",
+            "titulo": "Loro parado en pierna velluda.",
+            "puntaje": 0.7109,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7622,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-1c5aca126a0d7d59",
+            "titulo": "Huron blanco en su jaula",
+            "puntaje": 0.8229,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Zarigüeya en la pierna de una mujer comiendo de un tubo blanco",
+        "Hurón husmeando un tubo en manos de una chica sentada"
+      ],
+      "granite_alt_vs_referencias": 0.6062,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "marcada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-115872da580ac344",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 62.66,
+      "ficha": {
+        "titular": "Persona con serpiente de ferret",
+        "descripcion": "Una persona sostiene una serpiente de ferret en sus brazos, mientras la mantiene junto a un tubo de crema.",
+        "texto_alternativo": "Persona sosteniendo una serpiente de ferret junto a un tubo de crema.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "serpiente de ferret",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7562
+          },
+          {
+            "termino": "persona",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8036
+          },
+          {
+            "termino": "tubo de crema",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7691
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7622,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-d043772877cb911c",
+            "titulo": "Un par de hurones blancos heridos dentro de una jaula",
+            "puntaje": 0.8421,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-1c5aca126a0d7d59",
+            "titulo": "Huron blanco en su jaula",
+            "puntaje": 0.8229,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7622,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-3a779071a540a3a2",
+            "titulo": "Tres chinchillas en un jaula.",
+            "puntaje": 0.7477,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Zarigüeya en la pierna de una mujer comiendo de un tubo blanco",
+        "Hurón husmeando un tubo en manos de una chica sentada"
+      ],
+      "granite_alt_vs_referencias": 0.66,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-1d237d04ea78e0bc",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 58.01,
+      "ficha": {
+        "titular": "Mujer joven en el sol",
+        "descripcion": "",
+        "texto_alternativo": "Mujer joven usando gafas de sol y mirando hacia arriba, posada frente a una pared dorada.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "Mujer",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept10766",
+            "origen": "tesauro",
+            "similitud": 0.9216
+          },
+          {
+            "termino": "joven",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8463
+          },
+          {
+            "termino": "Sol",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept16562",
+            "origen": "tesauro",
+            "similitud": 0.8943
+          },
+          {
+            "termino": "gafas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8203
+          },
+          {
+            "termino": "pared",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7878
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-6657ffd53824b409",
+            "titulo": "Mujer joven con cabello castaño, sombrero café y anteojos",
+            "puntaje": 0.6963,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7602,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-6d726a1360351c9d",
+            "titulo": "Mujer posando junto a una ventana arriba de tablas de madera",
+            "puntaje": 0.6813,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept10766",
+            "titulo": "Mujer",
+            "puntaje": 0.9216,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept16562",
+            "titulo": "Sol",
+            "puntaje": 0.8943,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Mujer posando para fotografía recargándose en construcción dorada",
+        "Mujer con vestido con las manos en sus hombros recargada de puntillas sobre una pared dorada",
+        "Mujer posando para foto recargada pared metálica.",
+        "Mujer posando para fotografía sobre escultura dorada"
+      ],
+      "granite_alt_vs_referencias": 0.7272,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-1d237d04ea78e0bc",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 68.57,
+      "ficha": {
+        "titular": "Mujer con gafas y vestido azul",
+        "descripcion": "Una mujer con gafas y vestido azul oscuro se encuentra frente a una pared de metal dorado brillante.",
+        "texto_alternativo": "Persona con gafas, vestido azul, pared de metal dorado.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "Mujer",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept10766",
+            "origen": "tesauro",
+            "similitud": 0.9216
+          },
+          {
+            "termino": "gafas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8203
+          },
+          {
+            "termino": "vestido",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8237
+          },
+          {
+            "termino": "metal",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8822
+          },
+          {
+            "termino": "azul",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8135
+          },
+          {
+            "termino": "pared",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7878
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7602,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7602,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7602,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7602,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept10766",
+            "titulo": "Mujer",
+            "puntaje": 0.9216,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Mujer posando para fotografía recargándose en construcción dorada",
+        "Mujer con vestido con las manos en sus hombros recargada de puntillas sobre una pared dorada",
+        "Mujer posando para foto recargada pared metálica.",
+        "Mujer posando para fotografía sobre escultura dorada"
+      ],
+      "granite_alt_vs_referencias": 0.6785,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-32750e1ab3a702d4",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 28.53,
+      "ficha": {
+        "titular": "Rueda de auto tirada en el campo",
+        "descripcion": "",
+        "texto_alternativo": "Rueda de auto tirada en la tierra",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "auto",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7868
+          },
+          {
+            "termino": "tira",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7917
+          },
+          {
+            "termino": "campo",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7982
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-f99aa9172600132a",
+            "titulo": "Rueda de auto tirada en la tierra",
+            "puntaje": 0.7338,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7011,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-913b67b82c41dfa9",
+            "titulo": "Pequeña avioneta en medio del campo",
+            "puntaje": 0.753,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Triciclo propulsado con hélice estacionado en el pasto de un campo.",
+        "Motocicleta y asiento con turbina en el pasto",
+        "Triciclo con un ventilador en la parte trasera estacionado sobre el pasto bajo el sol"
+      ],
+      "granite_alt_vs_referencias": 0.6529,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-32750e1ab3a702d4",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 67.33,
+      "ficha": {
+        "titular": "Foto de tracción eléctrica de dos ruedas",
+        "descripcion": "Muestra una tracción eléctrica de dos ruedas con motor de propulsión por hélice y estructura metálica circunferente en campo verde al aire libre bajo cielo azul con nubes.",
+        "texto_alternativo": "Motor de propulsión por hélice, estructura metálica circunferente, tracción eléctrica de dos ruedas, campo verde, cielo azul con nubes.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "tracción eléctrica",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8168
+          },
+          {
+            "termino": "motor de hélice",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7874
+          },
+          {
+            "termino": "estructura metálica",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8147
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-8e975f69a8bf4d4f",
+            "titulo": "Dos personas con un parachute rosa en un campo abierto en medio del bosque",
+            "puntaje": 0.8215,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-8e975f69a8bf4d4f",
+            "titulo": "Dos personas con un parachute rosa en un campo abierto en medio del bosque",
+            "puntaje": 0.8215,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-913b67b82c41dfa9",
+            "titulo": "Pequeña avioneta en medio del campo",
+            "puntaje": 0.753,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7011,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7011,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ]
+      },
+      "referencias": [
+        "Triciclo propulsado con hélice estacionado en el pasto de un campo.",
+        "Motocicleta y asiento con turbina en el pasto",
+        "Triciclo con un ventilador en la parte trasera estacionado sobre el pasto bajo el sol"
+      ],
+      "granite_alt_vs_referencias": 0.6551,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-71ecd7689ad8de0d",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 29.09,
+      "ficha": {
+        "titular": "Yate en el mar",
+        "descripcion": "",
+        "texto_alternativo": "Vista del yate en el mar con montañas al fondo",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "yate",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7511
+          },
+          {
+            "termino": "Mar",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept178",
+            "origen": "tesauro",
+            "similitud": 0.9422
+          },
+          {
+            "termino": "montañas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8071
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-a1a990acad68f08c",
+            "titulo": "Vista del mar y de la costa desde un yate",
+            "puntaje": 0.8777,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#decorative/example-3-image-with-adjacent-text-alternative",
+            "titulo": "Decorative Images › Example 3: Image with adjacent text alternative",
+            "puntaje": 0.7304,
+            "url": "https://www.w3.org/WAI/tutorials/images/decorative/",
+            "extracto": "Decorative Images — Example 3: Image with adjacent text alternative. This picture of a sleeping dog is already sufficiently described by the adjacent text. There is no need to repeat this information, and a null (empty) alt value can be used for this image."
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-df2af1afbe874ed2",
+            "titulo": "Bote en el lago paseando, montañas y bosque",
+            "puntaje": 0.8154,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept178",
+            "titulo": "Mar",
+            "puntaje": 0.9422,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Frente de una lancha sobre el mar navegando hacia rocas en la playa",
+        "Bonito bote blanco navegando en el mar en día soleado"
+      ],
+      "granite_alt_vs_referencias": 0.7787,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-71ecd7689ad8de0d",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 59.01,
+      "ficha": {
+        "titular": "Nave blanca sobre el mar",
+        "descripcion": "Vista desde la parte delantera de una nave blanca navegando sobre el mar azul, con un cielo despejado y rocas en el horizonte.",
+        "texto_alternativo": "Nave blanca navegando sobre el mar azul, cielo despejado, con rocas en el horizonte.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "nave",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7753
+          },
+          {
+            "termino": "Mar",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept178",
+            "origen": "tesauro",
+            "similitud": 0.9422
+          },
+          {
+            "termino": "cielo",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8051
+          },
+          {
+            "termino": "rocas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.853
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-a1a990acad68f08c",
+            "titulo": "Vista del mar y de la costa desde un yate",
+            "puntaje": 0.8777,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-eb918a6f59814af2",
+            "titulo": "Vista del mar azul desde lo alto de una montaña rocosa",
+            "puntaje": 0.8017,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-a1a990acad68f08c",
+            "titulo": "Vista del mar y de la costa desde un yate",
+            "puntaje": 0.8777,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-eb918a6f59814af2",
+            "titulo": "Vista del mar azul desde lo alto de una montaña rocosa",
+            "puntaje": 0.8017,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7602,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-df2af1afbe874ed2",
+            "titulo": "Bote en el lago paseando, montañas y bosque",
+            "puntaje": 0.8154,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept178",
+            "titulo": "Mar",
+            "puntaje": 0.9422,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Frente de una lancha sobre el mar navegando hacia rocas en la playa",
+        "Bonito bote blanco navegando en el mar en día soleado"
+      ],
+      "granite_alt_vs_referencias": 0.831,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-7872f3e93140c2bd",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 28.66,
+      "ficha": {
+        "titular": "",
+        "descripcion": "",
+        "texto_alternativo": "Cocina en un mercado público de Asia",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "cocina",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7995
+          },
+          {
+            "termino": "Mercado",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept13608",
+            "origen": "tesauro",
+            "similitud": 0.8972
+          },
+          {
+            "termino": "Sector público",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept4452",
+            "origen": "tesauro",
+            "similitud": 0.8906
+          }
+        ],
+        "advertencias": [
+          "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
+        ],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-d29d877aa02a2456",
+            "titulo": "Cocina en un mercado público de Asia",
+            "puntaje": 0.787,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.8069,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-3-images-conveying-succinct-information",
+            "titulo": "Informative Images › Example 3: Images conveying succinct information",
+            "puntaje": 0.8023,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 3: Images conveying succinct information. This simple diagram illustrates a counter-clockwise direction for unscrewing a bottle top or cap. The information can be described in a short sentence, so the text alternative “Push the cap down and turn it…"
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept13608",
+            "titulo": "Mercado",
+            "puntaje": 0.8972,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept4452",
+            "titulo": "Sector público",
+            "puntaje": 0.8906,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Mujeres preparando comida en una cocina bajo techo",
+        "Chicas preparando y vendiendo comida"
+      ],
+      "granite_alt_vs_referencias": 0.6548,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "marcada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-7872f3e93140c2bd",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 68.84,
+      "ficha": {
+        "titular": "Personas trabajando en cocina",
+        "descripcion": "Escena interior con varias personas cerca de una cocina o mesa de preparación. Iluminación artificial y cálida, creando sombras suaves.",
+        "texto_alternativo": "Personas trabajando en cocina, iluminación artificial cálida.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "personas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8036
+          },
+          {
+            "termino": "cocina",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7995
+          },
+          {
+            "termino": "recipiente",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8614
+          }
+        ],
+        "advertencias": [
+          "La foto contiene texto visible; se trató como dato, no como instrucción."
+        ],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-d29d877aa02a2456",
+            "titulo": "Cocina en un mercado público de Asia",
+            "puntaje": 0.787,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-4c9e04430c3f9cae",
+            "titulo": "Grupo de personas en feria divirtiéndose",
+            "puntaje": 0.808,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.8069,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#introduccion",
+            "titulo": "Images Tutorial",
+            "puntaje": 0.779,
+            "url": "https://www.w3.org/WAI/tutorials/images/",
+            "extracto": "Images Tutorial. Images must have text alternatives that describe the information or function represented by them. This ensures that images can be used by people with various disabilities . This tutorial demonstrates how to provide appropriate text alternatives based on the…"
+          }
+        ]
+      },
+      "referencias": [
+        "Mujeres preparando comida en una cocina bajo techo",
+        "Chicas preparando y vendiendo comida"
+      ],
+      "granite_alt_vs_referencias": 0.6086,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-92bfe7bbc5a5579b",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 30.51,
+      "ficha": {
+        "titular": "Hombre en caminatas",
+        "descripcion": "",
+        "texto_alternativo": "Un hombre caminando por las escaleras rocosas",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "hombre",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8567
+          },
+          {
+            "termino": "escaleras",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7746
+          },
+          {
+            "termino": "roca",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8753
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-873906fe44ae2051",
+            "titulo": "Hombre sobre escalones de piedra levantando los brazos y mirando al cielo",
+            "puntaje": 0.8012,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7476,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-791a337673d37ad1",
+            "titulo": "Hombre escalando roca.",
+            "puntaje": 0.7883,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Hombre subiendo por escaleras de piedra bajo el sol",
+        "Hombre subiendo unas escaleras en ruinas bajo el sol",
+        "Hombre subiendo escaleras de piedra en el día"
+      ],
+      "granite_alt_vs_referencias": 0.8359,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-92bfe7bbc5a5579b",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 65.08,
+      "ficha": {
+        "titular": "Hombre caminando por escalera",
+        "descripcion": "Un hombre camina por una escalera de piedra oscura y redondeada, con la espalda hacia el espectador.",
+        "texto_alternativo": "Hombre sobre escalones de piedra.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "hombre",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8567
+          },
+          {
+            "termino": "escalera",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7803
+          },
+          {
+            "termino": "piedra",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8747
+          }
+        ],
+        "advertencias": [],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-873906fe44ae2051",
+            "titulo": "Hombre sobre escalones de piedra levantando los brazos y mirando al cielo",
+            "puntaje": 0.8012,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-873906fe44ae2051",
+            "titulo": "Hombre sobre escalones de piedra levantando los brazos y mirando al cielo",
+            "puntaje": 0.8012,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7476,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-791a337673d37ad1",
+            "titulo": "Hombre escalando roca.",
+            "puntaje": 0.7883,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-3-images-conveying-succinct-information",
+            "titulo": "Informative Images › Example 3: Images conveying succinct information",
+            "puntaje": 0.7052,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 3: Images conveying succinct information. This simple diagram illustrates a counter-clockwise direction for unscrewing a bottle top or cap. The information can be described in a short sentence, so the text alternative “Push the cap down and turn it…"
+          }
+        ]
+      },
+      "referencias": [
+        "Hombre subiendo por escaleras de piedra bajo el sol",
+        "Hombre subiendo unas escaleras en ruinas bajo el sol",
+        "Hombre subiendo escaleras de piedra en el día"
+      ],
+      "granite_alt_vs_referencias": 0.7873,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "marcada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el texto alternativo no es consistente con la descripción objetiva"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-b3cb95507ffe905c",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 29.38,
+      "ficha": {
+        "titular": "Grafiti en pared",
+        "descripcion": "",
+        "texto_alternativo": "Grafiti en pared",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "Grafiti",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8221
+          },
+          {
+            "termino": "Pared",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7933
+          },
+          {
+            "termino": "Bella",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7822
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-ae37c5891fc21f92",
+            "titulo": "Arte en pared de casa cercana a las montañas.",
+            "puntaje": 0.7524,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-3-images-conveying-succinct-information",
+            "titulo": "Informative Images › Example 3: Images conveying succinct information",
+            "puntaje": 0.8023,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 3: Images conveying succinct information. This simple diagram illustrates a counter-clockwise direction for unscrewing a bottle top or cap. The information can be described in a short sentence, so the text alternative “Push the cap down and turn it…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-ca747a271f2fea5a",
+            "titulo": "Grafiti de dos peces en la pared en la ciudad",
+            "puntaje": 0.7475,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Grafiti sobre una pared de ladrillos de una casa",
+        "Graffiti pintado en pared de ladrillo."
+      ],
+      "granite_alt_vs_referencias": 0.8138,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-b3cb95507ffe905c",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 67.95,
+      "ficha": {
+        "titular": "Pintura mural street art",
+        "descripcion": "Una pintura mural de estilo street art sobre una pared de ladrillo, con un personaje central con casco y traje naranja, dos carteles con letras en español y algunas etiquetas menores.",
+        "texto_alternativo": "CELEBRACIÓN: \"TIME TO DANCE\", \"IT'S TIME TO DA\", DEATH CRAV, POLI",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "pintura mural",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.845
+          },
+          {
+            "termino": "street art",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7815
+          },
+          {
+            "termino": "casco",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7785
+          },
+          {
+            "termino": "traje naranja",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7464
+          },
+          {
+            "termino": "carteles",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8218
+          }
+        ],
+        "advertencias": [],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-ae37c5891fc21f92",
+            "titulo": "Arte en pared de casa cercana a las montañas.",
+            "puntaje": 0.7524,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-ae37c5891fc21f92",
+            "titulo": "Arte en pared de casa cercana a las montañas.",
+            "puntaje": 0.7524,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-ca747a271f2fea5a",
+            "titulo": "Grafiti de dos peces en la pared en la ciudad",
+            "puntaje": 0.7475,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.8069,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#introduccion",
+            "titulo": "Images Tutorial",
+            "puntaje": 0.779,
+            "url": "https://www.w3.org/WAI/tutorials/images/",
+            "extracto": "Images Tutorial. Images must have text alternatives that describe the information or function represented by them. This ensures that images can be used by people with various disabilities . This tutorial demonstrates how to provide appropriate text alternatives based on the…"
+          }
+        ]
+      },
+      "referencias": [
+        "Grafiti sobre una pared de ladrillos de una casa",
+        "Graffiti pintado en pared de ladrillo."
+      ],
+      "granite_alt_vs_referencias": 0.386,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "marcada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el texto alternativo no es consistente con la descripción objetiva"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-b952030adcb2ad11",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 29.77,
+      "ficha": {
+        "titular": "",
+        "descripcion": "",
+        "texto_alternativo": "Señalamiento de madera en medio del bosque",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "señalamiento",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8507
+          },
+          {
+            "termino": "madera",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8569
+          },
+          {
+            "termino": "Bosque",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept4070",
+            "origen": "tesauro",
+            "similitud": 0.918
+          }
+        ],
+        "advertencias": [
+          "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
+        ],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-ba80648eb2a007f2",
+            "titulo": "Señalamiento de madera en medio del bosque",
+            "puntaje": 0.7727,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7453,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-67ff27277aca273b",
+            "titulo": "Torre de caza de madera en el bosque.",
+            "puntaje": 0.8396,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept4070",
+            "titulo": "Bosque",
+            "puntaje": 0.918,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Letrero sobre la hierba alta en un bosque con árboles durante el día",
+        "Pastizal crecido y seco con árboles.",
+        "Campo con pasto alto y arboles altos en el día"
+      ],
+      "granite_alt_vs_referencias": 0.7428,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "marcada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-b952030adcb2ad11",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 63.15,
+      "ficha": {
+        "titular": "Paisaje natural con árboles",
+        "descripcion": "Una fotografía de un paisaje natural con árboles altos y densos en el fondo, una vegetación seca y alta en primer plano, y un poste de madera con un cartel que indica 'Pista' sobre un terreno rocoso.",
+        "texto_alternativo": "Pista - señalización de madera en medio del bosque junto a camino de tierra.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "árboles",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8823
+          },
+          {
+            "termino": "vegetación seca",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8159
+          },
+          {
+            "termino": "piste",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7615
+          },
+          {
+            "termino": "terreno rocoso",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8157
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-cad8bf3b5b8fb49b",
+            "titulo": "Campo de pasto y árboles en día otoñal.",
+            "puntaje": 0.8105,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-cad8bf3b5b8fb49b",
+            "titulo": "Campo de pasto y árboles en día otoñal.",
+            "puntaje": 0.8105,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-67ff27277aca273b",
+            "titulo": "Torre de caza de madera en el bosque.",
+            "puntaje": 0.8396,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7453,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.7453,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ]
+      },
+      "referencias": [
+        "Letrero sobre la hierba alta en un bosque con árboles durante el día",
+        "Pastizal crecido y seco con árboles.",
+        "Campo con pasto alto y arboles altos en el día"
+      ],
+      "granite_alt_vs_referencias": 0.734,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-eb4cf829956bfd61",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 30.73,
+      "ficha": {
+        "titular": "",
+        "descripcion": "",
+        "texto_alternativo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "camino",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7696
+          },
+          {
+            "termino": "piedra",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8747
+          },
+          {
+            "termino": "residencia",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7812
+          }
+        ],
+        "advertencias": [
+          "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
+        ],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.8057,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-3-images-conveying-succinct-information",
+            "titulo": "Informative Images › Example 3: Images conveying succinct information",
+            "puntaje": 0.8023,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 3: Images conveying succinct information. This simple diagram illustrates a counter-clockwise direction for unscrewing a bottle top or cap. The information can be described in a short sentence, so the text alternative “Push the cap down and turn it…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-e733c8cbd160af9a",
+            "titulo": "Pequeña choza de piedra y camino empedrado.",
+            "puntaje": 0.773,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Camino de piedras en medio de casas y áreas verdes",
+        "Camino de piedra rodeado de casas en un pueblo"
+      ],
+      "granite_alt_vs_referencias": 0.8259,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 0,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "marcada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b"
+      }
+    },
+    {
+      "xm": "xm-eb4cf829956bfd61",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 74.74,
+      "ficha": {
+        "titular": "Calle de piedra con árboles",
+        "descripcion": "Una calle de piedra curvada que se extiende desde la izquierda hacia la derecha, flanqueada por árboles y vegetación.",
+        "texto_alternativo": "Pasillo de madera, balaustrado, camino de piedra curvada, lampuerna clásica, pared roja, ventana, árboles, vegetación.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "calle",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8141
+          },
+          {
+            "termino": "paso",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8046
+          },
+          {
+            "termino": "piedra",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8747
+          },
+          {
+            "termino": "Árbol",
+            "uri": "http://vocabularies.unesco.org/thesaurus/concept2672",
+            "origen": "tesauro",
+            "similitud": 0.9081
+          },
+          {
+            "termino": "lampuerna",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7321
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.8057,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.8057,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.8069,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-535547a4f4459378",
+            "titulo": "Casa roja de madera, pasto y arboles",
+            "puntaje": 0.7724,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "tesauro",
+            "id": "http://vocabularies.unesco.org/thesaurus/concept2672",
+            "titulo": "Árbol",
+            "puntaje": 0.9081,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Camino de piedras en medio de casas y áreas verdes",
+        "Camino de piedra rodeado de casas en un pueblo"
+      ],
+      "granite_alt_vs_referencias": 0.7149,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-fb7839333b0a414b",
+      "ruta_pedida": "rapida",
+      "estado_http": 200,
+      "segundos": 115.72,
+      "ficha": {
+        "titular": "Escena urbana con jardín y casa",
+        "descripcion": "Se muestra un jardín con flores rojas y arbustos verdes en primer plano, seguido de una casa blanca con arquitectura clásica y ventanas grandes en el fondo bajo un cielo azul claro.",
+        "texto_alternativo": "Jadi y casa blanca con ventanas, cielo azul.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "jardín",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.817
+          },
+          {
+            "termino": "flores rojas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7926
+          },
+          {
+            "termino": "arbustos verdes",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7837
+          },
+          {
+            "termino": "casa blanca",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8004
+          },
+          {
+            "termino": "ventanas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8257
+          },
+          {
+            "termino": "cielo azul",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7818
+          }
+        ],
+        "advertencias": [],
+        "estado": "requiere_revision"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.736,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.736,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.8069,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-f2d7211e01fb1306",
+            "titulo": "Casas de colores claros con árboles enfrente y cielo azul de fondo",
+            "puntaje": 0.7568,
+            "url": null,
+            "extracto": null
+          }
+        ]
+      },
+      "referencias": [
+        "Acercamiento de arbustos con flores en medio de la ciudad clásica",
+        "Edificio de estilo clásico visto desde arbusto con flores de ía."
+      ],
+      "granite_alt_vs_referencias": 0.6526,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "sanitizado"
+        ],
+        [
+          "apego_visual",
+          "marcada"
+        ],
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [
+        "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa"
+      ],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    },
+    {
+      "xm": "xm-fb7839333b0a414b",
+      "ruta_pedida": "completa",
+      "estado_http": 200,
+      "segundos": 80.31,
+      "ficha": {
+        "titular": "Arbusto con rosas y casa",
+        "descripcion": "En primer plano hay un arbusto verde oscuro con flores de rosas rojas y frutos amarillos. Detrás se ve una gran casa blanca con ventanas y balcones, junto a otra casa más pequeña con techo rojo.",
+        "texto_alternativo": "Saç - arbusto verde oscuro con rosas rojas y frutos amarillos; casa blanca con ventanas y balcones; otra casa con techo rojo; poste blanco con cartel 'Saç'; cielo azul claro.",
+        "descripcion_extendida": "",
+        "palabras_clave": [
+          {
+            "termino": "arbusto",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8176
+          },
+          {
+            "termino": "rosas",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.782
+          },
+          {
+            "termino": "frutos",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8696
+          },
+          {
+            "termino": "casa blanca",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8004
+          },
+          {
+            "termino": "casa roja",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7867
+          },
+          {
+            "termino": "posto",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.7866
+          },
+          {
+            "termino": "cartel",
+            "uri": null,
+            "origen": "libre",
+            "similitud": 0.8376
+          }
+        ],
+        "advertencias": [],
+        "estado": "borrador"
+      },
+      "fuentes": {
+        "titular": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.736,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "descripcion": [
+          {
+            "tipo": "foto_similar",
+            "id": "xm-c7123f1938909b1f",
+            "titulo": "Camino de piedra en medio de edificios residenciales bajo el sol",
+            "puntaje": 0.736,
+            "url": null,
+            "extracto": null
+          },
+          {
+            "tipo": "foto_similar",
+            "id": "xm-99fd7bb792823a4a",
+            "titulo": "Edificio clásico en la ciudad y cielo lleno de nubes",
+            "puntaje": 0.7634,
+            "url": null,
+            "extracto": null
+          }
+        ],
+        "texto_alternativo": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-2-images-used-to-supplement-other-information",
+            "titulo": "Informative Images › Example 2: Images used to supplement other information",
+            "puntaje": 0.8069,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 2: Images used to supplement other information. The following image shows a dog wearing a bell. It supplements the adjacent text that explains the purpose of this bell. A short text alternative is sufficient to describe the information that is…"
+          },
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#informative/example-3-images-conveying-succinct-information",
+            "titulo": "Informative Images › Example 3: Images conveying succinct information",
+            "puntaje": 0.8023,
+            "url": "https://www.w3.org/WAI/tutorials/images/informative/",
+            "extracto": "Informative Images — Example 3: Images conveying succinct information. This simple diagram illustrates a counter-clockwise direction for unscrewing a bottle top or cap. The information can be described in a short sentence, so the text alternative “Push the cap down and turn it…"
+          }
+        ],
+        "palabras_clave": [
+          {
+            "tipo": "regla",
+            "id": "w3c-wai-images#introduccion",
+            "titulo": "Images Tutorial",
+            "puntaje": 0.779,
+            "url": "https://www.w3.org/WAI/tutorials/images/",
+            "extracto": "Images Tutorial. Images must have text alternatives that describe the information or function represented by them. This ensures that images can be used by people with various disabilities . This tutorial demonstrates how to provide appropriate text alternatives based on the…"
+          }
+        ]
+      },
+      "referencias": [
+        "Acercamiento de arbustos con flores en medio de la ciudad clásica",
+        "Edificio de estilo clásico visto desde arbusto con flores de ía."
+      ],
+      "granite_alt_vs_referencias": 0.6875,
+      "valido_a_la_primera": true,
+      "llamadas_p1": 1,
+      "guardrails_salida": [
+        [
+          "esquema",
+          "aprobada"
+        ],
+        [
+          "reglas_iptc",
+          "aprobada"
+        ],
+        [
+          "copia_contexto",
+          "aprobada"
+        ],
+        [
+          "atributos_sensibles",
+          "aprobada"
+        ],
+        [
+          "tesauro",
+          "aprobada"
+        ],
+        [
+          "apego_visual",
+          "aprobada"
+        ],
+        [
+          "consistencia",
+          "aprobada"
+        ],
+        [
+          "fuentes",
+          "aprobada"
+        ]
+      ],
+      "revision": [],
+      "modelos": {
+        "embedding": "embeddinggemma-2:440m",
+        "vision": "qwen3.5:0.8b",
+        "composicion": "lfm3:1.7b-q4_K_M"
+      }
+    }
+  ]
+}

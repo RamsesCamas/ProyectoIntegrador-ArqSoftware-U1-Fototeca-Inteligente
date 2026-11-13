@@ -1,6 +1,6 @@
 """Banco de ajuste de prompts (H4): genera fichas por las dos rutas para las 10 fotos de `ajuste_prompts`.
 
-    python -m scripts.ajustar_prompts [--etiqueta v1]
+    python -m scripts.ajustar_prompts [--etiqueta v1] [--rutas rapida,completa]
 
 `ajuste_prompts` son 10 fotos de `nuevas` reservadas para este fin (nunca `eval_fichas`, para que la evaluación quede fuera de muestra). Por
 cada foto y ruta guarda la ficha, las referencias humanas, la similitud granite del texto alternativo con ellas,
@@ -35,7 +35,9 @@ def valido_a_la_primera(eventos, tarea: str) -> bool | None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--etiqueta", default="v1")
+    ap.add_argument("--rutas", default="rapida,completa", help="rutas a probar, separadas por coma")
     args = ap.parse_args()
+    rutas = tuple(r for r in ("rapida", "completa") if r in args.rutas.split(","))
     config = cargar_configuracion(modo_evaluacion=True)
     c = construir_contenedor(config)
     http = TestClient(crear_app(c, precalentar=False))
@@ -48,7 +50,7 @@ def main() -> None:
                       files=[("archivos", (f"{xm}.jpg", (dir_img / por_id[xm]["archivo"]).read_bytes(), "image/jpeg"))])
         doc = subidas[xm] = r.json()["documentos"][0]["documento_id"]
         refs = por_id[xm]["es"]
-        for ruta in ("rapida", "completa"):
+        for ruta in rutas:
             t0 = time.perf_counter()
             resp = http.post("/fichas", json={"documento_id": doc, "forzar_ruta": ruta, "sin_cache": True})
             segundos = round(time.perf_counter() - t0, 2)
@@ -74,7 +76,7 @@ def main() -> None:
     for doc in subidas.values():
         http.delete(f"/documentos/{doc}")
     resumen = {}
-    for ruta in ("rapida", "completa"):
+    for ruta in rutas:
         cs = [x for x in casos if x["ruta_pedida"] == ruta]
         sims = [x["granite_alt_vs_referencias"] for x in cs if x["granite_alt_vs_referencias"] is not None]
         resumen[ruta] = {

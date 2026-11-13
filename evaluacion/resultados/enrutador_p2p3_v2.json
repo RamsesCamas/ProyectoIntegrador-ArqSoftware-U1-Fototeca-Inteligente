@@ -1,0 +1,404 @@
+{
+  "modulo": "enrutador",
+  "fecha": "2026-11-13T14:02:47+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "580643649771",
+  "configuracion": {
+    "fichas": {
+      "ruta_rapida": {
+        "configuracion": "qwen_rapida",
+        "forzar_ruta": "rapida",
+        "sin_cache": true
+      },
+      "ruta_completa": {
+        "configuracion": "lfm3_composicion",
+        "forzar_ruta": "completa",
+        "modelo_composicion": "composicion",
+        "sin_cache": true
+      },
+      "margen_calidad": 0.5,
+      "fraccion_latencia": 0.5,
+      "pliegues": 5,
+      "semilla": 2026,
+      "enrutador_fichas_vigente": {
+        "tau_consenso": 0.7864
+      }
+    },
+    "busquedas": {
+      "k": 12,
+      "k_recall": 10,
+      "sin_cache": true,
+      "filtros": {
+        "particion": "subida"
+      },
+      "enrutador_busquedas_vigente": {
+        "tau_busqueda": 0.6086
+      }
+    }
+  },
+  "metricas": {
+    "fichas": {
+      "fotos": 30,
+      "utilizables": 30,
+      "excluidas": [],
+      "motivo_exclusion": "falta la calidad (juez) de alguna ruta, las señales o la latencia",
+      "regla_ruta_correcta": "rápida si calidad_rapida ≥ calidad_completa − 0.5; si no, completa",
+      "ruta_correcta": {
+        "rapida": 28,
+        "completa": 2
+      },
+      "senales_tomadas_de": {
+        "qwen_rapida": 30
+      },
+      "rapida_que_escalo_a_completa": 8,
+      "con_texto_visible": 3,
+      "umbrales_elegidos": {
+        "enrutador_fichas.tau_consenso": 0.7279,
+        "enrutador_fichas.tau_acuerdo": 0.0,
+        "restriccion_latencia_cumplida": false,
+        "limite_latencia_s": 29.336,
+        "nota": "los copia la sesión principal a config/parametros.yaml, con la evidencia en ADR-03"
+      },
+      "barrido": {
+        "pares_evaluados": 279,
+        "pares_factibles": 0,
+        "factible": false,
+        "limite_latencia_s": 29.336
+      },
+      "exactitud_en_muestra": 0.8333,
+      "exactitud_fuera_de_muestra": 0.8,
+      "validacion_cruzada": {
+        "pliegues": 5,
+        "semilla": 2026,
+        "n": 30,
+        "exactitud": 0.8,
+        "calidad_media": 4.85,
+        "granite_media": 0.6845,
+        "latencia_media_s": 44.3354,
+        "latencia_p50_s": 27.985,
+        "fraccion_rapida": 0.8667,
+        "por_pliegue": [
+          {
+            "pliegue": 1,
+            "n_prueba": 6,
+            "tau_consenso": 0.7279,
+            "tau_acuerdo": 0.0,
+            "restriccion_cumplida_en_entrenamiento": false,
+            "exactitud_entrenamiento": 0.7917,
+            "exactitud_prueba": 1.0
+          },
+          {
+            "pliegue": 2,
+            "n_prueba": 6,
+            "tau_consenso": 0.7279,
+            "tau_acuerdo": 0.0,
+            "restriccion_cumplida_en_entrenamiento": false,
+            "exactitud_entrenamiento": 0.875,
+            "exactitud_prueba": 0.6667
+          },
+          {
+            "pliegue": 3,
+            "n_prueba": 6,
+            "tau_consenso": 0.735,
+            "tau_acuerdo": 0.0,
+            "restriccion_cumplida_en_entrenamiento": false,
+            "exactitud_entrenamiento": 0.8333,
+            "exactitud_prueba": 0.8333
+          },
+          {
+            "pliegue": 4,
+            "n_prueba": 6,
+            "tau_consenso": 0.6551,
+            "tau_acuerdo": 0.0,
+            "restriccion_cumplida_en_entrenamiento": false,
+            "exactitud_entrenamiento": 0.9167,
+            "exactitud_prueba": 0.5
+          },
+          {
+            "pliegue": 5,
+            "n_prueba": 6,
+            "tau_consenso": 0.7279,
+            "tau_acuerdo": 0.0,
+            "restriccion_cumplida_en_entrenamiento": false,
+            "exactitud_entrenamiento": 0.7917,
+            "exactitud_prueba": 1.0
+          }
+        ]
+      },
+      "estrategias": {
+        "siempre_rapida": {
+          "n": 30,
+          "exactitud": 0.9333,
+          "calidad_media": 4.8833,
+          "granite_media": 0.7126,
+          "latencia_media_s": 42.2319,
+          "latencia_p50_s": 27.407,
+          "fraccion_rapida": 1.0
+        },
+        "siempre_completa": {
+          "n": 30,
+          "exactitud": 0.0667,
+          "calidad_media": 4.95,
+          "granite_media": 0.6505,
+          "latencia_media_s": 58.6715,
+          "latencia_p50_s": 57.55,
+          "fraccion_rapida": 0.0
+        },
+        "umbrales_vigentes": {
+          "n": 30,
+          "exactitud": 0.2333,
+          "calidad_media": 4.95,
+          "granite_media": 0.6621,
+          "latencia_media_s": 52.8067,
+          "latencia_p50_s": 55.765,
+          "fraccion_rapida": 0.1667,
+          "tau_consenso": 0.7864,
+          "tau_acuerdo": 0.25
+        },
+        "umbrales_elegidos_en_muestra": {
+          "n": 30,
+          "exactitud": 0.8333,
+          "calidad_media": 4.9,
+          "granite_media": 0.6888,
+          "latencia_media_s": 43.3652,
+          "latencia_p50_s": 27.985,
+          "fraccion_rapida": 0.8333
+        },
+        "validacion_cruzada_fuera_de_muestra": {
+          "n": 30,
+          "exactitud": 0.8,
+          "calidad_media": 4.85,
+          "granite_media": 0.6845,
+          "latencia_media_s": 44.3354,
+          "latencia_p50_s": 27.985,
+          "fraccion_rapida": 0.8667
+        },
+        "oraculo": {
+          "n": 30,
+          "exactitud": 1.0,
+          "calidad_media": 4.9833,
+          "granite_media": 0.7097,
+          "latencia_media_s": 42.1708,
+          "latencia_p50_s": 27.985,
+          "fraccion_rapida": 0.9333
+        }
+      },
+      "umbrales_vigentes_nota": null,
+      "advertencia": "Ningún par de umbrales cumple la restricción de latencia (ni siquiera «siempre rápida» baja de la mitad de «siempre completa»): se eligió el par de mayor exactitud sin ella."
+    },
+    "busquedas": {
+      "consultas": {
+        "simple": 10,
+        "compleja": 15
+      },
+      "exactitud_enrutador": {
+        "exactitud": 0.84,
+        "n": 25,
+        "por_tipo": {
+          "simple": 0.7,
+          "compleja": 0.9333
+        },
+        "matriz_confusion": {
+          "etiqueta_simple": {
+            "simple": 7,
+            "compleja": 3
+          },
+          "etiqueta_compleja": {
+            "compleja": 14,
+            "simple": 1
+          }
+        },
+        "consultas_con_error": []
+      },
+      "latencia_por_ruta_s": {
+        "simple (sin P4)": {
+          "n": 25,
+          "media_s": 0.281,
+          "p50_s": 0.236,
+          "p95_s": 0.61,
+          "max_s": 0.652
+        },
+        "compleja (con P4)": {
+          "n": 25,
+          "media_s": 5.689,
+          "p50_s": 5.649,
+          "p95_s": 6.77,
+          "max_s": 6.906
+        }
+      },
+      "latencia_por_tipo_y_ruta_s": {
+        "simple": {
+          "simple": {
+            "n": 10,
+            "media_s": 0.26,
+            "p50_s": 0.238,
+            "p95_s": 0.454,
+            "max_s": 0.536
+          },
+          "compleja": {
+            "n": 10,
+            "media_s": 5.633,
+            "p50_s": 5.665,
+            "p95_s": 6.21,
+            "max_s": 6.319
+          }
+        },
+        "compleja": {
+          "simple": {
+            "n": 15,
+            "media_s": 0.294,
+            "p50_s": 0.232,
+            "p95_s": 0.635,
+            "max_s": 0.652
+          },
+          "compleja": {
+            "n": 15,
+            "media_s": 5.727,
+            "p50_s": 5.631,
+            "p95_s": 6.849,
+            "max_s": 6.906
+          }
+        }
+      },
+      "latencia_con_la_decision_del_enrutador_s": {
+        "todas": {
+          "n": 25,
+          "media_s": 4.0,
+          "p50_s": 5.488,
+          "p95_s": 6.77,
+          "max_s": 6.906
+        },
+        "decidio_simple": {
+          "n": 8,
+          "media_s": 0.227,
+          "p50_s": 0.222,
+          "p95_s": 0.319,
+          "max_s": 0.354
+        },
+        "decidio_compleja": {
+          "n": 17,
+          "media_s": 5.775,
+          "p50_s": 5.671,
+          "p95_s": 6.84,
+          "max_s": 6.906
+        }
+      },
+      "recall@10": {
+        "simple": {
+          "simple": {
+            "n": 10,
+            "recall@10": 1.0,
+            "ic95": [
+              1.0,
+              1.0
+            ],
+            "acierto@10": 1.0,
+            "mrr": 1.0
+          },
+          "compleja": {
+            "n": 10,
+            "recall@10": 1.0,
+            "ic95": [
+              1.0,
+              1.0
+            ],
+            "acierto@10": 1.0,
+            "mrr": 1.0
+          },
+          "auto": {
+            "n": 10,
+            "recall@10": 1.0,
+            "ic95": [
+              1.0,
+              1.0
+            ],
+            "acierto@10": 1.0,
+            "mrr": 1.0
+          }
+        },
+        "compleja": {
+          "simple": {
+            "n": 15,
+            "recall@10": 0.8556,
+            "ic95": [
+              0.6889,
+              1.0
+            ],
+            "acierto@10": 0.9333,
+            "mrr": 0.7541
+          },
+          "compleja": {
+            "n": 15,
+            "recall@10": 0.8556,
+            "ic95": [
+              0.6889,
+              1.0
+            ],
+            "acierto@10": 0.9333,
+            "mrr": 0.8229
+          },
+          "auto": {
+            "n": 15,
+            "recall@10": 0.8556,
+            "ic95": [
+              0.6889,
+              1.0
+            ],
+            "acierto@10": 0.9333,
+            "mrr": 0.8229
+          }
+        }
+      },
+      "complejas_con_p4_menos_sin_p4": {
+        "campo": "recall@10",
+        "n": 15,
+        "media": 0.0,
+        "ic95": [
+          0.0,
+          0.0
+        ],
+        "mejora": 0,
+        "empeora": 0,
+        "igual": 15
+      },
+      "p4": {
+        "ruta_compleja_sin_modelo": 0,
+        "con_terminos_excluidos": 5,
+        "con_filtro_de_personas": 25,
+        "nota": "ruta_compleja_sin_modelo = P4 falló y el servicio buscó con el texto original"
+      },
+      "galeria": {
+        "subidas": 995,
+        "no_subidas": [
+          "xm-40782300618ab6ea",
+          "xm-40b1e60462b975ee",
+          "xm-40eb7b75928b7955",
+          "xm-410ffbca20263c04",
+          "xm-417c758c430d3b34"
+        ],
+        "relevantes_no_subidos": []
+      },
+      "filtros": {
+        "particion": "subida"
+      },
+      "alcance_r10": "Los relevantes están marcados dentro de la galería y la búsqueda queda limitada a las fotos subidas (filtros = {\"particion\": \"subida\"}: la galería más cualquier otra foto subida por la evaluación), así que el archivo catalogado no compite. Una foto subida que se valida por retroalimentación cambia de partición y sale del filtro."
+    },
+    "graficas": [
+      "evaluacion/graficas/enrutador_fichas_senales.png",
+      "evaluacion/graficas/enrutador_fichas_estrategias.png",
+      "evaluacion/graficas/enrutador_busquedas.png"
+    ],
+    "detalle_busquedas": "evaluacion/resultados/enrutador_busquedas_detalle.csv"
+  }
+}

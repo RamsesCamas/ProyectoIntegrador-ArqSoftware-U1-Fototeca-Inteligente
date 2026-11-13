@@ -104,7 +104,7 @@ class FlujoBusqueda:
                 modelo = s.modelo
                 interpretada = {"consulta_semantica": s.datos.get("consulta_semantica") or limpio,
                                 "excluir": [x for x in s.datos.get("excluir", []) if x],
-                                "filtros": {"contiene_personas": s.datos.get("contiene_personas")},
+                                "filtros": {"contiene_personas": self._filtro_personas(limpio, s.datos)},
                                 "terminos_tesauro": [x for x in s.datos.get("terminos", []) if x]}
             except (ServicioNoDisponible, TiempoAgotado):
                 registrar("C2", "p4_fallo_busqueda_simple")   # último recurso: búsqueda simple con el texto original
@@ -145,6 +145,17 @@ class FlujoBusqueda:
         registrar("C2", "busqueda_completa", duracion_ms=m["tiempo_ms"], ruta=m["ruta"], cache=m["cache"],
                   modelo=m.get("modelo"), tiempos_por_capa_ms=m["tiempos_por_capa_ms"], guardrails=m["guardrails"],
                   iteraciones_agente=m["iteraciones_agente"], resultados=len(respuesta["resultados"]))
+
+    @staticmethod
+    def _filtro_personas(consulta: str, datos: dict) -> bool | None:
+        """`contiene_personas` de P4 solo si la búsqueda habla de personas. En las 25 consultas complejas del
+        enrutador LFM3 nunca dejó `null` (17 true y 8 false, p. ej. true para «domo de una torre de
+        telecomunicaciones»), y el filtro penalizaba a la mitad resultados que no tenían por qué."""
+        valor = datos.get("contiene_personas")
+        if valor is None or PERSONAS.search(consulta):
+            return valor
+        registrar("C2", "filtro_personas_descartado", valor_p4=valor)
+        return None
 
     @staticmethod
     def _filtro_vectorial(filtros: dict | None) -> dict | None:

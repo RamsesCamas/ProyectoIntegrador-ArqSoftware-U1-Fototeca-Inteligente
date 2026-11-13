@@ -1,0 +1,669 @@
+{
+  "modulo": "rag_fichas",
+  "fecha": "2026-11-13T13:25:36+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "580643649771",
+  "configuracion": {
+    "configuraciones": {
+      "con_rag": {
+        "sin_cache": true
+      },
+      "sin_rag": {
+        "sin_rag": true,
+        "sin_cache": true
+      }
+    },
+    "recuperacion": null,
+    "percentiles_criterio_vecinos": [
+      75,
+      90
+    ],
+    "k_vecinos": 5,
+    "embebedor_criterio_y_cruce": "granite-embedding:278m"
+  },
+  "metricas": {
+    "conjunto": {
+      "nombre": "eval_fichas",
+      "fotos": 30,
+      "no_subidas": [],
+      "con_etiquetas_open_images": 23
+    },
+    "por_configuracion": {
+      "con_rag": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.6291,
+          "p50": 0.6497,
+          "p95": 0.8456,
+          "min": 0.3675,
+          "max": 0.8637,
+          "ic95": [
+            0.577,
+            0.6806
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 18.1453,
+          "p50": 17.825,
+          "p95": 37.8385,
+          "min": 0.0,
+          "max": 59.14,
+          "ic95": [
+            13.5355,
+            23.1699
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.6,
+          "n": 30
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 70.814,
+          "p50_s": 73.66,
+          "p95_s": 102.425,
+          "max_s": 118.287
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 70.814,
+          "p50_s": 73.66,
+          "p95_s": 102.425,
+          "max_s": 118.287
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.001,
+            "p50_s": 0.0,
+            "p95_s": 0.002,
+            "max_s": 0.008
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.737,
+            "p50_s": 0.663,
+            "p95_s": 1.46,
+            "max_s": 1.952
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.001
+          },
+          "modelo_vision": {
+            "n": 30,
+            "media_s": 31.963,
+            "p50_s": 30.556,
+            "p95_s": 43.33,
+            "max_s": 48.882
+          },
+          "modelo_composicion": {
+            "n": 25,
+            "media_s": 43.179,
+            "p50_s": 40.389,
+            "p95_s": 63.673,
+            "max_s": 72.178
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 1.984,
+            "p50_s": 1.243,
+            "p95_s": 5.643,
+            "max_s": 6.94
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 899.9,
+          "p50": 918.5,
+          "p95": 981.6,
+          "min": 709.0,
+          "max": 1016.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 270.0,
+          "p50": 294.5,
+          "p95": 360.1,
+          "min": 107.0,
+          "max": 438.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "completa": 25,
+          "rapida": 5
+        },
+        "modelo_composicion_final": {
+          "lfm3:1.7b-q4_K_M": 25
+        },
+        "iteraciones_agente_media": 0.2,
+        "campos_con_fuente_valida": {
+          "tasa": 1.0,
+          "campos_con_texto": 85,
+          "campos_con_fuente": 85
+        },
+        "fidelidad_contexto": {
+          "tasa": 1.0,
+          "citas_validas": 256,
+          "citas_invalidas": 0,
+          "fichas_con_dato": 30,
+          "citas_validas_por_tipo": {
+            "regla": 108,
+            "foto_similar": 148
+          },
+          "tesauro_cota_inferior": null
+        },
+        "recall_palabras_clave_oi": {
+          "n": 23,
+          "media": 0.2907,
+          "p50": 0.0,
+          "p95": 1.0,
+          "min": 0.0,
+          "max": 1.0,
+          "ic95": [
+            0.1403,
+            0.4665
+          ],
+          "micro": 0.2373,
+          "fotos_con_etiquetas": 23
+        },
+        "recall_palabras_clave_oi_exacto_tesauro": {
+          "n": 23,
+          "media": 0.0208,
+          "p50": 0.0,
+          "p95": 0.1611,
+          "min": 0.0,
+          "max": 0.2
+        },
+        "palabras_clave_por_ficha": {
+          "n": 30,
+          "media": 6.7,
+          "p50": 7.5,
+          "p95": 10.0,
+          "min": 1.0,
+          "max": 10.0
+        }
+      },
+      "sin_rag": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.7281,
+          "p50": 0.729,
+          "p95": 0.8287,
+          "min": 0.5103,
+          "max": 0.8923,
+          "ic95": [
+            0.697,
+            0.7586
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 29.7057,
+          "p50": 27.93,
+          "p95": 49.014,
+          "min": 11.49,
+          "max": 63.46,
+          "ic95": [
+            26.0939,
+            33.7619
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.9333,
+          "n": 30
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 59.779,
+          "p50_s": 57.793,
+          "p95_s": 70.688,
+          "max_s": 74.569
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 59.779,
+          "p50_s": 57.793,
+          "p95_s": 70.688,
+          "max_s": 74.569
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.001
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.5,
+            "p50_s": 0.41,
+            "p95_s": 1.026,
+            "max_s": 1.191
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.002
+          },
+          "modelo_vision": {
+            "n": 30,
+            "media_s": 31.15,
+            "p50_s": 29.91,
+            "p95_s": 39.47,
+            "max_s": 43.523
+          },
+          "modelo_composicion": {
+            "n": 30,
+            "media_s": 26.37,
+            "p50_s": 25.925,
+            "p95_s": 31.9,
+            "max_s": 34.958
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 1.631,
+            "p50_s": 1.018,
+            "p95_s": 6.223,
+            "max_s": 7.413
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 433.3667,
+          "p50": 425.5,
+          "p95": 495.2,
+          "min": 400.0,
+          "max": 508.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 223.0667,
+          "p50": 213.5,
+          "p95": 277.55,
+          "min": 185.0,
+          "max": 309.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "completa": 30
+        },
+        "modelo_composicion_final": {
+          "lfm3:1.7b-q4_K_M": 30
+        },
+        "iteraciones_agente_media": 0.0,
+        "campos_con_fuente_valida": {
+          "tasa": 0.0,
+          "campos_con_texto": 90,
+          "campos_con_fuente": 0
+        },
+        "fidelidad_contexto": {
+          "tasa": null,
+          "citas_validas": 0,
+          "citas_invalidas": 0,
+          "fichas_con_dato": 30,
+          "citas_validas_por_tipo": {},
+          "tesauro_cota_inferior": null
+        },
+        "recall_palabras_clave_oi": {
+          "n": 23,
+          "media": 0.2793,
+          "p50": 0.1333,
+          "p95": 0.9667,
+          "min": 0.0,
+          "max": 1.0,
+          "ic95": [
+            0.152,
+            0.4231
+          ],
+          "micro": 0.2542,
+          "fotos_con_etiquetas": 23
+        },
+        "recall_palabras_clave_oi_exacto_tesauro": {
+          "n": 23,
+          "media": 0.0048,
+          "p50": 0.0,
+          "p95": 0.0,
+          "min": 0.0,
+          "max": 0.1111
+        },
+        "palabras_clave_por_ficha": {
+          "n": 30,
+          "media": 5.1,
+          "p50": 5.0,
+          "p95": 8.0,
+          "min": 0.0,
+          "max": 9.0
+        }
+      }
+    },
+    "con_rag_menos_sin_rag": {
+      "juez_promedio": {
+        "campo": "juez_promedio",
+        "n": 30,
+        "media": 0.0,
+        "ic95": [
+          0.0,
+          0.0
+        ],
+        "a_mayor": 0,
+        "b_mayor": 0,
+        "empates": 30
+      },
+      "juez_fidelidad": {
+        "campo": "juez_fidelidad",
+        "n": 30,
+        "media": 0.0,
+        "ic95": [
+          0.0,
+          0.0
+        ],
+        "a_mayor": 0,
+        "b_mayor": 0,
+        "empates": 30
+      },
+      "juez_relevancia": {
+        "campo": "juez_relevancia",
+        "n": 30,
+        "media": 0.0,
+        "ic95": [
+          0.0,
+          0.0
+        ],
+        "a_mayor": 0,
+        "b_mayor": 0,
+        "empates": 30
+      },
+      "granite_max": {
+        "campo": "granite_max",
+        "n": 30,
+        "media": -0.099,
+        "ic95": [
+          -0.1469,
+          -0.0501
+        ],
+        "a_mayor": 9,
+        "b_mayor": 21,
+        "empates": 0
+      },
+      "chrf": {
+        "campo": "chrf",
+        "n": 30,
+        "media": -11.5603,
+        "ic95": [
+          -16.0701,
+          -6.908
+        ],
+        "a_mayor": 7,
+        "b_mayor": 23,
+        "empates": 0
+      },
+      "recall_oi": {
+        "campo": "recall_oi",
+        "n": 23,
+        "media": 0.0115,
+        "ic95": [
+          -0.1377,
+          0.1776
+        ],
+        "a_mayor": 6,
+        "b_mayor": 7,
+        "empates": 10
+      }
+    },
+    "cruce_idiomas": {
+      "umbral": 0.7625,
+      "tpr": 0.9624,
+      "fpr": 0.0226,
+      "youden_j": 0.9398,
+      "n_positivos": 133,
+      "n_negativos": 133,
+      "origen_pares": "etiquetas de Open Images con coincidencia exacta en inglés con un concepto del tesauro (prefLabel/altLabel@en) frente a la etiqueta en español de ese concepto",
+      "modelo": "granite-embedding:278m",
+      "similitud_positivos": {
+        "n": 133,
+        "media": 0.9043,
+        "p50": 0.92,
+        "p95": 0.9967,
+        "min": 0.6524,
+        "max": 1.0
+      },
+      "similitud_negativos": {
+        "n": 133,
+        "media": 0.6499,
+        "p50": 0.6575,
+        "p95": 0.7339,
+        "min": 0.5092,
+        "max": 0.8146
+      },
+      "regla": "τ maximiza TPR − FPR (índice de Youden); en empate, el τ mayor"
+    },
+    "acierto_recuperacion_ejemplos": {
+      "normales": {
+        "n": 350,
+        "top1_imagen": {
+          "n": 350,
+          "media": 0.8272,
+          "p50": 0.8276,
+          "p95": 0.9081,
+          "min": 0.6943,
+          "max": 0.9598
+        },
+        "p75": {
+          "acierto@5": 1.0,
+          "ic95": [
+            1.0,
+            1.0
+          ],
+          "acierto@1": 0.94,
+          "azar@5": 0.763
+        },
+        "p90": {
+          "acierto@5": 0.9857,
+          "ic95": [
+            0.9714,
+            0.9971
+          ],
+          "acierto@1": 0.8257,
+          "azar@5": 0.4098
+        }
+      },
+      "regiones_excluidas": {
+        "n": 150,
+        "top1_imagen": {
+          "n": 150,
+          "media": 0.816,
+          "p50": 0.8103,
+          "p95": 0.9023,
+          "min": 0.6746,
+          "max": 0.9567
+        },
+        "p75": {
+          "acierto@5": 1.0,
+          "ic95": [
+            1.0,
+            1.0
+          ],
+          "acierto@1": 0.94,
+          "azar@5": 0.763
+        },
+        "p90": {
+          "acierto@5": 0.9933,
+          "ic95": [
+            0.98,
+            1.0
+          ],
+          "acierto@1": 0.8333,
+          "azar@5": 0.4098
+        }
+      }
+    },
+    "plantilla_revision_manual": {
+      "ruta": "evaluacion/revision_manual/plantilla_fichas.csv",
+      "estado": "escrita",
+      "fichas": 20,
+      "de": 30,
+      "semilla": 2026,
+      "configuracion": "con_rag",
+      "columnas": [
+        "xm_id",
+        "documento_id",
+        "archivo_imagen",
+        "referencias",
+        "titular",
+        "texto_alternativo",
+        "descripcion",
+        "palabras_clave",
+        "estado_ficha",
+        "ruta",
+        "juez_fidelidad",
+        "juez_relevancia",
+        "juez_justificacion",
+        "humano_fidelidad (0-5)",
+        "humano_relevancia (0-5)",
+        "comentario"
+      ]
+    },
+    "metodos": {
+      "recall_palabras_clave_oi": "etiqueta de Open Images (inglés) recuperada si alguna palabra clave (español) tiene coseno granite ≥ τ; τ calibrado con pares de traducción del tesauro (máximo TPR − FPR)",
+      "recall_exacto_tesauro": "la URI de alguna palabra clave tiene la etiqueta de Open Images en inglés",
+      "campos_con_fuente_valida": "campos con texto (titular, descripción, texto alternativo) que conservan ≥1 fuente tras quitar los ids que no estaban en el contexto",
+      "fidelidad_contexto": "citas válidas / (válidas + `invalidas_quitadas` del guardrail `fuentes`); para el tesauro solo cota inferior (las inválidas no traen tipo)",
+      "acierto@5": "algún vecino con similitud granite (descripción validada vs. referencia en español, máximo sobre referencias) ≥ percentil 75 de esa similitud contra todas las fichas validadas",
+      "ficha_vacia": "error HTTP o ficha degradada: calidad 0, recall 0 y sin citas"
+    },
+    "graficas": [
+      "evaluacion/graficas/rag_fichas_con_sin_rag.png",
+      "evaluacion/graficas/rag_fichas_acierto5.png"
+    ],
+    "detalle_recuperacion": "evaluacion/resultados/rag_fichas_recuperacion_detalle.csv"
+  }
+}

@@ -72,9 +72,14 @@ def versiones(plantillas: dict[str, Plantilla]) -> dict[str, str]:
     return salida
 
 
+CAMPOS_CON_CITA = ("titular", "descripcion", "texto_alternativo")
+
+
 def esquema_con_fuentes(esquema: dict, ids: list[str]) -> dict:
     """Copia del esquema para la gramática de la salida: cada campo de `fuentes` pasa a ser obligatorio y sus elementos
-    solo pueden ser uno de `ids` (los que el modelo vio en el prompt). Sin ids, las listas quedan vacías.
+    solo pueden ser uno de `ids` (los que el modelo vio en el prompt). Sin ids, las listas quedan vacías. Con ids, los
+    campos de texto (titular, descripción y texto alternativo) piden al menos una cita: con P3 v3, LFM3 dejaba sin cita el
+    titular y la descripción en 7 de 10 fichas de `ajuste_prompts`, aunque su redacción sigue las reglas recuperadas.
 
     La validación de la respuesta sigue usando el esquema estático: una cita inválida que llegara a pasar la quita el
     guardrail `fuentes`, no la descarta el gateway."""
@@ -86,6 +91,8 @@ def esquema_con_fuentes(esquema: dict, ids: list[str]) -> dict:
     for campo, sub in fuentes["properties"].items():
         if ids:
             sub["items"] = {"type": "string", "enum": ids}
+            if campo in CAMPOS_CON_CITA:
+                sub["minItems"] = 1
         else:
             sub["maxItems"] = 0
     fuentes["required"] = list(fuentes["properties"])

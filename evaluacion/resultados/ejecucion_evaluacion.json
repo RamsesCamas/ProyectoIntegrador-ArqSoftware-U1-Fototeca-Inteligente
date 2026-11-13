@@ -1,0 +1,50 @@
+{
+  "modulos": {
+    "r3_embeddings": {
+      "inicio": "2026-11-13T08:58:15+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T10:52:07+00:00",
+      "segundos": 6831.8
+    },
+    "r3_modelos": {
+      "inicio": "2026-11-13T10:52:07+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T12:07:38+00:00",
+      "segundos": 4531.3
+    },
+    "rag_fichas": {
+      "inicio": "2026-11-13T12:07:38+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T13:25:36+00:00",
+      "segundos": 4677.5
+    },
+    "enrutador": {
+      "inicio": "2026-11-13T13:25:36+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T14:02:47+00:00",
+      "segundos": 2231.5
+    },
+    "cache": {
+      "inicio": "2026-11-13T14:02:47+00:00",
+      "rapido": false,
+      "fraccion": 0.5,
+      "estado": "ok",
+      "error": null,
+      "fin": "2026-11-13T14:41:07+00:00",
+      "segundos": 2299.4
+    }
+  },
+  "actualizado": "2026-11-13T14:41:07+00:00"
+}

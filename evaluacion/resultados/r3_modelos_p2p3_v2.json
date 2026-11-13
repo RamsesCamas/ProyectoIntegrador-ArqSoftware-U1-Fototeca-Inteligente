@@ -1,0 +1,854 @@
+{
+  "modulo": "r3_modelos",
+  "fecha": "2026-11-13T12:07:38+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "580643649771",
+  "configuracion": {
+    "configuraciones": {
+      "qwen_rapida": {
+        "forzar_ruta": "rapida",
+        "sin_cache": true
+      },
+      "qwen_composicion": {
+        "forzar_ruta": "completa",
+        "modelo_composicion": "vision",
+        "sin_cache": true
+      },
+      "lfm3_composicion": {
+        "forzar_ruta": "completa",
+        "modelo_composicion": "composicion",
+        "sin_cache": true
+      }
+    },
+    "modelos": {
+      "qwen_rapida": "qwen3.5:0.8b",
+      "qwen_composicion": "qwen3.5:0.8b",
+      "lfm3_composicion": "lfm3:1.7b-q4_K_M"
+    },
+    "generacion": {
+      "temperatura_fichas": 0.2,
+      "temperatura_clasificacion": 0.0,
+      "top_p": 0.9,
+      "presence_penalty": 0.0,
+      "num_ctx": 4096,
+      "think": false,
+      "num_predict": {
+        "P1": 350,
+        "P2": 260,
+        "P3": 600,
+        "P4": 200,
+        "P5": 150,
+        "P6": 80,
+        "P7": 120
+      },
+      "lado_max_imagen_px": 512,
+      "por_modelo": {
+        "qwen3.5:0.8b": {
+          "presence_penalty": 1.5,
+          "extra": {
+            "draft_num_predict": 0
+          }
+        },
+        "lfm3:1.7b-q4_K_M": {
+          "presence_penalty": 0.0
+        }
+      }
+    },
+    "tiempos_limite_s": {
+      "qwen_imagen": 58,
+      "qwen_texto": 64,
+      "lfm3": 90,
+      "embedding": 15
+    }
+  },
+  "metricas": {
+    "conjunto": {
+      "nombre": "eval_fichas",
+      "fotos": 30,
+      "no_subidas": []
+    },
+    "por_configuracion": {
+      "qwen_rapida": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 4.9333,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.8333,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 4.8333,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 5.0,
+          "ic95": [
+            4.6333,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 4.8833,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0,
+          "ic95": [
+            4.7333,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 4.8833,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.7126,
+          "p50": 0.7269,
+          "p95": 0.8589,
+          "min": 0.4123,
+          "max": 0.9394,
+          "ic95": [
+            0.6715,
+            0.7553
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 27.7063,
+          "p50": 26.655,
+          "p95": 58.7665,
+          "min": 0.0,
+          "max": 78.79,
+          "ic95": [
+            22.1985,
+            33.6081
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.7,
+          "n": 30
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 42.232,
+          "p50_s": 27.407,
+          "p95_s": 85.031,
+          "max_s": 88.493
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 42.232,
+          "p50_s": 27.407,
+          "p95_s": 85.031,
+          "max_s": 88.493
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.003,
+            "p50_s": 0.0,
+            "p95_s": 0.001,
+            "max_s": 0.097
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.485,
+            "p50_s": 0.31,
+            "p95_s": 1.014,
+            "max_s": 1.314
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.001
+          },
+          "modelo_vision": {
+            "n": 30,
+            "media_s": 33.51,
+            "p50_s": 26.776,
+            "p95_s": 52.275,
+            "max_s": 57.022
+          },
+          "modelo_composicion": {
+            "n": 8,
+            "media_s": 28.482,
+            "p50_s": 29.331,
+            "p95_s": 31.004,
+            "max_s": 31.494
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 0.583,
+            "p50_s": 0.313,
+            "p95_s": 1.909,
+            "max_s": 3.126
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 723.1667,
+          "p50": 714.0,
+          "p95": 786.35,
+          "min": 664.0,
+          "max": 799.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 151.5333,
+          "p50": 150.0,
+          "p95": 178.75,
+          "min": 127.0,
+          "max": 185.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "rapida": 22,
+          "completa": 8
+        },
+        "modelo_composicion_final": {
+          "lfm3:1.7b-q4_K_M": 8
+        },
+        "iteraciones_agente_media": 0.2
+      },
+      "qwen_composicion": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 4.9667,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.9,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 4.9,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 5.0,
+          "ic95": [
+            4.7333,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 4.9333,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0,
+          "ic95": [
+            4.8167,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 4.9333,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.659,
+          "p50": 0.6526,
+          "p95": 0.8616,
+          "min": 0.3169,
+          "max": 0.8845,
+          "ic95": [
+            0.6056,
+            0.7088
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 21.5277,
+          "p50": 25.94,
+          "p95": 38.803,
+          "min": 0.0,
+          "max": 42.08,
+          "ic95": [
+            16.8309,
+            25.7955
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.4333,
+          "n": 30
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 51.676,
+          "p50_s": 50.4,
+          "p95_s": 72.364,
+          "max_s": 78.216
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 24.361,
+          "p50_s": 21.927,
+          "p95_s": 35.921,
+          "max_s": 53.912
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.001,
+            "max_s": 0.001
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.467,
+            "p50_s": 0.304,
+            "p95_s": 1.188,
+            "max_s": 2.044
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.001
+          },
+          "modelo_vision": {
+            "n": 0
+          },
+          "modelo_composicion": {
+            "n": 30,
+            "media_s": 22.61,
+            "p50_s": 20.766,
+            "p95_s": 35.059,
+            "max_s": 45.614
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 1.244,
+            "p50_s": 0.442,
+            "p95_s": 5.719,
+            "max_s": 6.192
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 894.2,
+          "p50": 879.5,
+          "p95": 961.15,
+          "min": 838.0,
+          "max": 980.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 247.2,
+          "p50": 247.5,
+          "p95": 328.75,
+          "min": 169.0,
+          "max": 361.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "completa": 30
+        },
+        "modelo_composicion_final": {
+          "qwen3.5:0.8b": 30
+        },
+        "iteraciones_agente_media": 0.2
+      },
+      "lfm3_composicion": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 4.9667,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.9,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 4.9333,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 5.0,
+          "ic95": [
+            4.8,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 4.95,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0,
+          "ic95": [
+            4.85,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 4.95,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.6505,
+          "p50": 0.6618,
+          "p95": 0.8664,
+          "min": 0.3249,
+          "max": 0.8899,
+          "ic95": [
+            0.5927,
+            0.7051
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 22.489,
+          "p50": 22.475,
+          "p95": 50.0675,
+          "min": 0.0,
+          "max": 61.2,
+          "ic95": [
+            17.3773,
+            27.9494
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.7,
+          "n": 30
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 58.671,
+          "p50_s": 57.55,
+          "p95_s": 72.839,
+          "max_s": 80.027
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 31.356,
+          "p50_s": 30.411,
+          "p95_s": 40.83,
+          "max_s": 42.555
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.001,
+            "max_s": 0.002
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.474,
+            "p50_s": 0.35,
+            "p95_s": 1.264,
+            "max_s": 1.748
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.002
+          },
+          "modelo_vision": {
+            "n": 0
+          },
+          "modelo_composicion": {
+            "n": 30,
+            "media_s": 29.382,
+            "p50_s": 29.054,
+            "p95_s": 36.514,
+            "max_s": 40.875
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 1.457,
+            "p50_s": 0.871,
+            "p95_s": 3.723,
+            "max_s": 5.381
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 939.7667,
+          "p50": 927.0,
+          "p95": 1016.45,
+          "min": 875.0,
+          "max": 1030.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 273.4667,
+          "p50": 260.0,
+          "p95": 381.8,
+          "min": 189.0,
+          "max": 449.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "completa": 30
+        },
+        "modelo_composicion_final": {
+          "lfm3:1.7b-q4_K_M": 30
+        },
+        "iteraciones_agente_media": 0.2
+      }
+    },
+    "diferencias_pareadas": {
+      "lfm3_composicion_menos_qwen_composicion": {
+        "campo": "juez_promedio",
+        "n": 30,
+        "media": 0.0167,
+        "ic95": [
+          -0.1333,
+          0.15
+        ],
+        "a_mayor": 2,
+        "b_mayor": 1,
+        "empates": 27,
+        "granite": {
+          "campo": "granite_max",
+          "n": 30,
+          "media": -0.0084,
+          "ic95": [
+            -0.078,
+            0.0643
+          ],
+          "a_mayor": 13,
+          "b_mayor": 16,
+          "empates": 1
+        },
+        "chrf": {
+          "campo": "chrf",
+          "n": 30,
+          "media": 0.9613,
+          "ic95": [
+            -5.3015,
+            8.5989
+          ],
+          "a_mayor": 12,
+          "b_mayor": 17,
+          "empates": 1
+        }
+      },
+      "qwen_rapida_menos_qwen_composicion": {
+        "campo": "juez_promedio",
+        "n": 30,
+        "media": -0.05,
+        "ic95": [
+          -0.1667,
+          0.0333
+        ],
+        "a_mayor": 1,
+        "b_mayor": 2,
+        "empates": 27
+      }
+    },
+    "tabla": [
+      {
+        "configuracion": "qwen_rapida",
+        "modelo": "qwen3.5:0.8b",
+        "rol": "ruta rápida (P2 con visión y vecinos)",
+        "parametros": "752.39M",
+        "cuantizacion": "Q8_0",
+        "calidad_0_5": 4.8833,
+        "calidad_ic95": [
+          4.7333,
+          5.0
+        ],
+        "latencia_media_s": 42.232,
+        "latencia_p50_s": 27.407,
+        "latencia_p95_s": 85.031,
+        "memoria_gb": 0.83,
+        "memoria_rss_h0_gb": 1.657,
+        "tamano_disco_gb": 1.322,
+        "licencia": "Apache 2.0",
+        "granite_max_media": 0.7126,
+        "chrf_media": 27.7063,
+        "json_valido_primera": 1.0,
+        "pasa_guardrails_salida": 0.7,
+        "n": 30
+      },
+      {
+        "configuracion": "qwen_composicion",
+        "modelo": "qwen3.5:0.8b",
+        "rol": "composición P3 (solo texto, desde P1)",
+        "parametros": "752.39M",
+        "cuantizacion": "Q8_0",
+        "calidad_0_5": 4.9333,
+        "calidad_ic95": [
+          4.8167,
+          5.0
+        ],
+        "latencia_media_s": 51.676,
+        "latencia_p50_s": 50.4,
+        "latencia_p95_s": 72.364,
+        "memoria_gb": 0.83,
+        "memoria_rss_h0_gb": 1.657,
+        "tamano_disco_gb": 1.322,
+        "licencia": "Apache 2.0",
+        "granite_max_media": 0.659,
+        "chrf_media": 21.5277,
+        "json_valido_primera": 1.0,
+        "pasa_guardrails_salida": 0.4333,
+        "n": 30
+      },
+      {
+        "configuracion": "lfm3_composicion",
+        "modelo": "lfm3:1.7b-q4_K_M",
+        "rol": "composición P3 (desde el mismo P1)",
+        "parametros": "1.7B",
+        "cuantizacion": "Q4_K_M",
+        "calidad_0_5": 4.95,
+        "calidad_ic95": [
+          4.85,
+          5.0
+        ],
+        "latencia_media_s": 58.671,
+        "latencia_p50_s": 57.55,
+        "latencia_p95_s": 72.839,
+        "memoria_gb": 1.389,
+        "memoria_rss_h0_gb": 1.473,
+        "tamano_disco_gb": 1.1,
+        "licencia": "LFM Open License v1.0 (Liquid AI)",
+        "granite_max_media": 0.6505,
+        "chrf_media": 22.489,
+        "json_valido_primera": 1.0,
+        "pasa_guardrails_salida": 0.7,
+        "n": 30
+      }
+    ],
+    "tabla_markdown": "| Modelo (configuración) | Parámetros / cuantización | Calidad (0–5) | Latencia (s) | Memoria (GB) | Licencia |\n|---|---|---|---|---|---|\n| qwen3.5:0.8b · ruta rápida (P2 con visión y vecinos) | 752.39M / Q8_0 | 4.88 (IC95 4.73–5.00) | 42.2 (p50 27.4 · p95 85.0) | 0.83 (RSS H0 1.66) | Apache 2.0 |\n| qwen3.5:0.8b · composición P3 (solo texto, desde P1) | 752.39M / Q8_0 | 4.93 (IC95 4.82–5.00) | 51.7 (p50 50.4 · p95 72.4) | 0.83 (RSS H0 1.66) | Apache 2.0 |\n| lfm3:1.7b-q4_K_M · composición P3 (desde el mismo P1) | 1.7B / Q4_K_M | 4.95 (IC95 4.85–5.00) | 58.7 (p50 57.5 · p95 72.8) | 1.39 (RSS H0 1.47) | LFM Open License v1.0 (Liquid AI) |\n\nCalidad: promedio de fidelidad y relevancia del juez P7 (LFM3, temperatura 0) contra las descripciones humanas en español de XM3600. Latencia: media de la ruta en CPU (p50 y p95 entre paréntesis); las composiciones incluyen P1. Memoria: /api/ps con el modelo cargado; entre paréntesis, el RSS del proceso medido en H0.",
+    "conclusion": {
+      "modelo_por_ruta": {
+        "rapida": "qwen3.5:0.8b (P2 con visión)",
+        "completa": "qwen3.5:0.8b (P1) + qwen3.5:0.8b (P3)"
+      },
+      "composicion": "Composición (ruta completa, P3) con la misma descripción P1: lfm3:1.7b-q4_K_M obtiene calidad 4.95 y qwen3.5:0.8b 4.93 (diferencia lfm3:1.7b-q4_K_M − qwen3.5:0.8b: 0.02, IC95 [-0.13, 0.15], n = 30); latencia p50 de la ruta 57.5 s contra 50.4 s; JSON válido a la primera 100 % contra 100 %. Conclusión: la diferencia de calidad no es significativa (el IC95 incluye 0); con calidad equivalente decide el costo y la composición más rápida es qwen3.5:0.8b (p50 50.4 s).",
+      "ruta_rapida": "Ruta rápida (P2): modelos con visión según /api/show: qwen3.5:0.8b. qwen3.5:0.8b con visión y vecinos obtiene calidad 4.88 contra 4.93 de la ruta completa con qwen3.5:0.8b (diferencia -0.05, IC95 [-0.17, 0.03], n = 30), sin diferencia significativa de calidad (el IC95 incluye 0); latencia p50 27.4 s contra 50.4 s (46 % menos).",
+      "compromiso": "Compromiso: la ruta rápida cambia la calidad media en -0.05 puntos y la latencia p50 en -46 %; el enrutador de fichas (ADR-03, evaluacion/enrutador.py) decide foto por foto cuándo conviene.",
+      "recursos": "lfm3:1.7b-q4_K_M: 1.39 GB cargado (/api/ps), 1.10 GB en disco, Q4_K_M, contexto máximo 262144 tokens, licencia LFM Open License v1.0 (Liquid AI); qwen3.5:0.8b: 0.83 GB cargado (/api/ps), 1.32 GB en disco, Q8_0, contexto máximo 262144 tokens, licencia Apache 2.0",
+      "ventana_contexto": "Ventana de contexto: se usa num_ctx = 4096; el prompt de generación mide p50 714 tokens en qwen_rapida, 880 tokens en qwen_composicion, 927 tokens en lfm3_composicion.",
+      "idioma": "Todas las métricas de calidad se miden contra descripciones humanas en español (XM3600): reflejan el desempeño en español.",
+      "regla_de_decision": "P3: gana la composición de mayor calidad si el IC95 de la diferencia pareada excluye 0; si no, la de menor latencia p50."
+    },
+    "modelos": {
+      "lfm3:1.7b-q4_K_M": {
+        "parametros": "1.7B",
+        "parametros_exactos": 1728801600,
+        "cuantizacion": "Q4_K_M",
+        "formato": "gguf",
+        "familia": "lfm3",
+        "tamano_disco_bytes": 1099638680,
+        "tamano_disco_gb": 1.1,
+        "digest": "b36a103fe2f8",
+        "contexto_maximo_tokens": 262144,
+        "capacidades": [
+          "completion",
+          "tools",
+          "thinking"
+        ],
+        "licencia": "LFM Open License v1.0 (Liquid AI)",
+        "licencia_fuente": "docs/LICENCIAS-Y-CORPUS.md (tabla de modelos)",
+        "licencia_ollama_show_primera_linea": "LFM Open License v1.0"
+      },
+      "qwen3.5:0.8b": {
+        "parametros": "752.39M",
+        "parametros_exactos": 752393024,
+        "cuantizacion": "Q8_0",
+        "formato": "gguf",
+        "familia": "qwen35",
+        "tamano_disco_bytes": 1322069277,
+        "tamano_disco_gb": 1.322,
+        "digest": "de63045f2975",
+        "contexto_maximo_tokens": 262144,
+        "capacidades": [
+          "completion",
+          "vision",
+          "tools",
+          "thinking"
+        ],
+        "licencia": "Apache 2.0",
+        "licencia_fuente": "docs/LICENCIAS-Y-CORPUS.md (tabla de modelos)",
+        "licencia_ollama_show_primera_linea": "Apache License"
+      }
+    },
+    "memoria_api_ps": {
+      "lfm3:1.7b-q4_K_M": {
+        "memoria_bytes": 1388650166,
+        "memoria_gb": 1.389,
+        "memoria_gib": 1.293,
+        "vram_bytes": 0,
+        "contexto_cargado": 4096,
+        "medido": "2026-11-13T12:07:34+00:00",
+        "cargados_a_la_vez": [
+          "embeddinggemma-2:440m",
+          "granite-embedding:278m",
+          "lfm3:1.7b-q4_K_M",
+          "qwen3.5:0.8b"
+        ]
+      },
+      "qwen3.5:0.8b": {
+        "memoria_bytes": 829570413,
+        "memoria_gb": 0.83,
+        "memoria_gib": 0.773,
+        "vram_bytes": 0,
+        "contexto_cargado": 4096,
+        "medido": "2026-11-13T12:07:38+00:00",
+        "cargados_a_la_vez": [
+          "embeddinggemma-2:440m",
+          "granite-embedding:278m",
+          "lfm3:1.7b-q4_K_M",
+          "qwen3.5:0.8b"
+        ]
+      }
+    },
+    "memoria_rss_h0": {
+      "fuente": "evaluacion/resultados/h0_memoria_por_modelo.txt",
+      "contexto": "Desglose de memoria del contenedor ollama durante la corrida 5 (caché de prompts desactivada), 2026-11-08T01:08:06Z",
+      "por_modelo": {
+        "qwen3.5:0.8b": {
+          "blob": "sha256-889ea3b9143c",
+          "vmrss_kb": 1617684,
+          "vmrss_gb": 1.657,
+          "vmrss_gib": 1.543
+        },
+        "lfm3:1.7b-q4_K_M": {
+          "blob": "sha256-3793e1e6e226",
+          "vmrss_kb": 1438764,
+          "vmrss_gb": 1.473,
+          "vmrss_gib": 1.372
+        },
+        "embeddinggemma-2:440m": {
+          "blob": "sha256-111e84992a04",
+          "vmrss_kb": 924168,
+          "vmrss_gb": 0.946,
+          "vmrss_gib": 0.881
+        },
+        "granite-embedding:278m": {
+          "blob": "sha256-a658c903bf83",
+          "vmrss_kb": 699712,
+          "vmrss_gb": 0.717,
+          "vmrss_gib": 0.667
+        }
+      }
+    },
+    "docker_stats": "no se puede leer desde el contenedor `servicio` (sin acceso al socket de Docker); medir desde el host con `docker stats`. Referencia de H0: evaluacion/resultados/h0_docker_stats.jsonl",
+    "ventana_contexto": {
+      "num_ctx": 4096,
+      "presupuesto_prompt_tokens": 2000,
+      "contexto_maximo_por_modelo": {
+        "lfm3:1.7b-q4_K_M": 262144,
+        "qwen3.5:0.8b": 262144
+      },
+      "tokens_prompt_generacion_p50": {
+        "qwen_rapida": 714.0,
+        "qwen_composicion": 879.5,
+        "lfm3_composicion": 927.0
+      }
+    },
+    "p1": {
+      "fotos": 30,
+      "fallidas": 0,
+      "segundos": {
+        "n": 30,
+        "media_s": 27.315,
+        "p50_s": 24.476,
+        "p95_s": 41.612,
+        "max_s": 42.347
+      }
+    },
+    "metodos": {
+      "calidad": "juez P7 (LFM3, temperatura 0; fidelidad y relevancia 0–5, calidad = su promedio), similitud granite máxima del texto alternativo con las referencias en español de XM3600 y chrF. Ficha sin texto = 0 (no se manda al juez); texto alternativo vacío = 0 en granite y chrF",
+      "json_valido_primera": "primer evento C6 `llamada_modelo` de la tarea de composición (P2 en la ruta rápida, P3 en la completa) con resultado `ok`, intento 1 y sin respaldo; tiempo agotado o error de transporte en ese intento = no; sin traza = sin dato",
+      "pasa_guardrails_salida": "estado final de la ficha distinto de `requiere_revision`",
+      "latencia": "meta.tiempo_ms; en las composiciones se suma el P1 calculado aparte (p1_unico)",
+      "memoria": "/api/ps de Ollama con el modelo cargado (precalentado con keep_alive -1); referencia RSS de H0",
+      "intervalos": "IC95 de la media por bootstrap (1,000 remuestreos, semilla 2026); diferencias pareadas por foto"
+    },
+    "graficas": [
+      "evaluacion/graficas/r3_modelos_calidad.png",
+      "evaluacion/graficas/r3_modelos_latencia.png"
+    ]
+  }
+}

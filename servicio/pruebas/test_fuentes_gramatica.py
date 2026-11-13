@@ -28,6 +28,8 @@ def test_gramatica_restringe_las_citas_a_los_ids_del_prompt():
     assert sub["properties"]["titular"]["items"]["enum"] == ["foto:xm-a", "regla:iptc#alt"]
     assert "enum" not in str(esquema["properties"]["fuentes"])            # el estático no se modifica
     assert validar({"titular": ["foto:otra"]}, sub)                          # fuera del enum → inválido
+    assert [c for c, v in sub["properties"].items() if v.get("minItems") == 1] == ["titular", "descripcion",
+                                                                                   "texto_alternativo"]
     sin_ids = esquema_con_fuentes(esquema, [])["properties"]["fuentes"]["properties"]
     assert all(v["maxItems"] == 0 for v in sin_ids.values())
 

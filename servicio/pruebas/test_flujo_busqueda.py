@@ -90,6 +90,18 @@ def test_compleja_usa_p4_y_penaliza_exclusiones(entorno):
     assert r["resultados"][0]["documento_id"] != "xm-b"
 
 
+def test_filtro_de_personas_solo_si_la_busqueda_las_menciona(entorno):
+    cfg = entorno["cfg"]
+    p4 = lambda v: json.dumps({"consulta_semantica": "playa", "excluir": [], "contiene_personas": v, "terminos": []})
+    f, _ = entorno["flujo"]({cfg.modelos["composicion"]: [p4(True), p4(False)]})
+    r = f.buscar_texto("fotos de una playa al atardecer con el sol bajo y nubes", k=3, forzar_ruta="compleja")
+    assert r["meta"]["ruta"] == "compleja" and r["consulta_interpretada"]["filtros"]["contiene_personas"] is None
+    r = f.buscar_texto("fotos de una playa al atardecer sin personas en la arena", k=3, forzar_ruta="compleja")
+    assert r["consulta_interpretada"]["filtros"]["contiene_personas"] is False
+    a = next(x for x in r["resultados"] if x["documento_id"] == "xm-a")
+    assert any("menciona personas" in razon for razon in a["razones"])
+
+
 def test_sin_resultados_reformula_con_p5(entorno):
     cfg = entorno["cfg"]
     cfg.parametros["enrutador_busquedas"]["tau_busqueda"] = 1.5     # nada lo alcanza
