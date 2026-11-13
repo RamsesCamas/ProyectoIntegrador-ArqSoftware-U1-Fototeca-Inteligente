@@ -56,8 +56,11 @@ modelos cargados y fichas en curso).
 - **Intercambiabilidad:** las pruebas del servicio sustituyen todos los adaptadores por versiones en memoria
   (`servicio/pruebas/falsos.py`: `AlmacenVectorialFalso`, `EmbebedorFalso`, `ClienteLLMFalso`…) sin cambiar ninguna capa
   superior, y el contrato de capas impide que una capa superior importe un adaptador (ADR-13).
-- **pendiente:** la memoria de `qdrant` con las colecciones llenas, medida con `docker stats` durante el guion de la demo
-  en la verificación final sin red, y la latencia de la recuperación por capa (`contexto` y `cache`) en
+- **Memoria con las colecciones llenas** (2,600 fotos en tres colecciones, 412 fragmentos de normas, 4,500 conceptos y
+  83 prototipos; `indexado.json`). Durante la demo sin red, el pico de `qdrant` fue de 0.409 GiB de sus 0.5 GiB
+  (`h9_memoria.json`, 335 muestras de `docker stats`). Cabe, pero es el contenedor más ajustado: un archivo bastante
+  más grande necesitaría subir su límite o activar el almacenamiento en disco de los vectores.
+- **pendiente:** la latencia de la recuperación por capa (`contexto` y `cache`) en
   `evaluacion/resultados/desempeno.json`.
 
 ## Consecuencias

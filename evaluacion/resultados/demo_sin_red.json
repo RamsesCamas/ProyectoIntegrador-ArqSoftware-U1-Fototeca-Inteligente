@@ -1,0 +1,245 @@
+{
+  "fecha": "2026-11-13T08:56:28+00:00",
+  "url_web": "http://web",
+  "pasos": [
+    {
+      "paso": "0",
+      "nombre": "Sin acceso a internet",
+      "ok": true,
+      "segundos": 0.01,
+      "observado": {
+        "huggingface.co": "sin acceso (gaierror)",
+        "ollama.com": "sin acceso (gaierror)",
+        "1.1.1.1": "sin acceso (OSError)"
+      }
+    },
+    {
+      "paso": "1",
+      "nombre": "Todo local: /health en verde",
+      "ok": true,
+      "segundos": 0.34,
+      "observado": {
+        "estado": "ok",
+        "modelos_cargados": [
+          "embeddinggemma-2:440m",
+          "granite-embedding:278m",
+          "lfm3:1.7b-q4_K_M",
+          "qwen3.5:0.8b"
+        ],
+        "componentes": {
+          "servicio": "ok",
+          "ollama": "ok",
+          "qdrant": "ok",
+          "almacen": "ok",
+          "cache": "ok"
+        }
+      }
+    },
+    {
+      "paso": "2",
+      "nombre": "Catalogar una foto nueva",
+      "ok": true,
+      "segundos": 82.39,
+      "observado": {
+        "http": 200,
+        "ruta": "completa",
+        "tiempo_ms": 78932.6,
+        "campos_con_fuente": [
+          "descripcion",
+          "palabras_clave",
+          "texto_alternativo",
+          "titular"
+        ],
+        "estado_ficha": "borrador",
+        "iteraciones_agente": 0
+      }
+    },
+    {
+      "paso": "3",
+      "nombre": "La misma foto recortada: caché semántica",
+      "ok": true,
+      "segundos": 2.77,
+      "observado": {
+        "http": 200,
+        "cache": "semantica",
+        "duplicado_de": {
+          "documento_id": "up-5be808014d800398",
+          "similitud": 0.9705
+        },
+        "tiempo_ms": 18.0
+      }
+    },
+    {
+      "paso": "4",
+      "nombre": "Captura de un documento: 422 con mensaje seguro",
+      "ok": true,
+      "segundos": 2.09,
+      "observado": {
+        "http": 422,
+        "mensaje": "Esto no parece una fotografía: parece un documento, una tabla o una captura de pantalla. Fototeca Viva cataloga fotografías."
+      }
+    },
+    {
+      "paso": "4b",
+      "nombre": "Inyección en la imagen: se aísla y se marca",
+      "ok": true,
+      "segundos": 112.24,
+      "observado": {
+        "http": 200,
+        "ruta": "completa",
+        "inyeccion_marcada": true,
+        "advertencias": [
+          "La foto contiene texto visible; se trató como dato, no como instrucción.",
+          "No hay información suficiente para 'Fotos similares' (F1-F5).",
+          "No hay información suficiente para 'Reglas' (R1-R4).",
+          "No hay información suficiente para 'Términos del tesauro' (T1-T2)."
+        ]
+      }
+    },
+    {
+      "paso": "5",
+      "nombre": "Región que el archivo no tiene: ciclo de agente",
+      "ok": true,
+      "segundos": 78.88,
+      "observado": {
+        "http": 200,
+        "iteraciones_agente": 2,
+        "reformulo": true,
+        "recuperacion": {
+          "top1": 0.7012,
+          "top5": 0.6432
+        }
+      }
+    },
+    {
+      "paso": "6",
+      "nombre": "Corregir y validar (aprende sin fine-tuning)",
+      "ok": true,
+      "segundos": 0.74,
+      "observado": {
+        "http": 200,
+        "respuesta": {
+          "registrado": true,
+          "id": 1,
+          "traza_id": "48398e84",
+          "documento_id": "up-5be808014d800398",
+          "ficha_validada": true,
+          "version_archivo": 90,
+          "entradas_cache_invalidadas": 1,
+          "ficha": {
+            "titular": "Descripción objetiva de la imagen",
+            "descripcion": "Una fotografía de una caja negra rectangular sobre un fondo de madera clara y brillante.",
+            "texto_alternativo": "Caja negra rectangular sobre fondo de madera clara y brillante.",
+            "descripcion_extendida": "",
+            "palabras_clave": [
+              {
+                "termino": "caja",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.7966
+              },
+              {
+                "termino": "madera",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.8569
+              },
+              {
+                "termino": "paredes",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.7803
+              },
+              {
+                "termino": "luz",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.8732
+              },
+              {
+                "termino": "suelo",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.8459
+              },
+              {
+                "termino": "fondo",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.7978
+              }
+            ],
+            "advertencias": [],
+            "estado": "validada"
+          }
+        }
+      }
+    },
+    {
+      "paso": "7",
+      "nombre": "Buscar: simple y compleja",
+      "ok": true,
+      "segundos": 11.95,
+      "observado": {
+        "simple": {
+          "http": 200,
+          "ruta": "simple",
+          "resultados": 12,
+          "con_razones": true,
+          "tiempo_ms": 320.6
+        },
+        "compleja": {
+          "http": 200,
+          "ruta": "compleja",
+          "resultados": 12,
+          "con_razones": true,
+          "tiempo_ms": 11603.1
+        }
+      }
+    },
+    {
+      "paso": "8",
+      "nombre": "Panel de métricas",
+      "ok": true,
+      "segundos": 0.37,
+      "observado": {
+        "http": 200,
+        "secciones": [
+          "accesibilidad",
+          "bloqueos",
+          "cache",
+          "desde",
+          "eventos_considerados",
+          "generado",
+          "guardrails",
+          "iteraciones_agente",
+          "iteraciones_agente_busquedas",
+          "latencia_por_capa",
+          "latencia_por_endpoint",
+          "latencia_por_evento"
+        ]
+      }
+    },
+    {
+      "paso": "9",
+      "nombre": "La API documentada (Swagger sin CDN)",
+      "ok": true,
+      "segundos": 0.07,
+      "observado": {
+        "docs": 200,
+        "swagger_js": 200,
+        "openapi": 200,
+        "rutas": 13,
+        "cdn_externos": []
+      }
+    }
+  ],
+  "aprobados": 11,
+  "total": 11,
+  "documentos_eliminados_al_final": {
+    "up-5be808014d800398": 200,
+    "up-3781631010b2c250": 200,
+    "up-c9564b44ef715524": 200,
+    "up-f16176ace2523a82": 200
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "fecha": "2026-11-13",
+  "fuente": "evaluacion/resultados/h9_docker_stats.jsonl (docker stats cada ~2 s durante demo_sin_red)",
+  "muestras": 335,
+  "pico_gib": {
+    "web": 0.009,
+    "servicio": 0.075,
+    "ollama": 4.452,
+    "qdrant": 0.409,
+    "servicio-run (cliente de la demo)": 0.027
+  },
+  "limite_gib": {
+    "web": 0.0625,
+    "servicio": 1.5,
+    "ollama": 5.0,
+    "qdrant": 0.5,
+    "servicio-run (cliente de la demo)": 1.5
+  },
+  "suma_limites_servicios_gib": 7.0625,
+  "suma_picos_servicios_gib": 4.945
+}

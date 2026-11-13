@@ -67,7 +67,23 @@ Fuente: `evaluacion/resultados/h0.json` (verificaciones `0.5`, `0.5_sin_limite_c
   contra 42.698 s a 768 px (`0.6_corrida4.p1_por_lado_segun_log`). Esas latencias se descartaron
   (`0.6_corrida4.nota`) y 0.6 se repitió completa con la caché desactivada (corrida 5).
 - Suma de límites: 5,120 + 512 + 1,536 + 64 MiB = 7,232 MiB = **7.0625 GiB** (Docker usa unidades binarias).
-  El uso de los cuatro contenedores juntos durante la demo se mide en H9.
+- **Precalentamiento con las opciones de cada modelo (2026-11-13).** El servicio precalentaba Qwen sin opciones y
+  `llama-server` cargaba también su modelo borrador de decodificación especulativa. Ahora `precalentar` envía `num_ctx`
+  y `draft_num_predict: 0`. Con los cuatro modelos recién cargados, la memoria anónima del cgroup quedó en
+  4,447,547,392 bytes y el `llama-server` de Qwen en 1,478,252 KiB de RSS (`memoria_precalentado.txt`).
+- **Los cuatro contenedores durante la demo sin red** (H9, 335 muestras de `docker stats` mientras corría
+  `demo_sin_red`, 11 de 11 pasos aprobados; `h9_memoria.json`):
+
+  | Contenedor | Pico (GiB) | Límite (GiB) |
+  |---|---|---|
+  | `ollama` | 4.452 | 5.0 |
+  | `qdrant` | 0.409 | 0.5 |
+  | `servicio` | 0.075 | 1.5 |
+  | `web` | 0.009 | 0.0625 |
+  | **Suma** | **4.945** | **7.0625** |
+
+  Ningún contenedor llegó a su límite. `qdrant`, con las siete colecciones llenas, es el más ajustado (82 % de su
+  límite).
 
 ## Consecuencias
 - **Se gana:** los cuatro modelos caben con margen en el límite de 5g sin cambiar ningún modelo, y las latencias
