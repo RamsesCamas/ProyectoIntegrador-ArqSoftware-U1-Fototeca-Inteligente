@@ -58,7 +58,7 @@ al 50 % de los conjuntos); pendiente (H7): (2) calidad de la ficha con RAG contr
 | **Problema que resuelve** | Los archivos institucionales acumulan miles de fotos sin metadatos. Sin metadatos no se pueden encontrar, y sin texto alternativo no son accesibles. Además hay duplicados y versiones recortadas que nadie detecta. Catalogar a mano es lento y queda inconsistente entre una persona y otra |
 | **Resultado que entrega (no un chat)** | 1) Una **ficha catalográfica IPTC** por foto: titular, descripción, texto alternativo de 250 caracteres o menos, descripción extendida y palabras clave del Tesauro UNESCO, **con la fuente de cada campo**. 2) Un **reporte de casi duplicados**. 3) **Resultados de búsqueda** por texto o por foto, con la razón de cada coincidencia. 4) Un **panel de accesibilidad del archivo**: qué porcentaje de fotos tiene texto alternativo validado |
 | **Tipo de producto** | Combina tres tipos del catálogo: **transformador multimodal** (foto → ficha estructurada), **detector de similitud** (casi duplicados) y **generador fundamentado** (cada campo cita sus fuentes) |
-| **Cómo intervienen los modelos, los embeddings y el RAG** | **EmbeddingGemma-2** pone texto e imágenes en un mismo espacio vectorial, y con eso resuelve la búsqueda, los duplicados, la caché semántica y el enrutador. **Qwen3.5-0.8B** ve la imagen y la describe de forma objetiva: es «los ojos». **LFM3-1.7B**, solo de texto, compone la ficha razonando sobre la descripción y el contexto recuperado: es «el catalogador». **granite-embedding-278m** es el segundo modelo de embeddings del experimento de selección y funciona además como verificador independiente en un guardrail de salida. El **RAG es doble**: el *RAG de ejemplos* recupera fotos parecidas ya catalogadas y sus fichas; el *RAG normativo* recupera reglas de IPTC y del W3C sobre texto alternativo y términos del Tesauro UNESCO |
+| **Cómo intervienen los modelos, los embeddings y el RAG** | **EmbeddingGemma-2** pone texto e imágenes en un mismo espacio vectorial, y con eso resuelve la búsqueda, los duplicados, la caché semántica y el enrutador. **Qwen3.5-0.8B** ve la imagen, la describe de forma objetiva y compone la ficha a partir de esa descripción y del contexto recuperado. **LFM3-1.7B**, solo de texto, interpreta las búsquedas complejas y es el respaldo de la composición; la hipótesis inicial era que compondría mejor, y el experimento de selección (ADR-01) no lo sostuvo. **granite-embedding-278m** es el segundo modelo de embeddings del experimento de selección y funciona además como verificador independiente en un guardrail de salida. El **RAG es doble**: el *RAG de ejemplos* recupera fotos parecidas ya catalogadas y sus fichas; el *RAG normativo* recupera reglas de IPTC y del W3C sobre texto alternativo y términos del Tesauro UNESCO |
 | **Qué lo hace original** | (a) **El archivo aprende de las correcciones sin fine-tuning**: cada ficha validada se convierte en ejemplo del RAG, y eso se mide con una curva de aprendizaje. (b) **Trazabilidad por campo**: cada dato de la ficha dice de qué regla, término o foto similar salió. (c) **Accesibilidad como objetivo del producto**, no como extra. (d) **Arquitectura híbrida adaptativa**: la ruta unificada va por defecto y la ruta pipeline entra como ciclo de agente cuando la recuperación es pobre. Todo con modelos de 1.7B parámetros o menos, en CPU |
 | **Cómo se medirá su valor** | Porcentaje de campos aceptados sin edición; tiempo por ficha, manual contra asistido (el autor cronometra 10 fotos); cobertura de texto alternativo; acierto@k de la búsqueda texto→imagen en español; recall y precisión de la detección de duplicados; curva de aprendizaje (aceptación contra número de correcciones acumuladas) |
 
@@ -129,7 +129,7 @@ Tamaños (`evaluacion/conjuntos/particiones.json` → `tamanos`): `archivo` 2,60
 |---|---|---|---|
 | R1 | Dominio y corpus propios | Archivo fotográfico XM3600 más corpus normativo y tesauro | §3; `evaluacion/resultados/corpus_r1.json`; `docs/LICENCIAS-Y-CORPUS.md` |
 | R2 | Ejecución local | Ollama, Qdrant, servicio y web en `docker compose`, solo CPU, sin APIs en la nube | Figuras 2 y 5; prueba sin red con `docker-compose.sinred.yml`: 11 de 11 pasos (`evaluacion/resultados/demo_sin_red.json`) |
-| R3 | Selección de modelos sustentada | Qwen3.5-0.8B contra LFM3-1.7B; EmbeddingGemma-2 contra granite; unificado contra pipeline contra híbrido | §7; ADR-01 y ADR-02; `r3_embeddings.json` (Tabla 10); pendiente (H7): `r3_modelos.json` |
+| R3 | Selección de modelos sustentada | Qwen3.5-0.8B contra LFM3-1.7B; EmbeddingGemma-2 contra granite; unificado contra pipeline contra híbrido | §7; ADR-01 y ADR-02; `r3_modelos.json` (Tabla 8) y `r3_embeddings.json` (Tabla 10) |
 | R4 | Embeddings en una base vectorial | Siete colecciones en Qdrant (Tabla 7) | `servicio/scripts/indexar_archivo.py`; `POST /documentos` |
 | R5 | RAG con fuentes | Cada campo de la ficha lista sus fuentes (regla, término del tesauro o foto similar); cada resultado de búsqueda trae sus razones | Respuestas de `POST /fichas` y `POST /busquedas` (Anexo B) |
 | R6 | Arquitectura en capas | C1–C7, `dominio`, T1 y T2 en paquetes separados; tres contratos de import-linter verificados en `pytest` | Figuras 3 y 4; ADR-13; `servicio/pruebas/test_contratos.py` |
@@ -169,13 +169,13 @@ porque las iniciales resultaron irreales para esta CPU; la regla del ajuste y lo
 |---|---|---|---|
 | Latencia de búsqueda simple | p95 de punta a punta | ≤ 1.5 s | pendiente (H7): `desempeno.json` |
 | Latencia de búsqueda compleja (con P4) | p95 | ≤ 25 s | pendiente (H7): `desempeno.json` |
-| Latencia de ficha, ruta rápida | p50 | ≤ 45 s (inicial: 15 s) | pendiente (H7). Referencia H0: P1 de Qwen a 512 px, p50 de 34.28 s (`h0.json` → `verificaciones.0.6.p1_por_lado.512`) |
-| Latencia de ficha, ruta completa | p50 | ≤ 90 s (inicial: 45 s) | pendiente (H7). Referencia H0: P1 34.28 s y P3 de LFM3 39.351 s de p50 (`verificaciones.0.6`) |
-| Latencia de ficha desde caché | p50 | ≤ 0.5 s | pendiente (H7): `cache.json` |
+| Latencia de ficha, ruta rápida | p50 | ≤ 45 s (inicial: 15 s) | 31.291 s, cumple (`r3_modelos.json` → `por_configuracion.qwen_rapida.latencia_ruta_s`; 30 fotos, Mac M1 Pro). Referencia H0: P1 de Qwen a 512 px, p50 de 34.28 s |
+| Latencia de ficha, ruta completa | p50 | ≤ 90 s (inicial: 45 s) | 50.528 s con P1 incluido, cumple (`r3_modelos.json` → `por_configuracion.qwen_composicion.latencia_ruta_s`; con LFM3 en P3: 56.231 s). Referencia H0: P1 34.28 s y P3 de LFM3 39.351 s de p50 |
+| Latencia de ficha desde caché | p50 | ≤ 0.5 s | 0.023 s en el cliente (sin caché: 69.312 s), cumple; 25 de 25 cargas repetidas salen de la caché exacta (`cache.json` → `metricas.fichas_exacta`, 25 fotos) |
 | Calidad de la búsqueda | R@10 texto→imagen en español | comparativa: la arquitectura elegida debe superar a las otras dos | R@10: unificado 1.0, pipeline 0.96, híbrido 1.0 (empate); R@1: 0.9, 0.704 y 0.82 (`r3_embeddings.json`, n = 250) |
 | Calidad de la ficha | fidelidad y relevancia 0–5, similitud con referencias | se reporta | pendiente (H7): `rag_fichas.json` |
 | Seguridad (guardrails) | bloqueos correctos / falsos positivos | ≥ 90 % / ≤ 10 % | pendiente (H7): `guardrails.json` |
-| Corrección de la caché semántica | respuestas incorrectas desde la caché | ≤ 2 % | pendiente (H7): `cache.json` |
+| Corrección de la caché semántica | respuestas incorrectas desde la caché | ≤ 2 % | Fichas: con τ_dup 0.95, 1 de 75 negativos recibe la ficha de otra foto (FPR 0.0133) con recall 0.94 en 150 casi duplicados, cumple. Búsquedas: 0 incorrectas en 15 paráfrasis, pero también 0 aciertos (similitud máxima 0.907 < 0.95) (`cache.json` → `metricas.fichas_semantica_tau_dup.en_tau_elegido` y `metricas.busquedas`) |
 | Privacidad | salidas sin GPS ni atributos sensibles | 100 % | pendiente (H7): `guardrails.json` |
 | Recursos | suma de límites de memoria / uso pico | ≤ 7.1 GB / se reporta | Límites: 7.0625 GiB (ADR-12). Pico en H0 con los cuatro modelos cargados: `ollama` 4.592 GiB y suma de contenedores 4.813 GiB (`h0.json` → `verificaciones.0.5.docker_stats`). Durante la demo sin red, suma de picos 4.945 GiB (`ollama` 4.452, `qdrant` 0.409, `servicio` 0.075, `web` 0.009; `h9_memoria.json`) |
 | Disponibilidad sin red | funciones operativas sin internet | 100 % | 11 de 11 pasos del guion sin acceso a internet (`demo_sin_red.json`) |
@@ -291,7 +291,7 @@ corpus, que invalida las fichas en caché; al final, la eliminación invalida la
 **Figura 7. Ficha normal (`POST /fichas`).** El recorrido completo con las etiquetas de los diez pasos del flujo de una
 consulta: (1) la web envía la foto y la API valida; (2) el middleware crea el `traza_id`; (3) guardrails de entrada;
 (4) caché exacta y semántica; (6) recuperación de ejemplos y evaluación de su calidad; (5) enrutamiento; (7) generación
-por la ruta completa (P1 con Qwen y P3 con LFM3) o la rápida (P2 con Qwen), siempre a través del gateway; (8) guardrails
+por la ruta completa (P1 y P3 con Qwen, con LFM3 de respaldo en P3) o la rápida (P2 con Qwen), siempre a través del gateway; (8) guardrails
 de salida con su política; (9) guardado en la caché, registro en T1 y respuesta con las fuentes de cada campo y `meta`;
 (10) retroalimentación del archivista, que con `validar_ficha` promueve la ficha como ejemplo del RAG. En Fototeca Viva
 el paso 6 va antes que el 5 porque el enrutador decide con las señales de los vecinos recuperados (ADR-03).
@@ -353,13 +353,22 @@ operación.
   longitud de la consulta, con el costo de cómputo del pipeline; descripción→descripción; asignación de términos del
   tesauro; recuperación de normas.
 
-**Tabla 8.** Comparación de modelos de lenguaje (formato que pide el curso). pendiente (H7): `r3_modelos.json`.
+**Tabla 8.** Comparación de modelos de lenguaje (formato que pide el curso). Fuente:
+`evaluacion/resultados/r3_modelos.json` → `metricas.tabla`, corrida con 30 de las 60 fotos de `eval_fichas`
+(`--fraccion 0.5`). Calidad: promedio de fidelidad y relevancia del juez P7 contra las descripciones humanas en español,
+con su IC95. Latencia: de la ruta en CPU (las composiciones incluyen P1). Memoria: `/api/ps` con el modelo cargado.
 
 | Modelo | Parámetros / cuantización | Calidad (0–5) | Latencia (s) | Memoria (GB) | Licencia |
 |---|---|---|---|---|---|
-| `qwen3.5:0.8b` (ruta rápida, con imagen) | pendiente (H7) | pendiente (H7) | pendiente (H7) | pendiente (H7) | Apache 2.0 (`h0.json` → `verificaciones.0.8.licencias_modelos_ollama`) |
-| `qwen3.5:0.8b` (composición, solo texto) | pendiente (H7) | pendiente (H7) | pendiente (H7) | pendiente (H7) | Apache 2.0 |
-| `lfm3:1.7b-q4_K_M` (composición) | pendiente (H7) | pendiente (H7) | pendiente (H7) | pendiente (H7) | LFM Open License v1.0 (`verificaciones.0.8.licencias_modelos_ollama`) |
+| `qwen3.5:0.8b` (ruta rápida, con imagen) | 752.39M / Q8_0 | 4.8833 (IC95 4.7667–4.9667) | p50 31.291 · p95 81.643 | 0.83 | Apache 2.0 |
+| `qwen3.5:0.8b` (composición P3, solo texto; **elegida**) | 752.39M / Q8_0 | 4.95 (IC95 4.85–5.0) | p50 50.528 · p95 66.827 | 0.83 | Apache 2.0 |
+| `lfm3:1.7b-q4_K_M` (composición P3) | 1.7B / Q4_K_M | 5.0 (IC95 5.0–5.0) | p50 56.231 · p95 70.182 | 1.389 | LFM Open License v1.0 |
+
+Las métricas sin juez y la tasa de guardrails completan la tabla (`metricas.por_configuracion`). Las tres configuraciones
+dan JSON válido a la primera en 1.0 de los casos. Similitud granite máxima con las referencias: 0.7041, 0.6753 y 0.6841;
+chrF: 28.1953, 24.2847 y 23.439. Fichas que salen sin `requiere_revision`: 0.6, 0.6667 y 0.7333. La corrida usó los
+prompts P2/P3 v4; la primera, con v2, se conserva como el «antes» (`r3_modelos_p2p3_v2.json`). Las gráficas están en
+`evaluacion/graficas/r3_modelos_calidad.png` y `r3_modelos_latencia.png`.
 
 **Tabla 9.** Datos de viabilidad de los modelos de lenguaje, medidos en H0 (no sustituyen a la Tabla 8). Fuente:
 `evaluacion/resultados/h0.json` → `verificaciones.0.6` y `modelos_descargados`; memoria en
@@ -405,15 +414,25 @@ como reformulación del ciclo de agente cuando la recuperación es pobre (ADR-07
 por lo que un modelo de lenguaje «dice» de la foto en todos los casos, a cambio de búsquedas y duplicados en segundos y
 sin modelo de lenguaje, lo que importa en una laptop en CPU. Entre los dos modelos de texto, EmbeddingGemma-2 gana con
 claridad en descripción→descripción, y granite queda parejo en tesauro y normas; granite se conserva como segundo modelo
-y como verificador independiente en `consistencia`. *Modelos de lenguaje (ADR-01):* pendiente (H7):
-`r3_modelos.json`. [AUTOR: redactar la conclusión con los resultados y conectarla con la tesis.]
+y como verificador independiente en `consistencia`. *Modelos de lenguaje (ADR-01):* con la misma
+descripción P1, ni el juez (LFM3 − Qwen: 0.05, IC95 [0.0, 0.15], 29 empates de 30) ni las fichas que pasan los
+guardrails sin revisión (22 contra 20 de 30; diferencia pareada 0.0667, IC95 [-0.1333, 0.2667]) separan a LFM3 de
+Qwen, y granite y chrF tampoco. Según la regla escrita antes de medir, decide el costo: **Qwen compone P3** (p50 de la
+ruta completa 50.528 s contra 56.231 s), y LFM3 queda como respaldo de P3 y para interpretar las búsquedas (P4 y P5).
+La hipótesis inicial (el modelo más grande compone mejor) no se sostuvo. En la primera corrida, con P2/P3 v2, LFM3
+parecía mejor (0.7 de sus fichas sin revisión contra 0.4333; `r3_modelos_p2p3_v2.json`), pero esa ventaja venía de un
+defecto que ningún guardrail medía: copiaba el contexto del prompt y citaba en bloque. Al agregar la verificación
+`copia_contexto` y ajustar los prompts (§10.4), la ventaja desapareció. La ruta rápida cuesta menos (p50 31.291 s
+contra 50.528 s) con una calidad del juez de 4.8833 contra 4.95. Se sacrifica la memoria de LFM3 (1.389 GB), que ya no
+compone la tarea principal, a cambio de un respaldo real y de las búsquedas complejas. El juez satura en 5 y es LFM3,
+así que la decisión no se apoya en él. [AUTOR: conectar la conclusión con la tesis.]
 
 ## 7.3 Criterio de los enrutadores
 
 El **enrutador de fichas** decide con señales de los cinco vecinos recuperados: consenso (similitud media imagen–imagen),
 acuerdo (Jaccard medio de sus palabras clave), texto visible en la foto y margen entre el primero y el quinto. Si hay
-texto visible, o el acuerdo o el consenso quedan bajo su umbral, la ficha va por la **ruta completa** (P1 con Qwen y P3 con
-LFM3); si no, por la **rápida** (P2 con Qwen y las fichas vecinas). Sin un umbral calibrado, elige la completa. El
+texto visible, o el acuerdo o el consenso quedan bajo su umbral, la ficha va por la **ruta completa** (P1 y P3 con
+Qwen); si no, por la **rápida** (P2 con Qwen y las fichas vecinas). Sin un umbral calibrado, elige la completa. El
 **enrutador de búsquedas** manda a la ruta compleja (P4 con LFM3) las consultas con negación, con más de dos
 restricciones, con más de doce palabras o más parecidas a los prototipos de consultas complejas; las demás se embeben y
 se buscan directo, y la búsqueda por foto no usa modelo de lenguaje. El detalle, las alternativas y la calibración están
@@ -438,7 +457,7 @@ y τ_inyeccion 0.8392 (`calibracion_h5.json`); τ_tesauro 0.89 (`calibracion_tes
 - **RAG normativo:** 4 reglas de `normas`, con la consulta «texto alternativo y descripción de imagen informativa» más las
   palabras clave de los vecinos; y hasta 10 candidatos del tesauro sobre el umbral τ_tesauro (0.75 inicial).
 - **Armado del prompt:** cada elemento lleva un id estable (`foto:…`, `regla:…`, `tesauro:…`) que el modelo debe citar.
-  El prompt de LFM3 tiene un presupuesto de 2,000 tokens, estimados como caracteres entre 3.5
+  El prompt de P3 tiene un presupuesto de 2,000 tokens, estimados como caracteres entre 3.5
   (`servicio/fototeca/contexto/ensamblador_prompt.py`); si no cabe, se quitan primero los vecinos menos parecidos hasta
   dejar dos, luego las reglas de menor puntaje hasta dejar una, y después lo que quede, en ese orden.
 - **Fragmentación:** una regla por fragmento (ADR-06).
@@ -470,7 +489,7 @@ en SQLite, sin Redis (ADR-04 y ADR-09).
 |---|---|---|---|---|---|---|---|
 | P1 | describir la imagen | Qwen3.5-0.8B | — (la orquestación sigue sin descripción) | 350 | 0.2 | sí | 58 s |
 | P2 | ficha rápida | Qwen3.5-0.8B | — (ficha degradada) | 260 | 0.2 | sí | 58 s |
-| P3 | ficha completa | LFM3-1.7B | Qwen3.5-0.8B (solo texto) | 600 | 0.2 | no | 90 s (64 s con Qwen) |
+| P3 | ficha completa | Qwen3.5-0.8B (solo texto; desde R3, ADR-01) | LFM3-1.7B | 600 | 0.2 | no | 64 s (90 s con LFM3) |
 | P4 | descomponer la búsqueda | LFM3-1.7B | Qwen3.5-0.8B | 200 | 0.0 | no | 90 s (64 s con Qwen) |
 | P5 | reformular la búsqueda | LFM3-1.7B | Qwen3.5-0.8B | 150 | 0.0 | no | 90 s (64 s con Qwen) |
 | P6 | atributos sensibles | Qwen3.5-0.8B | — | 80 | 0.0 | no | 64 s |
@@ -526,10 +545,10 @@ consecuencias). Los que dependen de la evaluación están en estado «Propuesta�
 
 | ADR | Decisión | Estado | Evidencia |
 |---|---|---|---|
-| ADR-01 | Qwen3.5-0.8B para la visión y la ruta rápida; LFM3-1.7B para la composición | Propuesta | pendiente (H7): `r3_modelos.json`; viabilidad en `h0.json` |
+| ADR-01 | Qwen3.5-0.8B ve y compone las fichas; LFM3-1.7B interpreta las búsquedas y es el respaldo de P3 | Aceptada | `r3_modelos.json` (Tabla 8); viabilidad en `h0.json` |
 | ADR-02 | EmbeddingGemma-2 como memoria multimodal y granite como segundo modelo; arquitectura híbrida adaptativa | Aceptada | `r3_embeddings.json`; viabilidad en `h0.json` |
 | ADR-03 | Enrutador de fichas por consenso, acuerdo y texto visible; enrutador de búsquedas por reglas y prototipos | Propuesta | pendiente (H7): `enrutador.json` |
-| ADR-04 | Umbral τ_dup, TTL e invalidación por etiquetas de la caché semántica | Propuesta | pendiente (H7): `cache.json` (barrido de τ_dup) |
+| ADR-04 | Umbral τ_dup, TTL e invalidación por etiquetas de la caché semántica | Aceptada | `cache.json` (barrido de τ_dup: 0.95, recall 0.94 y FPR 0.0133) |
 | ADR-05 | Verificaciones de los guardrails y política de cada falla | Propuesta | pendiente (H7): `guardrails.json` |
 | ADR-06 | Una regla por fragmento en las normas y un concepto por documento en el tesauro | Aceptada | `corpus_r1.json`; recuperación de normas en `r3_embeddings.json` → `metricas.normas` |
 | ADR-07 | Ciclo de agente híbrido adaptativo con MAX_ITER = 2 | Propuesta | pendiente (H7): `agente.json` |
@@ -597,6 +616,35 @@ la mejora del ciclo de agente; la latencia por capa en barras apiladas por ruta;
 - **Piso de relevancia de la búsqueda.** Con el p5 de los pares imagen–descripción propios, una consulta dejaba en
   promedio 3.212 fotos de 600. Se cambió al p95 de los pares ajenos: 30.98 (ADR-03;
   `calibracion_h4_piso_busqueda.json`).
+
+**Hallazgos de la evaluación (H7).** Salieron de leer los casos, no de las métricas agregadas:
+- **La ficha copiaba el contexto y el juez no lo veía.** Con P2/P3 v2, LFM3 usaba como titular una etiqueta del prompt
+  («Descripción objetiva de la imagen», «IPTC Image File») y como palabras clave los titulares de las fotos vecinas con
+  su alias («[F2] Auto de lujo estacionado frente a un restaurante»; `casos/fichas_con_rag_p2p3_v2.jsonl`, foto
+  `xm-1d617e33b2974afc`). El juez P7 calificaba esas fichas con 5 y ningún guardrail lo detectaba, así que la regla de
+  R3 favorecía a LFM3 sin ver el defecto. Capas responsables: C6 (el contrato del prompt) y C3 (faltaba la
+  verificación). Se agregó `copia_contexto` (sin modelo; ADR-05) y los prompts se ajustaron en las 10 fotos de
+  `ajuste_prompts`, nunca en `eval_fichas`. Con v3 la ruta completa dejó de copiar (10 de 10 aprobadas) pero también de
+  citar: 7 de 10 fichas en `requiere_revision` (`ajuste_prompts_p2p3_v3.json`). v4 pide en la gramática al menos una
+  cita por campo de texto y baja a 2 de 10 (`ajuste_prompts_p2p3_v4.json`). En las mismas 30 fotos de
+  evaluación, las fichas con copias pasan de 23 a 0 en `lfm3_composicion` y de 21 a 2 en `con_rag`
+  (`antes_despues_prompts.json`; en `con_rag` el «después» también cambia de modelo, porque desde R3 P3 lo compone
+  Qwen).
+- **La ruta rápida copia el titular de una foto similar.** Qwen lo hace en 4 de 10 fichas aun con la instrucción
+  explícita de no hacerlo (`ajuste_prompts_p2p3_v4.json`). Ocultarle el titular del vecino (P2 v5) no ayudó: en el
+  archivo, el titular de cada ficha es igual a su texto alternativo, porque los dos salen de la descripción humana más
+  corta, así que el modelo lo sigue viendo (3 titulares vacíos contra 4; `ajuste_prompts_p2_v5.json`). Se conserva v4:
+  `copia_contexto` vacía el titular y la ficha queda para el archivista.
+- **Un filtro de personas que nadie pidió.** P4 nunca dejó `contiene_personas` en `null`: lo fijó en las 25 consultas
+  complejas del enrutador (`enrutador_p2p3_v2.json` → `metricas.busquedas.p4.con_filtro_de_personas`); por ejemplo, `true`
+  para el domo de una torre de telecomunicaciones (`casos/enrutador_busquedas_subidas_antes_filtro_personas.jsonl`,
+  `cs-01`). La búsqueda penalizaba a la mitad resultados correctos. El R@10 no cambió (15 de 15 consultas iguales con y
+  sin P4, `metricas.busquedas.complejas_con_p4_menos_sin_p4`), pero sí el orden. Capa responsable: C2, que confiaba en
+  el modelo sin contrastarlo con la consulta. Ahora el filtro solo se respeta si la consulta menciona personas.
+- **La caché de búsquedas no reconoce paráfrasis.** Con τ_busq 0.95, 0 de 15 paráfrasis salen de la caché: la
+  similitud máxima entre una consulta y su paráfrasis fue 0.907 (`cache.json` → `metricas.busquedas.parafraseadas`).
+  Tampoco sirvió ninguna respuesta incorrecta. Tal como está calibrada, la caché semántica de búsquedas protege la
+  corrección pero casi no ahorra cómputo (ADR-04).
 
 pendiente (H7): cinco casos fallidos comentados (por ejemplo, una ficha con poco apego visual, un falso positivo de un
 guardrail, una búsqueda compleja mal descompuesta, un duplicado no detectado y una foto de una región excluida que el

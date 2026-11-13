@@ -2,7 +2,8 @@
 
     python -m evaluacion.antes_despues_prompts
 
-Lee los casos guardados de cada configuración de ficha: el «antes» (`casos/fichas_<config>_p2p3_v2.jsonl`, generado con
+Lee los casos guardados de cada configuración de ficha (con el modelo que compuso cada una: desde R3, P3 lo compone Qwen,
+así que en `con_rag` y `sin_rag` el «después» cambia de prompt y de modelo): el «antes» (`casos/fichas_<config>_p2p3_v2.jsonl`, generado con
 P2/P3 v2) y el «después» (`casos/fichas_<config>.jsonl`, con la versión vigente). Compara solo las fotos que están en
 los dos. Por configuración reporta las fichas con `requiere_revision`, sus motivos, los titulares vacíos y la
 verificación `copia_contexto`: la que registró el flujo o, en los casos v2 (anteriores a ella), la misma función
@@ -43,6 +44,9 @@ def _resumen(casos: list[dict]) -> dict:
         "titulares_vacios": sum(1 for f in fichas if not f.get("titular")),
         "motivos_revision": dict(motivos.most_common()),
         "copia_contexto": resumen_copia_contexto([copia_contexto_caso(r) for r in respuestas]),
+        "modelo_que_compuso": dict(Counter(((r.get("meta") or {}).get("modelos") or {}).get("composicion")
+                                           or ((r.get("meta") or {}).get("modelos") or {}).get("vision") or "sin dato"
+                                           for r in respuestas)),
         "versiones_configuracion": sorted({str((r.get("meta") or {}).get("version_configuracion"))
                                           for r in respuestas} - {"None"}),
     }

@@ -4,7 +4,7 @@
 - Tiempo límite por modelo y tipo de entrada (`tiempos_limite_s`, calibrados en H0 como 1.5 × p95).
 - Reintentos: 1 ante error de transporte o JSON inválido, con 1 s de espera. En el reintento por JSON inválido se
   agrega al prompt el error del validador.
-- Cadena de respaldo: si el modelo preferido agota sus intentos, se usa el de respaldo (P3: LFM3 → Qwen;
+- Cadena de respaldo: si el modelo preferido agota sus intentos, se usa el de respaldo (P3: Qwen → LFM3, desde R3;
   P4/P5: LFM3 → Qwen). El «último recurso» de cada tarea lo decide la orquestación (C2).
 - Registro de uso en T1: modelo, tarea, tokens, duraciones, si se agotó el tiempo y si se usó el respaldo.
 """

@@ -1,0 +1,288 @@
+{
+  "fecha": "2026-11-13T17:35:38+00:00",
+  "antes": "P2/P3 v2 (casos con sufijo _p2p3_v2)",
+  "despues": "versión vigente de los prompts (casos sin sufijo)",
+  "configuraciones": {
+    "qwen_rapida": {
+      "fotos_en_comun": 30,
+      "antes_p2p3_v2": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 9,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa": 8,
+          "el texto alternativo no es consistente con la descripción objetiva": 4,
+          "el texto alternativo tiene poco apego visual a la imagen": 2
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 6,
+          "tasa_fichas_con_copia": 0.2,
+          "titular_marcado": 3,
+          "fichas_con_palabras_quitadas": 4,
+          "palabras_quitadas": 32,
+          "origen": "aplicada a la ficha guardada (casos anteriores a la verificación)"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 22,
+          "lfm3:1.7b-q4_K_M": 8
+        },
+        "versiones_configuracion": [
+          "580643649771"
+        ]
+      },
+      "despues": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 12,
+        "titulares_vacios": 4,
+        "motivos_revision": {
+          "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa": 8,
+          "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista": 7,
+          "el texto alternativo tiene poco apego visual a la imagen": 3,
+          "el texto alternativo no es consistente con la descripción objetiva": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 4,
+          "tasa_fichas_con_copia": 0.1333,
+          "titular_marcado": 4,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 22,
+          "lfm3:1.7b-q4_K_M": 8
+        },
+        "versiones_configuracion": [
+          "5dba96fab1c7"
+        ]
+      }
+    },
+    "qwen_composicion": {
+      "fotos_en_comun": 30,
+      "antes_p2p3_v2": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 17,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "hay campos sin fuente verificable": 9,
+          "el texto alternativo no es consistente con la descripción objetiva": 8,
+          "el texto alternativo tiene poco apego visual a la imagen": 7,
+          "el texto alternativo quedó vacío; escribe uno de 250 caracteres o menos": 2,
+          "no atribuyas a las personas etnia, religión, salud, discapacidad u orientación, ni las identifiques por nombre": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 0,
+          "tasa_fichas_con_copia": 0.0,
+          "titular_marcado": 0,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "aplicada a la ficha guardada (casos anteriores a la verificación)"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 30
+        },
+        "versiones_configuracion": [
+          "580643649771"
+        ]
+      },
+      "despues": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 10,
+        "titulares_vacios": 1,
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 7,
+          "el texto alternativo no es consistente con la descripción objetiva": 6,
+          "el titular generado copia una etiqueta del prompt o de las normas; se dejó vacío para el archivista": 1,
+          "no atribuyas a las personas etnia, religión, salud, discapacidad u orientación, ni las identifiques por nombre": 1,
+          "se eliminaron atributos sensibles": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 1,
+          "tasa_fichas_con_copia": 0.0333,
+          "titular_marcado": 1,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 30
+        },
+        "versiones_configuracion": [
+          "5dba96fab1c7"
+        ]
+      }
+    },
+    "lfm3_composicion": {
+      "fotos_en_comun": 30,
+      "antes_p2p3_v2": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 9,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "el texto alternativo no es consistente con la descripción objetiva": 7,
+          "el texto alternativo tiene poco apego visual a la imagen": 6,
+          "hay campos sin fuente verificable": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 23,
+          "tasa_fichas_con_copia": 0.7667,
+          "titular_marcado": 13,
+          "fichas_con_palabras_quitadas": 20,
+          "palabras_quitadas": 141,
+          "origen": "aplicada a la ficha guardada (casos anteriores a la verificación)"
+        },
+        "modelo_que_compuso": {
+          "lfm3:1.7b-q4_K_M": 30
+        },
+        "versiones_configuracion": [
+          "580643649771"
+        ]
+      },
+      "despues": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 8,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 8,
+          "el texto alternativo no es consistente con la descripción objetiva": 5
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 0,
+          "tasa_fichas_con_copia": 0.0,
+          "titular_marcado": 0,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "modelo_que_compuso": {
+          "lfm3:1.7b-q4_K_M": 30
+        },
+        "versiones_configuracion": [
+          "5dba96fab1c7"
+        ]
+      }
+    },
+    "con_rag": {
+      "fotos_en_comun": 30,
+      "antes_p2p3_v2": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 12,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "el texto alternativo no es consistente con la descripción objetiva": 11,
+          "el texto alternativo tiene poco apego visual a la imagen": 7
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 21,
+          "tasa_fichas_con_copia": 0.7,
+          "titular_marcado": 12,
+          "fichas_con_palabras_quitadas": 17,
+          "palabras_quitadas": 117,
+          "origen": "aplicada a la ficha guardada (casos anteriores a la verificación)"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 5,
+          "lfm3:1.7b-q4_K_M": 25
+        },
+        "versiones_configuracion": [
+          "580643649771"
+        ]
+      },
+      "despues": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 9,
+        "titulares_vacios": 2,
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 8,
+          "el texto alternativo no es consistente con la descripción objetiva": 4,
+          "el titular generado copia una etiqueta del prompt o de las normas; se dejó vacío para el archivista": 1,
+          "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista": 1,
+          "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 2,
+          "tasa_fichas_con_copia": 0.0667,
+          "titular_marcado": 2,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 30
+        },
+        "versiones_configuracion": [
+          "5dba96fab1c7"
+        ]
+      }
+    },
+    "sin_rag": {
+      "fotos_en_comun": 30,
+      "antes_p2p3_v2": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 2,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 2,
+          "el texto alternativo no es consistente con la descripción objetiva": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 12,
+          "tasa_fichas_con_copia": 0.4,
+          "titular_marcado": 6,
+          "fichas_con_palabras_quitadas": 8,
+          "palabras_quitadas": 19,
+          "origen": "aplicada a la ficha guardada (casos anteriores a la verificación)"
+        },
+        "modelo_que_compuso": {
+          "lfm3:1.7b-q4_K_M": 30
+        },
+        "versiones_configuracion": [
+          "580643649771"
+        ]
+      },
+      "despues": {
+        "n": 30,
+        "estado_http_200": 30,
+        "requiere_revision": 8,
+        "titulares_vacios": 0,
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 7,
+          "el texto alternativo no es consistente con la descripción objetiva": 4
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 0,
+          "tasa_fichas_con_copia": 0.0,
+          "titular_marcado": 0,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "modelo_que_compuso": {
+          "qwen3.5:0.8b": 30
+        },
+        "versiones_configuracion": [
+          "5dba96fab1c7"
+        ]
+      }
+    }
+  }
+}

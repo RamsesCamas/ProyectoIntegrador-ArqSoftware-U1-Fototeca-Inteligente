@@ -1,16 +1,18 @@
 # Umbrales calibrados con datos. Lo genera `python -m scripts.aplicar_calibracion`; no se edita a mano.
 # El servicio lo mezcla sobre parametros.yaml (fototeca/api/arranque.py → fusionar_calibracion).
-_generado: '2026-11-13T08:49:20+00:00'
+_generado: '2026-11-13T17:35:23+00:00'
 _origen:
   guardrails.tau_tesauro: calibracion_tesauro.json → tau_elegido
   agente.tau_ret: calibracion_h4.json → umbrales.agente.tau_ret
-  enrutador_fichas.tau_consenso: calibracion_h4.json → umbrales.enrutador_fichas.tau_consenso
+  enrutador_fichas.tau_consenso: enrutador.json → metricas.fichas.umbrales_elegidos.enrutador_fichas.tau_consenso
   enrutador_busquedas.tau_busqueda: calibracion_h4.json → umbrales.enrutador_busquedas.tau_busqueda
   guardrails.tau_apego_visual: calibracion_h4.json → umbrales.guardrails.tau_apego_visual
   guardrails.tau_consistencia: calibracion_h4.json → umbrales.guardrails.tau_consistencia
   guardrails.tau_fuera_dominio: calibracion_h5.json → umbrales.guardrails.tau_fuera_dominio
   guardrails.tau_texto_visible: calibracion_h5.json → umbrales.guardrails.tau_texto_visible
   guardrails.tau_inyeccion: calibracion_h5.json → umbrales.guardrails.tau_inyeccion
+  cache.fichas.tau_dup: cache.json → metricas.fichas_semantica_tau_dup.tau_elegido
+  enrutador_fichas.tau_acuerdo: enrutador.json → metricas.fichas.umbrales_elegidos.enrutador_fichas.tau_acuerdo
 guardrails:
   tau_tesauro: 0.89
   tau_apego_visual: 0.6547
@@ -21,6 +23,10 @@ guardrails:
 agente:
   tau_ret: 0.7634
 enrutador_fichas:
-  tau_consenso: 0.7864
+  tau_consenso: 0.6768
+  tau_acuerdo: 0.0
 enrutador_busquedas:
   tau_busqueda: 0.6086
+cache:
+  fichas:
+    tau_dup: 0.95

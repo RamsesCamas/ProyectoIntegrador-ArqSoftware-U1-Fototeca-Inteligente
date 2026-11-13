@@ -2,7 +2,7 @@
 
 - Cada elemento del contexto lleva un id estable: `foto:xm-…`, `regla:iptc-2025.1#…`, `tesauro:<uri>`. El modelo
   debe citar solo esos ids y el guardrail `fuentes` (C3) lo verifica.
-- Presupuesto para LFM3: 2,000 tokens o menos, estimados como caracteres / 3.5. Si no cabe, se recorta en este
+- Presupuesto del prompt de P3: 2,000 tokens o menos, estimados como caracteres / 3.5. Si no cabe, se recorta en este
   orden: (1) las fichas vecinas, de la menos a la más similar; (2) la descripción extendida de los vecinos (no
   se incluye en estas líneas, así que no aplica); (3) las reglas, de la de menor a la de mayor puntaje. Se
   conservan al menos 2 vecinos y 1 regla mientras sea posible.

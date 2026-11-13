@@ -90,8 +90,8 @@ responde 422 con un `mensaje_seguro`.
 
 | Rol | Tag | Licencia |
 |---|---|---|
-| Visión y ruta rápida | `qwen3.5:0.8b` | Apache 2.0 |
-| Catalogador y ruta capaz | `lfm3:1.7b-q4_K_M` | LFM Open License v1.0 |
+| Visión y composición de las fichas (P1, P2 y P3) | `qwen3.5:0.8b` | Apache 2.0 |
+| Búsquedas complejas (P4, P5) y respaldo de P3 | `lfm3:1.7b-q4_K_M` | LFM Open License v1.0 |
 | Memoria multimodal (embeddings de texto e imagen) | `embeddinggemma-2:440m` | Apache 2.0 |
 | Auditor y segundo embedding | `granite-embedding:278m` | Apache 2.0 |
 

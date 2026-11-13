@@ -19,22 +19,22 @@
       "segundos": 3624.6
     },
     "rag_fichas": {
-      "inicio": "2026-11-13T12:07:38+00:00",
+      "inicio": "2026-11-13T16:35:51+00:00",
       "rapido": false,
       "fraccion": 0.5,
       "estado": "ok",
       "error": null,
-      "fin": "2026-11-13T13:25:36+00:00",
-      "segundos": 4677.5
+      "fin": "2026-11-13T17:31:50+00:00",
+      "segundos": 3358.8
     },
     "enrutador": {
-      "inicio": "2026-11-13T13:25:36+00:00",
+      "inicio": "2026-11-13T17:31:50+00:00",
       "rapido": false,
       "fraccion": 0.5,
       "estado": "ok",
       "error": null,
-      "fin": "2026-11-13T14:02:47+00:00",
-      "segundos": 2231.5
+      "fin": "2026-11-13T17:34:47+00:00",
+      "segundos": 177.0
     },
     "cache": {
       "inicio": "2026-11-13T14:02:47+00:00",
@@ -46,5 +46,5 @@
       "segundos": 2299.4
     }
   },
-  "actualizado": "2026-11-13T16:32:22+00:00"
+  "actualizado": "2026-11-13T17:34:47+00:00"
 }

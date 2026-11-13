@@ -64,7 +64,7 @@ sequenceDiagram
   M-->>FF: ruta y razones
   alt ruta completa
     FF->>M: GENERAR · ejecutar("P3", descripción<br/>de P1, vecinos, reglas y tesauro)
-    M->>O: POST /api/chat · LFM3-1.7B (no repite P1)
+    M->>O: POST /api/chat · Qwen3.5-0.8B, solo texto<br/>(no repite P1 · respaldo: LFM3-1.7B)
   else ruta rápida
     FF->>M: GENERAR · ejecutar("P2", imagen + fichas vecinas)
     M->>O: POST /api/chat · Qwen3.5-0.8B con la imagen

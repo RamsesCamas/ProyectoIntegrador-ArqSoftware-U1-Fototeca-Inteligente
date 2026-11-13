@@ -78,7 +78,7 @@ eliminación con la invalidación por la etiqueta `doc:{id}`.
 **Diagrama 7 · Secuencia de una ficha normal.** El recorrido completo por las capas con las etiquetas de los diez
 pasos del flujo de una consulta: traza, guardrails de entrada, caché, recuperación de ejemplos (que en Fototeca Viva
 va antes del enrutador, porque este decide con señales de los vecinos), enrutamiento, generación por la ruta completa
-(P1 con Qwen y P3 con LFM3) o la rápida (P2 con Qwen), guardrails de salida con su política, guardado en caché y
+(P1 y P3 con Qwen, con LFM3 de respaldo en P3) o la rápida (P2 con Qwen), guardrails de salida con su política, guardado en caché y
 registro en T1, respuesta con fuentes y `meta`, y retroalimentación con validación que promueve la ficha como
 ejemplo del RAG.
 

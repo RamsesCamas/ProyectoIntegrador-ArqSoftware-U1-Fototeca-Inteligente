@@ -1,0 +1,700 @@
+{
+  "modulo": "rag_fichas",
+  "fecha": "2026-11-13T17:31:50+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "5dba96fab1c7",
+  "configuracion": {
+    "configuraciones": {
+      "con_rag": {
+        "sin_cache": true
+      },
+      "sin_rag": {
+        "sin_rag": true,
+        "sin_cache": true
+      }
+    },
+    "recuperacion": null,
+    "percentiles_criterio_vecinos": [
+      75,
+      90
+    ],
+    "k_vecinos": 5,
+    "embebedor_criterio_y_cruce": "granite-embedding:278m"
+  },
+  "metricas": {
+    "conjunto": {
+      "nombre": "eval_fichas",
+      "fotos": 30,
+      "no_subidas": [],
+      "con_etiquetas_open_images": 23
+    },
+    "por_configuracion": {
+      "con_rag": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 4.9667,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.9,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 4.8667,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 5.0,
+          "ic95": [
+            4.7,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 4.9167,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0,
+          "ic95": [
+            4.8,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 4.9167,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 3.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.6993,
+          "p50": 0.7079,
+          "p95": 0.8437,
+          "min": 0.4252,
+          "max": 0.9109,
+          "ic95": [
+            0.6595,
+            0.739
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 25.8917,
+          "p50": 25.745,
+          "p95": 50.5035,
+          "min": 0.46,
+          "max": 62.3,
+          "ic95": [
+            21.4574,
+            31.0668
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.7,
+          "n": 30,
+          "sin_requiere_revision": 21
+        },
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 8,
+          "el texto alternativo no es consistente con la descripción objetiva": 4,
+          "el titular generado copia una etiqueta del prompt o de las normas; se dejó vacío para el archivista": 1,
+          "el titular generado copia el titular de una foto similar; se dejó vacío para el archivista": 1,
+          "el texto alternativo no se apegaba a la imagen; se reintentó por la ruta completa": 1
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 2,
+          "tasa_fichas_con_copia": 0.0667,
+          "titular_marcado": 2,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 47.687,
+          "p50_s": 46.461,
+          "p95_s": 65.474,
+          "max_s": 95.799
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 47.687,
+          "p50_s": 46.461,
+          "p95_s": 65.474,
+          "max_s": 95.799
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.007,
+            "p50_s": 0.0,
+            "p95_s": 0.002,
+            "max_s": 0.19
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.5,
+            "p50_s": 0.376,
+            "p95_s": 1.178,
+            "max_s": 1.507
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.001,
+            "max_s": 0.002
+          },
+          "modelo_vision": {
+            "n": 30,
+            "media_s": 26.241,
+            "p50_s": 24.209,
+            "p95_s": 35.774,
+            "max_s": 44.641
+          },
+          "modelo_composicion": {
+            "n": 26,
+            "media_s": 22.817,
+            "p50_s": 21.973,
+            "p95_s": 28.497,
+            "max_s": 46.603
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 1.079,
+            "p50_s": 0.478,
+            "p95_s": 2.909,
+            "max_s": 11.559
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 1024.9333,
+          "p50": 1051.0,
+          "p95": 1135.65,
+          "min": 793.0,
+          "max": 1137.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 204.1667,
+          "p50": 205.0,
+          "p95": 285.5,
+          "min": 102.0,
+          "max": 299.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "completa": 26,
+          "rapida": 4
+        },
+        "modelo_composicion_final": {
+          "qwen3.5:0.8b": 26
+        },
+        "iteraciones_agente_media": 0.2,
+        "campos_con_fuente_valida": {
+          "tasa": 1.0,
+          "campos_con_texto": 84,
+          "campos_con_fuente": 84
+        },
+        "fidelidad_contexto": {
+          "tasa": 1.0,
+          "citas_validas": 196,
+          "citas_invalidas": 0,
+          "fichas_con_dato": 30,
+          "citas_validas_por_tipo": {
+            "foto_similar": 116,
+            "regla": 80
+          },
+          "tesauro_cota_inferior": null
+        },
+        "recall_palabras_clave_oi": {
+          "n": 23,
+          "media": 0.5424,
+          "p50": 0.5,
+          "p95": 1.0,
+          "min": 0.0,
+          "max": 1.0,
+          "ic95": [
+            0.4201,
+            0.6713
+          ],
+          "micro": 0.4576,
+          "fotos_con_etiquetas": 23
+        },
+        "recall_palabras_clave_oi_exacto_tesauro": {
+          "n": 23,
+          "media": 0.0256,
+          "p50": 0.0,
+          "p95": 0.1611,
+          "min": 0.0,
+          "max": 0.2
+        },
+        "palabras_clave_por_ficha": {
+          "n": 30,
+          "media": 3.8667,
+          "p50": 4.0,
+          "p95": 5.0,
+          "min": 2.0,
+          "max": 6.0
+        }
+      },
+      "sin_rag": {
+        "n": 30,
+        "errores_http": 0,
+        "fichas_vacias": 0,
+        "juez_errores": 0,
+        "juez_fidelidad": {
+          "n": 30,
+          "media": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 5.0,
+          "max": 5.0,
+          "ic95": [
+            5.0,
+            5.0
+          ]
+        },
+        "juez_relevancia": {
+          "n": 30,
+          "media": 4.9667,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.0,
+          "max": 5.0,
+          "ic95": [
+            4.9,
+            5.0
+          ]
+        },
+        "juez_promedio": {
+          "n": 30,
+          "media": 4.9833,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.5,
+          "max": 5.0,
+          "ic95": [
+            4.95,
+            5.0
+          ]
+        },
+        "juez_promedio_solo_fichas_con_texto": {
+          "n": 30,
+          "media": 4.9833,
+          "p50": 5.0,
+          "p95": 5.0,
+          "min": 4.5,
+          "max": 5.0
+        },
+        "granite_max": {
+          "n": 30,
+          "media": 0.6577,
+          "p50": 0.6693,
+          "p95": 0.8188,
+          "min": 0.4182,
+          "max": 0.8407,
+          "ic95": [
+            0.6199,
+            0.6956
+          ]
+        },
+        "chrf": {
+          "n": 30,
+          "media": 21.8227,
+          "p50": 22.05,
+          "p95": 41.344,
+          "min": 0.0,
+          "max": 47.15,
+          "ic95": [
+            18.0207,
+            25.669
+          ]
+        },
+        "json_valido_primera": {
+          "tasa": 1.0,
+          "n": 30,
+          "casos_sin_traza": 0
+        },
+        "pasa_guardrails_salida": {
+          "tasa": 0.7333,
+          "n": 30,
+          "sin_requiere_revision": 22
+        },
+        "motivos_revision": {
+          "el texto alternativo tiene poco apego visual a la imagen": 7,
+          "el texto alternativo no es consistente con la descripción objetiva": 4
+        },
+        "copia_contexto": {
+          "n": 30,
+          "fichas_con_copia": 0,
+          "tasa_fichas_con_copia": 0.0,
+          "titular_marcado": 0,
+          "fichas_con_palabras_quitadas": 0,
+          "palabras_quitadas": 0,
+          "origen": "registrada por el flujo"
+        },
+        "latencia_ruta_s": {
+          "n": 30,
+          "media_s": 45.406,
+          "p50_s": 44.24,
+          "p95_s": 54.164,
+          "max_s": 55.163
+        },
+        "latencia_ficha_s": {
+          "n": 30,
+          "media_s": 45.406,
+          "p50_s": 44.24,
+          "p95_s": 54.164,
+          "max_s": 55.163
+        },
+        "latencia_por_capa_s": {
+          "guardrails_entrada": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.0
+          },
+          "contexto": {
+            "n": 30,
+            "media_s": 0.348,
+            "p50_s": 0.278,
+            "p95_s": 0.65,
+            "max_s": 0.979
+          },
+          "enrutador": {
+            "n": 30,
+            "media_s": 0.0,
+            "p50_s": 0.0,
+            "p95_s": 0.0,
+            "max_s": 0.0
+          },
+          "modelo_vision": {
+            "n": 30,
+            "media_s": 24.206,
+            "p50_s": 23.146,
+            "p95_s": 29.892,
+            "max_s": 31.309
+          },
+          "modelo_composicion": {
+            "n": 30,
+            "media_s": 19.694,
+            "p50_s": 19.206,
+            "p95_s": 24.103,
+            "max_s": 26.882
+          },
+          "guardrails_salida": {
+            "n": 30,
+            "media_s": 1.082,
+            "p50_s": 0.503,
+            "p95_s": 2.927,
+            "max_s": 4.801
+          }
+        },
+        "tokens_prompt_primera": {
+          "n": 30,
+          "media": 588.4333,
+          "p50": 578.0,
+          "p95": 640.1,
+          "min": 557.0,
+          "max": 655.0
+        },
+        "tokens_salida_primera": {
+          "n": 30,
+          "media": 278.0333,
+          "p50": 283.5,
+          "p95": 354.65,
+          "min": 189.0,
+          "max": 370.0
+        },
+        "razon_fin_primera": {
+          "stop": 30
+        },
+        "ruta_final": {
+          "completa": 30
+        },
+        "modelo_composicion_final": {
+          "qwen3.5:0.8b": 30
+        },
+        "iteraciones_agente_media": 0.0,
+        "campos_con_fuente_valida": {
+          "tasa": 0.0,
+          "campos_con_texto": 90,
+          "campos_con_fuente": 0
+        },
+        "fidelidad_contexto": {
+          "tasa": null,
+          "citas_validas": 0,
+          "citas_invalidas": 0,
+          "fichas_con_dato": 30,
+          "citas_validas_por_tipo": {},
+          "tesauro_cota_inferior": null
+        },
+        "recall_palabras_clave_oi": {
+          "n": 23,
+          "media": 0.4577,
+          "p50": 0.4286,
+          "p95": 0.9857,
+          "min": 0.0,
+          "max": 1.0,
+          "ic95": [
+            0.3507,
+            0.5686
+          ],
+          "micro": 0.4294,
+          "fotos_con_etiquetas": 23
+        },
+        "recall_palabras_clave_oi_exacto_tesauro": {
+          "n": 23,
+          "media": 0.0048,
+          "p50": 0.0,
+          "p95": 0.0,
+          "min": 0.0,
+          "max": 0.1111
+        },
+        "palabras_clave_por_ficha": {
+          "n": 30,
+          "media": 4.1333,
+          "p50": 4.0,
+          "p95": 5.0,
+          "min": 3.0,
+          "max": 7.0
+        }
+      }
+    },
+    "con_rag_menos_sin_rag": {
+      "juez_promedio": {
+        "campo": "juez_promedio",
+        "n": 30,
+        "media": -0.0667,
+        "ic95": [
+          -0.1833,
+          0.0167
+        ],
+        "a_mayor": 1,
+        "b_mayor": 3,
+        "empates": 26
+      },
+      "juez_fidelidad": {
+        "campo": "juez_fidelidad",
+        "n": 30,
+        "media": -0.0333,
+        "ic95": [
+          -0.1,
+          0.0
+        ],
+        "a_mayor": 0,
+        "b_mayor": 1,
+        "empates": 29
+      },
+      "juez_relevancia": {
+        "campo": "juez_relevancia",
+        "n": 30,
+        "media": -0.1,
+        "ic95": [
+          -0.2667,
+          0.0333
+        ],
+        "a_mayor": 1,
+        "b_mayor": 3,
+        "empates": 26
+      },
+      "granite_max": {
+        "campo": "granite_max",
+        "n": 30,
+        "media": 0.0416,
+        "ic95": [
+          -0.014,
+          0.0974
+        ],
+        "a_mayor": 19,
+        "b_mayor": 11,
+        "empates": 0
+      },
+      "chrf": {
+        "campo": "chrf",
+        "n": 30,
+        "media": 4.069,
+        "ic95": [
+          -1.9242,
+          10.7816
+        ],
+        "a_mayor": 20,
+        "b_mayor": 10,
+        "empates": 0
+      },
+      "recall_oi": {
+        "campo": "recall_oi",
+        "n": 23,
+        "media": 0.0848,
+        "ic95": [
+          -0.0209,
+          0.2207
+        ],
+        "a_mayor": 7,
+        "b_mayor": 7,
+        "empates": 9
+      }
+    },
+    "cruce_idiomas": {
+      "umbral": 0.7625,
+      "tpr": 0.9624,
+      "fpr": 0.0226,
+      "youden_j": 0.9398,
+      "n_positivos": 133,
+      "n_negativos": 133,
+      "origen_pares": "etiquetas de Open Images con coincidencia exacta en inglés con un concepto del tesauro (prefLabel/altLabel@en) frente a la etiqueta en español de ese concepto",
+      "modelo": "granite-embedding:278m",
+      "similitud_positivos": {
+        "n": 133,
+        "media": 0.9043,
+        "p50": 0.92,
+        "p95": 0.9967,
+        "min": 0.6524,
+        "max": 1.0
+      },
+      "similitud_negativos": {
+        "n": 133,
+        "media": 0.6499,
+        "p50": 0.6575,
+        "p95": 0.7339,
+        "min": 0.5092,
+        "max": 0.8146
+      },
+      "regla": "τ maximiza TPR − FPR (índice de Youden); en empate, el τ mayor"
+    },
+    "acierto_recuperacion_ejemplos": {
+      "normales": {
+        "n": 350,
+        "top1_imagen": {
+          "n": 350,
+          "media": 0.8272,
+          "p50": 0.8276,
+          "p95": 0.9081,
+          "min": 0.6943,
+          "max": 0.9598
+        },
+        "p75": {
+          "acierto@5": 1.0,
+          "ic95": [
+            1.0,
+            1.0
+          ],
+          "acierto@1": 0.94,
+          "azar@5": 0.763
+        },
+        "p90": {
+          "acierto@5": 0.9857,
+          "ic95": [
+            0.9714,
+            0.9971
+          ],
+          "acierto@1": 0.8257,
+          "azar@5": 0.4098
+        }
+      },
+      "regiones_excluidas": {
+        "n": 150,
+        "top1_imagen": {
+          "n": 150,
+          "media": 0.816,
+          "p50": 0.8103,
+          "p95": 0.9023,
+          "min": 0.6746,
+          "max": 0.9567
+        },
+        "p75": {
+          "acierto@5": 1.0,
+          "ic95": [
+            1.0,
+            1.0
+          ],
+          "acierto@1": 0.94,
+          "azar@5": 0.763
+        },
+        "p90": {
+          "acierto@5": 0.9933,
+          "ic95": [
+            0.98,
+            1.0
+          ],
+          "acierto@1": 0.8333,
+          "azar@5": 0.4098
+        }
+      }
+    },
+    "plantilla_revision_manual": {
+      "ruta": "evaluacion/revision_manual/plantilla_fichas.csv",
+      "estado": "escrita",
+      "fichas": 20,
+      "de": 30,
+      "semilla": 2026,
+      "configuracion": "con_rag",
+      "columnas": [
+        "xm_id",
+        "documento_id",
+        "archivo_imagen",
+        "referencias",
+        "titular",
+        "texto_alternativo",
+        "descripcion",
+        "palabras_clave",
+        "estado_ficha",
+        "ruta",
+        "juez_fidelidad",
+        "juez_relevancia",
+        "juez_justificacion",
+        "humano_fidelidad (0-5)",
+        "humano_relevancia (0-5)",
+        "comentario"
+      ]
+    },
+    "metodos": {
+      "recall_palabras_clave_oi": "etiqueta de Open Images (inglés) recuperada si alguna palabra clave (español) tiene coseno granite ≥ τ; τ calibrado con pares de traducción del tesauro (máximo TPR − FPR)",
+      "recall_exacto_tesauro": "la URI de alguna palabra clave tiene la etiqueta de Open Images en inglés",
+      "campos_con_fuente_valida": "campos con texto (titular, descripción, texto alternativo) que conservan ≥1 fuente tras quitar los ids que no estaban en el contexto",
+      "fidelidad_contexto": "citas válidas / (válidas + `invalidas_quitadas` del guardrail `fuentes`); para el tesauro solo cota inferior (las inválidas no traen tipo)",
+      "acierto@5": "algún vecino con similitud granite (descripción validada vs. referencia en español, máximo sobre referencias) ≥ percentil 75 de esa similitud contra todas las fichas validadas",
+      "ficha_vacia": "error HTTP o ficha degradada: calidad 0, recall 0 y sin citas"
+    },
+    "graficas": [
+      "evaluacion/graficas/rag_fichas_con_sin_rag.png",
+      "evaluacion/graficas/rag_fichas_acierto5.png"
+    ],
+    "detalle_recuperacion": "evaluacion/resultados/rag_fichas_recuperacion_detalle.csv"
+  }
+}

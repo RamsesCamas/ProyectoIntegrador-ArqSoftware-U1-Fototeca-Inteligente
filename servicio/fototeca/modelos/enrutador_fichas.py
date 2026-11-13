@@ -7,7 +7,7 @@ Señales (sobre los 5 vecinos que recuperó C5):
 - margen = similitud del 1er vecino − la del 5º.
 
 Regla explícita:
-    si texto_visible o acuerdo < τ_acuerdo o consenso < τ_consenso → ruta «completa» (Qwen describe, LFM3 compone)
+    si texto_visible o acuerdo < τ_acuerdo o consenso < τ_consenso → ruta «completa» (Qwen describe y compone; LFM3 de respaldo)
     si no → ruta «rapida» (Qwen ve la imagen y las fichas vecinas)
 Si τ_consenso todavía no está calibrado, se elige la ruta completa (la conservadora).
 """

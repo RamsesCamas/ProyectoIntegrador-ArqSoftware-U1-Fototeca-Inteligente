@@ -61,12 +61,17 @@ cifra que aparezca sale de `evaluacion/resultados/` y lleva su fuente en letra p
 
 ## 7 · Modelos: quién hace qué · 5:00–6:00
 
-- **Contenido:** Qwen3.5-0.8B = los ojos (y la ruta rápida) · LFM3-1.7B = el catalogador · EmbeddingGemma-2 = la memoria
-  multimodal · granite = el auditor.
-- **Visual:** la tabla comparativa de modelos de lenguaje del informe (Tabla 8): pendiente (H7), de
-  `evaluacion/resultados/r3_modelos.json`.
-- **Notas del orador:** criterios: calidad (juez y métricas sin juez), latencia, memoria, licencia e idioma. Por qué no
-  modelos más grandes: los cuatro ya ocupan el límite de memoria de `ollama` (pico de 4.592 GiB de 5.0,
+- **Contenido:** Qwen3.5-0.8B = los ojos y la pluma (describe y compone las fichas) · LFM3-1.7B = el intérprete de
+  búsquedas y el respaldo · EmbeddingGemma-2 = la memoria multimodal · granite = el auditor.
+- **Visual:** la tabla comparativa de modelos de lenguaje del informe (Tabla 8), de
+  `evaluacion/resultados/r3_modelos.json`, y la gráfica `evaluacion/graficas/r3_modelos_latencia.png`.
+- **Notas del orador:** criterios: calidad (juez y métricas sin juez), guardrails, latencia, memoria, licencia e
+  idioma, con una regla de decisión escrita antes de medir. La hipótesis era que LFM3, más grande, compondría mejor.
+  Con la misma entrada, ni el juez (5.0 contra 4.95) ni las fichas que pasan sin revisión (22 contra 20 de 30) los
+  separan con significancia, así que decide el costo: Qwen compone con p50 de 50.528 s contra 56.231 s
+  (`r3_modelos.json`). Lección: en la primera corrida LFM3 «ganaba» porque copiaba el contexto y el juez no lo veía; al
+  agregar la verificación `copia_contexto` la ventaja desapareció (ADR-01). La ruta rápida tarda menos (p50 31.291 s).
+  Por qué no modelos más grandes: los cuatro ya ocupan el límite de memoria de `ollama` (pico de 4.592 GiB de 5.0,
   `evaluacion/resultados/h0.json` → `verificaciones.0.5.docker_stats`). Qué se sacrificó y por qué es adecuado
   (ADR-01).
 
@@ -86,7 +91,9 @@ cifra que aparezca sale de `evaluacion/resultados/` y lleva su fuente en letra p
 - **Contenido:** ruta rápida o completa según consenso, acuerdo y texto visible · RRF de dos listas · una regla por
   fragmento · caché semántica con τ_dup.
 - **Visual:** una tabla pequeña con los parámetros y su justificación (k = 5 vecinos, k = 4 reglas, RRF k = 60, τ_dup y
-  su barrido) y la curva de τ_dup: pendiente (H7), de `evaluacion/resultados/cache.json`.
+  su barrido) y la curva de τ_dup, `evaluacion/graficas/cache_tau_dup.png`. Con τ_dup = 0.95: recall 0.94 en 150 casi
+  duplicados y 1 de 75 fotos distintas con la ficha de otra (FPR 0.0133, meta ≤ 0.02); el recorte es la transformación
+  más difícil (recall 0.7917) (`evaluacion/resultados/cache.json` → `metricas.fichas_semantica_tau_dup`).
 - **Notas del orador:** ADR-03, ADR-04 y ADR-06; los umbrales se calibran con datos, no a ojo.
 
 ## 10 · Demo en vivo · 8:00–13:00

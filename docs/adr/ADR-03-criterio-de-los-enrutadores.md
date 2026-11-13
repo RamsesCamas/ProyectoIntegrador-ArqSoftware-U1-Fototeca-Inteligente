@@ -7,7 +7,7 @@ seguridad (texto visible en la foto), explicabilidad de la decisión
 
 ## Contexto
 Las dos rutas de la ficha cuestan muy distinto: la **rápida** hace una sola llamada (P2, Qwen con la imagen y las fichas
-vecinas) y la **completa** hace dos (P1 con Qwen y P3 con LFM3; ADR-01). En las búsquedas pasa lo mismo: una búsqueda
+vecinas) y la **completa** hace dos (P1 y P3 con Qwen; ADR-01). En las búsquedas pasa lo mismo: una búsqueda
 **simple** solo embebe el texto y consulta la base vectorial, mientras que una **compleja** llama antes a P4 (LFM3) para
 descomponerla. Hace falta un criterio explícito, barato de calcular y registrado en la traza para decidir cada caso.
 

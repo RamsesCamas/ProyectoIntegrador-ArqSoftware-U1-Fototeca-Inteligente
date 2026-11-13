@@ -46,8 +46,8 @@ etiqueta en español (ninguno descartado). El corpus de fotos (XM3600) se cuenta
 
 | Rol | Tag de Ollama | Licencia | Fuente de la licencia |
 |---|---|---|---|
-| Visión y ruta rápida | `qwen3.5:0.8b` | **Apache 2.0** | `ollama show` (campo `license`, H0 0.8) |
-| Catalogador y ruta capaz | `lfm3:1.7b-q4_K_M` | **LFM Open License v1.0** (Liquid AI) | `ollama show` y ficha de Ollama |
+| Visión y composición de las fichas (P1, P2 y P3) | `qwen3.5:0.8b` | **Apache 2.0** | `ollama show` (campo `license`, H0 0.8) |
+| Búsquedas complejas (P4, P5) y respaldo de P3 | `lfm3:1.7b-q4_K_M` | **LFM Open License v1.0** (Liquid AI) | `ollama show` y ficha de Ollama |
 | Memoria multimodal (embeddings) | `embeddinggemma-2:440m` | **Apache 2.0** | Ficha oficial `huggingface.co/google/embeddinggemma-2` (`license: apache-2.0`); `ollama show` no incluye el texto |
 | Auditor y segundo embedding | `granite-embedding:278m` | **Apache 2.0** (IBM) | `ollama show` |
 
