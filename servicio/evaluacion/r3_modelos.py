@@ -338,7 +338,10 @@ def agregar(casos: list[dict]) -> dict:
         "granite_max": con_ic("granite_max"), "chrf": con_ic("chrf"),
         "json_valido_primera": {**tasa(columna("gen_json_valido_primera")),
                                 "casos_sin_traza": sum(1 for x in casos if not x.get("gen_con_traza"))},
-        "pasa_guardrails_salida": tasa(columna("pasa_guardrails_salida")),
+        "pasa_guardrails_salida": {**tasa(columna("pasa_guardrails_salida")),
+                                   "sin_requiere_revision": sum(1 for v in columna("pasa_guardrails_salida") if v)},
+        # Por qué quedó cada ficha en `requiere_revision` (una ficha puede tener varios motivos).
+        "motivos_revision": dict(Counter(m for x in casos for m in (x.get("revision") or [])).most_common()),
         "latencia_ruta_s": percentiles([v for v in columna("latencia_ruta_s") if v is not None]),
         "latencia_ficha_s": percentiles([v for v in columna("latencia_ficha_s") if v is not None]),
         "latencia_por_capa_s": {k: percentiles([v for v in columna(f"capa_{k}_s") if v is not None]) for k in CAPAS},
@@ -541,20 +544,22 @@ def tabla_r3(agg: dict, modelos: dict, info: dict, memoria: dict, rss: dict) -> 
     return filas, "\n".join(lineas) + "\n\n" + nota
 
 
-def ganador_composicion(dif_comp: dict, p50: dict) -> str:
-    """LFM3 o Qwen para P3: gana la de mayor calidad si el IC95 de la diferencia pareada excluye 0; si no, la de
-    menor latencia p50."""
-    ic = dif_comp.get("ic95")
-    if ic and ic[0] > 0:
-        return "lfm3_composicion"
-    if ic and ic[1] < 0:
-        return "qwen_composicion"
+def ganador_composicion(dif_comp: dict, dif_guard: dict, p50: dict) -> str:
+    """LFM3 o Qwen para P3, en este orden: (1) la de mayor calidad del juez si el IC95 de la diferencia pareada
+    excluye 0; (2) si no, la que deja más fichas sin `requiere_revision` (guardrails de salida: fuentes, consistencia,
+    apego visual) si el IC95 de esa diferencia pareada excluye 0; (3) si tampoco, la de menor latencia p50."""
+    for dif in (dif_comp, dif_guard):
+        ic = (dif or {}).get("ic95")
+        if ic and ic[0] > 0:
+            return "lfm3_composicion"
+        if ic and ic[1] < 0:
+            return "qwen_composicion"
     a, b = p50.get("lfm3_composicion"), p50.get("qwen_composicion")
     return "qwen_composicion" if (a is not None and b is not None and b < a) else "lfm3_composicion"
 
 
-def conclusion(agg: dict, modelos: dict, info: dict, memoria: dict, dif_comp: dict, dif_rapida: dict,
-               ganador: str, num_ctx) -> dict:
+def conclusion(agg: dict, modelos: dict, info: dict, memoria: dict, dif_comp: dict, dif_guard: dict,
+               dif_rapida: dict, ganador: str, num_ctx) -> dict:
     """Conclusión escrita SOLO a partir de los números medidos (regla de decisión explícita)."""
     q = {k: agg[k]["juez_promedio"].get("media") for k in CONFIGS_R3}
     p50 = {k: agg[k]["latencia_ruta_s"].get("p50_s") for k in CONFIGS_R3}
@@ -568,8 +573,17 @@ def conclusion(agg: dict, modelos: dict, info: dict, memoria: dict, dif_comp: di
     elif ic[1] < 0:
         veredicto = f"{mq} compone fichas de mayor calidad que {ml}; los datos NO respaldan a {ml} en P3 (revisar ADR-01)"
     else:
-        veredicto = (f"la diferencia de calidad no es significativa (el IC95 incluye 0); con calidad equivalente decide "
-                     f"el costo y la composición más rápida es {modelos[ganador]} (p50 {fmt(p50[ganador], 1)} s)")
+        icg = dif_guard.get("ic95")
+        pg = {k: agg[k]["pasa_guardrails_salida"].get("tasa") for k in CONFIGS_R3}
+        guard = (f"{fmt_pct(pg['lfm3_composicion'])} contra {fmt_pct(pg['qwen_composicion'])} de fichas sin "
+                 f"`requiere_revision` (diferencia pareada {fmt(dif_guard.get('media'))}, IC95 {fmt_ic(icg)})")
+        if icg and (icg[0] > 0 or icg[1] < 0):
+            veredicto = (f"la diferencia de calidad del juez no es significativa (el IC95 incluye 0), pero los guardrails "
+                         f"de salida sí separan a las dos composiciones: {guard}; gana {modelos[ganador]}")
+        else:
+            veredicto = (f"ni la calidad del juez ni los guardrails de salida ({guard}) separan a las dos composiciones; "
+                         f"decide el costo y la composición más rápida es {modelos[ganador]} "
+                         f"(p50 {fmt(p50[ganador], 1)} s)")
     composicion = (f"Composición (ruta completa, P3) con la misma descripción P1: {ml} obtiene calidad "
                    f"{fmt(q['lfm3_composicion'])} y {mq} {fmt(q['qwen_composicion'])} (diferencia {ml} − {mq}: "
                    f"{fmt(dif_comp.get('media'))}, IC95 {fmt_ic(ic)}, n = {dif_comp.get('n')}); latencia p50 de la ruta "
@@ -615,8 +629,9 @@ def conclusion(agg: dict, modelos: dict, info: dict, memoria: dict, dif_comp: di
         "ventana_contexto": contexto,
         "idioma": "Todas las métricas de calidad se miden contra descripciones humanas en español (XM3600): "
                   "reflejan el desempeño en español.",
-        "regla_de_decision": "P3: gana la composición de mayor calidad si el IC95 de la diferencia pareada excluye "
-                             "0; si no, la de menor latencia p50.",
+        "regla_de_decision": "P3: gana la composición de mayor calidad del juez si el IC95 de la diferencia pareada "
+                             "excluye 0; si no, la que deja más fichas sin `requiere_revision` si el IC95 de esa "
+                             "diferencia pareada excluye 0; si tampoco, la de menor latencia p50.",
     }
 
 
@@ -662,7 +677,8 @@ def ejecutar(c: ClienteEval) -> dict:
     rss = rss_h0()
     p50 = {k: agg[k]["latencia_ruta_s"].get("p50_s") for k in CONFIGS_R3}
     dif_comp = diferencia_pareada(casos["lfm3_composicion"], casos["qwen_composicion"], "juez_promedio")
-    ganador = ganador_composicion(dif_comp, p50)
+    dif_guard = diferencia_pareada(casos["lfm3_composicion"], casos["qwen_composicion"], "pasa_guardrails_salida")
+    ganador = ganador_composicion(dif_comp, dif_guard, p50)
     dif_rapida = diferencia_pareada(casos["qwen_rapida"], casos[ganador], "juez_promedio")
     tabla, markdown = tabla_r3(agg, modelos, info, memoria, rss)
     num_ctx = c.config.parametro("generacion.num_ctx")
@@ -674,10 +690,11 @@ def ejecutar(c: ClienteEval) -> dict:
             "lfm3_composicion_menos_qwen_composicion": {**diferencia_pareada(
                 casos["lfm3_composicion"], casos["qwen_composicion"], "juez_promedio"),
                 "granite": diferencia_pareada(casos["lfm3_composicion"], casos["qwen_composicion"], "granite_max"),
-                "chrf": diferencia_pareada(casos["lfm3_composicion"], casos["qwen_composicion"], "chrf")},
+                "chrf": diferencia_pareada(casos["lfm3_composicion"], casos["qwen_composicion"], "chrf"),
+                "pasa_guardrails_salida": dif_guard},
             f"qwen_rapida_menos_{ganador}": dif_rapida},
         "tabla": tabla, "tabla_markdown": markdown,
-        "conclusion": conclusion(agg, modelos, info, memoria, dif_comp, dif_rapida, ganador, num_ctx),
+        "conclusion": conclusion(agg, modelos, info, memoria, dif_comp, dif_guard, dif_rapida, ganador, num_ctx),
         "modelos": info, "memoria_api_ps": memoria, "memoria_rss_h0": rss,
         "docker_stats": "no se puede leer desde el contenedor `servicio` (sin acceso al socket de Docker); medir "
                         "desde el host con `docker stats`. Referencia de H0: evaluacion/resultados/h0_docker_stats.jsonl",

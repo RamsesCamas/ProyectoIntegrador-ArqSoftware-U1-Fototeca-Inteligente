@@ -34,8 +34,8 @@ from fototeca.dominio.errores import NoEncontrado, ServicioNoDisponible, TiempoA
 from fototeca.dominio.esquemas_ficha import Ficha, FichaRegistrada, Fuente, PalabraClave
 from fototeca.guardrails.entrada.imagen import VerificadorImagen
 from fototeca.guardrails.resultado import ResultadoGuardrail
-from fototeca.guardrails.salida.reglas import (aplicar_reglas_iptc, recortar_longitudes, verificar_esquema,
-                                              verificar_fuentes)
+from fototeca.guardrails.salida.reglas import (aplicar_reglas_iptc, limpiar_advertencias, recortar_longitudes,
+                                              verificar_esquema, verificar_fuentes)
 from fototeca.guardrails.salida.semanticas import GuardrailsSemanticos
 from fototeca.modelos.enrutador_fichas import DecisionRuta, EnrutadorFichas
 from fototeca.modelos.gateway import Gateway, SalidaTarea
@@ -338,7 +338,7 @@ class FlujoFicha:
         # Los modelos citan con alias cortos (F1, R1, T1); aquí se traducen a los ids reales del contexto.
         fuentes_crudas = e.contexto.resolver_citas(datos.get("fuentes", {})) if e.contexto else datos.get("fuentes", {})
         datos["palabras_clave"] = []
-        datos["advertencias"] = [a for a in datos.get("advertencias", []) if isinstance(a, str)]
+        datos["advertencias"] = limpiar_advertencias(datos.get("advertencias", []))
         resultados: list[ResultadoGuardrail] = []
         with _Cronometro(e, "guardrails_salida"):
             crudos, recortes = recortar_longitudes({k: datos[k] for k in ("titular", "descripcion", "texto_alternativo",

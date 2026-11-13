@@ -54,6 +54,18 @@ def recortar_longitudes(datos: dict) -> tuple[dict, list[str]]:
     return salida, cambios
 
 
+# Alias de citas del prompt (F1, R2, T3). El archivista no los ve, así que una advertencia que los menciona no le sirve.
+_ALIAS_CITA = re.compile(r"\b[FRT]\d{1,2}\b")
+
+
+def limpiar_advertencias(advertencias) -> list[str]:
+    """Quita de las advertencias del modelo lo que no es texto o habla de los alias internos del prompt (en R3, LFM3
+    copió `F1`…`F5` como advertencias en 8 de 30 fichas)."""
+    if not isinstance(advertencias, list):
+        return []
+    return [a.strip() for a in advertencias if isinstance(a, str) and a.strip() and not _ALIAS_CITA.search(a)]
+
+
 def verificar_esquema(datos: dict) -> tuple[Ficha | None, ResultadoGuardrail]:
     try:
         ficha = Ficha.model_validate(datos)

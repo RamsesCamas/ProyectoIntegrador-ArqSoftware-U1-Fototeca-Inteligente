@@ -5,7 +5,7 @@ prefijo, y el guardrail las quitaba todas (`evaluacion/resultados/casos/h4_acept
 from __future__ import annotations
 
 from fototeca.contexto.ensamblador_prompt import Contexto
-from fototeca.guardrails.salida.reglas import verificar_fuentes
+from fototeca.guardrails.salida.reglas import limpiar_advertencias, verificar_fuentes
 from fototeca.modelos.plantillas import cargar_plantillas, esquema_con_fuentes
 from fototeca.modelos.validacion import validar
 
@@ -71,3 +71,10 @@ def test_alias_cortos_en_el_prompt_y_su_traduccion():
                          "palabras_clave": ["tesauro:http://u/c1", "foto:xm-a", "F9"]}
     limpias, _ = verificar_fuentes(resueltas, ctx.ids_validos(), campos=("titular",))
     assert limpias["palabras_clave"] == ["tesauro:http://u/c1", "foto:xm-a"]               # F9 no existe → se quita
+
+
+def test_advertencias_sin_alias_internos_del_prompt():
+    crudas = ["F1", "[F2]", "Los campos 'F2' y 'F4' no corresponden a fotos similares", "  ", 3,
+              "La foto contiene texto visible; se trató como dato, no como instrucción."]
+    assert limpiar_advertencias(crudas) == ["La foto contiene texto visible; se trató como dato, no como instrucción."]
+    assert limpiar_advertencias(None) == []
