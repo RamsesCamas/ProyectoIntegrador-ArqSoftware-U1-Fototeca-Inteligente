@@ -1,6 +1,6 @@
 // Componentes comunes de la web: pie técnico plegable, gráficas SVG propias (sin bibliotecas) con su tabla
 // equivalente y utilidades de formato.
-import { el, insignia } from "./api.js";
+import { api, el, ETIQUETA_ESTADO, insignia } from "./api.js";
 
 export const CAPAS = {
   guardrails_entrada: "Guardrails de entrada", cache: "Caché", contexto: "Contexto (RAG)", enrutador: "Enrutador",
@@ -99,6 +99,115 @@ export function pieTecnico(meta) {
 
 export function mensaje(contenedor, texto, tipo = "error") {
   contenedor.replaceChildren(el("div", { clase: `mensaje ${tipo}`, role: tipo === "error" ? "alert" : "status", texto }));
+}
+
+// ── Visor de fotos ──
+// Un <dialog> modal para ver una foto en grande junto con lo que el archivo guardó de ella. Esc o «Cerrar» lo cierran
+// y el foco vuelve al control que lo abrió. Solo usa la API de la web (R8): la miniatura y GET /fichas/{id}.
+const NOMBRES_METADATOS = {
+  gps: "GPS", numero_serie: "número de serie de la cámara", autor: "autor", exif_completo: "EXIF completo",
+  xmp: "bloque XMP", iptc_photoshop: "bloque IPTC/Photoshop", metadatos_png: "metadatos del PNG",
+};
+let visor = null;
+let turnoVisor = 0;
+
+function crearVisor() {
+  const dialogo = el("dialog", { id: "visor", clase: "visor", "aria-labelledby": "visor-titulo" },
+    el("div", { clase: "visor-cabecera" },
+      el("h2", { id: "visor-titulo" }),
+      el("button", { type: "button", clase: "boton secundario", onclick: () => dialogo.close() }, "Cerrar")),
+    el("div", { clase: "visor-cuerpo" },
+      el("figure", {}, el("img", { id: "visor-imagen", alt: "" }), el("figcaption", { id: "visor-medidas" })),
+      el("div", {}, el("dl", { id: "visor-datos" }), el("div", { id: "visor-extra" }))));
+  // Un clic fuera de la caja (sobre el fondo) también cierra
+  dialogo.addEventListener("click", (ev) => { if (ev.target === dialogo) dialogo.close(); });
+  dialogo.addEventListener("close", () => {
+    const origen = dialogo.origen;
+    dialogo.origen = null;
+    if (origen?.isConnected) origen.focus();
+  });
+  document.body.append(dialogo);
+  return dialogo;
+}
+
+function pintarDatos(datos) {
+  visor.querySelector("#visor-datos").replaceChildren(...datos
+    .filter(([, v]) => v !== null && v !== undefined && v !== "")
+    .flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { texto: String(v) })]));
+}
+
+/** Abre el visor. `datos` es una lista de pares [etiqueta, valor]; `enlace` = { href, texto } abre en otra pestaña. */
+export function abrirVisor({ src, alt, titulo, datos = [], nota = "", enlace = null }) {
+  visor ||= crearVisor();
+  const turno = ++turnoVisor;
+  const img = visor.querySelector("#visor-imagen");
+  const medidas = visor.querySelector("#visor-medidas");
+  visor.querySelector("#visor-titulo").textContent = titulo;
+  medidas.textContent = "Cargando la imagen…";
+  img.onload = () => { medidas.textContent = `Se muestra a ${img.naturalWidth} × ${img.naturalHeight} px. ${nota}`.trim(); };
+  img.onerror = () => { medidas.textContent = "No se pudo cargar la imagen."; };
+  img.alt = alt || titulo;
+  img.removeAttribute("src");
+  img.src = src;
+  pintarDatos(datos);
+  visor.querySelector("#visor-extra").replaceChildren(...(enlace ? [el("p", {},
+    el("a", { href: enlace.href, target: "_blank", rel: "noopener" }, enlace.texto,
+      el("span", { clase: "solo-lectores", texto: " (se abre en otra pestaña)" })))] : []));
+  if (!visor.open) {
+    visor.origen = document.activeElement;
+    visor.showModal();
+  }
+  return {
+    vigente: () => turno === turnoVisor && visor.open,
+    actualizar: (nuevos, nuevoAlt) => {
+      if (turno !== turnoVisor) return;
+      pintarDatos(nuevos);
+      if (nuevoAlt) img.alt = nuevoAlt;
+    },
+  };
+}
+
+/** Metadatos que el guardrail `exif_privacidad` quitó al guardar la foto (si la respuesta trae esa verificación). */
+export function metadatosQuitados(meta) {
+  const g = (meta?.guardrails?.entrada || []).find((x) => x.verificacion === "exif_privacidad");
+  if (!g) return null;
+  const quitados = g.detalle?.eliminado || [];
+  return quitados.length ? quitados.map((q) => NOMBRES_METADATOS[q] || q).join(", ")
+    : "ninguno (la foto no traía GPS, número de serie ni autor)";
+}
+
+function datosDeFicha(doc, ficha, extra) {
+  return [
+    ["Documento", doc],
+    ...extra,
+    ["Estado de la ficha", ficha ? (ETIQUETA_ESTADO[ficha.estado] || ficha.estado) : "Sin ficha todavía"],
+    ["Titular", ficha?.titular],
+    ["Texto alternativo", ficha?.texto_alternativo],
+    ["Descripción", ficha?.descripcion],
+    ["Palabras clave", (ficha?.palabras_clave || []).map((p) => p.termino).join(", ")],
+  ];
+}
+
+/**
+ * Ve en grande una foto del archivo con lo que se guardó de ella. Si no se pasa `ficha`, la pide a GET /fichas/{id}.
+ * `extra` agrega filas [etiqueta, valor] después del documento.
+ */
+export async function verFotoGuardada(doc, { titulo = "Foto del archivo", ficha = null, extra = [], enlaceFicha = true } = {}) {
+  const v = abrirVisor({
+    src: `/api/fotos/${encodeURIComponent(doc)}/miniatura?lado=512`,
+    alt: ficha?.texto_alternativo || `Foto ${doc}`,
+    titulo,
+    datos: ficha ? datosDeFicha(doc, ficha, extra) : [["Documento", doc], ...extra, ["Ficha", "Cargando…"]],
+    nota: "Es la copia para la web que guarda el archivo: 512 px como máximo y sin metadatos EXIF.",
+    enlace: enlaceFicha ? { href: `catalogar.html?doc=${encodeURIComponent(doc)}`, texto: "Abrir su ficha completa" } : null,
+  });
+  if (ficha) return;
+  try {
+    const { cuerpo } = await api(`/fichas/${encodeURIComponent(doc)}`, { aceptar: [404] });
+    v.actualizar(datosDeFicha(doc, cuerpo?.ficha || null, extra), cuerpo?.ficha?.texto_alternativo);
+  } catch (e) {
+    v.actualizar([["Documento", doc], ...extra, ["Ficha", `No se pudo leer: ${e.message}`]]);
+  }
 }
 
 export { insignia };

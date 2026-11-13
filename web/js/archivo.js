@@ -1,7 +1,7 @@
 // Archivo: GET /api/documentos (paginado) y DELETE /api/documentos/{id} con confirmación en la página (sin
 // window.confirm). Las miniaturas usan como `alt` el texto alternativo de su ficha (GET /api/fichas/{id}).
 import { api, anunciar, el, ETIQUETA_ESTADO } from "./api.js";
-import { mensaje } from "./comun.js";
+import { mensaje, verFotoGuardada } from "./comun.js";
 
 const POR_PAGINA = 24;
 const parametros = new URLSearchParams(location.search);
@@ -68,8 +68,11 @@ async function cargar() {
     document.getElementById("filas").replaceChildren(...cuerpo.documentos.map((d) => {
       let vista = "—";
       if (d.tipo === "foto") {
-        vista = el("img", { src: `/api/fotos/${encodeURIComponent(d.documento_id)}/miniatura?lado=96`, alt: `Foto ${d.nombre}`, width: "64" });
-        if (d.estado_ficha) conFicha.push({ doc: d, img: vista });
+        const img = el("img", { src: `/api/fotos/${encodeURIComponent(d.documento_id)}/miniatura?lado=96`, alt: `Foto ${d.nombre}`, width: "64" });
+        if (d.estado_ficha) conFicha.push({ doc: d, img });
+        // Clic en la miniatura: la foto en grande con lo que el archivo guardó de ella (su ficha)
+        vista = el("button", { type: "button", clase: "boton-imagen miniatura-archivo", "aria-label": `Ver en grande ${d.nombre}`,
+          onclick: () => verFotoGuardada(d.documento_id, { titulo: d.nombre, extra: [["Fecha de carga", (d.fecha || "").slice(0, 10)]] }) }, img);
       }
       const boton = el("button", { type: "button", clase: "boton secundario", "aria-label": `Eliminar ${d.nombre}`,
         onclick: (ev) => pedirConfirmacion(d, ev.currentTarget) }, "Eliminar");

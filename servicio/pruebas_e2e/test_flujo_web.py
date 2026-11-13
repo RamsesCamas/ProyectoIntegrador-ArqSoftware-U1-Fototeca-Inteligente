@@ -100,6 +100,10 @@ def test_flujo_cargar_catalogar_validar_buscar_metricas(sesion, foto_de_prueba):
         # 1. Cargar y catalogar (una sola foto: la llamada es síncrona y muestra la ficha)
         pagina.goto("/catalogar.html")
         pagina.set_input_files("#fotos", str(foto_de_prueba))
+        # Vista previa local de la foto elegida, antes de subirla
+        expect(pagina.locator("#vista-previa li")).to_have_count(1)
+        expect(pagina.locator("#vista-previa")).to_contain_text(foto_de_prueba.name)
+        assert pagina.get_attribute("#vista-previa img", "alt")
         pagina.click("#boton-catalogar")
         titulo = pagina.locator("#titulo-revision")
         titulo.wait_for(timeout=ESPERA_FICHA_MS)
@@ -108,6 +112,25 @@ def test_flujo_cargar_catalogar_validar_buscar_metricas(sesion, foto_de_prueba):
         alt = pagina.input_value("#campo-texto_alternativo")
         assert 0 < len(alt) <= 250, alt
         assert pagina.get_attribute("#revision figure.foto img", "alt")
+
+        # Visor: la foto guardada en grande con su ficha; Esc lo cierra y el foco vuelve a la foto
+        boton_foto = pagina.get_by_role("button", name="Ver en grande la foto guardada y su ficha")
+        boton_foto.click()
+        visor = pagina.locator("dialog#visor")
+        expect(visor).to_be_visible()
+        expect(visor.locator("#visor-datos")).to_contain_text(documento)
+        expect(visor.locator("#visor-medidas")).to_contain_text("sin metadatos EXIF")
+        pagina.keyboard.press("Escape")
+        expect(visor).to_be_hidden()
+        expect(boton_foto).to_be_focused()
+        # Si la ficha cita una foto similar, su chip abre el ejemplo en el visor
+        chip = pagina.locator("button.chip-foto").first
+        if chip.count():
+            chip.click()
+            expect(visor).to_be_visible()
+            expect(pagina.locator("#visor-titulo")).to_have_text("Foto similar usada como ejemplo")
+            pagina.get_by_role("button", name="Cerrar").click()
+            expect(visor).to_be_hidden()
 
         # 2. Fuentes: cada campo muestra sus chips o avisa que no tiene fuente verificable
         for campo in ("titular", "texto_alternativo", "descripcion"):
@@ -136,7 +159,8 @@ def test_flujo_cargar_catalogar_validar_buscar_metricas(sesion, foto_de_prueba):
         pagina.click("#formulario-texto button[type=submit]")
         pagina.wait_for_function("() => { const m = document.querySelector('#estado .mensaje');"
                                  " return m && !m.textContent.startsWith('Buscando'); }", timeout=180_000)
-        expect(pagina.locator("#estado .mensaje.error")).to_have_count(0)
+        error_busqueda = pagina.locator("#estado .mensaje.error")
+        assert error_busqueda.count() == 0, f"La búsqueda «{consulta}» falló: {error_busqueda.first.inner_text()}"
         for tarjeta in pagina.locator("#resultados article").all():
             assert tarjeta.locator("img").get_attribute("alt")
             assert tarjeta.locator(".razones li").count() >= 1

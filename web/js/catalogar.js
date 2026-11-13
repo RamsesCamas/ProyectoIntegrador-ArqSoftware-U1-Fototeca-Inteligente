@@ -1,6 +1,6 @@
 // Catalogar: subir fotos → ficha (o lote) → revisar con fuentes → retroalimentación y validación.
 import { api, anunciar, el, ETIQUETA_ESTADO, insignia } from "./api.js";
-import { mensaje, pieTecnico, textoGuardrail } from "./comun.js";
+import { abrirVisor, mensaje, metadatosQuitados, pieTecnico, textoGuardrail, verFotoGuardada } from "./comun.js";
 
 const ETIQUETAS_CAMPO = {
   titular: "Titular", texto_alternativo: "Texto alternativo", descripcion: "Descripción",
@@ -11,16 +11,26 @@ const MAXIMOS = { titular: 120, texto_alternativo: 250, descripcion: 800, descri
 const progreso = document.getElementById("progreso");
 const revision = document.getElementById("revision");
 const OTRA_PESTANA = { target: "_blank", rel: "noopener" };
+const vistaPrevia = document.getElementById("vista-previa");
+const MAX_PREVIAS = 24;
+let urlsPrevias = [];
 
-/** Fuente de un campo como chip: foto similar (con miniatura), regla, término del tesauro (con su URI) o archivista. */
+const tamano = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
+
+/**
+ * Fuente de un campo como chip: foto similar (con miniatura; abre el visor con la foto y la ficha del ejemplo), regla,
+ * término del tesauro (con su URI) o archivista.
+ */
 function chipFuente(f) {
   const puntaje = f.puntaje != null ? ` · ${f.puntaje}` : "";
   if (f.tipo === "foto_similar") {
-    return el("a", { clase: "chip chip-foto", href: `catalogar.html?doc=${encodeURIComponent(f.id)}`, ...OTRA_PESTANA,
-      title: f.titulo ? `Foto similar: ${f.titulo}` : `Foto similar ${f.id}` },
+    return el("button", { type: "button", clase: "chip chip-foto",
+      title: f.titulo ? `Foto similar: ${f.titulo} (ver en grande)` : `Foto similar ${f.id} (ver en grande)`,
+      onclick: () => verFotoGuardada(f.id, { titulo: "Foto similar usada como ejemplo",
+        extra: [["Puntaje de recuperación", f.puntaje]] }) },
       el("img", { src: `/api/fotos/${encodeURIComponent(f.id)}/miniatura?lado=96`, alt: "", width: "24", height: "24" }),
       `Foto similar${puntaje}`,
-      el("span", { clase: "solo-lectores", texto: `: ${f.titulo || f.id} (se abre en otra pestaña)` }));
+      el("span", { clase: "solo-lectores", texto: `: ${f.titulo || f.id} (ver la foto y su ficha)` }));
   }
   if (f.tipo === "tesauro") {
     const texto = `Tesauro: ${f.titulo || f.id}${puntaje}`;
@@ -175,11 +185,16 @@ function mostrarFicha(respuesta) {
       botones.forEach((b) => { b.disabled = false; });
     }
   });
+  // El visor muestra la copia guardada y la ficha tal como está guardada (se actualiza al validar)
+  const verGuardada = () => verFotoGuardada(doc, { titulo: "Foto guardada en el archivo", ficha: original, enlaceFicha: false,
+    extra: [["Ruta", meta.ruta], ["Metadatos quitados al guardar", metadatosQuitados(meta)]] });
   revision.replaceChildren(
     el("h2", { id: "titulo-revision", tabindex: "-1", texto: "Revisa la ficha" }),
     el("div", { clase: "revision" },
       el("figure", { clase: "foto" },
-        el("img", { src: `/api/fotos/${encodeURIComponent(doc)}/miniatura`, alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
+        el("button", { type: "button", clase: "boton-imagen", "aria-label": "Ver en grande la foto guardada y su ficha", onclick: verGuardada },
+          el("img", { src: `/api/fotos/${encodeURIComponent(doc)}/miniatura`, alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
+          el("span", { clase: "lupa", "aria-hidden": "true", texto: "Ver en grande" })),
         el("figcaption", {}, `Documento ${doc} · Estado: `, estadoFicha)),
       el("div", {}, ...avisos(ficha, meta), formulario)),
     pieTecnico(meta));
@@ -244,6 +259,36 @@ async function catalogarLote(archivos) {
   } catch (e) { mensaje(progreso, e.message); }
 }
 
+/** Vista previa de las fotos elegidas, antes de subirlas: se ven tal como están en tu equipo. */
+function mostrarElegidas(archivos) {
+  urlsPrevias.forEach((u) => URL.revokeObjectURL(u));
+  const imagenes = archivos.filter((a) => /^image\/(jpeg|png)$/.test(a.type));
+  const visibles = imagenes.slice(0, MAX_PREVIAS);
+  urlsPrevias = visibles.map((a) => URL.createObjectURL(a));
+  vistaPrevia.hidden = !visibles.length;
+  const items = visibles.map((a, i) => {
+    const url = urlsPrevias[i];
+    const medidas = el("span", {});
+    const img = el("img", { src: url, alt: `Vista previa de ${a.name}` });
+    const datos = () => [["Archivo", a.name], ["Tamaño", tamano(a.size)], ["Tipo", a.type],
+      ["Medidas originales", img.naturalWidth ? `${img.naturalWidth} × ${img.naturalHeight} px` : null],
+      ["Al guardarla", "El servicio quita el GPS, el número de serie de la cámara y los datos del autor antes de guardarla."]];
+    img.addEventListener("load", () => { medidas.textContent = ` · ${img.naturalWidth} × ${img.naturalHeight} px`; });
+    return el("li", {},
+      el("button", { type: "button", clase: "boton-imagen", "aria-label": `Ver en grande ${a.name}`,
+        onclick: () => abrirVisor({ src: url, alt: `Foto elegida: ${a.name}`, titulo: `Foto elegida: ${a.name}`, datos: datos(),
+          nota: "Es el archivo original, todavía en tu equipo: aún no se ha subido." }) },
+        img, el("span", { clase: "lupa", "aria-hidden": "true", texto: "Ver" })),
+      el("span", { clase: "nombre-archivo", texto: a.name }),
+      el("span", { clase: "id" }, tamano(a.size), medidas));
+  });
+  if (imagenes.length > visibles.length) items.push(el("li", { clase: "id", texto: `y ${imagenes.length - visibles.length} fotos más` }));
+  vistaPrevia.replaceChildren(...items);
+  if (imagenes.length) anunciar(imagenes.length === 1 ? "1 foto elegida: puedes verla antes de catalogar" : `${imagenes.length} fotos elegidas`);
+}
+
+document.getElementById("fotos").addEventListener("change", (ev) => mostrarElegidas([...ev.target.files]));
+
 document.getElementById("formulario-carga").addEventListener("submit", (ev) => {
   ev.preventDefault();
   const archivos = [...document.getElementById("fotos").files];
@@ -260,7 +305,7 @@ zona.addEventListener("drop", (e) => {
   e.preventDefault();
   zona.classList.remove("activa");
   document.getElementById("fotos").files = e.dataTransfer.files;
-  anunciar(`${e.dataTransfer.files.length} fotos listas para catalogar`);
+  mostrarElegidas([...e.dataTransfer.files]);
 });
 
 // catalogar.html?doc=ID → muestra la ficha guardada (o la genera si la foto todavía no tiene)

@@ -166,3 +166,31 @@ svg.barra-svg { display: block; width: 100%; height: .9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ── Visor de fotos y vista previa ── */
+.boton-imagen { display: block; position: relative; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: var(--radio); }
+.boton-imagen .lupa { position: absolute; right: .5rem; bottom: .5rem; background: rgba(18, 38, 58, .88); color: #fff;
+  font-size: .8rem; font-weight: 600; padding: .1rem .55rem; border-radius: 999px; }
+.miniatura-archivo { width: 64px; }
+.miniatura-archivo img { display: block; border-radius: 4px; }
+button.chip { font: inherit; font-size: .85rem; cursor: zoom-in; }
+.vista-previa { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .75rem; padding: 0; margin: 0 0 1rem; }
+.vista-previa li { display: flex; flex-direction: column; gap: .15rem; font-size: .85rem; }
+.vista-previa img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border-radius: 6px; border: 1px solid var(--borde); }
+.nombre-archivo { font-weight: 600; word-break: break-all; }
+dialog.visor { width: min(1000px, 96vw); max-width: 96vw; max-height: 94vh; padding: 0; border: 0; border-radius: var(--radio);
+  background: var(--superficie); color: var(--texto); box-shadow: 0 12px 40px rgba(0, 0, 0, .35); }
+dialog.visor::backdrop { background: rgba(18, 38, 58, .78); }
+.visor-cabecera { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem 1rem; border-bottom: 1px solid var(--borde); }
+.visor-cabecera h2 { margin: 0; font-size: 1.1rem; word-break: break-word; }
+.visor-cuerpo { display: grid; grid-template-columns: minmax(0, 3fr) minmax(220px, 2fr); gap: 1rem; padding: 1rem; overflow: auto; max-height: calc(94vh - 4rem); }
+.visor-cuerpo figure { margin: 0; }
+.visor-cuerpo img { display: block; width: 100%; height: auto; max-height: 72vh; object-fit: contain; background: #1d1f21; border-radius: 6px; }
+.visor-cuerpo figcaption { margin-top: .4rem; font-size: .85rem; color: var(--texto-suave); }
+.visor dl { display: grid; grid-template-columns: max-content 1fr; gap: .3rem .75rem; margin: 0; font-size: .92rem; }
+.visor dt { font-weight: 600; }
+.visor dd { margin: 0; word-break: break-word; }
+@media (max-width: 720px) {
+  .visor-cuerpo { grid-template-columns: 1fr; }
+  .visor dl { grid-template-columns: 1fr; }
+}
