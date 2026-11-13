@@ -6,7 +6,8 @@ Ventana: todas las trazas guardadas o, si se define FOTOTECA_EVAL_DESDE (fecha I
 
 Cada ficha o búsqueda se clasifica por su evento de cierre (C2 `ficha_completa` o `busqueda_completa`): flujo, ruta,
 caché y tiempo por capa. Las fichas de configuraciones experimentales se separan de las de producción con señales de
-su propia traza: P3 compuesto por Qwen sin ser respaldo (experimento R3), sin RAG (transición
+su propia traza: P3 compuesto, sin ser respaldo, por el modelo que no es el preferido de P3 en la configuración
+vigente (experimento R3; desde ADR-01 el preferido es Qwen, así que el experimento es LFM3), sin RAG (transición
 RECUPERAR_EJEMPLOS→ENRUTAR), P1 precalculado (ruta completa sin llamada a P1) y ciclo de agente apagado (max_iter = 0).
 La latencia total es la de la petición HTTP (evento C1 de la misma traza); si no existe (lotes en segundo plano), la
 del flujo. «Otros» = total − suma de las capas medidas (API, orquestación y registro).
@@ -45,7 +46,7 @@ def endpoint(ruta: str) -> str:
     return re.sub(r"^/(documentos|fichas|lotes|fotos)/[^/]+", r"/\1/{id}", ruta or "")
 
 
-def _variante_ficha(cierre, eventos, modelo_vision: str) -> str:
+def _variante_ficha(cierre, eventos, modelo_p3: str) -> str:
     if (cierre.cache or "ninguna") != "ninguna":
         return "produccion"
     transiciones = {((e.detalle or {}).get("de"), (e.detalle or {}).get("a")) for e in eventos
@@ -53,9 +54,9 @@ def _variante_ficha(cierre, eventos, modelo_vision: str) -> str:
     llamadas = [e for e in eventos if e.capa == "C6" and e.evento == "llamada_modelo"]
     if ("RECUPERAR_EJEMPLOS", "ENRUTAR") in transiciones:
         return "experimento: sin RAG"
-    if any((e.detalle or {}).get("tarea") == "P3" and e.modelo == modelo_vision and not (e.detalle or {}).get("respaldo")
+    if any((e.detalle or {}).get("tarea") == "P3" and e.modelo != modelo_p3 and not (e.detalle or {}).get("respaldo")
            for e in llamadas):
-        return "experimento: P3 con Qwen (R3)"
+        return "experimento: P3 con el modelo no preferido (R3)"
     if cierre.ruta == "completa" and not any((e.detalle or {}).get("tarea") == "P1" for e in llamadas):
         return "experimento: P1 precalculado (R3)"
     if any(e.capa == "C2" and e.evento == "evaluar_recuperacion" and (e.detalle or {}).get("max_iter") == 0 for e in eventos):
@@ -63,7 +64,7 @@ def _variante_ficha(cierre, eventos, modelo_vision: str) -> str:
     return "produccion"
 
 
-def peticiones(eventos: list, modelo_vision: str) -> list[dict]:
+def peticiones(eventos: list, modelo_p3: str) -> list[dict]:
     """Una fila por ficha o búsqueda cerrada, con su ruta, caché, variante y tiempo por capa (ms)."""
     por_traza: dict[str, list] = defaultdict(list)
     for e in eventos:
@@ -81,7 +82,7 @@ def peticiones(eventos: list, modelo_vision: str) -> list[dict]:
             if total is None:
                 continue
             cache = cierre.cache or "ninguna"
-            variante = _variante_ficha(cierre, evs, modelo_vision) if flujo == "fichas" else "produccion"
+            variante = _variante_ficha(cierre, evs, modelo_p3) if flujo == "fichas" else "produccion"
             if cache != "ninguna":
                 grupo = f"cache {cache}"
             else:
@@ -209,7 +210,8 @@ def ejecutar(c: ClienteEval) -> dict:
     desde = os.environ.get("FOTOTECA_EVAL_DESDE") or None
     eventos = c.contenedor.sumidero_eventos.consultar(desde=desde)
     registro(f"desempeño · {len(eventos)} eventos" + (f" desde {desde}" if desde else " (todas las trazas)"))
-    filas = peticiones(eventos, c.config.modelos.get("vision", ""))
+    rol_p3 = c.contenedor.gateway.plantillas["P3"].modelo_preferido          # «vision» desde ADR-01
+    filas = peticiones(eventos, c.config.modelos.get(rol_p3, ""))
     grupos = por_grupo(filas)
     metricas = {
         "ventana": {"desde": desde, "eventos": len(eventos), "primer_evento": eventos[0].ts if eventos else None,

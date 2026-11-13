@@ -180,6 +180,10 @@ def test_la_version_de_configuracion_cambia_si_cambia_un_prompt(config):
     editadas = {**plantillas, "P3": reemplazar(plantillas["P3"], sistema=plantillas["P3"].sistema + " ")}
     otra = reemplazar(config, versiones_prompts=versiones(editadas))
     assert otra.version_configuracion("c1") != config.version_configuracion("c1")
+    # cambiar solo el modelo que compone (encabezado) también cambia la versión: así se invalida la caché (ADR-01)
+    otro_modelo = {**plantillas, "P3": reemplazar(plantillas["P3"], modelo_preferido="composicion",
+                                                  modelo_respaldo="vision")}
+    assert versiones(otro_modelo)["P3"] != versiones(plantillas)["P3"]
 
 
 def test_texto_visible_que_ve_p1_en_el_ciclo_obliga_la_ruta_completa(entorno):

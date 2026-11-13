@@ -1,8 +1,8 @@
 {
   "modulo": "desempeno",
-  "fecha": "2026-11-13T19:45:52+00:00",
+  "fecha": "2026-11-13T19:49:43+00:00",
   "rapido": false,
-  "fraccion": 0.5,
+  "fraccion": 1.0,
   "hardware": {
     "maquina": "aarch64",
     "nproc": 8,
@@ -13,10 +13,10 @@
     "lscpu_Model name": "-",
     "limite_memoria_contenedor_bytes": 1610612736
   },
-  "version_configuracion": "f01f9c6598b3",
+  "version_configuracion": "39efdb56e30f",
   "configuracion": {
     "fuente": "tabla eventos (SQLite) de T1",
-    "desde": null,
+    "desde": "2026-11-13T16:35:00+00:00",
     "capas": {
       "guardrails_entrada": "C3 guardrails de entrada",
       "cache": "C4 caché",
@@ -58,549 +58,292 @@
   },
   "metricas": {
     "ventana": {
-      "desde": null,
-      "eventos": 68519,
-      "primer_evento": "2026-11-08T00:25:07.083+00:00",
-      "ultimo_evento": "2026-11-13T19:45:49.810+00:00",
-      "trazas": 26812
+      "desde": "2026-11-13T16:35:00+00:00",
+      "eventos": 5625,
+      "primer_evento": "2026-11-13T16:35:01.949+00:00",
+      "ultimo_evento": "2026-11-13T19:47:39.131+00:00",
+      "trazas": 1148
     },
     "peticiones_clasificadas": {
-      "fichas": 642,
-      "busquedas": 160,
+      "fichas": 220,
+      "busquedas": 56,
       "por_variante": {
-        "fichas · produccion": 342,
-        "busquedas · produccion": 160,
-        "fichas · experimento: P3 con Qwen (R3)": 158,
-        "fichas · experimento: P1 precalculado (R3)": 60,
-        "fichas · experimento: sin RAG": 60,
-        "fichas · experimento: sin ciclo de agente": 22
+        "fichas · produccion": 165,
+        "fichas · experimento: sin RAG": 30,
+        "busquedas · produccion": 56,
+        "fichas · experimento: sin ciclo de agente": 25
       }
     },
     "total": {
       "fichas": {
-        "n": 642,
-        "media_ms": 47103.498,
-        "p50_ms": 39109.4,
-        "p95_ms": 90376.86,
-        "max_ms": 445264.4
+        "n": 220,
+        "media_ms": 44921.766,
+        "p50_ms": 43135.0,
+        "p95_ms": 81771.425,
+        "max_ms": 113533.1
       },
       "busquedas": {
-        "n": 160,
-        "media_ms": 2853.032,
-        "p50_ms": 407.35,
-        "p95_ms": 8092.035,
-        "max_ms": 11610.5
+        "n": 56,
+        "media_ms": 2977.78,
+        "p50_ms": 387.6,
+        "p95_ms": 6727.325,
+        "max_ms": 6863.9
       }
     },
     "por_ruta": {
       "fichas": {
-        "rapida": {
+        "completa": {
           "total": {
-            "n": 173,
-            "media_ms": 32213.423,
-            "p50_ms": 28522.7,
-            "p95_ms": 53727.1,
-            "max_ms": 130765.4
-          },
-          "por_capa": {
-            "guardrails_entrada": {
-              "n": 173,
-              "media_ms": 7.932,
-              "p50_ms": 0.1,
-              "p95_ms": 89.62,
-              "max_ms": 201.9
-            },
-            "cache": {
-              "n": 173,
-              "media_ms": 0.054,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 9.4
-            },
-            "contexto": {
-              "n": 173,
-              "media_ms": 568.364,
-              "p50_ms": 335.6,
-              "p95_ms": 1071.64,
-              "max_ms": 13895.5
-            },
-            "enrutador": {
-              "n": 173,
-              "media_ms": 0.295,
-              "p50_ms": 0.3,
-              "p95_ms": 0.54,
-              "max_ms": 2.7
-            },
-            "modelo_vision": {
-              "n": 173,
-              "media_ms": 31055.809,
-              "p50_ms": 27830.6,
-              "p95_ms": 52112.4,
-              "max_ms": 118307.9
-            },
-            "modelo_composicion": {
-              "n": 173,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "guardrails_salida": {
-              "n": 173,
-              "media_ms": 529.727,
-              "p50_ms": 271.3,
-              "p95_ms": 1128.96,
-              "max_ms": 16994.2
-            },
-            "otros": {
-              "n": 173,
-              "media_ms": 51.241,
-              "p50_ms": 43.3,
-              "p95_ms": 68.16,
-              "max_ms": 368.2
-            }
-          },
-          "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.0002,
-            "cache": 0.0,
-            "contexto": 0.0176,
-            "enrutador": 0.0,
-            "modelo_vision": 0.9641,
-            "modelo_composicion": 0.0,
-            "guardrails_salida": 0.0164,
-            "otros": 0.0016
-          },
-          "variante": "produccion",
-          "rutas": {
-            "rapida": 173
-          },
-          "iteraciones_agente": {
-            "0": 165,
-            "2": 8
-          }
-        },
-        "completa · experimento: P3 con Qwen (R3)": {
-          "total": {
-            "n": 158,
-            "media_ms": 47186.699,
-            "p50_ms": 46630.8,
-            "p95_ms": 84240.325,
+            "n": 95,
+            "media_ms": 60907.197,
+            "p50_ms": 56792.6,
+            "p95_ms": 96423.15,
             "max_ms": 113533.1
           },
           "por_capa": {
             "guardrails_entrada": {
-              "n": 158,
-              "media_ms": 3.778,
+              "n": 95,
+              "media_ms": 6.158,
               "p50_ms": 0.2,
-              "p95_ms": 0.5,
+              "p95_ms": 1.11,
               "max_ms": 189.5
             },
             "cache": {
-              "n": 158,
+              "n": 95,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
             "contexto": {
-              "n": 158,
-              "media_ms": 580.546,
-              "p50_ms": 453.4,
-              "p95_ms": 1390.0,
-              "max_ms": 2043.7
+              "n": 95,
+              "media_ms": 652.584,
+              "p50_ms": 533.0,
+              "p95_ms": 1464.49,
+              "max_ms": 1983.3
             },
             "enrutador": {
-              "n": 158,
-              "media_ms": 0.251,
-              "p50_ms": 0.2,
-              "p95_ms": 0.5,
+              "n": 95,
+              "media_ms": 0.273,
+              "p50_ms": 0.3,
+              "p95_ms": 0.43,
               "max_ms": 1.9
             },
             "modelo_vision": {
-              "n": 158,
-              "media_ms": 20501.346,
-              "p50_ms": 23210.9,
-              "p95_ms": 51978.96,
+              "n": 95,
+              "media_ms": 32615.795,
+              "p50_ms": 28237.9,
+              "p95_ms": 54802.75,
               "max_ms": 74612.1
             },
             "modelo_composicion": {
-              "n": 158,
-              "media_ms": 24716.113,
-              "p50_ms": 22477.7,
-              "p95_ms": 35436.325,
+              "n": 95,
+              "media_ms": 26188.632,
+              "p50_ms": 23493.1,
+              "p95_ms": 40030.74,
               "max_ms": 66977.7
             },
             "guardrails_salida": {
-              "n": 158,
-              "media_ms": 1275.441,
-              "p50_ms": 609.9,
-              "p95_ms": 4583.665,
+              "n": 95,
+              "media_ms": 1293.179,
+              "p50_ms": 648.0,
+              "p95_ms": 4337.06,
               "max_ms": 11558.6
             },
             "otros": {
-              "n": 158,
-              "media_ms": 109.226,
-              "p50_ms": 57.75,
-              "p95_ms": 285.875,
+              "n": 95,
+              "media_ms": 150.576,
+              "p50_ms": 122.6,
+              "p95_ms": 320.12,
               "max_ms": 737.0
             }
           },
           "proporcion_media_por_capa": {
             "guardrails_entrada": 0.0001,
             "cache": 0.0,
-            "contexto": 0.0123,
+            "contexto": 0.0107,
             "enrutador": 0.0,
-            "modelo_vision": 0.4345,
-            "modelo_composicion": 0.5238,
-            "guardrails_salida": 0.027,
-            "otros": 0.0023
-          },
-          "variante": "experimento: P3 con Qwen (R3)",
-          "rutas": {
-            "completa": 158
-          },
-          "iteraciones_agente": {
-            "0": 138,
-            "2": 20
-          }
-        },
-        "completa": {
-          "total": {
-            "n": 142,
-            "media_ms": 82502.462,
-            "p50_ms": 73511.8,
-            "p95_ms": 118374.305,
-            "max_ms": 445264.4
-          },
-          "por_capa": {
-            "guardrails_entrada": {
-              "n": 142,
-              "media_ms": 1.808,
-              "p50_ms": 0.1,
-              "p95_ms": 0.9,
-              "max_ms": 118.2
-            },
-            "cache": {
-              "n": 142,
-              "media_ms": 2.237,
-              "p50_ms": 0.0,
-              "p95_ms": 13.97,
-              "max_ms": 19.5
-            },
-            "contexto": {
-              "n": 142,
-              "media_ms": 863.799,
-              "p50_ms": 610.75,
-              "p95_ms": 1667.72,
-              "max_ms": 12373.8
-            },
-            "enrutador": {
-              "n": 142,
-              "media_ms": 0.282,
-              "p50_ms": 0.3,
-              "p95_ms": 0.5,
-              "max_ms": 0.9
-            },
-            "modelo_vision": {
-              "n": 142,
-              "media_ms": 35177.556,
-              "p50_ms": 30927.0,
-              "p95_ms": 63215.68,
-              "max_ms": 107634.0
-            },
-            "modelo_composicion": {
-              "n": 142,
-              "media_ms": 43968.363,
-              "p50_ms": 38167.7,
-              "p95_ms": 58371.385,
-              "max_ms": 312259.8
-            },
-            "guardrails_salida": {
-              "n": 142,
-              "media_ms": 2290.765,
-              "p50_ms": 1216.1,
-              "p95_ms": 7780.445,
-              "max_ms": 36897.2
-            },
-            "otros": {
-              "n": 142,
-              "media_ms": 197.654,
-              "p50_ms": 60.05,
-              "p95_ms": 423.12,
-              "max_ms": 3497.7
-            }
-          },
-          "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.0,
-            "cache": 0.0,
-            "contexto": 0.0105,
-            "enrutador": 0.0,
-            "modelo_vision": 0.4264,
-            "modelo_composicion": 0.5329,
-            "guardrails_salida": 0.0278,
-            "otros": 0.0024
+            "modelo_vision": 0.5355,
+            "modelo_composicion": 0.43,
+            "guardrails_salida": 0.0212,
+            "otros": 0.0025
           },
           "variante": "produccion",
           "rutas": {
-            "completa": 142
+            "completa": 95
           },
           "iteraciones_agente": {
-            "0": 128,
-            "2": 13,
-            "1": 1
+            "0": 81,
+            "2": 14
           }
         },
-        "completa · experimento: P1 precalculado (R3)": {
+        "rapida": {
           "total": {
-            "n": 60,
-            "media_ms": 30303.91,
-            "p50_ms": 29657.7,
-            "p95_ms": 38511.705,
-            "max_ms": 42564.1
+            "n": 70,
+            "media_ms": 28572.651,
+            "p50_ms": 25995.9,
+            "p95_ms": 36944.79,
+            "max_ms": 94442.1
           },
           "por_capa": {
             "guardrails_entrada": {
-              "n": 60,
-              "media_ms": 0.303,
-              "p50_ms": 0.3,
-              "p95_ms": 0.72,
-              "max_ms": 1.5
+              "n": 70,
+              "media_ms": 3.08,
+              "p50_ms": 0.1,
+              "p95_ms": 0.4,
+              "max_ms": 201.9
             },
             "cache": {
-              "n": 60,
+              "n": 70,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
             "contexto": {
-              "n": 60,
-              "media_ms": 479.797,
-              "p50_ms": 331.95,
-              "p95_ms": 1453.37,
-              "max_ms": 2237.1
+              "n": 70,
+              "media_ms": 380.506,
+              "p50_ms": 319.55,
+              "p95_ms": 732.665,
+              "max_ms": 1313.8
             },
             "enrutador": {
-              "n": 60,
-              "media_ms": 0.318,
-              "p50_ms": 0.3,
-              "p95_ms": 0.6,
-              "max_ms": 2.3
+              "n": 70,
+              "media_ms": 0.251,
+              "p50_ms": 0.2,
+              "p95_ms": 0.4,
+              "max_ms": 1.1
             },
             "modelo_vision": {
-              "n": 60,
+              "n": 70,
+              "media_ms": 27821.479,
+              "p50_ms": 25427.75,
+              "p95_ms": 35680.03,
+              "max_ms": 93833.8
+            },
+            "modelo_composicion": {
+              "n": 70,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
-            "modelo_composicion": {
-              "n": 60,
-              "media_ms": 28470.878,
-              "p50_ms": 28107.0,
-              "p95_ms": 34623.95,
-              "max_ms": 40874.8
-            },
             "guardrails_salida": {
-              "n": 60,
-              "media_ms": 1303.427,
-              "p50_ms": 775.75,
-              "p95_ms": 3952.095,
-              "max_ms": 5381.0
+              "n": 70,
+              "media_ms": 322.457,
+              "p50_ms": 257.75,
+              "p95_ms": 718.215,
+              "max_ms": 1107.6
             },
             "otros": {
-              "n": 60,
-              "media_ms": 49.187,
-              "p50_ms": 45.25,
-              "p95_ms": 72.04,
-              "max_ms": 90.0
+              "n": 70,
+              "media_ms": 44.877,
+              "p50_ms": 42.9,
+              "p95_ms": 61.185,
+              "max_ms": 69.9
             }
           },
           "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.0,
+            "guardrails_entrada": 0.0001,
             "cache": 0.0,
-            "contexto": 0.0158,
+            "contexto": 0.0133,
             "enrutador": 0.0,
-            "modelo_vision": 0.0,
-            "modelo_composicion": 0.9395,
-            "guardrails_salida": 0.043,
+            "modelo_vision": 0.9737,
+            "modelo_composicion": 0.0,
+            "guardrails_salida": 0.0113,
             "otros": 0.0016
           },
-          "variante": "experimento: P1 precalculado (R3)",
+          "variante": "produccion",
           "rutas": {
-            "completa": 60
+            "rapida": 70
           },
           "iteraciones_agente": {
-            "0": 54,
-            "2": 6
+            "0": 69,
+            "2": 1
           }
         },
         "completa · experimento: sin RAG": {
           "total": {
-            "n": 60,
-            "media_ms": 52599.993,
-            "p50_ms": 53298.75,
-            "p95_ms": 69129.985,
-            "max_ms": 74574.5
+            "n": 30,
+            "media_ms": 45414.027,
+            "p50_ms": 44246.6,
+            "p95_ms": 54171.06,
+            "max_ms": 55170.7
           },
           "por_capa": {
             "guardrails_entrada": {
-              "n": 60,
-              "media_ms": 0.262,
+              "n": 30,
+              "media_ms": 0.243,
               "p50_ms": 0.3,
               "p95_ms": 0.4,
-              "max_ms": 0.7
+              "max_ms": 0.4
             },
             "cache": {
-              "n": 60,
+              "n": 30,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
             "contexto": {
-              "n": 60,
-              "media_ms": 424.022,
-              "p50_ms": 362.8,
-              "p95_ms": 904.325,
-              "max_ms": 1191.2
+              "n": 30,
+              "media_ms": 348.143,
+              "p50_ms": 277.9,
+              "p95_ms": 649.96,
+              "max_ms": 978.9
             },
             "enrutador": {
-              "n": 60,
+              "n": 30,
               "media_ms": 0.073,
-              "p50_ms": 0.0,
+              "p50_ms": 0.1,
               "p95_ms": 0.1,
-              "max_ms": 1.8
+              "max_ms": 0.1
             },
             "modelo_vision": {
-              "n": 60,
-              "media_ms": 27678.067,
-              "p50_ms": 27380.5,
-              "p95_ms": 33963.885,
-              "max_ms": 43522.6
+              "n": 30,
+              "media_ms": 24206.103,
+              "p50_ms": 23146.55,
+              "p95_ms": 29891.97,
+              "max_ms": 31309.3
             },
             "modelo_composicion": {
-              "n": 60,
-              "media_ms": 23032.208,
-              "p50_ms": 23081.25,
-              "p95_ms": 29619.19,
-              "max_ms": 34958.4
+              "n": 30,
+              "media_ms": 19694.443,
+              "p50_ms": 19206.2,
+              "p95_ms": 24103.16,
+              "max_ms": 26881.9
             },
             "guardrails_salida": {
-              "n": 60,
-              "media_ms": 1356.367,
-              "p50_ms": 799.25,
-              "p95_ms": 4863.565,
-              "max_ms": 7412.8
+              "n": 30,
+              "media_ms": 1082.07,
+              "p50_ms": 502.8,
+              "p95_ms": 2926.81,
+              "max_ms": 4801.1
             },
             "otros": {
-              "n": 60,
-              "media_ms": 108.992,
-              "p50_ms": 41.85,
-              "p95_ms": 407.32,
-              "max_ms": 504.1
+              "n": 30,
+              "media_ms": 82.95,
+              "p50_ms": 41.35,
+              "p95_ms": 264.63,
+              "max_ms": 455.2
             }
           },
           "proporcion_media_por_capa": {
             "guardrails_entrada": 0.0,
             "cache": 0.0,
-            "contexto": 0.0081,
+            "contexto": 0.0077,
             "enrutador": 0.0,
-            "modelo_vision": 0.5262,
-            "modelo_composicion": 0.4379,
-            "guardrails_salida": 0.0258,
-            "otros": 0.0021
+            "modelo_vision": 0.533,
+            "modelo_composicion": 0.4337,
+            "guardrails_salida": 0.0238,
+            "otros": 0.0018
           },
           "variante": "experimento: sin RAG",
           "rutas": {
-            "completa": 60
+            "completa": 30
           },
           "iteraciones_agente": {
-            "0": 60
-          }
-        },
-        "cache exacta": {
-          "total": {
-            "n": 26,
-            "media_ms": 18.531,
-            "p50_ms": 18.4,
-            "p95_ms": 21.25,
-            "max_ms": 21.7
-          },
-          "por_capa": {
-            "guardrails_entrada": {
-              "n": 26,
-              "media_ms": 0.281,
-              "p50_ms": 0.3,
-              "p95_ms": 0.375,
-              "max_ms": 0.6
-            },
-            "cache": {
-              "n": 26,
-              "media_ms": 0.55,
-              "p50_ms": 0.5,
-              "p95_ms": 0.7,
-              "max_ms": 0.7
-            },
-            "contexto": {
-              "n": 26,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "enrutador": {
-              "n": 26,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "modelo_vision": {
-              "n": 26,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "modelo_composicion": {
-              "n": 26,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "guardrails_salida": {
-              "n": 26,
-              "media_ms": 0.1,
-              "p50_ms": 0.1,
-              "p95_ms": 0.1,
-              "max_ms": 0.1
-            },
-            "otros": {
-              "n": 26,
-              "media_ms": 17.6,
-              "p50_ms": 17.45,
-              "p95_ms": 20.2,
-              "max_ms": 20.7
-            }
-          },
-          "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.0152,
-            "cache": 0.0297,
-            "contexto": 0.0,
-            "enrutador": 0.0,
-            "modelo_vision": 0.0,
-            "modelo_composicion": 0.0,
-            "guardrails_salida": 0.0054,
-            "otros": 0.9498
-          },
-          "variante": "produccion",
-          "rutas": {
-            "cache": 26
-          },
-          "iteraciones_agente": {
-            "0": 26
+            "0": 30
           }
         },
         "rapida · experimento: sin ciclo de agente": {
@@ -687,587 +430,434 @@
             "0": 22
           }
         },
-        "cache semantica": {
+        "completa · experimento: sin ciclo de agente": {
           "total": {
-            "n": 1,
-            "media_ms": 2760.8,
-            "p50_ms": 2760.8,
-            "p95_ms": 2760.8,
-            "max_ms": 2760.8
+            "n": 3,
+            "media_ms": 71633.2,
+            "p50_ms": 70264.6,
+            "p95_ms": 75830.11,
+            "max_ms": 76448.5
           },
           "por_capa": {
             "guardrails_entrada": {
-              "n": 1,
+              "n": 3,
+              "media_ms": 0.133,
+              "p50_ms": 0.1,
+              "p95_ms": 0.19,
+              "max_ms": 0.2
+            },
+            "cache": {
+              "n": 3,
+              "media_ms": 0.0,
+              "p50_ms": 0.0,
+              "p95_ms": 0.0,
+              "max_ms": 0.0
+            },
+            "contexto": {
+              "n": 3,
+              "media_ms": 597.9,
+              "p50_ms": 452.5,
+              "p95_ms": 858.58,
+              "max_ms": 903.7
+            },
+            "enrutador": {
+              "n": 3,
               "media_ms": 0.1,
               "p50_ms": 0.1,
               "p95_ms": 0.1,
               "max_ms": 0.1
             },
-            "cache": {
-              "n": 1,
-              "media_ms": 1.2,
-              "p50_ms": 1.2,
-              "p95_ms": 1.2,
-              "max_ms": 1.2
-            },
-            "contexto": {
-              "n": 1,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "enrutador": {
-              "n": 1,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
             "modelo_vision": {
-              "n": 1,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
+              "n": 3,
+              "media_ms": 46904.033,
+              "p50_ms": 45982.8,
+              "p95_ms": 49218.12,
+              "max_ms": 49577.6
             },
             "modelo_composicion": {
-              "n": 1,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
+              "n": 3,
+              "media_ms": 22228.733,
+              "p50_ms": 21901.7,
+              "p95_ms": 24608.63,
+              "max_ms": 24909.4
             },
             "guardrails_salida": {
-              "n": 1,
-              "media_ms": 0.2,
-              "p50_ms": 0.2,
-              "p95_ms": 0.2,
-              "max_ms": 0.2
+              "n": 3,
+              "media_ms": 1853.4,
+              "p50_ms": 1009.1,
+              "p95_ms": 3619.55,
+              "max_ms": 3909.6
             },
             "otros": {
-              "n": 1,
-              "media_ms": 2759.2,
-              "p50_ms": 2759.2,
-              "p95_ms": 2759.2,
-              "max_ms": 2759.2
+              "n": 3,
+              "media_ms": 48.9,
+              "p50_ms": 48.4,
+              "p95_ms": 53.35,
+              "max_ms": 53.9
             }
           },
           "proporcion_media_por_capa": {
             "guardrails_entrada": 0.0,
-            "cache": 0.0004,
-            "contexto": 0.0,
+            "cache": 0.0,
+            "contexto": 0.0083,
             "enrutador": 0.0,
-            "modelo_vision": 0.0,
-            "modelo_composicion": 0.0,
-            "guardrails_salida": 0.0001,
-            "otros": 0.9994
+            "modelo_vision": 0.6548,
+            "modelo_composicion": 0.3103,
+            "guardrails_salida": 0.0259,
+            "otros": 0.0007
           },
-          "variante": "produccion",
+          "variante": "experimento: sin ciclo de agente",
           "rutas": {
-            "cache": 1
+            "completa": 3
           },
           "iteraciones_agente": {
-            "0": 1
+            "0": 3
           }
         }
       },
       "busquedas": {
         "simple": {
           "total": {
-            "n": 77,
-            "media_ms": 304.905,
-            "p50_ms": 258.7,
-            "p95_ms": 635.3,
-            "max_ms": 695.0
+            "n": 29,
+            "media_ms": 256.01,
+            "p50_ms": 262.5,
+            "p95_ms": 358.56,
+            "max_ms": 395.0
           },
           "por_capa": {
             "guardrails_entrada": {
-              "n": 77,
-              "media_ms": 103.138,
+              "n": 29,
+              "media_ms": 81.293,
               "p50_ms": 83.4,
-              "p95_ms": 227.1,
-              "max_ms": 480.6
+              "p95_ms": 102.38,
+              "max_ms": 115.5
             },
             "cache": {
-              "n": 77,
-              "media_ms": 85.734,
-              "p50_ms": 77.5,
-              "p95_ms": 145.7,
-              "max_ms": 199.6
+              "n": 29,
+              "media_ms": 76.431,
+              "p50_ms": 72.3,
+              "p95_ms": 112.8,
+              "max_ms": 126.3
             },
             "contexto": {
-              "n": 77,
-              "media_ms": 105.484,
+              "n": 29,
+              "media_ms": 89.831,
               "p50_ms": 86.7,
-              "p95_ms": 165.46,
-              "max_ms": 477.5
+              "p95_ms": 118.04,
+              "max_ms": 161.1
             },
             "enrutador": {
-              "n": 77,
-              "media_ms": 4.09,
+              "n": 29,
+              "media_ms": 2.89,
               "p50_ms": 0.1,
-              "p95_ms": 25.88,
-              "max_ms": 79.9
+              "p95_ms": 10.16,
+              "max_ms": 65.1
             },
             "modelo_vision": {
-              "n": 77,
+              "n": 29,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
             "modelo_composicion": {
-              "n": 77,
+              "n": 29,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
             "guardrails_salida": {
-              "n": 77,
-              "media_ms": 0.047,
+              "n": 29,
+              "media_ms": 0.028,
               "p50_ms": 0.0,
-              "p95_ms": 0.22,
-              "max_ms": 0.5
+              "p95_ms": 0.16,
+              "max_ms": 0.3
             },
             "otros": {
-              "n": 77,
-              "media_ms": 6.412,
-              "p50_ms": 6.0,
-              "p95_ms": 9.02,
-              "max_ms": 12.5
+              "n": 29,
+              "media_ms": 5.531,
+              "p50_ms": 5.1,
+              "p95_ms": 8.18,
+              "max_ms": 8.6
             }
           },
           "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.3383,
-            "cache": 0.2812,
-            "contexto": 0.346,
-            "enrutador": 0.0134,
+            "guardrails_entrada": 0.3175,
+            "cache": 0.2985,
+            "contexto": 0.3509,
+            "enrutador": 0.0113,
             "modelo_vision": 0.0,
             "modelo_composicion": 0.0,
-            "guardrails_salida": 0.0002,
-            "otros": 0.021
+            "guardrails_salida": 0.0001,
+            "otros": 0.0216
           },
           "variante": "produccion",
           "rutas": {
-            "simple": 77
+            "simple": 29
           },
           "iteraciones_agente": {
-            "0": 77
+            "0": 29
           }
         },
         "compleja": {
           "total": {
-            "n": 67,
-            "media_ms": 6408.312,
-            "p50_ms": 6075.1,
-            "p95_ms": 9325.34,
-            "max_ms": 11610.5
+            "n": 27,
+            "media_ms": 5901.163,
+            "p50_ms": 6006.9,
+            "p95_ms": 6815.25,
+            "max_ms": 6863.9
           },
           "por_capa": {
             "guardrails_entrada": {
-              "n": 67,
-              "media_ms": 94.084,
-              "p50_ms": 77.3,
-              "p95_ms": 178.35,
-              "max_ms": 220.6
+              "n": 27,
+              "media_ms": 81.863,
+              "p50_ms": 76.2,
+              "p95_ms": 138.19,
+              "max_ms": 173.1
             },
             "cache": {
-              "n": 67,
-              "media_ms": 105.009,
-              "p50_ms": 78.1,
-              "p95_ms": 233.44,
-              "max_ms": 388.6
+              "n": 27,
+              "media_ms": 75.789,
+              "p50_ms": 71.1,
+              "p95_ms": 99.73,
+              "max_ms": 119.5
             },
             "contexto": {
-              "n": 67,
-              "media_ms": 127.96,
-              "p50_ms": 107.5,
-              "p95_ms": 298.72,
-              "max_ms": 381.0
+              "n": 27,
+              "media_ms": 121.619,
+              "p50_ms": 94.0,
+              "p95_ms": 272.74,
+              "max_ms": 326.3
             },
             "enrutador": {
-              "n": 67,
-              "media_ms": 0.051,
-              "p50_ms": 0.0,
-              "p95_ms": 0.17,
+              "n": 27,
+              "media_ms": 0.067,
+              "p50_ms": 0.1,
+              "p95_ms": 0.2,
               "max_ms": 0.2
             },
             "modelo_vision": {
-              "n": 67,
+              "n": 27,
               "media_ms": 0.0,
               "p50_ms": 0.0,
               "p95_ms": 0.0,
               "max_ms": 0.0
             },
             "modelo_composicion": {
-              "n": 67,
-              "media_ms": 6075.099,
-              "p50_ms": 5754.0,
-              "p95_ms": 8740.46,
-              "max_ms": 11030.1
+              "n": 27,
+              "media_ms": 5616.356,
+              "p50_ms": 5717.4,
+              "p95_ms": 6509.93,
+              "max_ms": 6609.0
             },
             "guardrails_salida": {
-              "n": 67,
-              "media_ms": 0.03,
+              "n": 27,
+              "media_ms": 0.019,
               "p50_ms": 0.0,
               "p95_ms": 0.1,
               "max_ms": 0.1
             },
             "otros": {
-              "n": 67,
-              "media_ms": 6.082,
-              "p50_ms": 5.6,
-              "p95_ms": 8.8,
-              "max_ms": 10.2
+              "n": 27,
+              "media_ms": 5.452,
+              "p50_ms": 5.4,
+              "p95_ms": 6.67,
+              "max_ms": 8.4
             }
           },
           "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.0147,
-            "cache": 0.0164,
-            "contexto": 0.02,
+            "guardrails_entrada": 0.0139,
+            "cache": 0.0128,
+            "contexto": 0.0206,
             "enrutador": 0.0,
             "modelo_vision": 0.0,
-            "modelo_composicion": 0.948,
+            "modelo_composicion": 0.9517,
             "guardrails_salida": 0.0,
             "otros": 0.0009
           },
           "variante": "produccion",
           "rutas": {
-            "compleja": 67
+            "compleja": 27
           },
           "iteraciones_agente": {
-            "0": 67
-          }
-        },
-        "cache exacta": {
-          "total": {
-            "n": 16,
-            "media_ms": 228.156,
-            "p50_ms": 227.85,
-            "p95_ms": 325.275,
-            "max_ms": 325.8
-          },
-          "por_capa": {
-            "guardrails_entrada": {
-              "n": 16,
-              "media_ms": 111.094,
-              "p50_ms": 119.45,
-              "p95_ms": 163.125,
-              "max_ms": 165.3
-            },
-            "cache": {
-              "n": 16,
-              "media_ms": 106.325,
-              "p50_ms": 118.3,
-              "p95_ms": 157.275,
-              "max_ms": 170.4
-            },
-            "contexto": {
-              "n": 16,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "enrutador": {
-              "n": 16,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "modelo_vision": {
-              "n": 16,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "modelo_composicion": {
-              "n": 16,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "guardrails_salida": {
-              "n": 16,
-              "media_ms": 0.0,
-              "p50_ms": 0.0,
-              "p95_ms": 0.0,
-              "max_ms": 0.0
-            },
-            "otros": {
-              "n": 16,
-              "media_ms": 10.738,
-              "p50_ms": 10.2,
-              "p95_ms": 13.875,
-              "max_ms": 14.1
-            }
-          },
-          "proporcion_media_por_capa": {
-            "guardrails_entrada": 0.4869,
-            "cache": 0.466,
-            "contexto": 0.0,
-            "enrutador": 0.0,
-            "modelo_vision": 0.0,
-            "modelo_composicion": 0.0,
-            "guardrails_salida": 0.0,
-            "otros": 0.0471
-          },
-          "variante": "produccion",
-          "rutas": {
-            "simple": 11,
-            "compleja": 5
-          },
-          "iteraciones_agente": {
-            "0": 16
+            "0": 27
           }
         }
       }
     },
     "por_endpoint": {
-      "DELETE /documentos/{id}": {
-        "n": 77,
-        "media_ms": 255.552,
-        "p50_ms": 255.48,
-        "p95_ms": 282.552,
-        "max_ms": 424.9,
-        "estados_http": {
-          "2xx": 77
-        }
-      },
-      "GET /configuracion": {
-        "n": 1,
-        "media_ms": 1.92,
-        "p50_ms": 1.92,
-        "p95_ms": 1.92,
-        "max_ms": 1.92,
-        "estados_http": {
-          "2xx": 1
-        }
-      },
-      "GET /documentos": {
-        "n": 3,
-        "media_ms": 9.233,
-        "p50_ms": 9.91,
-        "p95_ms": 14.041,
-        "max_ms": 14.5,
-        "estados_http": {
-          "2xx": 3
-        }
-      },
       "GET /fotos/{id}/miniatura": {
-        "n": 32,
-        "media_ms": 5.598,
-        "p50_ms": 1.59,
-        "p95_ms": 15.564,
+        "n": 30,
+        "media_ms": 5.324,
+        "p50_ms": 1.355,
+        "p95_ms": 16.145,
         "max_ms": 19.33,
         "estados_http": {
-          "2xx": 31,
-          "4xx": 1
+          "2xx": 30
         }
       },
       "GET /health": {
-        "n": 24685,
-        "media_ms": 54.499,
-        "p50_ms": 11.55,
-        "p95_ms": 349.912,
-        "max_ms": 3413.28,
+        "n": 737,
+        "media_ms": 331.525,
+        "p50_ms": 337.79,
+        "p95_ms": 429.106,
+        "max_ms": 1040.26,
         "estados_http": {
-          "2xx": 24685
-        }
-      },
-      "GET /metricas": {
-        "n": 1,
-        "media_ms": 368.79,
-        "p50_ms": 368.79,
-        "p95_ms": 368.79,
-        "max_ms": 368.79,
-        "estados_http": {
-          "2xx": 1
+          "2xx": 737
         }
       },
       "POST /busquedas": {
-        "n": 166,
-        "media_ms": 2752.995,
-        "p50_ms": 384.855,
-        "p95_ms": 8028.805,
-        "max_ms": 11610.5,
+        "n": 62,
+        "media_ms": 2697.863,
+        "p50_ms": 311.06,
+        "p95_ms": 6709.083,
+        "max_ms": 6863.93,
         "estados_http": {
-          "2xx": 160,
+          "2xx": 56,
           "4xx": 6
         }
       },
       "POST /documentos": {
-        "n": 1151,
-        "media_ms": 2106.36,
-        "p50_ms": 1814.8,
-        "p95_ms": 3151.295,
-        "max_ms": 15294.55,
+        "n": 49,
+        "media_ms": 1943.246,
+        "p50_ms": 1864.18,
+        "p95_ms": 2442.394,
+        "max_ms": 3105.07,
         "estados_http": {
-          "2xx": 1137,
-          "5xx": 7,
-          "4xx": 7
+          "2xx": 43,
+          "4xx": 6
         }
       },
       "POST /fichas": {
-        "n": 642,
-        "media_ms": 47103.496,
-        "p50_ms": 39109.4,
-        "p95_ms": 90376.843,
-        "max_ms": 445264.39,
+        "n": 220,
+        "media_ms": 44921.765,
+        "p50_ms": 43134.985,
+        "p95_ms": 81771.432,
+        "max_ms": 113533.07,
         "estados_http": {
-          "2xx": 642
+          "2xx": 220
         }
       },
       "POST /retroalimentacion": {
-        "n": 51,
-        "media_ms": 416.17,
-        "p50_ms": 397.65,
-        "p95_ms": 671.475,
+        "n": 50,
+        "media_ms": 409.848,
+        "p50_ms": 397.64,
+        "p95_ms": 636.496,
         "max_ms": 814.07,
         "estados_http": {
-          "2xx": 51
+          "2xx": 50
         }
       }
     },
     "por_modelo_y_tarea": {
       "llamadas_directas_de_la_evaluacion": {
         "lfm3:1.7b-q4_K_M · P7": {
-          "n": 339,
-          "media_ms": 8398.04,
-          "p50_ms": 7981.78,
-          "p95_ms": 11681.183,
+          "n": 102,
+          "media_ms": 7987.421,
+          "p50_ms": 7923.75,
+          "p95_ms": 9584.123,
           "max_ms": 14704.01,
           "json_invalido": 0,
           "tiempo_agotado": 0,
           "respaldo": 0,
-          "tokens_salida_media": 77.3
-        },
-        "qwen3.5:0.8b · P1": {
-          "n": 280,
-          "media_ms": 24166.079,
-          "p50_ms": 22873.925,
-          "p95_ms": 33398.671,
-          "max_ms": 51217.1,
-          "json_invalido": 0,
-          "tiempo_agotado": 0,
-          "respaldo": 0,
-          "tokens_salida_media": 179.9
+          "tokens_salida_media": 77.8
         }
       },
       "peticiones_api": {
-        "lfm3:1.7b-q4_K_M · P3": {
-          "n": 236,
-          "media_ms": 35840.229,
-          "p50_ms": 32803.31,
-          "p95_ms": 55888.457,
-          "max_ms": 90020.78,
-          "json_invalido": 2,
-          "tiempo_agotado": 4,
-          "respaldo": 0,
-          "tokens_salida_media": 251.6
-        },
         "lfm3:1.7b-q4_K_M · P4": {
-          "n": 67,
-          "media_ms": 6067.399,
-          "p50_ms": 5743.36,
-          "p95_ms": 8733.134,
-          "max_ms": 11024.34,
+          "n": 27,
+          "media_ms": 5608.31,
+          "p50_ms": 5710.76,
+          "p95_ms": 6503.916,
+          "max_ms": 6602.45,
           "json_invalido": 0,
           "tiempo_agotado": 0,
           "respaldo": 0,
-          "tokens_salida_media": 71.2
+          "tokens_salida_media": 70.9
         },
         "qwen3.5:0.8b · P1": {
-          "n": 313,
-          "media_ms": 28020.904,
-          "p50_ms": 27622.15,
-          "p95_ms": 36752.828,
-          "max_ms": 58047.13,
+          "n": 131,
+          "media_ms": 26081.626,
+          "p50_ms": 24479.3,
+          "p95_ms": 35002.645,
+          "max_ms": 40932.1,
           "json_invalido": 2,
-          "tiempo_agotado": 2,
+          "tiempo_agotado": 0,
           "respaldo": 0,
-          "tokens_salida_media": 182.3
+          "tokens_salida_media": 188.9
         },
         "qwen3.5:0.8b · P2": {
-          "n": 256,
-          "media_ms": 28005.796,
-          "p50_ms": 25442.53,
-          "p95_ms": 39042.798,
-          "max_ms": 58076.13,
-          "json_invalido": 6,
-          "tiempo_agotado": 5,
-          "respaldo": 0,
-          "tokens_salida_media": 129.2
-        },
-        "qwen3.5:0.8b · P3": {
-          "n": 201,
-          "media_ms": 23722.207,
-          "p50_ms": 22079.46,
-          "p95_ms": 34065.79,
-          "max_ms": 64050.41,
-          "json_invalido": 0,
-          "tiempo_agotado": 3,
-          "respaldo": 5,
-          "tokens_salida_media": 232.1
-        },
-        "qwen3.5:0.8b · P6": {
-          "n": 134,
-          "media_ms": 2361.217,
-          "p50_ms": 2148.51,
-          "p95_ms": 3848.405,
-          "max_ms": 5251.45,
+          "n": 116,
+          "media_ms": 25836.302,
+          "p50_ms": 24685.42,
+          "p95_ms": 33220.787,
+          "max_ms": 39420.85,
           "json_invalido": 0,
           "tiempo_agotado": 0,
           "respaldo": 0,
-          "tokens_salida_media": 13.8
+          "tokens_salida_media": 125.4
+        },
+        "qwen3.5:0.8b · P3": {
+          "n": 132,
+          "media_ms": 23822.84,
+          "p50_ms": 22693.05,
+          "p95_ms": 33222.158,
+          "max_ms": 46597.96,
+          "json_invalido": 0,
+          "tiempo_agotado": 0,
+          "respaldo": 0,
+          "tokens_salida_media": 236.5
+        },
+        "qwen3.5:0.8b · P6": {
+          "n": 40,
+          "media_ms": 2005.504,
+          "p50_ms": 1805.51,
+          "p95_ms": 2986.554,
+          "max_ms": 4337.69,
+          "json_invalido": 0,
+          "tiempo_agotado": 0,
+          "respaldo": 0,
+          "tokens_salida_media": 13.3
         }
       }
     },
     "metas_latencia": {
       "busqueda_simple_p95": {
         "meta_s": 1.5,
-        "medido_s": 0.635,
+        "medido_s": 0.359,
         "estadistico": "p95",
-        "n": 77,
+        "n": 29,
         "cumple": true,
         "grupo": "busquedas, ruta simple, sin caché, configuración de producción"
       },
       "busqueda_compleja_p95": {
         "meta_s": 25,
-        "medido_s": 9.325,
+        "medido_s": 6.815,
         "estadistico": "p95",
-        "n": 67,
+        "n": 27,
         "cumple": true,
         "grupo": "busquedas, ruta compleja, sin caché, configuración de producción"
       },
       "ficha_rapida_p50": {
         "meta_s": 45,
-        "medido_s": 28.523,
+        "medido_s": 25.996,
         "estadistico": "p50",
-        "n": 173,
+        "n": 70,
         "cumple": true,
         "grupo": "fichas, ruta rapida, sin caché, configuración de producción"
       },
       "ficha_completa_p50": {
         "meta_s": 90,
-        "medido_s": 73.512,
+        "medido_s": 56.793,
         "estadistico": "p50",
-        "n": 142,
+        "n": 95,
         "cumple": true,
         "grupo": "fichas, ruta completa, sin caché, configuración de producción"
       },
       "ficha_cache_p50": {
         "meta_s": 0.5,
-        "medido_s": 0.018,
-        "estadistico": "p50",
-        "n": 27,
-        "cumple": true,
-        "grupo": "fichas servidas desde la caché (exacta o semántica)"
+        "estado": "pendiente: no hay trazas de fichas servidas desde la caché (exacta o semántica)"
       }
     }
   }
