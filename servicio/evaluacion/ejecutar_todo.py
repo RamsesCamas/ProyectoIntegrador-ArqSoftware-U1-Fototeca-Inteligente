@@ -44,16 +44,22 @@ def elegir(solo: str | None, desde: str | None) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--rapido", action="store_true", help="tamaños a la cuarta parte (FOTOTECA_EVAL_RAPIDO=1)")
+    ap.add_argument("--fraccion", type=float, help="fracción de cada conjunto (p. ej. 0.5); una corrida posterior mayor "
+                                                   "reutiliza los casos ya calculados")
     ap.add_argument("--solo", help="módulos separados por coma")
     ap.add_argument("--desde", help="empieza en este módulo")
     args = ap.parse_args(argv)
     if args.rapido:
         os.environ["FOTOTECA_EVAL_RAPIDO"] = "1"
+    if args.fraccion:
+        os.environ["FOTOTECA_EVAL_FRACCION"] = str(args.fraccion)
     modulos = elegir(args.solo, args.desde)
 
     # Se importa después de fijar FOTOTECA_EVAL_RAPIDO (los módulos lo leen al ejecutarse).
-    from evaluacion.comun import RESULTADOS, ahora, rapido, registro
-    registro(f"evaluación · {'RÁPIDA (prueba de humo) · ' if rapido() else ''}módulos: {', '.join(modulos)}")
+    from evaluacion.comun import RESULTADOS, ahora, fraccion, rapido, registro
+    etiqueta = "RÁPIDA (prueba de humo) · " if rapido() else (f"PARCIAL ({fraccion():.0%} de cada conjunto) · "
+                                                               if fraccion() < 1.0 else "")
+    registro(f"evaluación · {etiqueta}módulos: {', '.join(modulos)}")
     ruta_registro = RESULTADOS / "ejecucion_evaluacion.json"
     try:
         historial = json.loads(ruta_registro.read_text(encoding="utf-8")) if ruta_registro.exists() else {}
@@ -82,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
     for nombre in modulos:
         registro(f"── {nombre} ──")
         inicio, t0 = ahora(), time.perf_counter()
-        entrada = {"inicio": inicio, "rapido": rapido()}
+        entrada = {"inicio": inicio, "rapido": rapido(), "fraccion": fraccion()}
         try:
             if cliente is None and nombre not in SIN_CLIENTE:
                 raise RuntimeError(f"sin cliente de la API ({error_cliente})")

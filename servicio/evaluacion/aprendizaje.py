@@ -34,7 +34,7 @@ import numpy as np
 from evaluacion.calidad import (asegurar_subidas, ficha_evaluacion, intervalo_bootstrap, referencias,
                                 similitud_granite)
 from evaluacion.comun import (SEMILLA, ClienteEval, Incremental, guardar_grafica, guardar_resultado, particiones,
-                              percentiles, plt, rapido, registro, tamano)
+                              percentiles, plt, rapido, registro, tamano, fraccion)
 
 N_BLOQUES = 5
 PREFIJO = "[simulación]"
@@ -42,7 +42,10 @@ PALETA = {"azul": "#2a78d6", "naranja": "#eb6834", "gris": "#9a9992"}
 
 
 def _sufijo() -> str:
-    return "_rapido" if rapido() else ""
+    # La curva depende de los bloques, que cambian con el tamaño: cada fracción guarda sus casos aparte.
+    if rapido():
+        return "_rapido"
+    return "" if fraccion() >= 1.0 else f"_f{int(round(fraccion() * 100))}"
 
 
 def fotos_y_bloques() -> tuple[list[str], list[list[str]]]:

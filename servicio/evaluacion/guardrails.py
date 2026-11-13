@@ -40,7 +40,7 @@ import yaml
 
 from evaluacion.calidad import ficha_evaluacion, indice_xm, referencias
 from evaluacion.comun import (DATA, RESULTADOS, REVISION, SEMILLA, ClienteEval, Incremental, guardar_grafica,
-                              guardar_resultado, leer_conjunto, percentiles, plt, rapido, registro, tamano)
+                              guardar_resultado, leer_conjunto, percentiles, plt, rapido, registro, tamano, fraccion)
 
 CONFIG_FOTOS = "guardrails_foto"
 OPCIONES_FOTOS = {"sin_cache": True}           # flujo de producción (sin forzar ruta), sin caché
@@ -303,7 +303,7 @@ def detector_inyeccion_componente(c: ClienteEval) -> tuple[dict, list[dict]]:
 def evaluar_consultas(c: ClienteEval) -> list[dict]:
     from fototeca.guardrails.politicas import MENSAJES_SEGUROS
     items = leer_conjunto("consultas_guardrail")["items"]
-    if rapido():   # muestra estratificada para la prueba de humo
+    if fraccion() < 1.0:   # muestra estratificada (prueba de humo o corrida parcial)
         por_tipo = defaultdict(list)
         for it in items:
             por_tipo[it["tipo"]].append(it)

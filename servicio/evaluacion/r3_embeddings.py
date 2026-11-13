@@ -131,9 +131,11 @@ def ejecutar(c) -> dict:
     segundos_por_imagen = float(np.mean(muestra_tiempo))
     estimado_h = segundos_por_imagen * len(galeria_total) / 3600
     n_galeria = len(galeria_total) if estimado_h <= 3 else 500
-    galeria = sorted(galeria_total[:20] + rng.sample(galeria_total[20:], tamano(n_galeria) - 20)) if n_galeria < len(galeria_total) \
-        else galeria_total
-    galeria = galeria[:tamano(len(galeria))]
+    # Orden fijo (las 20 de la estimación y luego una muestra con semilla de tamaño n_galeria); la fracción toma su
+    # inicio, así que una corrida mayor reutiliza las descripciones ya calculadas.
+    orden = galeria_total[:20] + (rng.sample(galeria_total[20:], n_galeria - 20) if n_galeria < len(galeria_total)
+                                  else galeria_total[20:])
+    galeria = sorted(orden[:tamano(n_galeria)])
     registro(f"galería: {len(galeria)} imágenes (estimado para 1,000: {estimado_h:.1f} h a {segundos_por_imagen:.1f} s/imagen)")
 
     consultas = [indice[d]["es"][0] for d in galeria]

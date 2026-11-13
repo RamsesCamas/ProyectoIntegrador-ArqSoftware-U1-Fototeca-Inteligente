@@ -22,9 +22,24 @@ def rapido() -> bool:
     return os.environ.get("FOTOTECA_EVAL_RAPIDO", "0") == "1"
 
 
+def fraccion() -> float:
+    """Fracción de cada conjunto que se evalúa: 1 (completa), 0.25 con --rapido, o la de --fraccion. Los módulos toman
+    el INICIO de la misma muestra con semilla fija, así que una corrida mayor reutiliza los casos ya calculados."""
+    if rapido():
+        return 0.25
+    try:
+        f = float(os.environ.get("FOTOTECA_EVAL_FRACCION", "1"))
+    except ValueError:
+        f = 1.0
+    return min(1.0, max(0.05, f))
+
+
 def tamano(n: int) -> int:
-    """Con --rapido, los tamaños se reducen a la cuarta parte (pruebas de humo)."""
-    return max(2, n // 4) if rapido() else n
+    """Con --rapido, la cuarta parte (pruebas de humo); con --fraccion f, round(n·f) (mínimo 2)."""
+    if rapido():
+        return max(2, n // 4)
+    f = fraccion()
+    return n if f >= 1.0 else min(n, max(2, int(round(n * f))))
 
 
 def ahora() -> str:
@@ -140,7 +155,7 @@ class Incremental:
 def guardar_resultado(modulo: str, metricas: dict, detalle: list[dict] | None = None, configuracion: dict | None = None,
                       cliente: ClienteEval | None = None) -> Path:
     RESULTADOS.mkdir(parents=True, exist_ok=True)
-    cuerpo = {"modulo": modulo, "fecha": ahora(), "rapido": rapido(), "hardware": hardware(),
+    cuerpo = {"modulo": modulo, "fecha": ahora(), "rapido": rapido(), "fraccion": fraccion(), "hardware": hardware(),
               "version_configuracion": cliente.version_configuracion() if cliente else None,
               "configuracion": configuracion or {}, "metricas": metricas}
     ruta = RESULTADOS / f"{modulo}.json"

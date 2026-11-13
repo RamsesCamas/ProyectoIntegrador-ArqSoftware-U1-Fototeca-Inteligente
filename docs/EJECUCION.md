@@ -107,6 +107,12 @@ y cambia el archivo.
 2. Reconstruye el archivo con `python -m scripts.indexar_archivo`. Borra fichas, subidas y caché, pero conserva
    `config/calibracion.yaml`.
 
+**Corrida parcial (`--fraccion`).** Si no hay tiempo para la corrida completa, `--fraccion 0.5` evalúa la mitad de
+cada conjunto: toma el inicio de la misma muestra con semilla fija, así que una corrida posterior con una fracción
+mayor (o sin `--fraccion`) reutiliza los casos ya calculados y solo agrega los que faltan. La excepción es
+`aprendizaje`, cuya curva depende del tamaño de los bloques: guarda los casos de cada fracción aparte. Cada
+`<modulo>.json` registra su `fraccion`. Ejemplo: agrega `--fraccion 0.5` a los dos comandos de abajo.
+
 **Pasada 1: generaciones de referencia y calibración final.**
 
 ```bash
