@@ -211,13 +211,13 @@ def test_ficha_validada_aparece_como_foto_similar_de_una_foto_parecida(cliente_a
 
     b = _subir(cliente_api, _mitad_oscura(original), "b.jpg")
     assert cliente_api.get("/duplicados").json() == []                    # parecida, no casi duplicada
-    cita = {"titular": [f"foto:{a}"], "descripcion": [f"foto:{a}"], "texto_alternativo": [f"foto:{a}"]}
+    cita = {"titular": ["F1"], "descripcion": ["F1"], "texto_alternativo": ["F1"]}     # alias corto del prompt
     ficha_b = _catalogar(cliente_api, contenedor, b, fuentes=cita)
 
     assert ficha_b["meta"]["cache"] == "ninguna"
     # La ficha validada entró al contexto del modelo, con la corrección del archivista
     prompt = _ultimo_prompt(contenedor)
-    assert f"foto:{a}" in prompt and titular in prompt
+    assert f"[F1] {titular}" in prompt
     # …y quedó como fuente `foto_similar` de los campos de la nueva ficha
     for campo in ("titular", "descripcion", "texto_alternativo"):
         similares = [f for f in ficha_b["fuentes"].get(campo, []) if f["tipo"] == "foto_similar"]

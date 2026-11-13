@@ -70,3 +70,23 @@ def versiones(plantillas: dict[str, Plantilla]) -> dict[str, str]:
                                            sort_keys=True).encode("utf-8")).hexdigest()[:8]
         salida[t] = f"{p.nombre}@v{p.version}#{huella}"
     return salida
+
+
+def esquema_con_fuentes(esquema: dict, ids: list[str]) -> dict:
+    """Copia del esquema para la gramática de la salida: cada campo de `fuentes` pasa a ser obligatorio y sus elementos
+    solo pueden ser uno de `ids` (los que el modelo vio en el prompt). Sin ids, las listas quedan vacías.
+
+    La validación de la respuesta sigue usando el esquema estático: una cita inválida que llegara a pasar la quita el
+    guardrail `fuentes`, no la descarta el gateway."""
+    nuevo = json.loads(json.dumps(esquema))
+    fuentes = nuevo.get("properties", {}).get("fuentes")
+    if not isinstance(fuentes, dict) or not isinstance(fuentes.get("properties"), dict):
+        return nuevo
+    ids = list(dict.fromkeys(i for i in ids if i))
+    for campo, sub in fuentes["properties"].items():
+        if ids:
+            sub["items"] = {"type": "string", "enum": ids}
+        else:
+            sub["maxItems"] = 0
+    fuentes["required"] = list(fuentes["properties"])
+    return nuevo

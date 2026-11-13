@@ -1,0 +1,26 @@
+{
+  "fecha": "2026-11-13T08:46:00+00:00",
+  "proposito": "comparar el piso de relevancia de la búsqueda: p5 de pares imagen–descripción propios (τ anterior) contra la distribución de pares ajenos",
+  "muestra": "600 fotos del archivo (random.Random(2026).sample), primera descripción humana en español; embeddinggemma-2:440m (imagen 384 px, rol consulta)",
+  "metodo": "matriz imagen×texto; diagonal = propias, fuera de la diagonal = ajenas; resultados_por_consulta_sobre = media de fotos (de 600) con similitud ≥ t por consulta",
+  "propias": {
+    "p5": 0.6635,
+    "p10": 0.6762,
+    "p50": 0.7207
+  },
+  "ajenas": {
+    "p50": 0.544,
+    "p90": 0.5921,
+    "p95": 0.6086,
+    "p99": 0.6434,
+    "p99.9": 0.6862
+  },
+  "resultados_por_consulta_sobre": {
+    "0.55": 258.155,
+    "0.58": 97.06,
+    "0.6": 44.357,
+    "0.62": 19.2,
+    "0.6635": 3.212
+  },
+  "decision": "τ_busqueda = p95 de ajenas; lo calcula ahora scripts/calibrar.py h4 (calibracion_h4.json)"
+}

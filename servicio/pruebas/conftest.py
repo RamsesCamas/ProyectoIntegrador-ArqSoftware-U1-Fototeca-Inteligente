@@ -20,7 +20,7 @@ from pruebas.falsos import AlmacenVectorialFalso, ClienteLLMFalso, EmbebedorFals
 
 @pytest.fixture
 def config(tmp_path):
-    base = cargar_configuracion(modo_evaluacion=False)
+    base = cargar_configuracion(modo_evaluacion=False, con_calibracion=False)
     rutas = {"datos": str(tmp_path), "sqlite": str(tmp_path / "sqlite" / "prueba.db"),
              "fotos": str(tmp_path / "fotos"), "config": base.rutas["config"]}
     return replace(base, rutas=rutas)

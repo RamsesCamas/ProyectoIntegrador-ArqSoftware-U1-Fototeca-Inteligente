@@ -45,27 +45,60 @@ class Contexto:
         return ({id_foto(v.documento_id) for v in self.vecinos} | {id_regla(r) for r in self.reglas}
                 | {id_tesauro(t) for t in self.terminos})
 
+    # ── alias de citas ──
+    # Los modelos pequeños copian mal ids largos (`regla:w3c-wai-images#informative/…`, `foto:xm-…`) y gastan tokens en
+    # ellos. En el prompt cada fuente lleva un alias corto (F1, R1, T1) y, antes del guardrail `fuentes`, el alias se
+    # traduce al id real. Los alias se derivan del contenido actual del contexto, así que deben pedirse después de
+    # recortarlo (variables_p2/variables_p3).
+    def _fotos_con_ficha(self) -> list:
+        return [v for v in self.vecinos if v.ficha]
+
+    def alias(self) -> dict[str, str]:
+        a = {f"F{i}": id_foto(v.documento_id) for i, v in enumerate(self._fotos_con_ficha(), 1)}
+        a.update({f"R{i}": id_regla(r) for i, r in enumerate(self.reglas, 1)})
+        a.update({f"T{i}": id_tesauro(t) for i, t in enumerate(self.terminos, 1)})
+        return a
+
+    def ids_citables(self, ruta: str) -> list[str]:
+        """Los alias que aparecen en el prompt de esa ruta (P2: fotos y 2 reglas; P3: fotos, reglas y tesauro). Se usan
+        como `enum` en la gramática de la salida, así el modelo solo puede citar fuentes que vio."""
+        if self.sin_rag:
+            return []
+        fotos = [f"F{i}" for i in range(1, len(self._fotos_con_ficha()) + 1)]
+        reglas = [f"R{i}" for i in range(1, len(self.reglas) + 1)]
+        if ruta == "rapida":
+            return fotos + reglas[:2]
+        return fotos + reglas + [f"T{i}" for i in range(1, len(self.terminos) + 1)]
+
+    def resolver_citas(self, fuentes) -> dict:
+        """Traduce los alias citados (F1, r2…) a ids reales; lo que no es alias se deja igual para que el guardrail
+        decida (un id real válido pasa, uno inventado se quita)."""
+        a = self.alias()
+        salida = {}
+        for campo, ids in (fuentes or {}).items() if isinstance(fuentes, dict) else []:
+            if isinstance(ids, list):
+                salida[campo] = [a.get(i.strip().upper(), i) if isinstance(i, str) else i for i in ids]
+        return salida
+
     # ── líneas por tipo ──
     def lineas_fotos(self, estilo: str = "completa") -> list[str]:
         lineas = []
-        for v in self.vecinos:
-            f = v.ficha.ficha if v.ficha else None
-            if f is None:
-                continue
+        for i, v in enumerate(self._fotos_con_ficha(), 1):
+            f = v.ficha.ficha
             palabras = ", ".join(p.termino for p in f.palabras_clave[:8])
             if estilo == "rapida":
-                lineas.append(f"[{id_foto(v.documento_id)}] titular: {_corto(f.titular, 120)} | texto_alternativo: "
+                lineas.append(f"[F{i}] titular: {_corto(f.titular, 120)} | texto_alternativo: "
                               f"{_corto(f.texto_alternativo, 250)} | palabras_clave: {palabras}")
             else:
-                lineas.append(f"[{id_foto(v.documento_id)}] {_corto(f.titular, 120)} | {_corto(f.descripcion, 300)} | {palabras}")
+                lineas.append(f"[F{i}] {_corto(f.titular, 120)} | {_corto(f.descripcion, 300)} | {palabras}")
         return lineas
 
     def lineas_reglas(self) -> list[str]:
-        return [f"[{id_regla(r)}] {_corto(r.carga.get('texto', ''), 600)}" for r in self.reglas]
+        return [f"[R{i}] {_corto(r.carga.get('texto', ''), 600)}" for i, r in enumerate(self.reglas, 1)]
 
     def lineas_terminos(self) -> list[str]:
-        return [f"[{id_tesauro(t)}] {t.carga.get('etiqueta_es', '')} — {_corto(t.carga.get('nota_alcance', ''), 120)}"
-                for t in self.terminos]
+        return [f"[T{i}] {t.carga.get('etiqueta_es', '')} — {_corto(t.carga.get('nota_alcance', ''), 120)}"
+                for i, t in enumerate(self.terminos, 1)]
 
 
 def _tokens(texto: str, caracteres_por_token: float) -> int:

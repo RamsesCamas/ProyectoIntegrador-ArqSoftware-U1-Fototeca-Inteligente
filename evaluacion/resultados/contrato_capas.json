@@ -1,0 +1,31 @@
+{
+  "fecha": "2026-11-13T06:42:04+00:00",
+  "configuracion": "servicio/pyproject.toml [tool.importlinter]",
+  "codigo_real": {
+    "codigo_salida": 0,
+    "resumen": "Contracts: 3 kept, 0 broken.",
+    "rotos": [],
+    "salida": "╔══╗─────────▶╔╗ ╔╗      ╔╗◀───┐\n╚╣╠╝◀─────┐  ╔╝╚╗║║────▶╔╝╚╗   │\n ║║   ╔══╦══╦╩╗╔╝║║  ╔╦═╩╗╔╝╔═╦══╗\n ║║╔══╣╔╗║╔╗║╔╣║ ║║ ╔╬╣╔╗║║ ║│║╔═╝\n╔╣╠╣║║║╚╝║╚╝║║║╚╗║╚═╝║║║║║╚╗║═╣║\n╚══╩╩╩╣╔═╩══╩╝╚═╝╚═══╩╩╝╚╩═╩╩═╩╝\n  └──▶║║                    ▲ \n      ╚╝────────────────────┘\n\n\n---------\nContracts\n---------\n\nAnalyzed 75 files, 203 dependencies.\n------------------------------------\n\nCapas del servicio (C1→C7) KEPT\nTransversales independientes KEPT\nDominio sin dependencias internas KEPT\n\nContracts: 3 kept, 0 broken."
+  },
+  "pruebas_negativas": {
+    "c7_importa_c1": {
+      "import_agregado": "import fototeca.api.arranque  # C7 → C1: prohibido",
+      "codigo_salida": 1,
+      "resumen": "Contracts: 2 kept, 1 broken.",
+      "rotos": [
+        "Capas del servicio (C1→C7)"
+      ],
+      "salida": "\n---------\nContracts\n---------\n\nAnalyzed 76 files, 204 dependencies.\n------------------------------------\n\nCapas del servicio (C1→C7) BROKEN\nTransversales independientes KEPT\nDominio sin dependencias internas KEPT\n\nContracts: 2 kept, 1 broken.\n\n\n----------------\nBroken contracts\n----------------\n\nCapas del servicio (C1→C7)\n--------------------------\n\nfototeca.datos is not allowed to import fototeca.api:\n\n- fototeca.datos.infractor -> fototeca.api.arranque (l.1)"
+    },
+    "t1_importa_c7": {
+      "import_agregado": "import fototeca.datos.puertos  # T1 → C7: prohibido",
+      "codigo_salida": 1,
+      "resumen": "Contracts: 2 kept, 1 broken.",
+      "rotos": [
+        "Transversales independientes"
+      ],
+      "salida": "\n---------\nContracts\n---------\n\nAnalyzed 76 files, 204 dependencies.\n------------------------------------\n\nCapas del servicio (C1→C7) KEPT\nTransversales independientes BROKEN\nDominio sin dependencias internas KEPT\n\nContracts: 2 kept, 1 broken.\n\n\n----------------\nBroken contracts\n----------------\n\nTransversales independientes\n----------------------------\n\nfototeca.observabilidad is not allowed to import fototeca.datos:\n\n-   fototeca.observabilidad.infractor -> fototeca.datos.puertos (l.1)"
+    }
+  },
+  "ok": true
+}

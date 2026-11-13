@@ -73,6 +73,10 @@ def h4(c) -> dict:
     primeras = c.embebedor.embeber_textos([por_id[d]["es"][0] for d in muestra], rol="consulta")
     cortas = c.embebedor.embeber_textos([min(por_id[d]["es"], key=len) for d in muestra], rol="consulta")
     sim_desc = np.sum(vec_img * primeras, axis=1)
+    # Piso de relevancia de la búsqueda: el nivel que alcanzan los pares imagen–descripción AJENOS (ruido). Con el p5
+    # de los pares propios (versión anterior) solo pasaban coincidencias casi exactas: 3.2 fotos de 600 por consulta.
+    matriz = vec_img @ np.asarray(primeras).T
+    sim_ajenas = matriz[~np.eye(len(muestra), dtype=bool)]
     sim_alt = np.sum(vec_img * cortas, axis=1)
     dobles = [d for d in muestra if len(por_id[d]["es"]) >= 2]
     g1 = c.embebedor_secundario.embeber_textos([por_id[d]["es"][0] for d in dobles])
@@ -82,12 +86,19 @@ def h4(c) -> dict:
         "conjunto_calibracion": f"nuevas sin eval_fichas ({len(calibracion)} fotos); archivo (muestra de {len(muestra)})",
         "distribuciones": {"top1_recuperacion": resumen(top1), "margen_top1_top5": resumen(margen),
                            "consenso": resumen(consenso), "imagen_vs_descripcion_humana": resumen(sim_desc),
+                           "imagen_vs_descripcion_ajena": {**resumen(sim_ajenas), "p99": pct(sim_ajenas, 99)},
                            "imagen_vs_texto_alternativo_humano": resumen(sim_alt),
                            "granite_desc_vs_desc_misma_imagen": resumen(sim_granite)},
         "umbrales": {"agente.tau_ret": pct(top1, 10), "enrutador_fichas.tau_consenso": pct(consenso, 50),
-                     "enrutador_busquedas.tau_busqueda": pct(sim_desc, 5),
+                     "enrutador_busquedas.tau_busqueda": pct(sim_ajenas, 95),
                      "guardrails.tau_apego_visual": pct(sim_alt, 5),
                      "guardrails.tau_consistencia": pct(sim_granite, 5)},
+        "reglas": {"agente.tau_ret": "p10 del top-1 de recuperación en nuevas",
+                   "enrutador_fichas.tau_consenso": "p50 del consenso entre vecinos en nuevas",
+                   "enrutador_busquedas.tau_busqueda": "p95 de la similitud imagen–descripción ajena (piso de ruido)",
+                   "guardrails.tau_apego_visual": "p5 de imagen–texto alternativo humano de la misma foto",
+                   "guardrails.tau_consistencia": "p5 de granite entre dos descripciones humanas de la misma foto"},
+        "resultados_por_consulta_sobre_tau_busqueda": round(float(np.mean((matriz >= pct(sim_ajenas, 95)).sum(axis=0))), 2),
         "fraccion_pobre_con_tau_ret_y_delta": round(float(np.mean([(t < pct(top1, 10)) or (mg < 0.02)
                                                                      for t, mg in zip(top1, margen)])), 4),
     }
@@ -101,8 +112,16 @@ def _umbral_balanceado(positivos: list[float], negativos: list[float], fpr_max: 
         tpr = float(np.mean([p >= u for p in positivos]))
         fpr = float(np.mean([n >= u for n in negativos]))
         if fpr <= fpr_max and (mejor is None or tpr - fpr > mejor["tpr"] - mejor["fpr"]):
-            mejor = {"umbral": round(u, 4), "tpr": round(tpr, 4), "fpr": round(fpr, 4)}
-    return mejor or {"umbral": round(max(negativos) + 1e-4, 4), "tpr": 0.0, "fpr": 0.0}
+            mejor = {"umbral": u, "tpr": round(tpr, 4), "fpr": round(fpr, 4)}
+    if mejor is None:
+        return {"umbral": round(max(negativos) + 1e-4, 4), "tpr": 0.0, "fpr": 0.0}
+    # El candidato coincide con un caso de calibración (margen cero). Se usa el punto medio entre él y el valor
+    # inmediato inferior: la TPR y la FPR en calibración no cambian, y los casos nuevos tienen margen.
+    inferiores = [x for x in candidatos if x < mejor["umbral"]]
+    limite = mejor["umbral"]
+    mejor["umbral"] = round((limite + max(inferiores)) / 2, 4) if inferiores else round(limite, 4)
+    mejor["candidato_en_calibracion"] = round(limite, 4)
+    return mejor
 
 
 def h5(c) -> dict:
@@ -145,7 +164,10 @@ def h5(c) -> dict:
                      "guardrails.tau_inyeccion": u_iny["umbral"]},
         "desempeno_en_calibracion": {"fuera_de_dominio": u_fdd, "texto_visible": u_txt, "inyeccion_texto": u_iny},
         "regla": "umbral con mejor exactitud balanceada cuya tasa de falsos positivos sobre el archivo sea ≤ 1 % "
-                 "(≤ 10 % para texto visible, cuyo costo es solo enviar la foto por la ruta completa)",
+                 "(≤ 10 % para texto visible, cuyo costo es solo enviar la foto por la ruta completa); el umbral se "
+                 "coloca en el punto medio entre ese candidato y el valor inmediato inferior",
+        "nota_signo": "fuera de dominio se calibra con el signo invertido (positivo = diferencia baja): en "
+                      "desempeno_en_calibracion el umbral aparece positivo y en umbrales con su signo real",
     }
 
 

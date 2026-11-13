@@ -65,8 +65,12 @@ class Gateway:
 
     # ── ejecución ──
     def ejecutar(self, tarea: str, variables: dict, imagenes: list[bytes] | None = None, *,
-                 rol: str | None = None, permitir_respaldo: bool = True) -> SalidaTarea:
+                 rol: str | None = None, permitir_respaldo: bool = True,
+                 esquema_gramatica: dict | None = None) -> SalidaTarea:
+        """`esquema_gramatica` (opcional) es el esquema que se envía al modelo para restringir su salida; la respuesta
+        se valida siempre contra el esquema estático de la plantilla."""
         plantilla = self.plantillas[tarea]
+        gramatica = esquema_gramatica or plantilla.esquema
         cadena = [rol] if rol else [plantilla.modelo_preferido] + (
             [plantilla.modelo_respaldo] if permitir_respaldo and plantilla.modelo_respaldo else [])
         espera = float(self.config.parametro("gateway.espera_reintento_s", 1))
@@ -81,7 +85,7 @@ class Gateway:
                 t0 = time.perf_counter()
                 comun = {"modelo": modelo, "tarea": tarea, "intento": intento, "respaldo": posicion > 0}
                 try:
-                    resp = self.cliente.generar(modelo, mensajes, imagenes=con_imagen, esquema_json=plantilla.esquema,
+                    resp = self.cliente.generar(modelo, mensajes, imagenes=con_imagen, esquema_json=gramatica,
                                                 opciones=self.opciones(plantilla, modelo),
                                                 tiempo_limite_s=self.tiempo_limite(plantilla, rol_modelo))
                 except (TiempoAgotado, ServicioNoDisponible) as e:
@@ -99,7 +103,9 @@ class Gateway:
                           resultado="ok" if not errores else "json_invalido", tokens_prompt=resp.tokens_prompt,
                           tokens_salida=resp.tokens_salida, carga_ms=round(resp.duracion_carga_ms, 1),
                           razon_fin=resp.razon_fin, thinking_eliminado=resp.thinking_eliminado,
-                          tiempo_agotado=False, **comun)
+                          tiempo_agotado=False, **comun,
+                          # Para diagnosticar (p. ej. repeticiones hasta el límite de tokens): solo si es inválido.
+                          **({"errores": errores[:3], "cola_texto": (resp.texto or "")[-300:]} if errores else {}))
                 if not errores:
                     return SalidaTarea(tarea, datos, modelo, respaldo=posicion > 0, intentos=intento,
                                        tokens_prompt=resp.tokens_prompt, tokens_salida=resp.tokens_salida,

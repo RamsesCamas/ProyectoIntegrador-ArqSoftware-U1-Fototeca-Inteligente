@@ -32,6 +32,8 @@ def validar(obj, esquema: dict, ruta: str = "$") -> list[str]:
                 errores += validar(v, props[k], f"{ruta}.{k}")
             elif isinstance(extra, dict):
                 errores += validar(v, extra, f"{ruta}.{k}")
+            elif extra is False:
+                errores.append(f"{ruta}: campo no permitido «{k}»")
     elif tipo == "array":
         if not isinstance(obj, list):
             return errores + [f"{ruta}: se esperaba una lista"]

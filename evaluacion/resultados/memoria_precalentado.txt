@@ -1,0 +1,23 @@
+# Memoria con los 4 modelos precalentados (precalentar con num_ctx y draft_num_predict=0), 2026-11-13T06:41:39Z
+NAME                      ID              SIZE      PROCESSOR    CONTEXT    RUNNER      UNTIL   
+granite-embedding:278m    1a37926bf842    573 MB    100% CPU     512        llamacpp    Forever    
+embeddinggemma-2:440m     7d8dc01c0a05    634 MB    100% CPU     4096       llamacpp    Forever    
+lfm3:1.7b-q4_K_M          b36a103fe2f8    1.4 GB    100% CPU     4096       llamacpp    Forever    
+qwen3.5:0.8b              de63045f2975    1.4 GB    100% CPU     4096       llamacpp    Forever    
+
+## docker stats
+fototeca-viva-servicio-1 56.95MiB / 1.5GiB
+fototeca-viva-web-1 8.863MiB / 64MiB
+fototeca-viva-ollama-1 4.158GiB / 5GiB
+fototeca-viva-qdrant-1 330.3MiB / 512MiB
+
+## cgroup ollama (memory.stat)
+anon 4447555584
+file 896901120
+
+## RSS por proceso (KiB)
+41300 /bin/ollama serve
+1478252 /usr/lib/ollama/llama-server --model /root/.ollama/models/blobs/sha256-889ea3b9143cdc32146c7d530ce5f3d452ec18069086f6f4167ce9ae72a96
+1414392 /usr/lib/ollama/llama-server --model /root/.ollama/models/blobs/sha256-3793e1e6e2266919d6e015287221b41100175a98eddaba92e111aed3b05c9
+796504 /usr/lib/ollama/llama-server --model /root/.ollama/models/blobs/sha256-111e84992a0406bacb70d11dddd8874001c783cc56b82c462ec82a2f5b8d08
+697696 /usr/lib/ollama/llama-server --model /root/.ollama/models/blobs/sha256-a658c903bf83a9d84fe1b9869874229ddfdfc1c88b04f958f17dd24e243d26

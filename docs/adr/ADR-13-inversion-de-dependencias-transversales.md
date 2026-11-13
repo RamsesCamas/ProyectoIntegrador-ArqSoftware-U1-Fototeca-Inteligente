@@ -44,8 +44,10 @@ importara T1, habría un ciclo, y las transversales dejarían de ser independien
     contrato falle (prueba negativa);
   - `test_transversal_no_puede_importar_negocio`: en una copia agrega un import de T1 hacia C7 y exige que falle el
     contrato «Transversales independientes» (prueba negativa).
-- **pendiente:** la salida registrada de `lint-imports` y de esas pruebas (contratos cumplidos y rotos, y resultado de
-  las pruebas negativas) en `evaluacion/resultados/contrato_capas.json`.
+- **Salida registrada** de `python -m scripts.verificar_contratos` en `evaluacion/resultados/contrato_capas.json`:
+  - código real: «Contracts: 3 kept, 0 broken.»;
+  - copia con un import de C7 hacia C1: «Contracts: 2 kept, 1 broken.»;
+  - copia con un import de T1 hacia C7: «Contracts: 2 kept, 1 broken.».
 
 ## Consecuencias
 - **Se gana:** las dependencias van siempre hacia abajo y sin ciclos; T1 y T2 se prueban con sumideros falsos; la

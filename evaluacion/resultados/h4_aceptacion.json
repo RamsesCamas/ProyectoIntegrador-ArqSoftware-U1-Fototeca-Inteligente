@@ -1,0 +1,199 @@
+{
+  "fecha": "2026-11-13T08:42:53+00:00",
+  "minutos": 22.6,
+  "version_configuracion": "afaaf748e634",
+  "criterios": {
+    "fichas_validas_con_fuentes_por_ruta": {
+      "rapida": 10,
+      "completa": 10
+    },
+    "ciclo_de_agente_activado": true,
+    "busqueda_simple_ok": true,
+    "busqueda_compleja_ok": true,
+    "meta_completo_en_todas": true
+  },
+  "por_ruta": {
+    "rapida": {
+      "pedidas": 10,
+      "validas_con_fuentes": 10,
+      "segundos": [
+        28.75,
+        30.15,
+        32.39,
+        35.19,
+        36.85,
+        36.88,
+        37.44,
+        39.0,
+        39.8,
+        118.39
+      ]
+    },
+    "completa": {
+      "pedidas": 10,
+      "validas_con_fuentes": 10,
+      "segundos": [
+        57.54,
+        70.75,
+        70.99,
+        72.32,
+        72.92,
+        73.62,
+        83.5,
+        88.78,
+        93.02,
+        94.16
+      ]
+    }
+  },
+  "agente": [
+    {
+      "tipo": "agente",
+      "xm": "xm-6ca5fb4d1a5cfe53",
+      "estado_http": 200,
+      "iteraciones": 2,
+      "recuperacion_prevista": {
+        "xm": "xm-6ca5fb4d1a5cfe53",
+        "top1": 0.6895,
+        "margen": 0.0798,
+        "pobre": true,
+        "dominio": 0.0357,
+        "texto_visible": 0.0065
+      },
+      "reformulaciones_en_traza": [
+        {
+          "iteracion": 1,
+          "consultas": 1,
+          "top1_antes": 0.6895,
+          "top1_despues": 0.6895,
+          "vecinos": [
+            "xm-d1a86bc70daa3d75",
+            "xm-aef73236856e88e4",
+            "xm-be13671a018a19b0",
+            "xm-d9f5f595c60cbabf",
+            "xm-d8ae3fe5ccff5e59"
+          ]
+        },
+        {
+          "iteracion": 2,
+          "consultas": 5,
+          "top1_antes": 0.6895,
+          "top1_despues": 0.6719,
+          "vecinos": [
+            "xm-be13671a018a19b0",
+            "xm-d9f5f595c60cbabf",
+            "xm-e02dd0c536dcf68e",
+            "xm-3198664c7e4ef82f",
+            "xm-d1a86bc70daa3d75"
+          ]
+        }
+      ],
+      "recuperacion": {
+        "top1": 0.6719,
+        "top5": 0.5901
+      },
+      "ruta": "completa",
+      "transiciones": [
+        "GUARDRAILS_ENTRADA→CACHE",
+        "CACHE→RECUPERAR_EJEMPLOS",
+        "RECUPERAR_EJEMPLOS→EVALUAR_RECUPERACION",
+        "EVALUAR_RECUPERACION→REFORMULAR",
+        "REFORMULAR→EVALUAR_RECUPERACION",
+        "EVALUAR_RECUPERACION→REFORMULAR",
+        "REFORMULAR→EVALUAR_RECUPERACION",
+        "EVALUAR_RECUPERACION→ENRUTAR",
+        "ENRUTAR→GENERAR",
+        "GENERAR→GUARDRAILS_SALIDA",
+        "GUARDRAILS_SALIDA→GUARDAR",
+        "GUARDAR→RESPONDER"
+      ],
+      "traza_id": "23335c38"
+    }
+  ],
+  "busquedas": [
+    {
+      "tipo": "busqueda",
+      "esperada": "simple",
+      "texto": "Fondo negro con luces blancas neón.",
+      "estado_http": 200,
+      "segundos": 0.43,
+      "ruta": "simple",
+      "modelo": null,
+      "resultados": 1,
+      "meta_completo": true,
+      "consulta_interpretada": {
+        "consulta_semantica": "Fondo negro con luces blancas neón.",
+        "excluir": [],
+        "filtros": {
+          "contiene_personas": null
+        },
+        "terminos_tesauro": []
+      },
+      "objetivo_en_top10": true,
+      "con_razones": true
+    },
+    {
+      "tipo": "busqueda",
+      "esperada": "compleja",
+      "texto": "Busca fotos de llantas de avión enterradas en pavimento sin personas.",
+      "estado_http": 200,
+      "segundos": 8.47,
+      "ruta": "compleja",
+      "modelo": "lfm3:1.7b-q4_K_M",
+      "resultados": 11,
+      "meta_completo": true,
+      "consulta_interpretada": {
+        "consulta_semantica": "fotos de llantas de avión enterradas en pavimento",
+        "excluir": [
+          "sin personas"
+        ],
+        "filtros": {
+          "contiene_personas": false
+        },
+        "terminos_tesauro": [
+          "llantas de avión",
+          "enterradas",
+          "pavimento"
+        ]
+      },
+      "objetivo_en_top10": null,
+      "con_razones": true
+    }
+  ],
+  "fotos": {
+    "nuevas": [
+      "xm-a92fb2e1ee320bd8",
+      "xm-bda1ee4befcd0059",
+      "xm-bc27434397e35317",
+      "xm-9a8b333d8d6ff118",
+      "xm-3e075c23fde7edc8",
+      "xm-72e9661d0e216283",
+      "xm-6cf2dfab8495d767",
+      "xm-61ab3979fb9ad758",
+      "xm-f33c2c9c7ed23ce1",
+      "xm-ec0d5c7e36616ec0"
+    ],
+    "regiones_excluidas": [
+      "xm-6ca5fb4d1a5cfe53"
+    ]
+  },
+  "eliminadas": {
+    "xm-a92fb2e1ee320bd8": 200,
+    "xm-bda1ee4befcd0059": 200,
+    "xm-bc27434397e35317": 200,
+    "xm-9a8b333d8d6ff118": 200,
+    "xm-3e075c23fde7edc8": 200,
+    "xm-72e9661d0e216283": 200,
+    "xm-6cf2dfab8495d767": 200,
+    "xm-61ab3979fb9ad758": 200,
+    "xm-f33c2c9c7ed23ce1": 200,
+    "xm-ec0d5c7e36616ec0": 200,
+    "xm-6ca5fb4d1a5cfe53": 200
+  },
+  "seleccion_agente": {
+    "candidatas": 250,
+    "con_recuperacion_pobre": 40,
+    "regla": "flujo_ficha.recuperacion_pobre (top-1 < τ_ret o margen < δ)"
+  },
+  "detalle": "resultados/casos/h4_aceptacion.jsonl"
+}

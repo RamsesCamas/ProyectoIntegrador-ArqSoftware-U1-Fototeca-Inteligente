@@ -12,7 +12,7 @@ generacion:
   presence_penalty: 0.0
   num_ctx: 4096                      # H0 0.5: con 4096 los 4 modelos caben en el límite de 5g (ADR-12)
   think: false                       # ADR-11 (H0 0.6: con think, P3 de LFM3 0/3 JSON válidos)
-  num_predict: {P1: 350, P2: 200, P3: 600, P4: 200, P5: 150, P6: 80, P7: 120}
+  num_predict: {P1: 350, P2: 260, P3: 600, P4: 200, P5: 150, P6: 80, P7: 120}   # referencia: manda el encabezado de cada prompt
   # H0 0.6 (h0.json): calidad media (granite contra las descripciones humanas) 0.6835 a 512 px, 0.696 a 768 y
   # 0.6973 a 1024; regla «el lado más pequeño a ≤0.02 de la mejor calidad» → 512 px (P1 p50 34.28 s contra 43.37 s).
   lado_max_imagen_px: 512
@@ -29,7 +29,8 @@ tiempos_limite_s:                    # H0 0.6: 1.5 × p95 medido, redondeado hac
   qwen_imagen: 58                    # P1 a 512 px: p95 38.499 s
   qwen_texto: 64                     # P3 con Qwen solo texto (respaldo): p95 42.178 s
   lfm3: 90                           # P3 con LFM3 (600 tokens máx.): p95 59.444 s
-  embedding: 5                       # por elemento; imagen a 384 px p95 2.775 s (mínimo 5 s)
+  embedding: 15                      # por elemento; imagen a 384 px p95 2.775 s en H0. Era 5 s: en H4 una imagen tardó
+                                     # >5 s justo después de LFM3 (h4_incidente_embedding.txt), así que se deja holgura
 
 gateway:
   reintentos: 1

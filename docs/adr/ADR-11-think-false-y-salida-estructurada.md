@@ -58,6 +58,21 @@ entregar un JSON válido. Sin `format`, P3 es más rápido pero ninguna respuest
 configuración elegida, P3 de LFM3 dio **8/8** JSON válidos sobre 8 fotos (p50 39.351 s, p95 59.444 s; mediana de
 263 tokens de salida; `0.6.p3_lfm3`).
 
+**Citas de fuentes (aceptación de H4 con modelos reales, 2026-11-13).** Con el primer esquema, `fuentes` era un objeto
+de claves libres y los ids completos iban en el prompt (`foto:xm-…`, `regla:w3c-wai-images#…`). LFM3 agrupaba las
+citas por tipo y sin prefijo, Qwen inventaba claves, y el guardrail `fuentes` las quitaba: solo 4 de 20 fichas
+quedaron con fuentes (rápida 4, completa 0;
+`evaluacion/resultados/h4_aceptacion_intento2_antes_de_fuentes.json`). Se decidió:
+1. **Claves fijas por campo** en P2 y P3 (`additionalProperties: false`).
+2. **Alias cortos** en el prompt (F1, R1, T1) que el flujo traduce al id real antes del guardrail, porque copiar ids
+   largos le cuesta tokens a un modelo pequeño y abre la puerta a errores.
+3. **Gramática por petición:** el esquema que se envía a Ollama hace obligatorias las claves y restringe cada cita con
+   un `enum` de los alias que aparecen en ese prompt. La respuesta se sigue validando contra el esquema estático, y
+   una cita que no corresponda la quita el guardrail.
+
+Resultado sobre las mismas 10 fotos de `nuevas`: **20 de 20** fichas válidas con fuentes (10 por ruta), con medianas
+de 36.865 s en la ruta rápida y 73.27 s en la completa (`evaluacion/resultados/h4_aceptacion.json`).
+
 ## Consecuencias
 - **Se gana:** JSON válido y descripciones más cortas (menos tokens = menos latencia en CPU).
 - **Se sacrifica:** descripciones de P1 menos detalladas; la riqueza de la ficha la aporta la composición (P3) con

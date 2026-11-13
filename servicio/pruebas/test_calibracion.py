@@ -46,3 +46,15 @@ def test_prototipos_son_todos_texto():
     proto = yaml.safe_load((DIR_SERVICIO / "config" / "prototipos.yaml").read_text(encoding="utf-8"))
     listas = [proto["inyeccion"]] + [l for t in ("consulta", "dominio", "texto_visible") for l in proto[t].values()]
     assert all(isinstance(x, str) and x.strip() for l in listas for x in l)
+
+
+def test_umbral_balanceado_deja_margen_sin_cambiar_tasas():
+    from scripts.calibrar import _umbral_balanceado
+
+    positivos = [0.0735, 0.09, 0.12]
+    negativos = [-0.05, 0.01, 0.0703]
+    r = _umbral_balanceado(positivos, negativos)
+    assert r["candidato_en_calibracion"] == 0.0735
+    assert r["umbral"] == round((0.0735 + 0.0703) / 2, 4)
+    assert all(p >= r["umbral"] for p in positivos) and all(n < r["umbral"] for n in negativos)
+    assert (r["tpr"], r["fpr"]) == (1.0, 0.0)

@@ -39,6 +39,7 @@ from fototeca.guardrails.salida.reglas import (aplicar_reglas_iptc, recortar_lon
 from fototeca.guardrails.salida.semanticas import GuardrailsSemanticos
 from fototeca.modelos.enrutador_fichas import DecisionRuta, EnrutadorFichas
 from fototeca.modelos.gateway import Gateway, SalidaTarea
+from fototeca.modelos.plantillas import esquema_con_fuentes
 from fototeca.observabilidad.registro import registrar
 from fototeca.observabilidad.traza import traza_actual
 
@@ -101,6 +102,14 @@ class _Cronometro:
 
     def __exit__(self, *_):
         self.estado.tiempos[self.capa] += (time.perf_counter() - self.t0) * 1000
+
+
+def recuperacion_pobre(config: Configuracion, top1: float, margen: float) -> bool:
+    """Regla del ciclo de agente (ADR-07): top-1 bajo τ_ret o margen top-1/top-5 bajo δ. Sin τ calibrado, nunca."""
+    tau = config.parametro("agente.tau_ret")
+    if tau is None:
+        return False
+    return top1 < float(tau) or margen < float(config.parametro("agente.delta_margen", 0.02))
 
 
 class FlujoFicha:
@@ -202,11 +211,7 @@ class FlujoFicha:
         return int(self.config.parametro("agente.max_iter", 2))
 
     def _es_pobre(self, r: Recuperacion) -> bool:
-        tau = self.config.parametro("agente.tau_ret")
-        delta = float(self.config.parametro("agente.delta_margen", 0.02))
-        if tau is None:
-            return False
-        return r.top1 < float(tau) or r.margen < delta
+        return recuperacion_pobre(self.config, r.top1, r.margen)
 
     def _evaluar(self, e: EstadoFicha) -> str:
         pobre = self._es_pobre(e.recuperacion)
@@ -301,8 +306,10 @@ class FlujoFicha:
                     variables["descripcion_visual"] += f"\n(Corrección pedida por el validador: {retroalimentacion})"
                 rol = e.opciones.modelo_composicion if (self.config.modo_evaluacion and
                                                         e.opciones.modelo_composicion in ("vision", "composicion")) else None
+                gramatica = esquema_con_fuentes(self.gateway.plantillas["P3"].esquema,
+                                                e.contexto.ids_citables("completa"))
                 with _Cronometro(e, "modelo_composicion"):
-                    e.salida = self.gateway.ejecutar("P3", variables, rol=rol)
+                    e.salida = self.gateway.ejecutar("P3", variables, rol=rol, esquema_gramatica=gramatica)
                 e.modelos["composicion"] = e.salida.modelo
                 if e.salida.respaldo:
                     e.advertencias.append(f"Se usó el modelo de respaldo ({e.salida.modelo}) para componer la ficha.")
@@ -311,8 +318,10 @@ class FlujoFicha:
                     descripcion = " ".join(v.ficha.ficha.descripcion for v in e.recuperacion.vecinos[:2] if v.ficha)
                     e.contexto = self._contexto(e, descripcion)
                     variables = variables_p2(e.contexto)
+                gramatica = esquema_con_fuentes(self.gateway.plantillas["P2"].esquema,
+                                                e.contexto.ids_citables("rapida"))
                 with _Cronometro(e, "modelo_vision"):
-                    e.salida = self.gateway.ejecutar("P2", variables, imagenes=[e.imagen])
+                    e.salida = self.gateway.ejecutar("P2", variables, imagenes=[e.imagen], esquema_gramatica=gramatica)
                 e.modelos["vision"] = e.salida.modelo
         except (ServicioNoDisponible, TiempoAgotado) as ex:
             registrar("C2", "generacion_fallida", ruta=e.ruta, error=type(ex).__name__)
@@ -326,7 +335,8 @@ class FlujoFicha:
         datos.setdefault("descripcion_extendida", "")
         datos.setdefault("advertencias", [])
         palabras_crudas = [p for p in datos.get("palabras_clave", []) if isinstance(p, str)]
-        fuentes_crudas = datos.get("fuentes", {})
+        # Los modelos citan con alias cortos (F1, R1, T1); aquí se traducen a los ids reales del contexto.
+        fuentes_crudas = e.contexto.resolver_citas(datos.get("fuentes", {})) if e.contexto else datos.get("fuentes", {})
         datos["palabras_clave"] = []
         datos["advertencias"] = [a for a in datos.get("advertencias", []) if isinstance(a, str)]
         resultados: list[ResultadoGuardrail] = []

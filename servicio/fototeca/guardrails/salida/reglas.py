@@ -132,12 +132,27 @@ def eliminar_frases(ficha: Ficha, hallazgos: dict[str, list[str]]) -> Ficha:
 def verificar_fuentes(fuentes: dict[str, list[str]], ids_validos: set[str],
                       campos: tuple[str, ...] = ("titular", "descripcion", "texto_alternativo", "palabras_clave"),
                       campos_presentes: set[str] | None = None) -> tuple[dict[str, list[str]], ResultadoGuardrail]:
-    """Quita las fuentes inválidas (ids que no estaban en el contexto). Si un campo queda sin fuentes → marcar."""
+    """Quita las fuentes inválidas (ids que no estaban en el contexto). Si un campo queda sin fuentes → marcar.
+
+    Un id citado sin su prefijo (`xm-…` en lugar de `foto:xm-…`) se acepta solo si corresponde a exactamente un id
+    válido: es el mismo id del contexto mal copiado, no uno inventado."""
+    sin_prefijo: dict[str, list[str]] = {}
+    for v in ids_validos:
+        if ":" in v:
+            sin_prefijo.setdefault(v.split(":", 1)[1], []).append(v)
+
+    def normalizar(i):
+        if not isinstance(i, str) or i in ids_validos:
+            return i
+        candidatos = sin_prefijo.get(i.strip(), [])
+        return candidatos[0] if len(candidatos) == 1 else i
+
     limpias: dict[str, list[str]] = {}
     invalidas = []
     for campo, ids in (fuentes or {}).items():
         if not isinstance(ids, list):
             continue
+        ids = [normalizar(i) for i in ids]
         buenas = [i for i in ids if isinstance(i, str) and i in ids_validos]
         invalidas += [i for i in ids if i not in buenas]
         if buenas:

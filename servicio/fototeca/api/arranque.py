@@ -103,11 +103,13 @@ def fusionar_calibracion(parametros: dict, calibracion: dict | None) -> dict:
     return salida
 
 
-def cargar_configuracion(modo_evaluacion: bool | None = None) -> Configuracion:
+def cargar_configuracion(modo_evaluacion: bool | None = None, con_calibracion: bool = True) -> Configuracion:
+    """`con_calibracion=False` deja solo `parametros.yaml` (las pruebas unitarias no dependen de los umbrales que la
+    calibración haya escrito en este equipo)."""
     dir_config = Path(_env("FOTOTECA_CONFIG", str(DIR_SERVICIO / "config")))
     parametros = yaml.safe_load((dir_config / "parametros.yaml").read_text(encoding="utf-8"))
     ruta_calibracion = dir_config / "calibracion.yaml"
-    if ruta_calibracion.exists():
+    if con_calibracion and ruta_calibracion.exists():
         parametros = fusionar_calibracion(parametros, yaml.safe_load(ruta_calibracion.read_text(encoding="utf-8")))
     datos = Path(_env("FOTOTECA_DATA", str(DIR_SERVICIO / "data")))
     modelos = {

@@ -49,8 +49,20 @@ Es el diseño **híbrido adaptativo**: unificado por defecto y pipeline solo cua
 **pendiente:** `evaluacion/resultados/agente.json`, sobre las 20 fotos de `regiones_excluidas` que están en
 `eval_fichas` más 30 de la misma partición: porcentaje de casos que activan el ciclo; porcentaje que **mejora** después
 de reformular (el acierto@5 de vecinos pasa de 0 a 1, o el top-1 sube más que δ); iteraciones promedio; latencia
-añadida; y calidad de la ficha con el ciclo contra sin él (`MAX_ITER = 0`). El valor calibrado de τ_ret saldrá en
-`evaluacion/resultados/calibracion_h4.json`.
+añadida; y calidad de la ficha con el ciclo contra sin él (`MAX_ITER = 0`).
+
+**τ_ret calibrado** con las 660 fotos de `nuevas` que no están en `eval_fichas`
+(`evaluacion/resultados/calibracion_h4.json`): la similitud top-1 de recuperación tiene p10 = 0.7634, p50 = 0.8223 y
+mínimo 0.6943, así que **τ_ret = 0.7634** (p10). Con ese τ y el margen δ, el 11.52 % de esas fotos se consideraría
+recuperación pobre y activaría el ciclo (`fraccion_pobre_con_tau_ret_y_delta` = 0.1152).
+
+**Aceptación de H4** (`evaluacion/resultados/h4_aceptacion.json`). Como τ_ret es el p10, elegir al azar una foto de
+`regiones_excluidas` activa el ciclo solo a veces. La aceptación elige, entre las 250 candidatas que no están en
+conjuntos de evaluación, las 40 que cumplen la regla del flujo (`recuperacion_pobre`) y quedan lejos de los umbrales
+de fuera de dominio y de texto visible. Con la de menor top-1 (0.6895 previsto) el ciclo hizo **2 iteraciones** con 2
+reformulaciones en la traza, y la recuperación siguió pobre (top-1 0.6719, top-5 0.5901). Reformular no garantiza
+encontrar mejores ejemplos cuando el archivo de verdad no tiene fotos de esa región; cuánto mejora en promedio lo mide
+`agente.json`.
 
 Costo de referencia de una reformulación, medido en H0: P1 de Qwen con la imagen a 512 px tuvo una p50 de 34.28 s y un
 embedding de texto de EmbeddingGemma-2, una p50 de 0.159 s (`evaluacion/resultados/h0.json` → `verificaciones.0.6`).

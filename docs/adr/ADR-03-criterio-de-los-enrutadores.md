@@ -48,6 +48,19 @@ ruta rápida y P3 lo recibe aislado entre delimitadores (ADR-05).
   en segundos.
 
 ## Evidencia
+**Valores iniciales calibrados** con las 660 fotos de `nuevas` que no están en `eval_fichas`
+(`evaluacion/resultados/calibracion_h4.json`):
+- **τ_consenso = 0.7864**, la mediana del consenso entre vecinos (p25 0.7582, p75 0.8152): de entrada, la mitad de las
+  fotos va a la ruta rápida;
+- **τ_busqueda = 0.6086**, el piso de relevancia de la búsqueda: el p95 de la similitud texto→imagen entre fotos y
+  descripciones **ajenas** (ruido) en una muestra de 600 fotos del archivo. Un resultado se muestra solo si supera lo que
+  alcanza el 95 % de los pares no relacionados; si ninguno lo supera, la búsqueda reformula con P5 (máximo 2 veces). Con
+  ese τ, una consulta deja en promedio 30.98 candidatas de 600. La primera versión usaba el p5 de los pares **propios**
+  (0.6635) y solo dejaba coincidencias casi exactas: 3.212 fotos de 600 por consulta
+  (`evaluacion/resultados/calibracion_h4_piso_busqueda.json`).
+
+El valor final de τ_consenso y τ_acuerdo sale de la validación cruzada de 5 pliegues del experimento del enrutador.
+
 **pendiente:** `evaluacion/resultados/enrutador.json`:
 - **Fichas:** se ejecutan las dos rutas sobre `eval_fichas`; la ruta «correcta» de cada foto es la rápida si su calidad
   queda a 0.5 puntos o menos de la completa. Se reporta el porcentaje de fotos enviadas a la ruta correcta, la latencia

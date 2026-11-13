@@ -1,0 +1,29 @@
+# Incidente en verificar_h4 (2026-11-13): embedding de imagen > 5 s justo después de una ficha completa
+# Fuente: evaluacion/logs/verificar_h4.log (bitácora JSON del servicio) y docker compose logs ollama
+
+## Duración de embedding_imagen en la misma corrida (ms)
+2026-11-13T06:48:45.545+00:00 1765.95 ok 
+2026-11-13T06:50:06.911+00:00 2231.84 ok 
+2026-11-13T06:51:41.222+00:00 1788.05 ok 
+2026-11-13T06:53:51.326+00:00 1596.14 ok 
+2026-11-13T06:55:14.906+00:00 2014.99 ok 
+2026-11-13T06:57:22.926+00:00 1875.32 ok 
+2026-11-13T06:58:50.008+00:00 1974.08 ok 
+2026-11-13T07:00:08.122+00:00 1869.68 ok 
+2026-11-13T07:02:34.309+00:00 1904.22 ok 
+2026-11-13T07:04:00.472+00:00 1683.88 ok 
+2026-11-13T07:05:23.388+00:00 5016.21 error TiempoAgotado
+
+## Peticiones a Ollama alrededor del fallo
+[GIN] 2026/11/13 - 07:05:17 | 200 |   32.78s |      172.18.0.6 | POST     "/api/chat"
+[GIN] 2026/11/13 - 07:05:18 | 200 |  201.3ms |      172.18.0.6 | POST     "/api/embed"
+[GIN] 2026/11/13 - 07:05:18 | 200 |    196ms |      172.18.0.6 | POST     "/api/embed"
+[GIN] 2026/11/13 - 07:05:23 | 400 |       5s |      172.18.0.6 | POST     "/api/embed"
+
+## memory.events del contenedor ollama después de la corrida
+low 0
+high 0
+max 2097
+oom 0
+oom_kill 0
+oom_group_kill 0

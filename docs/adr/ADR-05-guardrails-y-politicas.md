@@ -54,16 +54,36 @@ latencia añadida y política aplicada, sobre `inyeccion_imagen` (15), `fuera_de
 `consultas_guardrail` (25: 10 con inyección, 5 con datos personales y 10 normales), con `texto_benigno_imagen` (15) y
 20 fotos normales como casos que no deben activarse; más las activaciones de salida sobre las 60 fichas evaluadas
 (`apego_visual`, `consistencia`, `atributos_sensibles` y `fuentes`), de las que el autor revisa 10 a mano. Las metas son
-90 % o más de bloqueos correctos y 10 % o menos de falsos positivos (`servicio/config/metas_calidad.yaml`). Los umbrales
-calibrados saldrán en `evaluacion/resultados/calibracion_h4.json` y `calibracion_h5.json`.
+90 % o más de bloqueos correctos y 10 % o menos de falsos positivos (`servicio/config/metas_calidad.yaml`).
+
+**Umbrales calibrados (fuera de muestra respecto a la evaluación).** Los de entrada salen de los conjuntos
+`calibracion_*` contra una muestra del archivo (`evaluacion/resultados/calibracion_h5.json`). La regla, fijada antes de
+ver los datos, es la mejor exactitud balanceada con 1 % o menos de falsos positivos sobre el archivo (10 % para texto
+visible, cuyo costo es solo pasar por la ruta completa), y el umbral se pone en el punto medio entre ese candidato y el
+valor inmediato inferior, para que los casos nuevos tengan margen:
+
+| Verificación | Umbral | TPR en calibración | FPR en calibración | Casos |
+|---|---|---|---|---|
+| `fuera_de_dominio` (diferencia foto − documento) | −0.0719 | 1.0 | 0.0 | 15 capturas · 400 fotos |
+| `texto_visible` (diferencia con texto − sin texto) | 0.0139 | 0.5333 | 0.095 | 15 fotos con texto · 400 fotos |
+| `inyeccion` en texto (similitud con prototipos) | 0.8392 | 0.9333 | 0.0 | 15 frases · 300 descripciones |
+
+El detector de texto visible por embeddings es débil (TPR 0.5333). Por eso no es la única señal: el campo
+`texto_visible` de P1 también fuerza la ruta completa. Los de salida salen de `nuevas` sin `eval_fichas`
+(`calibracion_h4.json`): `tau_apego_visual` = 0.6547 (p5 de la similitud imagen–texto alternativo humano) y
+`tau_consistencia` = 0.5738 (p5 de granite entre dos descripciones humanas de la misma foto).
 
 **τ_tesauro.** El valor inicial (0.75, `servicio/config/parametros.yaml`) nunca se midió para el cruce de etiquetas de
 Open Images en inglés a conceptos del tesauro en español, así que se calibra al indexar el archivo con un **proxy
 léxico**: el concepto esperado de una etiqueta es el que la tiene, en singular o plural, entre sus etiquetas en inglés.
 Sobre esas etiquetas se elige el τ más bajo con precisión de 0.90 o más y al menos 20 mapeos aceptados (si ninguno
 llega, el de mayor F1). El mapeo sigue siendo por embeddings: el proxy solo define el esperado. La regla se fijó antes
-de ver los datos (`servicio/scripts/indexar_archivo.py`). **pendiente:** el τ elegido y su curva en
-`evaluacion/resultados/calibracion_tesauro.json`, y la recalibración cuando el autor revise los 50 pares.
+de ver los datos (`servicio/scripts/indexar_archivo.py`). Resultado (`evaluacion/resultados/calibracion_tesauro.json`):
+289 de 2,634 etiquetas tienen un esperado léxico; sin umbral, el concepto más cercano acierta en 0.5225. Con el τ inicial
+de 0.75 la precisión sería 0.5243; con el elegido, **τ_tesauro = 0.89**, es 0.9474 (54 de 57 mapeos aceptados), a costa
+de un recall de 0.1869. Se prefiere precisión: una palabra clave equivocada contamina el archivo, y una que falta solo
+deja el campo más corto. **pendiente:** la recalibración cuando el autor revise los 50 pares de
+`evaluacion/revision_manual/muestra_mapeo_oi_tesauro.csv`.
 
 Dato que ya existe: ninguna de las fotos del corpus trae EXIF ni GPS (`evaluacion/resultados/h0.json` →
 `verificaciones.0.7.exif`: `imagenes_con_exif` 0 y `con_gps` 0); por eso el guardrail de EXIF se prueba con copias a las

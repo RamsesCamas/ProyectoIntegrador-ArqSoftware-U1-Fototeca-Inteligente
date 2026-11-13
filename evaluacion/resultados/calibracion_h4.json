@@ -1,0 +1,102 @@
+{
+  "fecha": "2026-11-13T08:44:59+00:00",
+  "fase": "h4",
+  "version_configuracion_previa": "afaaf748e634",
+  "conjunto_calibracion": "nuevas sin eval_fichas (660 fotos); archivo (muestra de 600)",
+  "distribuciones": {
+    "top1_recuperacion": {
+      "n": 660,
+      "p5": 0.7464,
+      "p10": 0.7634,
+      "p25": 0.7907,
+      "p50": 0.8223,
+      "p75": 0.8589,
+      "p95": 0.9075,
+      "min": 0.6943,
+      "max": 0.9598
+    },
+    "margen_top1_top5": {
+      "n": 660,
+      "p5": 0.0311,
+      "p10": 0.0373,
+      "p25": 0.054,
+      "p50": 0.0763,
+      "p75": 0.1083,
+      "p95": 0.1572,
+      "min": 0.0058,
+      "max": 0.2595
+    },
+    "consenso": {
+      "n": 660,
+      "p5": 0.7181,
+      "p10": 0.7297,
+      "p25": 0.7582,
+      "p50": 0.7864,
+      "p75": 0.8152,
+      "p95": 0.8491,
+      "min": 0.671,
+      "max": 0.8952
+    },
+    "imagen_vs_descripcion_humana": {
+      "n": 600,
+      "p5": 0.6635,
+      "p10": 0.6762,
+      "p25": 0.6961,
+      "p50": 0.7207,
+      "p75": 0.7411,
+      "p95": 0.7711,
+      "min": 0.6038,
+      "max": 0.8078
+    },
+    "imagen_vs_descripcion_ajena": {
+      "n": 359400,
+      "p5": 0.4925,
+      "p10": 0.5035,
+      "p25": 0.5224,
+      "p50": 0.544,
+      "p75": 0.5677,
+      "p95": 0.6086,
+      "min": 0.4096,
+      "max": 0.7735,
+      "p99": 0.6434
+    },
+    "imagen_vs_texto_alternativo_humano": {
+      "n": 600,
+      "p5": 0.6547,
+      "p10": 0.6703,
+      "p25": 0.6916,
+      "p50": 0.7158,
+      "p75": 0.7368,
+      "p95": 0.7658,
+      "min": 0.6038,
+      "max": 0.8078
+    },
+    "granite_desc_vs_desc_misma_imagen": {
+      "n": 600,
+      "p5": 0.5738,
+      "p10": 0.6089,
+      "p25": 0.6672,
+      "p50": 0.7303,
+      "p75": 0.7953,
+      "p95": 0.8652,
+      "min": 0.4226,
+      "max": 0.9532
+    }
+  },
+  "umbrales": {
+    "agente.tau_ret": 0.7634,
+    "enrutador_fichas.tau_consenso": 0.7864,
+    "enrutador_busquedas.tau_busqueda": 0.6086,
+    "guardrails.tau_apego_visual": 0.6547,
+    "guardrails.tau_consistencia": 0.5738
+  },
+  "reglas": {
+    "agente.tau_ret": "p10 del top-1 de recuperación en nuevas",
+    "enrutador_fichas.tau_consenso": "p50 del consenso entre vecinos en nuevas",
+    "enrutador_busquedas.tau_busqueda": "p95 de la similitud imagen–descripción ajena (piso de ruido)",
+    "guardrails.tau_apego_visual": "p5 de imagen–texto alternativo humano de la misma foto",
+    "guardrails.tau_consistencia": "p5 de granite entre dos descripciones humanas de la misma foto"
+  },
+  "resultados_por_consulta_sobre_tau_busqueda": 30.98,
+  "fraccion_pobre_con_tau_ret_y_delta": 0.1152
+}

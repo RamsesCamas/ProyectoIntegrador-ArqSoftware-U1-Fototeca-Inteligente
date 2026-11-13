@@ -1,0 +1,205 @@
+{
+  "fecha": "2026-11-13T07:50:47+00:00",
+  "minutos": 31.0,
+  "version_configuracion": "c26422a57bea",
+  "criterios": {
+    "fichas_validas_con_fuentes_por_ruta": {
+      "rapida": 4,
+      "completa": 0
+    },
+    "ciclo_de_agente_activado": false,
+    "busqueda_simple_ok": true,
+    "busqueda_compleja_ok": true,
+    "meta_completo_en_todas": true
+  },
+  "por_ruta": {
+    "rapida": {
+      "pedidas": 10,
+      "validas_con_fuentes": 4,
+      "segundos": [
+        32.22,
+        32.84,
+        33.18,
+        33.75,
+        34.26,
+        37.61,
+        92.04,
+        112.89,
+        123.52,
+        135.7
+      ]
+    },
+    "completa": {
+      "pedidas": 10,
+      "validas_con_fuentes": 0,
+      "segundos": [
+        61.9,
+        70.02,
+        71.82,
+        72.07,
+        74.95,
+        78.36,
+        79.06,
+        94.25,
+        103.9,
+        221.32
+      ]
+    }
+  },
+  "agente": [
+    {
+      "tipo": "agente",
+      "xm": "xm-fde5284fe5283b6d",
+      "estado_http": 200,
+      "iteraciones": 0,
+      "reformulaciones_en_traza": [],
+      "recuperacion": {
+        "top1": 0.8291,
+        "top5": 0.79
+      },
+      "ruta": "completa",
+      "transiciones": [
+        "GUARDRAILS_ENTRADA→CACHE",
+        "CACHE→RECUPERAR_EJEMPLOS",
+        "RECUPERAR_EJEMPLOS→EVALUAR_RECUPERACION",
+        "EVALUAR_RECUPERACION→ENRUTAR",
+        "ENRUTAR→GENERAR",
+        "GENERAR→GUARDRAILS_SALIDA",
+        "GUARDRAILS_SALIDA→GUARDAR",
+        "GUARDAR→RESPONDER"
+      ],
+      "traza_id": "03055662"
+    },
+    {
+      "tipo": "agente",
+      "xm": "xm-b1df28d8d87f34bf",
+      "estado_http": 200,
+      "iteraciones": 0,
+      "reformulaciones_en_traza": [],
+      "recuperacion": {
+        "top1": 0.8608,
+        "top5": 0.8168
+      },
+      "ruta": "rapida",
+      "transiciones": [
+        "GUARDRAILS_ENTRADA→CACHE",
+        "CACHE→RECUPERAR_EJEMPLOS",
+        "RECUPERAR_EJEMPLOS→EVALUAR_RECUPERACION",
+        "EVALUAR_RECUPERACION→ENRUTAR",
+        "ENRUTAR→GENERAR",
+        "GENERAR→GUARDRAILS_SALIDA",
+        "GUARDRAILS_SALIDA→GUARDAR",
+        "GUARDAR→RESPONDER"
+      ],
+      "traza_id": "faf10f83"
+    },
+    {
+      "tipo": "agente",
+      "xm": "xm-d63cd00c3221030d",
+      "estado_http": 200,
+      "iteraciones": 0,
+      "reformulaciones_en_traza": [],
+      "recuperacion": {
+        "top1": 0.7681,
+        "top5": 0.7133
+      },
+      "ruta": "completa",
+      "transiciones": [
+        "GUARDRAILS_ENTRADA→CACHE",
+        "CACHE→RECUPERAR_EJEMPLOS",
+        "RECUPERAR_EJEMPLOS→EVALUAR_RECUPERACION",
+        "EVALUAR_RECUPERACION→ENRUTAR",
+        "ENRUTAR→GENERAR",
+        "GENERAR→GUARDRAILS_SALIDA",
+        "GUARDRAILS_SALIDA→GUARDAR",
+        "GUARDAR→RESPONDER"
+      ],
+      "traza_id": "c0ea1d30"
+    }
+  ],
+  "busquedas": [
+    {
+      "tipo": "busqueda",
+      "esperada": "simple",
+      "texto": "Fondo negro con luces blancas neón.",
+      "estado_http": 200,
+      "segundos": 0.62,
+      "ruta": "simple",
+      "modelo": null,
+      "resultados": 1,
+      "meta_completo": true,
+      "consulta_interpretada": {
+        "consulta_semantica": "Fondo negro con luces blancas neón.",
+        "excluir": [],
+        "filtros": {
+          "contiene_personas": null
+        },
+        "terminos_tesauro": []
+      },
+      "objetivo_en_top10": true,
+      "con_razones": true
+    },
+    {
+      "tipo": "busqueda",
+      "esperada": "compleja",
+      "texto": "Busca fotos de llantas de avión enterradas en pavimento sin personas.",
+      "estado_http": 200,
+      "segundos": 10.49,
+      "ruta": "compleja",
+      "modelo": "lfm3:1.7b-q4_K_M",
+      "resultados": 11,
+      "meta_completo": true,
+      "consulta_interpretada": {
+        "consulta_semantica": "fotos de llantas de avión enterradas en pavimento",
+        "excluir": [
+          "sin personas"
+        ],
+        "filtros": {
+          "contiene_personas": false
+        },
+        "terminos_tesauro": [
+          "llantas de avión",
+          "enterradas",
+          "pavimento"
+        ]
+      },
+      "objetivo_en_top10": null,
+      "con_razones": true
+    }
+  ],
+  "fotos": {
+    "nuevas": [
+      "xm-a92fb2e1ee320bd8",
+      "xm-bda1ee4befcd0059",
+      "xm-bc27434397e35317",
+      "xm-9a8b333d8d6ff118",
+      "xm-3e075c23fde7edc8",
+      "xm-72e9661d0e216283",
+      "xm-6cf2dfab8495d767",
+      "xm-61ab3979fb9ad758",
+      "xm-f33c2c9c7ed23ce1",
+      "xm-ec0d5c7e36616ec0"
+    ],
+    "regiones_excluidas": [
+      "xm-fde5284fe5283b6d",
+      "xm-b1df28d8d87f34bf",
+      "xm-d63cd00c3221030d"
+    ]
+  },
+  "eliminadas": {
+    "xm-a92fb2e1ee320bd8": 200,
+    "xm-bda1ee4befcd0059": 200,
+    "xm-bc27434397e35317": 200,
+    "xm-9a8b333d8d6ff118": 200,
+    "xm-3e075c23fde7edc8": 200,
+    "xm-72e9661d0e216283": 200,
+    "xm-6cf2dfab8495d767": 200,
+    "xm-61ab3979fb9ad758": 200,
+    "xm-f33c2c9c7ed23ce1": 200,
+    "xm-ec0d5c7e36616ec0": 200,
+    "xm-fde5284fe5283b6d": 200,
+    "xm-b1df28d8d87f34bf": 200,
+    "xm-d63cd00c3221030d": 200
+  },
+  "detalle": "resultados/casos/h4_aceptacion.jsonl"
+}

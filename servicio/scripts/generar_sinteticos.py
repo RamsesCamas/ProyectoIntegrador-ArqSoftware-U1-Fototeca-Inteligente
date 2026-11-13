@@ -181,12 +181,15 @@ def aplicar_transformacion(img: Image.Image, t: dict) -> tuple[Image.Image, int]
     return img, calidad
 
 
-def superponer_texto(img: Image.Image, texto: str, posicion: str, escala: float) -> Image.Image:
+def superponer_texto(img: Image.Image, texto: str, posicion: str, escala: float,
+                     ancho_caracter: float = 0.62) -> Image.Image:
+    """`ancho_caracter` (fracción del tamaño de letra) decide cuántos caracteres caben por línea. El valor por omisión
+    es el que materializó los conjuntos de evaluación; cambiarlo alteraría esas imágenes."""
     img = img.convert("RGB")
     w, h = img.size
     tam = max(14, int(min(w, h) * escala))
     f = fuente(tam, negrita=True)
-    caracteres = max(8, int(w / (tam * 0.62)))
+    caracteres = max(8, int(w / (tam * ancho_caracter)))
     lineas = textwrap.wrap(texto, width=caracteres)
     alto_linea = int(tam * 1.25)
     alto = alto_linea * len(lineas) + tam // 2
