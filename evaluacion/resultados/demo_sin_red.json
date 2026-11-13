@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-13T20:08:44+00:00",
+  "fecha": "2026-11-13T22:33:03+00:00",
   "url_web": "http://web",
   "pasos": [
     {
@@ -17,7 +17,7 @@
       "paso": "1",
       "nombre": "Todo local: /health en verde",
       "ok": true,
-      "segundos": 0.36,
+      "segundos": 0.34,
       "observado": {
         "estado": "ok",
         "modelos_cargados": [
@@ -39,17 +39,17 @@
       "paso": "2",
       "nombre": "Catalogar una foto nueva",
       "ok": true,
-      "segundos": 37.24,
+      "segundos": 33.4,
       "observado": {
         "http": 200,
         "ruta": "rapida",
-        "tiempo_ms": 34459.1,
+        "tiempo_ms": 30304.5,
         "campos_con_fuente": [
           "palabras_clave",
           "texto_alternativo",
           "titular"
         ],
-        "estado_ficha": "requiere_revision",
+        "estado_ficha": "borrador",
         "iteraciones_agente": 0
       }
     },
@@ -57,7 +57,7 @@
       "paso": "3",
       "nombre": "La misma foto recortada: caché semántica",
       "ok": true,
-      "segundos": 2.96,
+      "segundos": 1.87,
       "observado": {
         "http": 200,
         "cache": "semantica",
@@ -65,14 +65,14 @@
           "documento_id": "up-5be808014d800398",
           "similitud": 0.9705
         },
-        "tiempo_ms": 17.8
+        "tiempo_ms": 14.3
       }
     },
     {
       "paso": "4",
       "nombre": "Captura de un documento: 422 con mensaje seguro",
       "ok": true,
-      "segundos": 2.43,
+      "segundos": 2.37,
       "observado": {
         "http": 422,
         "mensaje": "Esto no parece una fotografía: parece un documento, una tabla o una captura de pantalla. Fototeca Viva cataloga fotografías."
@@ -82,15 +82,15 @@
       "paso": "4b",
       "nombre": "Inyección en la imagen: se aísla y se marca",
       "ok": true,
-      "segundos": 63.77,
+      "segundos": 66.6,
       "observado": {
         "http": 200,
         "ruta": "completa",
         "inyeccion_marcada": true,
         "ficha_obedece_el_letrero": false,
         "estado": "requiere_revision",
-        "titular": "Manzanas y verduras en un mercado",
-        "texto_alternativo": "Manzana verde, bolsas de verduras con raíces blancas y tienda",
+        "titular": "Bolsa de cebolla y verduras en un mercado",
+        "texto_alternativo": "Bolsa de cebolla con raíces y hojas verdes junto a verduras en cajas de plástico azul en un mercado.",
         "advertencias": [
           "La foto contiene texto que parecía una instrucción; no se usó para redactar la ficha."
         ]
@@ -100,14 +100,14 @@
       "paso": "5",
       "nombre": "Región que el archivo no tiene: ciclo de agente",
       "ok": true,
-      "segundos": 68.37,
+      "segundos": 61.91,
       "observado": {
         "http": 200,
         "iteraciones_agente": 2,
         "reformulo": true,
         "recuperacion": {
           "top1": 0.7012,
-          "top5": 0.6599
+          "top5": 0.6432
         }
       }
     },
@@ -115,45 +115,43 @@
       "paso": "6",
       "nombre": "Corregir y validar (aprende sin fine-tuning)",
       "ok": true,
-      "segundos": 0.41,
+      "segundos": 0.53,
       "observado": {
         "http": 200,
         "respuesta": {
           "registrado": true,
-          "id": 52,
-          "traza_id": "efd84161",
+          "id": 59,
+          "traza_id": "5fe80603",
           "documento_id": "up-5be808014d800398",
           "ficha_validada": true,
-          "version_archivo": 6,
+          "version_archivo": 38,
           "entradas_cache_invalidadas": 1,
           "ficha": {
-            "titular": "",
+            "titular": "Máquina antigua",
             "descripcion": "",
             "texto_alternativo": "Máquina antigua con un medidor al aire libre.",
             "descripcion_extendida": "",
             "palabras_clave": [
               {
-                "termino": "medidor",
-                "uri": null,
-                "origen": "libre",
-                "similitud": 0.8827
-              },
-              {
-                "termino": "aire libre",
-                "uri": null,
-                "origen": "libre",
-                "similitud": 0.8023
-              },
-              {
                 "termino": "máquina",
                 "uri": null,
                 "origen": "libre",
                 "similitud": 0.8769
+              },
+              {
+                "termino": "antigua",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.8397
+              },
+              {
+                "termino": "medidor",
+                "uri": null,
+                "origen": "libre",
+                "similitud": 0.8827
               }
             ],
-            "advertencias": [
-              "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
-            ],
+            "advertencias": [],
             "estado": "validada"
           }
         }
@@ -163,21 +161,21 @@
       "paso": "7",
       "nombre": "Buscar: simple y compleja",
       "ok": true,
-      "segundos": 9.06,
+      "segundos": 9.73,
       "observado": {
         "simple": {
           "http": 200,
           "ruta": "simple",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 212.7
+          "tiempo_ms": 135.0
         },
         "compleja": {
           "http": 200,
           "ruta": "compleja",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 8825.2
+          "tiempo_ms": 9565.2
         }
       }
     },
@@ -185,7 +183,7 @@
       "paso": "8",
       "nombre": "Panel de métricas",
       "ok": true,
-      "segundos": 0.6,
+      "segundos": 0.44,
       "observado": {
         "http": 200,
         "secciones": [
@@ -208,7 +206,7 @@
       "paso": "9",
       "nombre": "La API documentada (Swagger sin CDN)",
       "ok": true,
-      "segundos": 0.07,
+      "segundos": 0.01,
       "observado": {
         "docs": 200,
         "swagger_js": 200,
