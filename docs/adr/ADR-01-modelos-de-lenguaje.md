@@ -1,7 +1,7 @@
 # ADR-01: Selección de los modelos de lenguaje: Qwen3.5-0.8B ve y compone las fichas; LFM3-1.7B interpreta las búsquedas y es el respaldo
 
 **Estado:** Aceptada
-**Fecha:** 2026-11-08 (evidencia de R3 y decisión final: 2026-11-13)
+**Fecha:** 2026-11-08 (evidencia de R3 y decisión final: 2026-11-13; el autor confirmó que Qwen compone P3)
 **Atributos de calidad en juego:** calidad de la ficha (fidelidad, relevancia y fuentes verificables), latencia en CPU,
 memoria (límite de 5g del contenedor `ollama`), validez del JSON, idioma español, licencia
 
