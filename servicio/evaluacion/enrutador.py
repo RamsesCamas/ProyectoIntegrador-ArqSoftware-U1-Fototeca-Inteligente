@@ -1,8 +1,8 @@
 """Enrutadores (ADR-03): el de fichas (ruta rápida o completa) y el de búsquedas (simple o compleja).
 
 Fichas, sobre `eval_fichas` (60 fotos):
-- Se reutilizan dos configuraciones del experimento de modelos: `qwen_rapida` (ruta rápida) y `lfm3_composicion`
-  (ruta completa: P1 de Qwen + P3 de LFM3; su latencia incluye P1).
+- Se reutilizan dos configuraciones del experimento de modelos: `qwen_rapida` (ruta rápida) y `qwen_composicion`
+  (ruta completa de producción desde R3: P1 y P3 de Qwen; su latencia incluye P1).
 - Ruta correcta de cada foto: la rápida si su calidad (promedio del juez P7) está a 0.5 puntos o menos de la de la
   completa; si no, la completa.
 - Señales por foto: las que calcula el propio servicio y devuelve en `meta.senales_enrutador` (consenso, acuerdo,
@@ -49,7 +49,7 @@ from evaluacion.r3_modelos import (COLORES, TINTA, TINTA_SECUNDARIA, Avance, bar
                                    eval_fichas_muestra, exigir_servicios, generar_fichas, leyenda_comun, media,
                                    nueva_figura, subir)
 
-RUTA_RAPIDA, RUTA_COMPLETA = "qwen_rapida", "lfm3_composicion"
+RUTA_RAPIDA, RUTA_COMPLETA = "qwen_rapida", "qwen_composicion"   # la ruta completa de producción (ADR-01)
 MARGEN_CALIDAD = 0.5        # la rápida es «correcta» si su calidad está a ≤ 0.5 puntos de la completa
 FRACCION_LATENCIA = 0.5     # restricción: latencia media ≤ la mitad de «siempre completa»
 PLIEGUES = 5

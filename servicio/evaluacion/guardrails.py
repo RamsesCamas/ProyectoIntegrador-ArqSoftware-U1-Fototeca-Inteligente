@@ -21,7 +21,7 @@ Además, el detector `inyeccion_en_imagen` se prueba como componente con el text
 de transcripción de P1 de los del detector) y así se mide su latencia, que la ficha no desglosa.
 
 Salida: activaciones de `apego_visual`, `consistencia`, `atributos_sensibles` y `fuentes` en las fichas que ya
-generaron las configuraciones con_rag, lfm3_composicion y qwen_rapida (casos de otros módulos), y una plantilla con
+generaron las configuraciones con_rag, qwen_composicion, lfm3_composicion y qwen_rapida (casos de otros módulos), y una plantilla con
 10 activaciones elegidas al azar (semilla 2026) para que el autor estime su precisión.
 
     python -m evaluacion.guardrails
@@ -44,7 +44,7 @@ from evaluacion.comun import (DATA, RESULTADOS, REVISION, SEMILLA, ClienteEval, 
 
 CONFIG_FOTOS = "guardrails_foto"
 OPCIONES_FOTOS = {"sin_cache": True}           # flujo de producción (sin forzar ruta), sin caché
-CONFIGS_SALIDA = ("con_rag", "lfm3_composicion", "qwen_rapida")
+CONFIGS_SALIDA = ("con_rag", "qwen_composicion", "lfm3_composicion", "qwen_rapida")
 VERIFICACIONES_SALIDA = ("apego_visual", "consistencia", "atributos_sensibles", "fuentes")
 ACTIVA = ("marcada", "sanitizado", "bloqueada")
 COMENTARIO_COPIA = "Fototeca Viva: copia sin cambios visuales para medir falsos positivos de los guardrails".encode()

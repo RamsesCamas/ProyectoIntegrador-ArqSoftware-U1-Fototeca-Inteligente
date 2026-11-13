@@ -2,8 +2,8 @@
 version: 4
 tarea: P3
 nombre: ficha_completa
-modelo_preferido: composicion
-modelo_respaldo: vision
+modelo_preferido: vision
+modelo_respaldo: composicion
 num_predict: 600
 temperatura: 0.2
 con_imagen: false

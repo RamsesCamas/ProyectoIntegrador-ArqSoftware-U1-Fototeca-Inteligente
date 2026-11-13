@@ -44,7 +44,7 @@ P4_OK = json.dumps({"consulta_semantica": "mercado", "excluir": ["coches"], "con
 def test_plantillas_cargan_con_version_y_esquema(plantillas):
     assert {"P1", "P2", "P3", "P4", "P5", "P6"} <= set(plantillas)
     assert plantillas["P1"].version >= 2 and plantillas["P1"].con_imagen
-    assert plantillas["P3"].modelo_preferido == "composicion" and plantillas["P3"].modelo_respaldo == "vision"
+    assert plantillas["P3"].modelo_preferido == "vision" and plantillas["P3"].modelo_respaldo == "composicion"   # R3 (ADR-01)
     assert "P1" in versiones(plantillas)
     # Las llaves literales del prompt P5 se respetan al rellenar
     texto = rellenar(plantillas["P5"].usuario, {"consulta": "perros"})
