@@ -73,9 +73,12 @@ cifra que aparezca sale de `evaluacion/resultados/` y lleva su fuente en letra p
 ## 8 · Unificado contra pipeline contra híbrido · 6:00–7:00
 
 - **Contenido:** una pregunta de arquitectura: ¿embedding multimodal o «describir y buscar como texto»?
-- **Visual:** la gráfica de R@k por arquitectura: pendiente (H7), de `evaluacion/graficas/` (módulo `r3_embeddings`).
-- **Notas del orador:** la decisión: unificado por defecto y pipeline como reformulación del agente (ADR-02 y ADR-07).
-  Mencionar el costo: en la viabilidad, embeber una imagen tuvo una p50 de 2.464 s y describirla con P1, de 34.28 s
+- **Visual:** la gráfica de R@k por arquitectura, `evaluacion/graficas/r3_embeddings_texto_imagen.png`.
+- **Notas del orador:** sobre la misma galería de 250 imágenes, la foto correcta queda en primer lugar en 0.9 de las
+  consultas con el unificado, 0.704 con el pipeline de Qwen y EmbeddingGemma-2, 0.48 con el de Qwen y granite, y 0.82
+  con el híbrido (`evaluacion/resultados/r3_embeddings.json` → `metricas.texto_imagen`). La decisión: unificado por
+  defecto y pipeline como reformulación del agente (ADR-02 y ADR-07). Mencionar el costo: describir las 250 imágenes
+  con Qwen tomó 1.65 h (`metricas.costo_pipeline`); embeber una imagen tuvo una p50 de 2.464 s en la viabilidad
   (`h0.json` → `verificaciones.0.6`). Relación con la tesis.
 
 ## 9 · Enrutador y decisiones de RAG · 7:00–8:00

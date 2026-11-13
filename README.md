@@ -14,7 +14,8 @@ FastAPI en capas y una web estática que solo habla con la API.
 ## Requisitos
 
 - **Docker Desktop** (Windows, macOS o Linux) con **8 GB o más de memoria** asignados y espacio libre en disco para
-  las imágenes Docker, los modelos y los datos (pendiente: la cifra medida se agrega en H9).
+  las imágenes Docker, los modelos y los datos. En la Mac de desarrollo (arm64) todo ocupó 9.53 GB después de la
+  preparación (`evaluacion/resultados/h9_disco.json`); en Windows x86 las imágenes pueden pesar un poco distinto.
   Es lo único que necesita el equipo: todos los scripts se ejecutan dentro de contenedores.
 - Internet **solo para la preparación** (imágenes Docker, modelos, datos y corpus). Después, todo funciona sin red.
 

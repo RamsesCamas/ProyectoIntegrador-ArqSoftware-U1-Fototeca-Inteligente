@@ -1,0 +1,20 @@
+{
+  "fecha": "2026-11-13T10:57:41+00:00",
+  "metodo": "docker image inspect (.Size) para las imágenes; du -sk dentro de cada contenedor para los volúmenes (uso real en disco; `docker system df` reporta el tamaño aparente de los archivos mmap de Qdrant); du -sk data/",
+  "maquina": "Mac M1 Pro (arm64), Docker Desktop",
+  "imagenes_bytes": {
+    "ollama/ollama:0.40.15": 4315917811,
+    "qdrant/qdrant:v1.19.2": 212889719,
+    "fototeca-viva-servicio:latest": 429595155,
+    "nginx:1.30.6-alpine": 61972604
+  },
+  "volumenes_bytes": {
+    "ollama_modelos (/root/.ollama)": 3655798784,
+    "qdrant_datos (/qdrant/storage)": 108728320,
+    "sqlite_datos (/app/data/sqlite)": 14716928
+  },
+  "data_bytes": 727093248,
+  "total_bytes": 9526712569,
+  "total_gb": 9.53,
+  "nota": "No incluye la imagen opcional de Playwright (perfil pruebas) ni la caché de construcción de Docker."
+}
