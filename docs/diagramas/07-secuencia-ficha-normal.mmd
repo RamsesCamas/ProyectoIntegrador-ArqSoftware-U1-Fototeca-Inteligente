@@ -60,20 +60,20 @@ sequenceDiagram
     M->>O: /api/chat · Qwen3.5-0.8B<br/>imagen a 512 px
     O-->>M: descripción objetiva,<br/>elementos, texto visible
     FF->>G: inyeccion_en_texto_visible()<br/>el texto se aísla como dato
-    FF->>X: reglas (k = 4), candidatos del tesauro<br/>y variables_p3() con ids estables<br/>y presupuesto del prompt
+    FF->>X: reglas (k = 4), candidatos del tesauro<br/>y variables_p3() con alias F1, R1, T1<br/>y presupuesto del prompt
     X->>O: embeber_textos(consultas)
     X->>Q: buscar(normas) y buscar(tesauro)
-    FF->>M: ejecutar("P3", variables)
+    FF->>M: ejecutar("P3", variables,<br/>gramática: enum de los alias del prompt)
     M->>O: /api/chat · LFM3-1.7B<br/>(respaldo: Qwen sin imagen)
-    O-->>M: JSON de la ficha con<br/>las fuentes de cada campo
+    O-->>M: JSON de la ficha con<br/>los alias citados en cada campo
   else ruta rápida
     FF->>X: fichas vecinas como<br/>contexto (variables_p2)
-    FF->>M: Paso 7 · GENERAR<br/>ejecutar("P2", imagen)
+    FF->>M: Paso 7 · GENERAR<br/>ejecutar("P2", imagen, gramática)
     M->>O: /api/chat · Qwen3.5-0.8B<br/>imagen y fichas vecinas
     O-->>M: titular, texto alternativo,<br/>palabras clave y fuentes
   end
   M-->>FF: SalidaTarea: modelo, respaldo,<br/>tokens y duración
-  FF->>G: Paso 8 · GUARDRAILS_SALIDA:<br/>esquema → reglas_iptc →<br/>atributos_sensibles → tesauro →<br/>apego_visual → consistencia → fuentes
+  FF->>G: Paso 8 · alias → ids reales; GUARDRAILS_SALIDA:<br/>esquema → reglas_iptc →<br/>atributos_sensibles → tesauro →<br/>apego_visual → consistencia → fuentes
   G->>O: embeddings para apego_visual (EmbeddingGemma-2)<br/>y consistencia (granite), y P6 con Qwen<br/>solo si el léxico detecta algo sensible
   alt todo aprobado, sanitizado o marcado
     G-->>FF: ficha verificada: borrador, o<br/>requiere_revision si algo se marcó
