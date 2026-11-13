@@ -107,16 +107,29 @@ cifra que aparezca sale de `evaluacion/resultados/` y lleva su fuente en letra p
 
 - **Contenido:** una tabla de 4 a 6 cifras clave: R@10 de la búsqueda, calidad con RAG contra sin RAG, bloqueos correctos
   y falsos positivos, respuestas incorrectas desde la caché, mejora del ciclo de agente y latencia p50 por ruta.
-- **Visual:** la tabla y la gráfica de latencia por capa en barras apiladas: pendiente (H7), de
-  `evaluacion/resultados/RESUMEN.md` y `evaluacion/graficas/`.
-- **Notas del orador:** comentar un error típico del análisis de errores del informe. [AUTOR: elegir las cifras.]
+- **Visual:** la gráfica `evaluacion/graficas/desempeno_capas_fichas.png` y esta tabla (todas las cifras, del 50 % de
+  cada conjunto):
+
+  | Cifra | Valor | Fuente |
+  |---|---|---|
+  | Búsqueda texto→imagen, R@1 · R@10 (unificada) | 0.9 · 1.0 | `r3_embeddings.json` |
+  | Campos de la ficha con fuente válida, con RAG · sin RAG | 84 de 84 · 0 de 90 | `rag_fichas.json` |
+  | Guardrails: casos bien manejados · falsos positivos | 29 de 33 · 1 de 23 | `guardrails.json` |
+  | Caché semántica: recall · fotos distintas con ficha ajena | 0.94 · 1 de 75 | `cache.json` |
+  | Ficha p50: rápida · completa · desde la caché | 25.996 s · 56.793 s · 0.023 s | `desempeno.json`, `cache.json` |
+  | Ciclo de agente: se activa · mejora | 3 de 25 · 0 de 3 | `agente.json` |
+- **Notas del orador:** el error más instructivo, la ficha que obedecía el letrero inyectado (informe §10.4, caso 1):
+  marcar y aislar no bastaba. Con la verificación de salida y la omisión del texto, la inyección en imagen bien
+  manejada pasó de 5 a 7 de 8. [AUTOR: elegir las cifras.]
 
 ## 12 · Limitaciones y trabajo futuro · 14:00–15:00
 
 - **Contenido:** modelos pequeños (alucinaciones) · sesgos por región · solo CPU · el texto en las fotos como vector de
   inyección.
-- **Visual:** la curva de aprendizaje (aceptación contra correcciones acumuladas): pendiente (H7), de
-  `evaluacion/resultados/aprendizaje.json`.
+- **Visual:** la curva de aprendizaje, `evaluacion/graficas/aprendizaje_curva.png`. En la simulación, la similitud
+  granite pasa de 0.6788 en el primer bloque a 0.7396 en el último, con intervalos que se traslapan, y la tasa de
+  fichas aceptables no cambia (0.4). El mecanismo funciona, pero con 50 fotos no se demuestra el efecto
+  (`evaluacion/resultados/aprendizaje.json`).
 - **Notas del orador:** cada ficha la valida una persona antes de publicarse; trabajo futuro y relación con la tesis.
   [AUTOR: cierre personal en una frase.]
 
