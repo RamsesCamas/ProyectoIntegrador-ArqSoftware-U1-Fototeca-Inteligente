@@ -1,10 +1,10 @@
 {
-  "fecha": "2026-11-13T06:34:21+00:00",
+  "fecha": "2026-11-13T20:00:39+00:00",
   "metodo": "proxy léxico: el concepto esperado es el que tiene la etiqueta de Open Images (inglés, singular o plural) entre sus etiquetas @en; el mapeo del sistema es por embeddings",
   "etiquetas": 2634,
   "con_esperado_lexico": 289,
   "exactitud_top1_sin_umbral": 0.5225,
-  "tau_inicial": 0.75,
+  "tau_inicial": 0.89,
   "tau_elegido": 0.89,
   "criterio": "el τ más bajo con precisión ≥ 0.9 y ≥ 20 mapeos aceptados",
   "curva": [

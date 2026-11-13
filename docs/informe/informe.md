@@ -177,7 +177,7 @@ porque las iniciales resultaron irreales para esta CPU; la regla del ajuste y lo
 | Seguridad (guardrails) | bloqueos correctos / falsos positivos | ≥ 90 % / ≤ 10 % | 0.8788 (29 de 33), **no cumple** / 0.0435 (1 de 23), cumple (`guardrails.json` → `metricas.entrada.global`); detalle y fallos en ADR-05 |
 | Corrección de la caché semántica | respuestas incorrectas desde la caché | ≤ 2 % | Fichas: con τ_dup 0.95, 1 de 75 negativos recibe la ficha de otra foto (FPR 0.0133) con recall 0.94 en 150 casi duplicados, cumple. Búsquedas: 0 incorrectas en 15 paráfrasis, pero también 0 aciertos (similitud máxima 0.907 < 0.95) (`cache.json` → `metricas.fichas_semantica_tau_dup.en_tau_elegido` y `metricas.busquedas`) |
 | Privacidad | salidas sin GPS ni atributos sensibles | 100 % | GPS: 10 de 10 fotos sin GPS, autor ni número de serie en la foto guardada, la miniatura y la respuesta (`guardrails.json` → `metricas.entrada.por_verificacion.exif_privacidad`); atributos sensibles: cada activación se elimina antes de responder (1 en las 30 fichas de `qwen_composicion`, 0 en las 30 con RAG; `metricas.salida_fichas`) |
-| Recursos | suma de límites de memoria / uso pico | ≤ 7.1 GB / se reporta | Límites: 7.0625 GiB (ADR-12). Pico en H0 con los cuatro modelos cargados: `ollama` 4.592 GiB y suma de contenedores 4.813 GiB (`h0.json` → `verificaciones.0.5.docker_stats`). Durante la demo sin red, suma de picos 4.945 GiB (`ollama` 4.452, `qdrant` 0.409, `servicio` 0.075, `web` 0.009; `h9_memoria.json`) |
+| Recursos | suma de límites de memoria / uso pico | ≤ 7.1 GB / se reporta | Límites: 7.0625 GiB (ADR-12). Pico en H0 con los cuatro modelos cargados: `ollama` 4.592 GiB y suma de contenedores 4.813 GiB (`h0.json` → `verificaciones.0.5.docker_stats`). Durante la demo sin red, repetida después de la evaluación, suma de picos 4.962 GiB (`ollama` 4.429, `qdrant` 0.443, `servicio` 0.081, `web` 0.009; `h9_memoria.json`) |
 | Disponibilidad sin red | funciones operativas sin internet | 100 % | 11 de 11 pasos del guion sin acceso a internet (`demo_sin_red.json`) |
 | Mantenibilidad | violaciones del contrato de capas | 0 | 0: «Contracts: 3 kept, 0 broken.»; las dos copias con un import prohibido rompen un contrato cada una (`contrato_capas.json`) |
 | Portabilidad | arranque en Windows con Docker Desktop | solo `docker compose`, sin scripts del host | pendiente (H9) en la laptop de la demo |
@@ -547,7 +547,7 @@ análisis de retroalimentación y la curva de aprendizaje (§10).
 # 9. Registro de decisiones de arquitectura (ADR)
 
 Los ADR completos están en `docs/adr/` y siguen la plantilla del curso (contexto, decisión, alternativas, evidencia y
-consecuencias). Los que dependen de la evaluación están en estado «Propuesta» y dicen qué se medirá y en qué archivo.
+consecuencias). Todos están aceptados con la evidencia medida en `evaluacion/resultados/`; ADR-07 lo está con su beneficio no demostrado.
 
 **Tabla 12.** Resumen de los ADR.
 
@@ -560,7 +560,7 @@ consecuencias). Los que dependen de la evaluación están en estado «Propuesta�
 | ADR-05 | Verificaciones de los guardrails y política de cada falla | Aceptada | `guardrails.json` (29 de 33 bien manejados; 1 de 23 falsos positivos) |
 | ADR-06 | Una regla por fragmento en las normas y un concepto por documento en el tesauro | Aceptada | `corpus_r1.json`; recuperación de normas en `r3_embeddings.json` → `metricas.normas` |
 | ADR-07 | Ciclo de agente híbrido adaptativo con MAX_ITER = 2 | Aceptada (beneficio no demostrado) | `agente.json` (activa en 3 de 25, mejora en 0 de 3) |
-| ADR-08 | Lotes asíncronos con un solo trabajador, sin Celery ni Redis | Propuesta | pendiente (H7): `desempeno.json` y memoria en H9 |
+| ADR-08 | Lotes asíncronos con un solo trabajador, sin Celery ni Redis | Aceptada | `desempeno.json` (p50 por ruta) y `h9_memoria.json` (suma de picos 4.962 GiB) |
 | ADR-09 | Qdrant como base vectorial y SQLite para lo demás; un adaptador por recurso | Aceptada | `h0.json` → `verificaciones.0.5.docker_stats` |
 | ADR-10 | Ollama 0.40.15, `embeddinggemma-2:440m` y el puerto `Embebedor` | Aceptada | `h0.json` → `verificaciones.0.3` y `0.3b` |
 | ADR-11 | Razonamiento desactivado, salida estructurada con JSON Schema y muestreo por modelo | Aceptada | `h0.json` → `verificaciones.0.2`, `0.6` y `0.6b` |

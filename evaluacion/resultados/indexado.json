@@ -1,6 +1,6 @@
 {
-  "fecha": "2026-11-13T06:38:43+00:00",
-  "segundos": 978.8,
+  "fecha": "2026-11-13T20:04:39+00:00",
+  "segundos": 1006.6,
   "modelos": {
     "principal": "embeddinggemma-2:440m",
     "secundario": "granite-embedding:278m",

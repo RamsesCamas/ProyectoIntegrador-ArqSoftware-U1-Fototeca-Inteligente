@@ -57,11 +57,13 @@ modelos cargados y fichas en curso).
   (`servicio/pruebas/falsos.py`: `AlmacenVectorialFalso`, `EmbebedorFalso`, `ClienteLLMFalso`…) sin cambiar ninguna capa
   superior, y el contrato de capas impide que una capa superior importe un adaptador (ADR-13).
 - **Memoria con las colecciones llenas** (2,600 fotos en tres colecciones, 412 fragmentos de normas, 4,500 conceptos y
-  83 prototipos; `indexado.json`). Durante la demo sin red, el pico de `qdrant` fue de 0.409 GiB de sus 0.5 GiB
-  (`h9_memoria.json`, 335 muestras de `docker stats`). Cabe, pero es el contenedor más ajustado: un archivo bastante
+  83 prototipos; `indexado.json`). Durante la demo sin red, el pico de `qdrant` fue de 0.443 GiB de sus 0.5 GiB
+  (`h9_memoria.json`, 259 muestras de `docker stats`). Cabe, pero es el contenedor más ajustado: un archivo bastante
   más grande necesitaría subir su límite o activar el almacenamiento en disco de los vectores.
-- **pendiente:** la latencia de la recuperación por capa (`contexto` y `cache`) en
-  `evaluacion/resultados/desempeno.json`.
+- **Latencia de la recuperación** con la configuración vigente (`desempeno.json` → `metricas.por_ruta.fichas`, p50 en
+  milisegundos): la capa `contexto` (RAG en Qdrant y SQLite) toma 319.55 ms en la ruta rápida y 533.0 ms en la completa,
+  y la caché, 0.0 ms en las fichas que no aciertan. Una ficha servida desde la caché exacta tarda 0.023 s en el
+  cliente (`cache.json`).
 
 ## Consecuencias
 - **Se gana:** la base vectorial queda aislada en su contenedor con un límite propio; SQLite no agrega procesos ni

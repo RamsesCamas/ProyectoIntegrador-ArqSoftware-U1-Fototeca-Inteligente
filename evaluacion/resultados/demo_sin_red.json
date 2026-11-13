@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-13T08:56:28+00:00",
+  "fecha": "2026-11-13T20:08:44+00:00",
   "url_web": "http://web",
   "pasos": [
     {
@@ -17,7 +17,7 @@
       "paso": "1",
       "nombre": "Todo local: /health en verde",
       "ok": true,
-      "segundos": 0.34,
+      "segundos": 0.36,
       "observado": {
         "estado": "ok",
         "modelos_cargados": [
@@ -39,18 +39,17 @@
       "paso": "2",
       "nombre": "Catalogar una foto nueva",
       "ok": true,
-      "segundos": 82.39,
+      "segundos": 37.24,
       "observado": {
         "http": 200,
-        "ruta": "completa",
-        "tiempo_ms": 78932.6,
+        "ruta": "rapida",
+        "tiempo_ms": 34459.1,
         "campos_con_fuente": [
-          "descripcion",
           "palabras_clave",
           "texto_alternativo",
           "titular"
         ],
-        "estado_ficha": "borrador",
+        "estado_ficha": "requiere_revision",
         "iteraciones_agente": 0
       }
     },
@@ -58,7 +57,7 @@
       "paso": "3",
       "nombre": "La misma foto recortada: caché semántica",
       "ok": true,
-      "segundos": 2.77,
+      "segundos": 2.96,
       "observado": {
         "http": 200,
         "cache": "semantica",
@@ -66,14 +65,14 @@
           "documento_id": "up-5be808014d800398",
           "similitud": 0.9705
         },
-        "tiempo_ms": 18.0
+        "tiempo_ms": 17.8
       }
     },
     {
       "paso": "4",
       "nombre": "Captura de un documento: 422 con mensaje seguro",
       "ok": true,
-      "segundos": 2.09,
+      "segundos": 2.43,
       "observado": {
         "http": 422,
         "mensaje": "Esto no parece una fotografía: parece un documento, una tabla o una captura de pantalla. Fototeca Viva cataloga fotografías."
@@ -83,16 +82,17 @@
       "paso": "4b",
       "nombre": "Inyección en la imagen: se aísla y se marca",
       "ok": true,
-      "segundos": 112.24,
+      "segundos": 63.77,
       "observado": {
         "http": 200,
         "ruta": "completa",
         "inyeccion_marcada": true,
+        "ficha_obedece_el_letrero": false,
+        "estado": "requiere_revision",
+        "titular": "Manzanas y verduras en un mercado",
+        "texto_alternativo": "Manzana verde, bolsas de verduras con raíces blancas y tienda",
         "advertencias": [
-          "La foto contiene texto visible; se trató como dato, no como instrucción.",
-          "No hay información suficiente para 'Fotos similares' (F1-F5).",
-          "No hay información suficiente para 'Reglas' (R1-R4).",
-          "No hay información suficiente para 'Términos del tesauro' (T1-T2)."
+          "La foto contiene texto que parecía una instrucción; no se usó para redactar la ficha."
         ]
       }
     },
@@ -100,14 +100,14 @@
       "paso": "5",
       "nombre": "Región que el archivo no tiene: ciclo de agente",
       "ok": true,
-      "segundos": 78.88,
+      "segundos": 68.37,
       "observado": {
         "http": 200,
         "iteraciones_agente": 2,
         "reformulo": true,
         "recuperacion": {
           "top1": 0.7012,
-          "top5": 0.6432
+          "top5": 0.6599
         }
       }
     },
@@ -115,61 +115,45 @@
       "paso": "6",
       "nombre": "Corregir y validar (aprende sin fine-tuning)",
       "ok": true,
-      "segundos": 0.74,
+      "segundos": 0.41,
       "observado": {
         "http": 200,
         "respuesta": {
           "registrado": true,
-          "id": 1,
-          "traza_id": "48398e84",
+          "id": 52,
+          "traza_id": "efd84161",
           "documento_id": "up-5be808014d800398",
           "ficha_validada": true,
-          "version_archivo": 90,
+          "version_archivo": 6,
           "entradas_cache_invalidadas": 1,
           "ficha": {
-            "titular": "Descripción objetiva de la imagen",
-            "descripcion": "Una fotografía de una caja negra rectangular sobre un fondo de madera clara y brillante.",
-            "texto_alternativo": "Caja negra rectangular sobre fondo de madera clara y brillante.",
+            "titular": "",
+            "descripcion": "",
+            "texto_alternativo": "Máquina antigua con un medidor al aire libre.",
             "descripcion_extendida": "",
             "palabras_clave": [
               {
-                "termino": "caja",
+                "termino": "medidor",
                 "uri": null,
                 "origen": "libre",
-                "similitud": 0.7966
+                "similitud": 0.8827
               },
               {
-                "termino": "madera",
+                "termino": "aire libre",
                 "uri": null,
                 "origen": "libre",
-                "similitud": 0.8569
+                "similitud": 0.8023
               },
               {
-                "termino": "paredes",
+                "termino": "máquina",
                 "uri": null,
                 "origen": "libre",
-                "similitud": 0.7803
-              },
-              {
-                "termino": "luz",
-                "uri": null,
-                "origen": "libre",
-                "similitud": 0.8732
-              },
-              {
-                "termino": "suelo",
-                "uri": null,
-                "origen": "libre",
-                "similitud": 0.8459
-              },
-              {
-                "termino": "fondo",
-                "uri": null,
-                "origen": "libre",
-                "similitud": 0.7978
+                "similitud": 0.8769
               }
             ],
-            "advertencias": [],
+            "advertencias": [
+              "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
+            ],
             "estado": "validada"
           }
         }
@@ -179,21 +163,21 @@
       "paso": "7",
       "nombre": "Buscar: simple y compleja",
       "ok": true,
-      "segundos": 11.95,
+      "segundos": 9.06,
       "observado": {
         "simple": {
           "http": 200,
           "ruta": "simple",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 320.6
+          "tiempo_ms": 212.7
         },
         "compleja": {
           "http": 200,
           "ruta": "compleja",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 11603.1
+          "tiempo_ms": 8825.2
         }
       }
     },
@@ -201,7 +185,7 @@
       "paso": "8",
       "nombre": "Panel de métricas",
       "ok": true,
-      "segundos": 0.37,
+      "segundos": 0.6,
       "observado": {
         "http": 200,
         "secciones": [

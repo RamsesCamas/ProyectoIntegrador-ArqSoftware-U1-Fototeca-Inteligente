@@ -1,12 +1,16 @@
 {
   "fecha": "2026-11-13",
-  "fuente": "evaluacion/resultados/h9_docker_stats.jsonl (docker stats cada ~2 s durante demo_sin_red)",
-  "muestras": 335,
+  "fuente": "evaluacion/resultados/h9_docker_stats.jsonl (docker stats cada ~2 s durante demo_sin_red, después de reconstruir el archivo y con la imagen del servicio de la evaluación final)",
+  "ventana": {
+    "desde": "2026-11-13T20:05:36Z",
+    "hasta": "2026-11-13T20:08:42Z"
+  },
+  "muestras": 259,
   "pico_gib": {
     "web": 0.009,
-    "servicio": 0.075,
-    "ollama": 4.452,
-    "qdrant": 0.409,
+    "servicio": 0.081,
+    "ollama": 4.429,
+    "qdrant": 0.443,
     "servicio-run (cliente de la demo)": 0.027
   },
   "limite_gib": {
@@ -17,5 +21,5 @@
     "servicio-run (cliente de la demo)": 1.5
   },
   "suma_limites_servicios_gib": 7.0625,
-  "suma_picos_servicios_gib": 4.945
+  "suma_picos_servicios_gib": 4.962
 }

@@ -1,7 +1,7 @@
 # ADR-08: Lotes asíncronos con un solo trabajador, sin Celery ni Redis
 
-**Estado:** Propuesta
-**Fecha:** 2026-11-08
+**Estado:** Aceptada
+**Fecha:** 2026-11-08 (evidencia: 2026-11-13)
 **Atributos de calidad en juego:** latencia percibida por el archivista, memoria (presupuesto de los contenedores),
 simplicidad de operación sin red, recuperación ante reinicios
 
@@ -32,10 +32,15 @@ memoria de los contenedores tiene un presupuesto fijo.
 - **Tareas en segundo plano de FastAPI sin estado persistente:** un reinicio perdería el progreso del lote.
 
 ## Evidencia
-**pendiente:**
-- latencia de punta a punta y por capa de las fichas (p50 y p95, por ruta) a partir de las trazas, en
-  `evaluacion/resultados/desempeno.json`, para dimensionar cuánto tarda un lote;
-- memoria de los cuatro contenedores durante el guion de la demo con `docker stats` (verificación final sin red).
+- **Cuánto tarda un lote** (`evaluacion/resultados/desempeno.json` → `metricas.por_ruta.fichas`, configuración
+  vigente). Una ficha tarda en la p50 25.996 s por la ruta rápida (70 fichas) y 56.793 s por la completa (95). Con el
+  enrutador calibrado, el 0.8667 de las fotos va a la rápida (`enrutador.json`), así que un lote de 20 fotos ocupa unos 10
+  minutos con un solo trabajador (estimación con esas p50: 20 × (0.8667 × 25.996 + 0.1333 × 56.793) s; no es una
+  medición de un lote). Es aceptable para un archivo que se cataloga en segundo plano.
+- **Memoria durante la demo sin red** (`evaluacion/resultados/h9_memoria.json`): la suma de picos fue de 4.962 GiB,
+  contra 7.0625 GiB de límites; `ollama` llegó a 4.429 de 5.0 GiB. Un broker y sus trabajadores tendrían que caber en
+  el margen que queda, y un segundo proceso que llamara a Ollama competiría por la misma CPU, que es el cuello de
+  botella (más del 90 % del tiempo de una ficha está en los modelos; Tabla 15 del informe).
 
 Contexto de memoria ya medido: con los cuatro modelos cargados y fichas en curso, el pico del contenedor `ollama` fue de
 4.592 GiB con un límite de 5.0 GiB y la suma de picos de los contenedores en la ventana de medición fue de 4.813 GiB
