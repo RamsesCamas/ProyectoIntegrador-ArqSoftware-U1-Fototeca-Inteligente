@@ -28,7 +28,7 @@ from collections import defaultdict
 import numpy as np
 
 from evaluacion.comun import (CONJUNTOS, DATA, REVISION, SEMILLA, Incremental, guardar_grafica, guardar_resultado,
-                              particiones, plt, registro, tamano)
+                              particiones, registro, tamano)
 
 K = (1, 5, 10)
 UNIFICADO = "unificado (EmbeddingGemma-2 texto→imagen)"
@@ -196,17 +196,7 @@ def ejecutar(c) -> dict:
     tesauro = evaluar_tesauro(c, emb, granite)
     normas = evaluar_normas(c, emb, granite)
 
-    fig = plt().figure(figsize=(8, 3.6))
-    ax = fig.add_subplot(111)
-    nombres = list(texto_imagen)
-    for i, k in enumerate(K):
-        ax.bar(np.arange(len(nombres)) + (i - 1) * 0.25, [texto_imagen[n][f"R@{k}"] for n in nombres], width=0.25, label=f"R@{k}")
-    ax.set_xticks(np.arange(len(nombres)), [n.split(" (")[0] + "\n" + n.split("(")[1].rstrip(")") for n in nombres], fontsize=7)
-    ax.set_ylim(0, 1)
-    ax.set_ylabel("Acierto")
-    ax.set_title(f"Búsqueda texto→imagen en la galería (n={len(galeria)})")
-    ax.legend()
-    guardar_grafica("r3_embeddings_texto_imagen", fig)
+    grafica_texto_imagen(texto_imagen, len(galeria))
 
     costo = {"segundos_por_descripcion_qwen": round(segundos_por_imagen, 2),
              "horas_estimadas_para_1000": round(estimado_h, 2),
@@ -229,6 +219,27 @@ def ejecutar(c) -> dict:
                                                            "galeria_completa": len(galeria_completa),
                                                            "desc_qwen": ruta_desc_qwen}, c)
     return metricas
+
+
+# Etiquetas cortas del eje x (los nombres de las configuraciones son largos y se enciman).
+ETIQUETA_EJE = {"unificado": "Unificado\nEmbeddingGemma-2", "pipeline (Qwen + EmbeddingGemma-2": "Pipeline\nQwen +\nEmbeddingGemma-2",
+                "pipeline (Qwen + granite": "Pipeline\nQwen + granite", "hibrido": "Híbrido (RRF)"}
+
+
+def grafica_texto_imagen(texto_imagen: dict, n: int) -> str:
+    """R@1, R@5 y R@10 por arquitectura, con el estilo común de las gráficas de evaluación. Se puede regenerar desde el
+    JSON sin volver a medir: `grafica_texto_imagen(json["metricas"]["texto_imagen"], json["metricas"]["galeria"]["n"])`."""
+    from evaluacion.r3_modelos import barras, nueva_figura
+    nombres = list(texto_imagen)
+    cats = [next((v for k, v in ETIQUETA_EJE.items() if nombre.startswith(k)), nombre) for nombre in nombres]
+    fig, (ax,) = nueva_figura(8.5, 4.1)
+    barras(ax, cats, {f"R@{k}": [texto_imagen[nombre][f"R@{k}"] for nombre in nombres] for k in K})
+    ax.set_ylim(0, 1.05)
+    ax.set_ylabel("Acierto (R@k)")
+    ax.tick_params(axis="x", labelsize=8)
+    ax.set_title(f"Búsqueda texto→imagen sobre la misma sub-galería (n = {n} imágenes)", pad=24)
+    guardar_grafica("r3_embeddings_texto_imagen", fig)
+    return "evaluacion/graficas/r3_embeddings_texto_imagen.png"
 
 
 def evaluar_tesauro(c, emb, granite) -> dict:

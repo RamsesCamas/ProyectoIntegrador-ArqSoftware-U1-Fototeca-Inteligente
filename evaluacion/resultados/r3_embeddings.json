@@ -1,0 +1,624 @@
+{
+  "modulo": "r3_embeddings",
+  "fecha": "2026-11-13T10:52:07+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "580643649771",
+  "configuracion": {
+    "modelo_principal": "embeddinggemma-2:440m",
+    "modelo_secundario": "granite-embedding:278m",
+    "lado_imagen_px": 384,
+    "galeria_pipeline": 250,
+    "galeria_completa": 500,
+    "desc_qwen": "/app/data/procesados/desc_qwen.jsonl"
+  },
+  "metricas": {
+    "galeria": {
+      "n": 250,
+      "decision_tamano": "500 (regla del experimento: si describir las 1,000 con Qwen tardaría más de 3 h, se usan 500)"
+    },
+    "texto_imagen": {
+      "unificado (EmbeddingGemma-2 texto→imagen)": {
+        "R@1": 0.9,
+        "R@5": 0.992,
+        "R@10": 1.0,
+        "MRR": 0.9418
+      },
+      "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": {
+        "R@1": 0.704,
+        "R@5": 0.924,
+        "R@10": 0.96,
+        "MRR": 0.8013
+      },
+      "pipeline (Qwen + granite texto→texto)": {
+        "R@1": 0.48,
+        "R@5": 0.716,
+        "R@10": 0.832,
+        "MRR": 0.5846
+      },
+      "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": {
+        "R@1": 0.82,
+        "R@5": 0.984,
+        "R@10": 1.0,
+        "MRR": 0.89
+      }
+    },
+    "por_grupo": {
+      "regiones_excluidas": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.8987,
+          "R@5": 0.9873,
+          "R@10": 1.0,
+          "n": 79
+        },
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": {
+          "R@1": 0.7595,
+          "R@5": 0.9367,
+          "R@10": 0.9747,
+          "n": 79
+        },
+        "pipeline (Qwen + granite texto→texto)": {
+          "R@1": 0.4684,
+          "R@5": 0.7595,
+          "R@10": 0.8861,
+          "n": 79
+        },
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": {
+          "R@1": 0.8354,
+          "R@5": 0.9873,
+          "R@10": 1.0,
+          "n": 79
+        }
+      },
+      "resto_de_locales": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.9006,
+          "R@5": 0.9942,
+          "R@10": 1.0,
+          "n": 171
+        },
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": {
+          "R@1": 0.6784,
+          "R@5": 0.9181,
+          "R@10": 0.9532,
+          "n": 171
+        },
+        "pipeline (Qwen + granite texto→texto)": {
+          "R@1": 0.4854,
+          "R@5": 0.6959,
+          "R@10": 0.807,
+          "n": 171
+        },
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": {
+          "R@1": 0.8129,
+          "R@5": 0.9825,
+          "R@10": 1.0,
+          "n": 171
+        }
+      },
+      "consulta_corta (≤8 palabras)": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.902,
+          "R@5": 1.0,
+          "R@10": 1.0,
+          "n": 102
+        },
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": {
+          "R@1": 0.6275,
+          "R@5": 0.8922,
+          "R@10": 0.951,
+          "n": 102
+        },
+        "pipeline (Qwen + granite texto→texto)": {
+          "R@1": 0.451,
+          "R@5": 0.6765,
+          "R@10": 0.7745,
+          "n": 102
+        },
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": {
+          "R@1": 0.7647,
+          "R@5": 0.9902,
+          "R@10": 1.0,
+          "n": 102
+        }
+      },
+      "consulta_larga (>10 palabras)": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.8916,
+          "R@5": 0.988,
+          "R@10": 1.0,
+          "n": 83
+        },
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": {
+          "R@1": 0.7349,
+          "R@5": 0.9518,
+          "R@10": 0.9639,
+          "n": 83
+        },
+        "pipeline (Qwen + granite texto→texto)": {
+          "R@1": 0.506,
+          "R@5": 0.7831,
+          "R@10": 0.8795,
+          "n": 83
+        },
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": {
+          "R@1": 0.8434,
+          "R@5": 0.9759,
+          "R@10": 1.0,
+          "n": 83
+        }
+      }
+    },
+    "por_locale_R@10": {
+      "ar": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "bn": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.75,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "cs": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.7143,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "da": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "de": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.5,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "el": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.6667,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "en": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.7778,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "es": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "fa": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.8333,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "fi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "fil": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.8,
+        "pipeline (Qwen + granite texto→texto)": 0.8,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "fr": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "he": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.875,
+        "pipeline (Qwen + granite texto→texto)": 0.625,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "hi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "hr": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.8333,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "hu": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.8,
+        "pipeline (Qwen + granite texto→texto)": 0.8,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "id": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "it": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.8571,
+        "pipeline (Qwen + granite texto→texto)": 0.5714,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "ja": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.96,
+        "pipeline (Qwen + granite texto→texto)": 0.88,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "ko": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.9524,
+        "pipeline (Qwen + granite texto→texto)": 0.8571,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "mi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.6667,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "nl": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "no": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.8571,
+        "pipeline (Qwen + granite texto→texto)": 0.8571,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "pl": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "pt": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.6,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "quz": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.8,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "ro": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.6,
+        "pipeline (Qwen + granite texto→texto)": 0.6,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "ru": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.3333,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "sv": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.9091,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "sw": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.8,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "te": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 0.875,
+        "pipeline (Qwen + granite texto→texto)": 0.875,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "th": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "tr": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "uk": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 1.0,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "vi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.75,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      },
+      "zh": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0,
+        "pipeline (Qwen + EmbeddingGemma-2 texto→texto)": 1.0,
+        "pipeline (Qwen + granite texto→texto)": 0.5,
+        "hibrido (RRF unificado + pipeline EmbeddingGemma-2)": 1.0
+      }
+    },
+    "texto_imagen_galeria_completa": {
+      "n": 500,
+      "unificado (EmbeddingGemma-2 texto→imagen)": {
+        "R@1": 0.824,
+        "R@5": 0.982,
+        "R@10": 0.992,
+        "MRR": 0.8926
+      },
+      "nota": "galería completa; no comparable con la sub-galería (el R@k baja al crecer la galería)"
+    },
+    "por_grupo_galeria_completa": {
+      "regiones_excluidas": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.8467,
+          "R@5": 0.98,
+          "R@10": 0.9933,
+          "n": 150
+        }
+      },
+      "resto_de_locales": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.8143,
+          "R@5": 0.9829,
+          "R@10": 0.9914,
+          "n": 350
+        }
+      },
+      "consulta_corta (≤8 palabras)": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.76,
+          "R@5": 0.9771,
+          "R@10": 0.9886,
+          "n": 175
+        }
+      },
+      "consulta_larga (>11 palabras)": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": {
+          "R@1": 0.8472,
+          "R@5": 0.9792,
+          "R@10": 0.9861,
+          "n": 144
+        }
+      }
+    },
+    "por_locale_R@10_galeria_completa": {
+      "ar": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "bn": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "cs": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "da": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "de": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "el": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "en": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "es": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "fa": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "fi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "fil": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "fr": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 0.9167
+      },
+      "he": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "hi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "hr": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "hu": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "id": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "it": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "ja": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 0.9808
+      },
+      "ko": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "mi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "nl": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "no": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "pl": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "pt": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "quz": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "ro": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "ru": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 0.9091
+      },
+      "sv": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "sw": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 0.9
+      },
+      "te": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "th": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "tr": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "uk": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "vi": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      },
+      "zh": {
+        "unificado (EmbeddingGemma-2 texto→imagen)": 1.0
+      }
+    },
+    "costo_pipeline": {
+      "segundos_por_descripcion_qwen": 32.52,
+      "horas_estimadas_para_1000": 9.03,
+      "horas_totales_descripciones": 1.65,
+      "descripciones_guardadas_en": "data/procesados/desc_qwen.jsonl"
+    },
+    "descripcion_descripcion": {
+      "EmbeddingGemma-2": {
+        "R@1": 0.756,
+        "R@5": 0.96,
+        "R@10": 0.976,
+        "MRR": 0.8384
+      },
+      "granite": {
+        "R@1": 0.46,
+        "R@5": 0.724,
+        "R@10": 0.816,
+        "MRR": 0.5873
+      }
+    },
+    "tesauro": {
+      "etiquetas_unicas": 3128,
+      "etiquetas_con_esperado": 319,
+      "evaluadas": 100,
+      "por_modelo": {
+        "EmbeddingGemma-2": {
+          "exactitud_top1": 0.56,
+          "exactitud_top3": 0.69
+        },
+        "granite": {
+          "exactitud_top1": 0.58,
+          "exactitud_top3": 0.71
+        }
+      },
+      "plantilla_revision": {
+        "ruta": "evaluacion/revision_manual/plantilla_tesauro.csv",
+        "estado": "escrita",
+        "filas": 50
+      },
+      "metodo_esperado": "coincidencia léxica única de la etiqueta en inglés (singular o plural) con prefLabel/altLabel@en del concepto (scripts._tesauro_lexico; formas ambiguas descartadas); 50 se revisan a mano (plantilla_tesauro.csv)"
+    },
+    "normas": {
+      "consultas": 20,
+      "por_modelo": {
+        "EmbeddingGemma-2": {
+          "acierto@1": 0.25,
+          "acierto@4": 0.65,
+          "acierto@10": 0.8
+        },
+        "granite": {
+          "acierto@1": 0.35,
+          "acierto@4": 0.65,
+          "acierto@10": 0.75
+        }
+      },
+      "por_tipo": {
+        "metadatos": {
+          "EmbeddingGemma-2": {
+            "acierto@1": 0.5,
+            "acierto@4": 1.0,
+            "acierto@10": 1.0,
+            "n": 8
+          },
+          "granite": {
+            "acierto@1": 0.625,
+            "acierto@4": 0.875,
+            "acierto@10": 1.0,
+            "n": 8
+          }
+        },
+        "texto_alternativo": {
+          "EmbeddingGemma-2": {
+            "acierto@1": 0.0833,
+            "acierto@4": 0.4167,
+            "acierto@10": 0.6667,
+            "n": 12
+          },
+          "granite": {
+            "acierto@1": 0.1667,
+            "acierto@4": 0.5,
+            "acierto@10": 0.5833,
+            "n": 12
+          }
+        }
+      },
+      "esperadas_inexistentes": [],
+      "k_produccion": 4,
+      "metodo": "consultas redactadas a partir del contenido de los fragmentos; esperadas marcadas por lectura (evaluacion/conjuntos/consultas_normas.json)"
+    }
+  }
+}

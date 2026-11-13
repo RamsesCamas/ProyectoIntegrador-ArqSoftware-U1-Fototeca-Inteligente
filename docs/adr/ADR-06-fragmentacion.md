@@ -53,9 +53,15 @@ Fuente: `evaluacion/resultados/corpus_r1.json` (versión del corpus `e1879cf6026
   prioriza la atomicidad sobre el tamaño objetivo. Los mayores de 800 son secciones de hasta 1,200 caracteres, que por
   regla no se dividen, o partes de una sección dividida que suman el solapamiento y el encabezado; ninguno llega a 1,200
   (el máximo medido es 1142).
-- **pendiente:** la calidad de la recuperación de normas (acierto@k sobre 20 consultas con su regla esperada,
-  EmbeddingGemma-2 contra granite) saldrá en `evaluacion/resultados/r3_embeddings.json`. Si resultara baja, este ADR se
-  revisa.
+- **Calidad de la recuperación de normas** (`evaluacion/resultados/r3_embeddings.json` → `metricas.normas`; 20
+  consultas en español con su regla esperada, corrida al 50 % de los conjuntos, que no recorta estas 20): con k = 4,
+  el valor de producción, EmbeddingGemma-2 recupera la regla esperada en 0.65 de las consultas (acierto@1 0.25,
+  acierto@10 0.8); granite, en 0.65 (0.35 y 0.75). Por tipo de consulta, las 8 de **metadatos** IPTC y DCMI llegan a
+  1.0 con k = 4 en EmbeddingGemma-2, pero las 12 de **texto alternativo** solo a 0.4167 (acierto@10 0.6667). Las
+  reglas de texto alternativo vienen sobre todo del tutorial de W3C, en inglés, y las consultas son en español: es el
+  riesgo que esta sección ya anotaba. No se cambia la fragmentación, porque el problema está en el idioma y no en el
+  tamaño de los fragmentos; el guardrail `fuentes` evita que una regla mal recuperada se cite sin estar en el
+  contexto.
 
 ## Consecuencias
 - **Se gana:** cada campo de la ficha puede citar exactamente la regla que aplicó, y el guardrail `fuentes` puede

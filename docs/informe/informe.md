@@ -38,8 +38,10 @@ SQLite, un servicio FastAPI organizado en las capas C1–C7 con las transversale
 con la API. La arquitectura combina una ruta **unificada** (un embedding multimodal) con una ruta **pipeline** (un modelo
 de visión describe y se busca como texto) que entra como ciclo de agente cuando la recuperación es pobre.
 
-**Cifras clave:** pendiente (H7): (1) R@10 de la búsqueda texto→imagen en español con la arquitectura elegida
-(`evaluacion/resultados/r3_embeddings.json`); (2) calidad de la ficha con RAG contra sin RAG
+**Cifras clave:** (1) la búsqueda texto→imagen en español con la arquitectura elegida (unificada) pone la foto
+correcta en el primer lugar en 0.9 de las consultas y entre las diez primeras en 1.0, contra 0.704 y 0.96 del pipeline
+con descripciones de Qwen, sobre la misma galería de 250 imágenes (`evaluacion/resultados/r3_embeddings.json`, corrida
+al 50 % de los conjuntos); pendiente (H7): (2) calidad de la ficha con RAG contra sin RAG
 (`evaluacion/resultados/rag_fichas.json`); (3) reducción de latencia de la ficha servida por la caché semántica
 (`evaluacion/resultados/cache.json`). [AUTOR: elegir las tres cifras definitivas cuando existan los resultados.]
 
@@ -127,7 +129,7 @@ Tamaños (`evaluacion/conjuntos/particiones.json` → `tamanos`): `archivo` 2,60
 |---|---|---|---|
 | R1 | Dominio y corpus propios | Archivo fotográfico XM3600 más corpus normativo y tesauro | §3; `evaluacion/resultados/corpus_r1.json`; `docs/LICENCIAS-Y-CORPUS.md` |
 | R2 | Ejecución local | Ollama, Qdrant, servicio y web en `docker compose`, solo CPU, sin APIs en la nube | Figuras 2 y 5; prueba sin red con `docker-compose.sinred.yml`: 11 de 11 pasos (`evaluacion/resultados/demo_sin_red.json`) |
-| R3 | Selección de modelos sustentada | Qwen3.5-0.8B contra LFM3-1.7B; EmbeddingGemma-2 contra granite; unificado contra pipeline contra híbrido | §7; ADR-01 y ADR-02; pendiente (H7): `r3_modelos.json` y `r3_embeddings.json` |
+| R3 | Selección de modelos sustentada | Qwen3.5-0.8B contra LFM3-1.7B; EmbeddingGemma-2 contra granite; unificado contra pipeline contra híbrido | §7; ADR-01 y ADR-02; `r3_embeddings.json` (Tabla 10); pendiente (H7): `r3_modelos.json` |
 | R4 | Embeddings en una base vectorial | Siete colecciones en Qdrant (Tabla 7) | `servicio/scripts/indexar_archivo.py`; `POST /documentos` |
 | R5 | RAG con fuentes | Cada campo de la ficha lista sus fuentes (regla, término del tesauro o foto similar); cada resultado de búsqueda trae sus razones | Respuestas de `POST /fichas` y `POST /busquedas` (Anexo B) |
 | R6 | Arquitectura en capas | C1–C7, `dominio`, T1 y T2 en paquetes separados; tres contratos de import-linter verificados en `pytest` | Figuras 3 y 4; ADR-13; `servicio/pruebas/test_contratos.py` |
@@ -170,7 +172,7 @@ porque las iniciales resultaron irreales para esta CPU; la regla del ajuste y lo
 | Latencia de ficha, ruta rápida | p50 | ≤ 45 s (inicial: 15 s) | pendiente (H7). Referencia H0: P1 de Qwen a 512 px, p50 de 34.28 s (`h0.json` → `verificaciones.0.6.p1_por_lado.512`) |
 | Latencia de ficha, ruta completa | p50 | ≤ 90 s (inicial: 45 s) | pendiente (H7). Referencia H0: P1 34.28 s y P3 de LFM3 39.351 s de p50 (`verificaciones.0.6`) |
 | Latencia de ficha desde caché | p50 | ≤ 0.5 s | pendiente (H7): `cache.json` |
-| Calidad de la búsqueda | R@10 texto→imagen en español | comparativa: la arquitectura elegida debe superar a las otras dos | pendiente (H7): `r3_embeddings.json` |
+| Calidad de la búsqueda | R@10 texto→imagen en español | comparativa: la arquitectura elegida debe superar a las otras dos | R@10: unificado 1.0, pipeline 0.96, híbrido 1.0 (empate); R@1: 0.9, 0.704 y 0.82 (`r3_embeddings.json`, n = 250) |
 | Calidad de la ficha | fidelidad y relevancia 0–5, similitud con referencias | se reporta | pendiente (H7): `rag_fichas.json` |
 | Seguridad (guardrails) | bloqueos correctos / falsos positivos | ≥ 90 % / ≤ 10 % | pendiente (H7): `guardrails.json` |
 | Corrección de la caché semántica | respuestas incorrectas desde la caché | ≤ 2 % | pendiente (H7): `cache.json` |
@@ -370,8 +372,11 @@ operación.
 | Tamaño en disco (bytes) | 1322069277 | 1099638680 |
 | Memoria residente del proceso del modelo (VmRSS) | 1617684 kB | 1438764 kB |
 
-**Tabla 10.** Embeddings: datos de viabilidad de H0 (galería de 50 pares) y comparación pendiente. Fuente:
-`evaluacion/resultados/h0.json` y `h0_memoria_por_modelo.txt`.
+**Tabla 10.** Embeddings: datos de viabilidad de H0 (galería de 50 pares) y comparación de R3. Fuentes:
+`evaluacion/resultados/h0.json` y `h0_memoria_por_modelo.txt` para las filas de viabilidad;
+`evaluacion/resultados/r3_embeddings.json` para las filas «R3», de la corrida con la mitad de cada conjunto
+(`--fraccion 0.5`). En texto→imagen, las arquitecturas se comparan sobre la misma sub-galería de 250 imágenes, y la
+consulta es la primera descripción humana en español de cada una.
 
 | Medición | EmbeddingGemma-2 (`440m`) | granite (`278m`) |
 |---|---|---|
@@ -380,11 +385,28 @@ operación.
 | Texto en español | — | paráfrasis 0.8173 contra no relacionada 0.4067; entrada máxima de 512 tokens (`verificaciones.0.4`) |
 | Latencia p50 (imagen · texto) | 2.464 s · 0.159 s (`verificaciones.0.6`) | — · 0.051 s |
 | Memoria residente (VmRSS) | 924168 kB | 699712 kB |
-| R@1, R@5, R@10 y MRR en la galería de R3 (unificado, pipeline e híbrido) | pendiente (H7): `r3_embeddings.json` | pendiente (H7) |
+| R3 · texto→imagen, **unificado** (R@1 · R@5 · R@10 · MRR) | **0.9 · 0.992 · 1.0 · 0.9418** | — (no embebe imágenes) |
+| R3 · texto→imagen, **pipeline** con descripciones de Qwen (R@1 · R@5 · R@10 · MRR) | 0.704 · 0.924 · 0.96 · 0.8013 | 0.48 · 0.716 · 0.832 · 0.5846 |
+| R3 · texto→imagen, **híbrido** RRF de unificado y pipeline (R@1 · R@5 · R@10 · MRR) | 0.82 · 0.984 · 1.0 · 0.89 | — |
+| R3 · costo del pipeline: describir la galería con Qwen | 1.65 h para 250 imágenes (`metricas.costo_pipeline`) | igual (usa las mismas descripciones) |
+| R3 · descripción→descripción (R@1 · MRR) | 0.756 · 0.8384 | 0.46 · 0.5873 |
+| R3 · términos del tesauro, 100 etiquetas (exactitud top-1 · top-3) | 0.56 · 0.69 | 0.58 · 0.71 |
+| R3 · normas, 20 consultas (acierto@1 · @4 · @10) | 0.25 · 0.65 · 0.8 | 0.35 · 0.65 · 0.75 |
 
-**Conclusión de la selección:** pendiente (H7). Debe decir qué modelo se usa en cada ruta, qué arquitectura de búsqueda
-rinde mejor y en qué tipo de consulta gana cada una, qué se sacrificó y por qué el compromiso es adecuado para el dominio
-y para una laptop en CPU (ADR-01 y ADR-02). [AUTOR: redactar la conclusión con los resultados y conectarla con la tesis.]
+La gráfica de la comparación texto→imagen está en `evaluacion/graficas/r3_embeddings_texto_imagen.png`.
+
+**Conclusión de la selección.** *Embeddings y arquitectura (ADR-02):* la ruta **unificada** con EmbeddingGemma-2 rinde
+mejor que el pipeline en todas las métricas y en todos los grupos medidos: en las fotos de regiones que el archivo no
+tiene (R@1 0.8987 contra 0.7595), en las demás (0.9006 contra 0.6784), con consultas cortas (0.902 contra 0.6275) y con
+consultas largas (0.8916 contra 0.7349; `metricas.por_grupo`). El pipeline solo acorta la distancia con las consultas
+largas, y cuesta horas de CPU porque cada foto se describe con un modelo de lenguaje. Fusionar siempre las dos rutas
+(híbrido) empeora el primer resultado (R@1 0.82). Por eso la unificada es la ruta por defecto y el pipeline entra solo
+como reformulación del ciclo de agente cuando la recuperación es pobre (ADR-07). Se sacrifica la posibilidad de buscar
+por lo que un modelo de lenguaje «dice» de la foto en todos los casos, a cambio de búsquedas y duplicados en segundos y
+sin modelo de lenguaje, lo que importa en una laptop en CPU. Entre los dos modelos de texto, EmbeddingGemma-2 gana con
+claridad en descripción→descripción, y granite queda parejo en tesauro y normas; granite se conserva como segundo modelo
+y como verificador independiente en `consistencia`. *Modelos de lenguaje (ADR-01):* pendiente (H7):
+`r3_modelos.json`. [AUTOR: redactar la conclusión con los resultados y conectarla con la tesis.]
 
 ## 7.3 Criterio de los enrutadores
 
@@ -505,18 +527,18 @@ consecuencias). Los que dependen de la evaluación están en estado «Propuesta�
 | ADR | Decisión | Estado | Evidencia |
 |---|---|---|---|
 | ADR-01 | Qwen3.5-0.8B para la visión y la ruta rápida; LFM3-1.7B para la composición | Propuesta | pendiente (H7): `r3_modelos.json`; viabilidad en `h0.json` |
-| ADR-02 | EmbeddingGemma-2 como memoria multimodal y granite como segundo modelo; arquitectura híbrida adaptativa | Propuesta | pendiente (H7): `r3_embeddings.json`; viabilidad en `h0.json` |
+| ADR-02 | EmbeddingGemma-2 como memoria multimodal y granite como segundo modelo; arquitectura híbrida adaptativa | Aceptada | `r3_embeddings.json`; viabilidad en `h0.json` |
 | ADR-03 | Enrutador de fichas por consenso, acuerdo y texto visible; enrutador de búsquedas por reglas y prototipos | Propuesta | pendiente (H7): `enrutador.json` |
 | ADR-04 | Umbral τ_dup, TTL e invalidación por etiquetas de la caché semántica | Propuesta | pendiente (H7): `cache.json` (barrido de τ_dup) |
 | ADR-05 | Verificaciones de los guardrails y política de cada falla | Propuesta | pendiente (H7): `guardrails.json` |
-| ADR-06 | Una regla por fragmento en las normas y un concepto por documento en el tesauro | Aceptada | `corpus_r1.json`; recuperación de normas pendiente en `r3_embeddings.json` |
+| ADR-06 | Una regla por fragmento en las normas y un concepto por documento en el tesauro | Aceptada | `corpus_r1.json`; recuperación de normas en `r3_embeddings.json` → `metricas.normas` |
 | ADR-07 | Ciclo de agente híbrido adaptativo con MAX_ITER = 2 | Propuesta | pendiente (H7): `agente.json` |
 | ADR-08 | Lotes asíncronos con un solo trabajador, sin Celery ni Redis | Propuesta | pendiente (H7): `desempeno.json` y memoria en H9 |
 | ADR-09 | Qdrant como base vectorial y SQLite para lo demás; un adaptador por recurso | Aceptada | `h0.json` → `verificaciones.0.5.docker_stats` |
 | ADR-10 | Ollama 0.40.15, `embeddinggemma-2:440m` y el puerto `Embebedor` | Aceptada | `h0.json` → `verificaciones.0.3` y `0.3b` |
 | ADR-11 | Razonamiento desactivado, salida estructurada con JSON Schema y muestreo por modelo | Aceptada | `h0.json` → `verificaciones.0.2`, `0.6` y `0.6b` |
 | ADR-12 | Límites de memoria por contenedor, modelos siempre cargados y caché de prompts desactivada | Aceptada | `h0.json` → `verificaciones.0.5`; `h0_cgroup_ollama*.txt` |
-| ADR-13 | Inversión de dependencias para T1 y T2 con puertos propios y raíz de composición | Aceptada | `servicio/pruebas/test_contratos.py`; registro pendiente en `contrato_capas.json` |
+| ADR-13 | Inversión de dependencias para T1 y T2 con puertos propios y raíz de composición | Aceptada | `servicio/pruebas/test_contratos.py`; `evaluacion/resultados/contrato_capas.json` |
 
 [AUTOR: al cerrar la evaluación, pasar a «Aceptada» los ADR cuya evidencia confirme la decisión, o escribir un ADR nuevo
 que reemplace al que no la confirme.]
@@ -599,7 +621,13 @@ pendiente (H7): propuestas a partir del análisis de errores. [AUTOR: priorizar 
   las fichas y los resultados los generan modelos de IA y pueden contener errores.
 - **Sesgos.** XM3600 elige 100 imágenes por cada uno de 36 locales (`evaluacion/resultados/h0.json` →
   `verificaciones.0.7.locale`), con descripciones que escribieron personas de distintas regiones. ¿Funciona igual en
-  todas las regiones? El análisis por locale de R3 y las `regiones_excluidas` lo miden: pendiente (H7). Las fichas
+  todas las regiones? En la búsqueda texto→imagen sobre la galería completa de 500 imágenes, la ruta unificada tiene
+  R@10 de 1.0 en 32 de los 36 locales; los otros cuatro son `sw` (0.9), `ru` (0.9091), `fr` (0.9167) y `ja` (0.9808), y las fotos de las
+  `regiones_excluidas` no salen peor que las demás (R@1 0.8467 contra 0.8143;
+  `evaluacion/resultados/r3_embeddings.json` → `por_locale_R@10_galeria_completa` y `por_grupo_galeria_completa`). El
+  pipeline con descripciones de Qwen varía más por locale (por ejemplo, R@10 de 0.6 en `ro` con EmbeddingGemma-2;
+  `por_locale_R@10`). Cada locale tiene pocas fotos en la muestra, así que estas cifras señalan dónde mirar, no prueban
+  una diferencia. Las fichas
   iniciales del archivo vienen de descripciones humanas, que también pueden traer sesgos.
 - **Privacidad.** El EXIF sensible se quita antes de guardar y las miniaturas se generan sin metadatos; la ficha no
   identifica personas por nombre ni infiere etnia, religión, salud, orientación u otros atributos sensibles (guardrail
@@ -697,8 +725,8 @@ Requisitos del equipo: Docker Desktop con 8 GB o más asignados a Docker. El REA
 
 ## 12.3 Anexo B · API del servicio
 
-La documentación OpenAPI completa la genera el servicio en `http://localhost:8000/docs` (pendiente: exportarla a
-`docs/api/openapi.json`). Todas las respuestas llevan la cabecera `X-Traza-Id`; los errores tienen la forma
+La documentación OpenAPI completa la genera el servicio en `http://localhost:8000/docs` y está exportada en
+`docs/api/openapi.json`. Todas las respuestas llevan la cabecera `X-Traza-Id`; los errores tienen la forma
 `{"error": {"codigo", "mensaje", "traza_id"}}` y los bloqueos de guardrails agregan `mensaje_seguro` y `verificaciones`.
 
 **Tabla 14.** Endpoints (`servicio/fototeca/api/rutas/`).
