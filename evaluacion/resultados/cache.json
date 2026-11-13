@@ -1,0 +1,400 @@
+{
+  "modulo": "cache",
+  "fecha": "2026-11-13T14:41:07+00:00",
+  "rapido": false,
+  "fraccion": 0.5,
+  "hardware": {
+    "maquina": "aarch64",
+    "nproc": 8,
+    "python": "3.12.16",
+    "lscpu_Architecture": "aarch64",
+    "lscpu_CPU(s)": "8",
+    "lscpu_Vendor ID": "Apple",
+    "lscpu_Model name": "-",
+    "limite_memoria_contenedor_bytes": 1610612736
+  },
+  "version_configuracion": "580643649771",
+  "configuracion": {
+    "tau_dup_configurado": 0.97,
+    "tau_busq": 0.95,
+    "taus_barridos": [
+      0.9,
+      0.91,
+      0.92,
+      0.93,
+      0.94,
+      0.95,
+      0.96,
+      0.97,
+      0.98,
+      0.99
+    ],
+    "fpr_max": 0.02,
+    "ttl_fichas_s": 604800,
+    "ttl_busquedas_s": 86400,
+    "fotos_cache_exacta": 25,
+    "busquedas": 15
+  },
+  "metricas": {
+    "fichas_exacta": {
+      "n": 25,
+      "con_ficha_200": 25,
+      "primera_ya_venia_de_cache": 0,
+      "primera_degradada_no_se_guarda": 0,
+      "cacheables": 25,
+      "aciertos_exactos": 25,
+      "tasa_aciertos_exactos": 1.0,
+      "recarga_devuelve_el_mismo_documento": 25,
+      "misma_ficha_servida": 25,
+      "latencia_cliente_s": {
+        "sin_cache": {
+          "n": 25,
+          "media_s": 71.545,
+          "p50_s": 69.312,
+          "p95_s": 92.711,
+          "max_s": 140.351
+        },
+        "con_cache": {
+          "n": 25,
+          "media_s": 0.024,
+          "p50_s": 0.023,
+          "p95_s": 0.027,
+          "max_s": 0.027
+        },
+        "reduccion_p50_porcentaje": 99.97
+      },
+      "latencia_servidor_ms": {
+        "sin_cache": {
+          "n": 25,
+          "media_ms": 71529.492,
+          "p50_ms": 69301.1,
+          "p95_ms": 92697.52,
+          "max_ms": 140334.8
+        },
+        "con_cache": {
+          "n": 25,
+          "media_ms": 14.576,
+          "p50_ms": 14.3,
+          "p95_ms": 17.26,
+          "max_ms": 18.1
+        }
+      },
+      "rutas_de_la_primera": {
+        "completa": 24,
+        "rapida": 1
+      }
+    },
+    "fichas_semantica_tau_dup": {
+      "n_positivos": 150,
+      "n_negativos": 75,
+      "barrido": [
+        {
+          "tau": 0.9,
+          "aciertos_positivos": 149,
+          "tasa_aciertos_positivos": 0.9933,
+          "aciertos_correctos": 149,
+          "recall": 0.9933,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 4,
+          "fpr": 0.0533,
+          "precision": 0.9739
+        },
+        {
+          "tau": 0.91,
+          "aciertos_positivos": 149,
+          "tasa_aciertos_positivos": 0.9933,
+          "aciertos_correctos": 149,
+          "recall": 0.9933,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 4,
+          "fpr": 0.0533,
+          "precision": 0.9739
+        },
+        {
+          "tau": 0.92,
+          "aciertos_positivos": 149,
+          "tasa_aciertos_positivos": 0.9933,
+          "aciertos_correctos": 149,
+          "recall": 0.9933,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 4,
+          "fpr": 0.0533,
+          "precision": 0.9739
+        },
+        {
+          "tau": 0.93,
+          "aciertos_positivos": 148,
+          "tasa_aciertos_positivos": 0.9867,
+          "aciertos_correctos": 148,
+          "recall": 0.9867,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 4,
+          "fpr": 0.0533,
+          "precision": 0.9737
+        },
+        {
+          "tau": 0.94,
+          "aciertos_positivos": 144,
+          "tasa_aciertos_positivos": 0.96,
+          "aciertos_correctos": 144,
+          "recall": 0.96,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 3,
+          "fpr": 0.04,
+          "precision": 0.9796
+        },
+        {
+          "tau": 0.95,
+          "aciertos_positivos": 141,
+          "tasa_aciertos_positivos": 0.94,
+          "aciertos_correctos": 141,
+          "recall": 0.94,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 1,
+          "fpr": 0.0133,
+          "precision": 0.993
+        },
+        {
+          "tau": 0.96,
+          "aciertos_positivos": 129,
+          "tasa_aciertos_positivos": 0.86,
+          "aciertos_correctos": 129,
+          "recall": 0.86,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 1,
+          "fpr": 0.0133,
+          "precision": 0.9923
+        },
+        {
+          "tau": 0.97,
+          "aciertos_positivos": 106,
+          "tasa_aciertos_positivos": 0.7067,
+          "aciertos_correctos": 106,
+          "recall": 0.7067,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 1,
+          "fpr": 0.0133,
+          "precision": 0.9907
+        },
+        {
+          "tau": 0.98,
+          "aciertos_positivos": 72,
+          "tasa_aciertos_positivos": 0.48,
+          "aciertos_correctos": 72,
+          "recall": 0.48,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 0,
+          "fpr": 0.0,
+          "precision": 1.0
+        },
+        {
+          "tau": 0.99,
+          "aciertos_positivos": 18,
+          "tasa_aciertos_positivos": 0.12,
+          "aciertos_correctos": 18,
+          "recall": 0.12,
+          "aciertos_con_otra_foto_en_positivos": 0,
+          "respuestas_incorrectas_servidas_negativos": 0,
+          "fpr": 0.0,
+          "precision": 1.0
+        }
+      ],
+      "tau_elegido": 0.95,
+      "criterio": "máximo recall con FPR ≤ 2% (empates: menor FPR y luego τ más alto)",
+      "en_tau_elegido": {
+        "tau": 0.95,
+        "aciertos_positivos": 141,
+        "tasa_aciertos_positivos": 0.94,
+        "aciertos_correctos": 141,
+        "recall": 0.94,
+        "aciertos_con_otra_foto_en_positivos": 0,
+        "respuestas_incorrectas_servidas_negativos": 1,
+        "fpr": 0.0133,
+        "precision": 0.993
+      },
+      "tau_configurado": 0.97,
+      "en_tau_configurado": {
+        "tau": 0.97,
+        "aciertos_positivos": 106,
+        "tasa_aciertos_positivos": 0.7067,
+        "aciertos_correctos": 106,
+        "recall": 0.7067,
+        "aciertos_con_otra_foto_en_positivos": 0,
+        "respuestas_incorrectas_servidas_negativos": 1,
+        "fpr": 0.0133,
+        "precision": 0.9907
+      },
+      "por_transformacion": {
+        "brillo_saturacion": {
+          "n": 25,
+          "recall_en_tau_elegido": 1.0,
+          "recall_en_tau_configurado": 1.0,
+          "sim_origen_p50": 0.9884
+        },
+        "espejo": {
+          "n": 30,
+          "recall_en_tau_elegido": 0.9667,
+          "recall_en_tau_configurado": 0.8333,
+          "sim_origen_p50": 0.9809
+        },
+        "marco_captura": {
+          "n": 19,
+          "recall_en_tau_elegido": 0.9474,
+          "recall_en_tau_configurado": 0.5263,
+          "sim_origen_p50": 0.9709
+        },
+        "recompresion": {
+          "n": 21,
+          "recall_en_tau_elegido": 0.9524,
+          "recall_en_tau_configurado": 0.7143,
+          "sim_origen_p50": 0.9832
+        },
+        "recorte": {
+          "n": 24,
+          "recall_en_tau_elegido": 0.7917,
+          "recall_en_tau_configurado": 0.4167,
+          "sim_origen_p50": 0.9684
+        },
+        "rotacion": {
+          "n": 31,
+          "recall_en_tau_elegido": 0.9677,
+          "recall_en_tau_configurado": 0.6774,
+          "sim_origen_p50": 0.978
+        }
+      },
+      "similitud_positivos_con_su_original": {
+        "n": 150,
+        "media_coseno": 0.975,
+        "p50_coseno": 0.98,
+        "p95_coseno": 0.993,
+        "max_coseno": 0.997
+      },
+      "similitud_negativos_con_su_vecino": {
+        "n": 75,
+        "media_coseno": 0.831,
+        "p50_coseno": 0.831,
+        "p95_coseno": 0.909,
+        "max_coseno": 0.971
+      },
+      "positivos_cuyo_vecino_mas_cercano_no_es_el_original": 0,
+      "latencia_embedding_imagen": {
+        "n": 150,
+        "media_s": 2.063,
+        "p50_s": 2.067,
+        "p95_s": 2.627,
+        "max_s": 2.647
+      },
+      "metodo": "positivos: vecino más cercano de cada transformada entre las fotos del archivo (embedding de imagen del mismo adaptador del servicio); negativos: similitud de cada foto con su vecino distinto más cercano, según el conjunto. Así se reproduce la caché semántica de fichas, que sirve la ficha de la foto más parecida si su coseno ≥ τ_dup.",
+      "nota": "τ elegido para ADR-04; aplicarlo en la configuración lo decide la sesión principal."
+    },
+    "busquedas": {
+      "n": 15,
+      "sin_error": 15,
+      "tau_busq": 0.95,
+      "repetidas": {
+        "n": 15,
+        "primera_ya_venia_de_cache": 0,
+        "aciertos_exactos": 15,
+        "tasa_aciertos": 1.0
+      },
+      "parafraseadas": {
+        "n": 15,
+        "aciertos_semanticos": 0,
+        "tasa_aciertos": 0.0,
+        "aciertos_exactos_por_normalizacion": 0,
+        "respuestas_incorrectas_servidas": 0,
+        "tasa_incorrectas_sobre_aciertos": null,
+        "tasa_incorrectas_sobre_consultas": 0.0,
+        "similitud_a_b": {
+          "n": 15,
+          "media_coseno": 0.84,
+          "p50_coseno": 0.846,
+          "p95_coseno": 0.906,
+          "max_coseno": 0.907
+        },
+        "pares_con_similitud_mayor_o_igual_a_tau_busq": 0,
+        "definicion_incorrecta": "el acierto viene de la entrada de otra consulta, o la búsqueda fresca de B encuentra la foto en el top-k y la respuesta servida no"
+      },
+      "encuentra_la_foto_top_k": {
+        "a_sin_cache": 15,
+        "b": 15,
+        "nota": "las consultas son descripciones de fotos del archivo (la 1ª es la descripción indexada de su ficha): sirve para juzgar la respuesta servida por la caché, no la calidad de la búsqueda"
+      },
+      "latencia_cliente_s": {
+        "exacta": {
+          "sin_cache": {
+            "n": 30,
+            "media_s": 2.999,
+            "p50_s": 0.454,
+            "p95_s": 9.174,
+            "max_s": 10.1
+          },
+          "con_cache": {
+            "n": 15,
+            "media_s": 0.23,
+            "p50_s": 0.225,
+            "p95_s": 0.329,
+            "max_s": 0.33
+          },
+          "reduccion_p50_porcentaje": 50.44
+        },
+        "semantica": {
+          "sin_cache": {
+            "n": 30,
+            "media_s": 2.999,
+            "p50_s": 0.454,
+            "p95_s": 9.174,
+            "max_s": 10.1
+          },
+          "con_cache": {
+            "n": 0
+          },
+          "reduccion_p50_porcentaje": null
+        }
+      },
+      "rutas_sin_cache": {
+        "compleja": 4,
+        "simple": 11
+      }
+    },
+    "invalidacion": {
+      "clave": "prueba",
+      "xm_id": "xm-ee712e893fa3e6f7",
+      "documento_id": "up-f94a69a94ea326dc",
+      "version_configuracion": "580643649771",
+      "ficha_antes": "exacta",
+      "entrada_en_almacen_antes": true,
+      "consulta": "Fotos en blanco y negro de músicos tocando",
+      "busqueda_1": "ninguna",
+      "busqueda_2_antes": "exacta",
+      "eliminar_estado_http": 200,
+      "entradas_cache_invalidadas": 1,
+      "version_archivo_despues": 1090,
+      "entrada_en_almacen_despues": false,
+      "exacta_responde_despues": false,
+      "semantica_responde_con_la_foto_eliminada": false,
+      "busqueda_despues": "ninguna",
+      "recarga_documento_id": "up-f94a69a94ea326dc",
+      "ficha_despues_estado_http": 200,
+      "ficha_despues_cache": "ninguna",
+      "ficha_despues_duplicado_de": null,
+      "ficha_despues_segundos": 83.377,
+      "ficha_despues_no_viene_de_la_entrada_eliminada": true,
+      "aprobada": true
+    },
+    "metas": {
+      "incorrectas_desde_cache_max": {
+        "meta": 0.02,
+        "medido_fichas_fpr_en_tau_elegido": 0.0133,
+        "medido_fichas_fpr_en_tau_configurado": 0.0133,
+        "medido_busquedas_incorrectas_sobre_consultas": 0.0,
+        "cumple_fichas_en_tau_elegido": true
+      },
+      "ficha_cache_p50_s": {
+        "meta": 0.5,
+        "medido": 0.023,
+        "cumple": true
+      }
+    }
+  }
+}

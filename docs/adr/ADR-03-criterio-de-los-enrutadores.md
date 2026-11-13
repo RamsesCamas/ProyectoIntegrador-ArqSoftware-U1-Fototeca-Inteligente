@@ -61,13 +61,35 @@ ruta rápida y P3 lo recibe aislado entre delimitadores (ADR-05).
 
 El valor final de τ_consenso y τ_acuerdo sale de la validación cruzada de 5 pliegues del experimento del enrutador.
 
-**pendiente:** `evaluacion/resultados/enrutador.json`:
-- **Fichas:** se ejecutan las dos rutas sobre `eval_fichas`; la ruta «correcta» de cada foto es la rápida si su calidad
-  queda a 0.5 puntos o menos de la completa. Se reporta el porcentaje de fotos enviadas a la ruta correcta, la latencia
-  de cada ruta, la calidad final contra «siempre rápida» y «siempre completa», y el par (τ_consenso, τ_acuerdo) que
-  maximiza la exactitud con la restricción de que la latencia media no pase de la mitad de «siempre completa».
-- **Búsquedas:** exactitud sobre 40 consultas etiquetadas (20 simples y 20 complejas), latencia de cada ruta y R@10 de
-  las complejas con P4 contra sin P4.
+**Fichas: pendiente (H7, repetición con P2/P3 v3).** Se ejecutan las dos rutas sobre `eval_fichas`; la ruta
+«correcta» de cada foto es la rápida si su calidad queda a 0.5 puntos o menos de la completa. Se reporta el porcentaje
+de fotos enviadas a la ruta correcta, la latencia de cada ruta, la calidad final contra «siempre rápida» y «siempre
+completa», y el par (τ_consenso, τ_acuerdo) que maximiza la exactitud con la restricción de que la latencia media no
+pase de la mitad de «siempre completa». La primera corrida usó fichas de P2/P3 v2, que copiaban el contexto (ADR-05,
+`copia_contexto`), y se repite con v3.
+
+**Búsquedas** (`evaluacion/resultados/enrutador.json` → `metricas.busquedas`; corrida del 2026-11-13 con
+`--fraccion 0.5`: 25 consultas etiquetadas, 10 simples y 15 complejas, sobre una galería de 995 fotos subidas; ninguna
+foto relevante quedó fuera de la galería):
+
+| Medición | Simples (n = 10) | Complejas (n = 15) |
+|---|---|---|
+| Enviadas a la ruta correcta | 0.7 (3 se fueron a la compleja) | 0.9333 (1 se fue a la simple) |
+| R@10 por la ruta simple (sin P4) | 1.0 | 0.8556 |
+| R@10 por la ruta compleja (con P4) | 1.0 | 0.8556 (IC95 0.6889–1.0) |
+| MRR sin P4 · con P4 | 1.0 · 1.0 | 0.7541 · 0.8229 |
+
+- **Exactitud del enrutador:** 0.84 sobre las 25 consultas.
+- **Latencia por ruta** (`latencia_por_ruta_s`): la simple tiene una p50 de 0.236 s y una p95 de 0.61 s; la compleja,
+  con P4, una p50 de 5.649 s y una p95 de 6.77 s.
+- **P4 en las complejas** (`complejas_con_p4_menos_sin_p4`): el R@10 no cambia en ninguna de las 15 consultas
+  (diferencia pareada 0.0), pero el MRR sube de 0.7541 a 0.8229: la penalización de lo excluido sube la foto correcta en
+  la lista. En 5 de las 25 consultas P4 encontró términos que excluir (`p4.con_terminos_excluidos`).
+
+**Lectura (búsquedas).** P4 no encuentra fotos que la búsqueda simple no encuentre; lo que aporta es el orden y la
+consulta interpretada que la web muestra, a cambio de unos 5 s más por consulta. Por eso P4 queda solo para las
+consultas que el enrutador marca como complejas. El error más frecuente del enrutador es caro pero inocuo: 3 de 10
+consultas simples pagaron P4 sin necesidad.
 
 Costo de cada llamada medido en H0 (referencia del ahorro posible, `evaluacion/resultados/h0.json` →
 `verificaciones.0.6`): P1 de Qwen con imagen a 512 px, p50 de 34.28 s; P3 de LFM3, p50 de 39.351 s; embedding de texto
