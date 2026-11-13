@@ -74,6 +74,11 @@ class FlujoSalud:
     def precalentar_en_segundo_plano(self) -> None:
         threading.Thread(target=self._precalentar, name="precalentar-modelos", daemon=True).start()
 
+    def _opciones_carga(self, modelo: str) -> dict:
+        """Las opciones con que se cargará el proceso del modelo: las mismas que el gateway envía en cada petición."""
+        por_modelo = (self.config.parametro("generacion.por_modelo", {}) or {}).get(modelo, {})
+        return {"num_ctx": int(self.config.parametro("generacion.num_ctx", 4096)), **(por_modelo.get("extra") or {})}
+
     def _precalentar(self) -> None:
         modelos = list(dict.fromkeys(self.config.modelos.values()))
         self.precalentamiento = {"estado": "en_curso", "modelos": modelos}
@@ -81,7 +86,7 @@ class FlujoSalud:
         fallidos = []
         for modelo in modelos:
             try:
-                self.cliente_llm.precalentar(modelo)
+                self.cliente_llm.precalentar(modelo, self._opciones_carga(modelo))
             except Exception as e:  # noqa: BLE001
                 fallidos.append({"modelo": modelo, "error": str(e)[:160]})
         self.precalentamiento = {"estado": "error" if fallidos else "listo", "modelos": modelos,

@@ -50,3 +50,11 @@ def test_docs_sin_cdn(cliente_api):
     assert "cdn.jsdelivr" not in r.text and "unpkg" not in r.text
     assert cliente_api.get("/estaticos/swagger-ui-bundle.js").status_code == 200
     assert cliente_api.get("/openapi.json").json()["info"]["title"] == "Fototeca Viva · API"
+
+
+def test_precalentar_carga_con_las_opciones_de_cada_modelo(contenedor):
+    """El proceso de Qwen debe cargarse sin el modelo de decodificación especulativa (draft_num_predict 0)."""
+    contenedor.salud._precalentar()
+    opciones = contenedor.cliente_llm.opciones_precalentar
+    qwen = contenedor.config.modelos["vision"]
+    assert opciones[qwen]["draft_num_predict"] == 0 and opciones[qwen]["num_ctx"] == 4096

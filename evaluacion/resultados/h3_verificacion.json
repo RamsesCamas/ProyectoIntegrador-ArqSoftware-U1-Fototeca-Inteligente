@@ -1,0 +1,114 @@
+{
+  "fecha": "2026-11-13T06:40:09+00:00",
+  "colecciones": {
+    "fotos_img": {
+      "esperado": 2600,
+      "real": 2600,
+      "ok": true
+    },
+    "fotos_txt": {
+      "esperado": 2600,
+      "real": 2600,
+      "ok": true
+    },
+    "fotos_txt_granite": {
+      "esperado": 2600,
+      "real": 2600,
+      "ok": true
+    },
+    "fotos_desc_qwen": {
+      "esperado": 0,
+      "real": 0,
+      "ok": true
+    },
+    "normas": {
+      "esperado": 412,
+      "real": 412,
+      "ok": true
+    },
+    "tesauro": {
+      "esperado": 4500,
+      "real": 4500,
+      "ok": true
+    },
+    "prototipos": {
+      "esperado": 83,
+      "real": 83,
+      "ok": true
+    }
+  },
+  "gps": {
+    "foto": "sinteticos/gps_sintetico/gps-01.jpg",
+    "estado_http_subida": 201,
+    "segundos_subida": 2.493,
+    "exif_original": {
+      "gps": true,
+      "numero_serie": true,
+      "autor": true
+    },
+    "exif_guardado": {
+      "gps": false,
+      "numero_serie": false,
+      "autor": false
+    },
+    "exif_miniatura": {
+      "gps": false,
+      "numero_serie": false,
+      "autor": false
+    },
+    "estado_http_miniatura": 200,
+    "guardrails_ingesta": [
+      {
+        "verificacion": "archivo_valido",
+        "resultado": "aprobada",
+        "detalle": {
+          "formato": "JPEG",
+          "ancho": 641,
+          "alto": 479
+        }
+      },
+      {
+        "verificacion": "exif_privacidad",
+        "resultado": "sanitizado",
+        "politica_aplicada": "sanitizar",
+        "detalle": {
+          "eliminado": [
+            "autor",
+            "gps",
+            "numero_serie"
+          ]
+        }
+      },
+      {
+        "verificacion": "fuera_de_dominio",
+        "resultado": "aprobada",
+        "valor": 0.0113,
+        "detalle": {
+          "nota": "sin prototipos o umbral sin calibrar"
+        }
+      }
+    ],
+    "ok": true
+  },
+  "eliminacion": {
+    "estado_http": 200,
+    "respuesta": {
+      "documento_id": "up-038e9803c81ce84a",
+      "eliminado": true,
+      "vectores_eliminados": 1,
+      "entradas_cache_invalidadas": 0,
+      "version_archivo": 3
+    },
+    "puntos_fotos_img": {
+      "antes_de_subir": 2600,
+      "con_la_foto": 2601,
+      "despues_de_eliminar": 2600
+    },
+    "vectores_del_documento_antes": 1,
+    "vectores_del_documento_despues": 0,
+    "documento_existe_despues": false,
+    "miniatura_despues": 404,
+    "ok": true
+  },
+  "ok": true
+}

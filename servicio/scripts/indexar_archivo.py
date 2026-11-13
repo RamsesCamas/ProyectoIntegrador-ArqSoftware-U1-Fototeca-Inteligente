@@ -104,6 +104,10 @@ def main() -> None:
     c = construir_contenedor(config)
     vec, docs = c.almacen_vectorial, c.almacen_documentos
     principal, granite = c.embebedor, c.embebedor_secundario
+    # Proceso por lotes sin usuario esperando: tiempo límite holgado (el del servicio, 5 s por elemento, es interactivo
+    # y no cubre la carga en frío de un modelo)
+    for e in (principal, granite):
+        e.tiempo_limite_s = max(float(e.tiempo_limite_s), 30.0)
     dim, dim_g = principal.dimension, granite.dimension
     tau_tesauro = float(config.parametro("guardrails.tau_tesauro", 0.75))
     registro(f"embeddings: {principal.nombre_modelo} ({dim}d) y {granite.nombre_modelo} ({dim_g}d) · τ_tesauro {tau_tesauro}")

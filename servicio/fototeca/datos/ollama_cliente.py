@@ -46,13 +46,17 @@ class OllamaCliente:
             "memoria_modelos_cargados_gib": round(sum(v or 0 for v in cargados.values()) / 2**30, 2),
         }
 
-    def precalentar(self, modelo: str) -> None:
-        """Carga el modelo en memoria con keep_alive=-1 (evita la latencia de carga en la primera petición)."""
+    def precalentar(self, modelo: str, opciones: dict | None = None) -> None:
+        """Carga el modelo en memoria con keep_alive=-1 (evita la latencia de carga en la primera petición).
+
+        `opciones` deben ser las mismas que usarán las peticiones (num_ctx y las propias del modelo): Ollama decide al
+        cargar el proceso, p. ej., si sube el modelo de decodificación especulativa de Qwen (≈0.6 GB más), aunque
+        luego cada petición lo desactive (ADR-12)."""
         try:
             if "embed" in modelo:
                 r = self._http.post("/api/embed", json={"model": modelo, "input": ["precalentar"], "keep_alive": -1})
             else:
-                r = self._http.post("/api/generate", json={"model": modelo, "keep_alive": -1})
+                r = self._http.post("/api/generate", json={"model": modelo, "keep_alive": -1, "options": opciones or {}})
             r.raise_for_status()
         except Exception as e:  # noqa: BLE001
             raise ServicioNoDisponible(f"No se pudo cargar el modelo {modelo}: {type(e).__name__}") from e

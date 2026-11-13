@@ -24,8 +24,10 @@ class ClienteLLMFalso:
         return {"estado": "ok", "version": "falso", "modelos_requeridos": self.modelos, "modelos_faltantes": [],
                 "modelos_cargados": self.modelos}
 
-    def precalentar(self, modelo: str) -> None:
+    def precalentar(self, modelo: str, opciones: dict | None = None) -> None:
         self.precalentados.append(modelo)
+        self.opciones_precalentar = getattr(self, "opciones_precalentar", {})
+        self.opciones_precalentar[modelo] = opciones
 
     def generar(self, modelo, mensajes, *, imagenes=None, esquema_json=None, opciones, tiempo_limite_s):
         self.llamadas.append({"modelo": modelo, "mensajes": mensajes, "imagenes": len(imagenes or [])})

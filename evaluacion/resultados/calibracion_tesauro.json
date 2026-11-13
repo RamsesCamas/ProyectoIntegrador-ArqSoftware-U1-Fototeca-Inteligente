@@ -1,0 +1,381 @@
+{
+  "fecha": "2026-11-13T06:34:21+00:00",
+  "metodo": "proxy léxico: el concepto esperado es el que tiene la etiqueta de Open Images (inglés, singular o plural) entre sus etiquetas @en; el mapeo del sistema es por embeddings",
+  "etiquetas": 2634,
+  "con_esperado_lexico": 289,
+  "exactitud_top1_sin_umbral": 0.5225,
+  "tau_inicial": 0.75,
+  "tau_elegido": 0.89,
+  "criterio": "el τ más bajo con precisión ≥ 0.9 y ≥ 20 mapeos aceptados",
+  "curva": [
+    {
+      "tau": 0.5,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.51,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.52,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.53,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.54,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.55,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.56,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.57,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.58,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.59,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.6,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.61,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.62,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.63,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.64,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.65,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.66,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.67,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.68,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.69,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.7,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.71,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.72,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.73,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.74,
+      "aceptados": 289,
+      "correctos": 151,
+      "precision": 0.5225,
+      "recall": 0.5225,
+      "f1": 0.5225
+    },
+    {
+      "tau": 0.75,
+      "aceptados": 288,
+      "correctos": 151,
+      "precision": 0.5243,
+      "recall": 0.5225,
+      "f1": 0.5234
+    },
+    {
+      "tau": 0.76,
+      "aceptados": 286,
+      "correctos": 150,
+      "precision": 0.5245,
+      "recall": 0.519,
+      "f1": 0.5217
+    },
+    {
+      "tau": 0.77,
+      "aceptados": 281,
+      "correctos": 149,
+      "precision": 0.5302,
+      "recall": 0.5156,
+      "f1": 0.5228
+    },
+    {
+      "tau": 0.78,
+      "aceptados": 270,
+      "correctos": 146,
+      "precision": 0.5407,
+      "recall": 0.5052,
+      "f1": 0.5224
+    },
+    {
+      "tau": 0.79,
+      "aceptados": 258,
+      "correctos": 144,
+      "precision": 0.5581,
+      "recall": 0.4983,
+      "f1": 0.5265
+    },
+    {
+      "tau": 0.8,
+      "aceptados": 235,
+      "correctos": 138,
+      "precision": 0.5872,
+      "recall": 0.4775,
+      "f1": 0.5267
+    },
+    {
+      "tau": 0.81,
+      "aceptados": 214,
+      "correctos": 131,
+      "precision": 0.6121,
+      "recall": 0.4533,
+      "f1": 0.5209
+    },
+    {
+      "tau": 0.82,
+      "aceptados": 194,
+      "correctos": 119,
+      "precision": 0.6134,
+      "recall": 0.4118,
+      "f1": 0.4928
+    },
+    {
+      "tau": 0.83,
+      "aceptados": 175,
+      "correctos": 114,
+      "precision": 0.6514,
+      "recall": 0.3945,
+      "f1": 0.4914
+    },
+    {
+      "tau": 0.84,
+      "aceptados": 156,
+      "correctos": 106,
+      "precision": 0.6795,
+      "recall": 0.3668,
+      "f1": 0.4764
+    },
+    {
+      "tau": 0.85,
+      "aceptados": 135,
+      "correctos": 99,
+      "precision": 0.7333,
+      "recall": 0.3426,
+      "f1": 0.467
+    },
+    {
+      "tau": 0.86,
+      "aceptados": 115,
+      "correctos": 93,
+      "precision": 0.8087,
+      "recall": 0.3218,
+      "f1": 0.4604
+    },
+    {
+      "tau": 0.87,
+      "aceptados": 99,
+      "correctos": 86,
+      "precision": 0.8687,
+      "recall": 0.2976,
+      "f1": 0.4433
+    },
+    {
+      "tau": 0.88,
+      "aceptados": 77,
+      "correctos": 69,
+      "precision": 0.8961,
+      "recall": 0.2388,
+      "f1": 0.377
+    },
+    {
+      "tau": 0.89,
+      "aceptados": 57,
+      "correctos": 54,
+      "precision": 0.9474,
+      "recall": 0.1869,
+      "f1": 0.3121
+    },
+    {
+      "tau": 0.9,
+      "aceptados": 40,
+      "correctos": 39,
+      "precision": 0.975,
+      "recall": 0.1349,
+      "f1": 0.2371
+    },
+    {
+      "tau": 0.91,
+      "aceptados": 26,
+      "correctos": 25,
+      "precision": 0.9615,
+      "recall": 0.0865,
+      "f1": 0.1587
+    },
+    {
+      "tau": 0.92,
+      "aceptados": 13,
+      "correctos": 12,
+      "precision": 0.9231,
+      "recall": 0.0415,
+      "f1": 0.0795
+    },
+    {
+      "tau": 0.93,
+      "aceptados": 8,
+      "correctos": 8,
+      "precision": 1.0,
+      "recall": 0.0277,
+      "f1": 0.0539
+    },
+    {
+      "tau": 0.94,
+      "aceptados": 5,
+      "correctos": 5,
+      "precision": 1.0,
+      "recall": 0.0173,
+      "f1": 0.034
+    },
+    {
+      "tau": 0.95,
+      "aceptados": 3,
+      "correctos": 3,
+      "precision": 1.0,
+      "recall": 0.0104,
+      "f1": 0.0205
+    }
+  ],
+  "nota": "Se recalibra cuando el autor revise los 50 pares de evaluacion/revision_manual/."
+}

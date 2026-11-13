@@ -39,3 +39,10 @@ def test_aplicar_calibracion_toma_los_valores_elegidos(tmp_path, monkeypatch):
     assert arbol["agente"]["tau_ret"] == 0.6 and arbol["cache"]["fichas"]["tau_dup"] == 0.95
     assert arbol["enrutador_fichas"] == {"tau_consenso": 0.7, "tau_acuerdo": 0.3}
     assert "enrutador.json" in arbol["_origen"]["enrutador_fichas.tau_consenso"]
+
+
+def test_prototipos_son_todos_texto():
+    """Una entrada sin comillas con «: » se lee en YAML como diccionario y rompe el embebido de prototipos."""
+    proto = yaml.safe_load((DIR_SERVICIO / "config" / "prototipos.yaml").read_text(encoding="utf-8"))
+    listas = [proto["inyeccion"]] + [l for t in ("consulta", "dominio", "texto_visible") for l in proto[t].values()]
+    assert all(isinstance(x, str) and x.strip() for l in listas for x in l)

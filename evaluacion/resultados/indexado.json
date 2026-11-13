@@ -1,0 +1,41 @@
+{
+  "fecha": "2026-11-13T06:38:43+00:00",
+  "segundos": 978.8,
+  "modelos": {
+    "principal": "embeddinggemma-2:440m",
+    "secundario": "granite-embedding:278m",
+    "lado_imagen_px": 384
+  },
+  "colecciones": {
+    "fotos_img": 2600,
+    "fotos_txt": 2600,
+    "fotos_txt_granite": 2600,
+    "fotos_desc_qwen": 0,
+    "normas": 412,
+    "tesauro": 4500,
+    "prototipos": 83
+  },
+  "documentos": {
+    "fotos": 2600,
+    "normas": 13
+  },
+  "fichas": {
+    "validada": 2600
+  },
+  "mapeo_open_images_tesauro": {
+    "umbral": 0.89,
+    "calibracion_umbral": "evaluacion/resultados/calibracion_tesauro.json",
+    "etiquetas_unicas": 2634,
+    "mapeadas": 63,
+    "tasa_mapeo": 0.0239,
+    "fotos_con_al_menos_una_palabra_clave": 682,
+    "porcentaje_fotos_con_palabras": 0.2623,
+    "similitud_top1": {
+      "p10": 0.71643,
+      "p50": 0.7659,
+      "p90": 0.83284
+    },
+    "muestra_revision": "evaluacion/revision_manual/muestra_mapeo_oi_tesauro.csv"
+  },
+  "version_corpus": "e1879cf60262"
+}
