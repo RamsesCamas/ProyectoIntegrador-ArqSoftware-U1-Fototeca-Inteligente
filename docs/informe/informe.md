@@ -113,7 +113,9 @@ similitud media con el resto quedan fuera del archivo como `regiones_excluidas` 
 ciclo de agente); el resto se divide en `archivo` (fotos ya
 catalogadas, con fichas iniciales construidas sin modelos a partir de las descripciones humanas y las etiquetas), `nuevas`
 (fotos por catalogar), `eval_fichas` (60 fotos: 40 de `nuevas` y 20 de `regiones_excluidas`) y `galeria_busqueda`.
-pendiente (H7): tamaños finales de cada partición y locales excluidos, tal como los registren los archivos de resultados.
+Tamaños (`evaluacion/conjuntos/particiones.json` → `tamanos`): `archivo` 2,600, `nuevas` 700, `regiones_excluidas` 300
+(locales `ja`, `ko` y `sv`), `eval_fichas` 60, `galeria_busqueda` 1,000, `aprendizaje` 100, `agente_extra` 30 y
+`ajuste_prompts` 10. Las cuatro últimas se toman de las anteriores y no se usan para calibrar.
 
 # 4. Requisitos y atributos de calidad
 
@@ -124,12 +126,12 @@ pendiente (H7): tamaños finales de cada partición y locales excluidos, tal com
 | ID | Requisito | Cómo se cumple | Evidencia |
 |---|---|---|---|
 | R1 | Dominio y corpus propios | Archivo fotográfico XM3600 más corpus normativo y tesauro | §3; `evaluacion/resultados/corpus_r1.json`; `docs/LICENCIAS-Y-CORPUS.md` |
-| R2 | Ejecución local | Ollama, Qdrant, servicio y web en `docker compose`, solo CPU, sin APIs en la nube | Figuras 2 y 5; prueba sin red con `docker-compose.sinred.yml`: pendiente (H9) |
+| R2 | Ejecución local | Ollama, Qdrant, servicio y web en `docker compose`, solo CPU, sin APIs en la nube | Figuras 2 y 5; prueba sin red con `docker-compose.sinred.yml`: 11 de 11 pasos (`evaluacion/resultados/demo_sin_red.json`) |
 | R3 | Selección de modelos sustentada | Qwen3.5-0.8B contra LFM3-1.7B; EmbeddingGemma-2 contra granite; unificado contra pipeline contra híbrido | §7; ADR-01 y ADR-02; pendiente (H7): `r3_modelos.json` y `r3_embeddings.json` |
 | R4 | Embeddings en una base vectorial | Siete colecciones en Qdrant (Tabla 7) | `servicio/scripts/indexar_archivo.py`; `POST /documentos` |
 | R5 | RAG con fuentes | Cada campo de la ficha lista sus fuentes (regla, término del tesauro o foto similar); cada resultado de búsqueda trae sus razones | Respuestas de `POST /fichas` y `POST /busquedas` (Anexo B) |
 | R6 | Arquitectura en capas | C1–C7, `dominio`, T1 y T2 en paquetes separados; tres contratos de import-linter verificados en `pytest` | Figuras 3 y 4; ADR-13; `servicio/pruebas/test_contratos.py` |
-| R7 | API REST documentada | FastAPI con OpenAPI en `/docs` (Swagger UI con recursos locales, sin CDN) | Anexo B; `docs/api/openapi.json`: pendiente |
+| R7 | API REST documentada | FastAPI con OpenAPI en `/docs` (Swagger UI con recursos locales, sin CDN) | Anexo B; `docs/api/openapi.json` (13 rutas) |
 | R8 | Web que consume la API por HTTP | Sitio estático en nginx que solo llama a `/api/*` | `web/`; `servicio/pruebas/test_web_r8.py` |
 | R9 | Evaluación | Un módulo por capa con sus conjuntos de prueba | §10; pendiente (H7) |
 | R10 | Reproducibilidad | README con los comandos exactos, versiones fijadas y lista de modelos | Anexo A; `README.md` |
@@ -173,9 +175,9 @@ porque las iniciales resultaron irreales para esta CPU; la regla del ajuste y lo
 | Seguridad (guardrails) | bloqueos correctos / falsos positivos | ≥ 90 % / ≤ 10 % | pendiente (H7): `guardrails.json` |
 | Corrección de la caché semántica | respuestas incorrectas desde la caché | ≤ 2 % | pendiente (H7): `cache.json` |
 | Privacidad | salidas sin GPS ni atributos sensibles | 100 % | pendiente (H7): `guardrails.json` |
-| Recursos | suma de límites de memoria / uso pico | ≤ 7.1 GB / se reporta | Límites: 7.0625 GiB (ADR-12). Pico en H0 con los cuatro modelos cargados: `ollama` 4.592 GiB y suma de contenedores 4.813 GiB (`h0.json` → `verificaciones.0.5.docker_stats`). Con los cuatro contenedores de la demo: pendiente (H9) |
-| Disponibilidad sin red | funciones operativas sin internet | 100 % | pendiente (H9): prueba con `docker-compose.sinred.yml` |
-| Mantenibilidad | violaciones del contrato de capas | 0 | Verificado por `servicio/pruebas/test_contratos.py`; registro pendiente en `evaluacion/resultados/contrato_capas.json` |
+| Recursos | suma de límites de memoria / uso pico | ≤ 7.1 GB / se reporta | Límites: 7.0625 GiB (ADR-12). Pico en H0 con los cuatro modelos cargados: `ollama` 4.592 GiB y suma de contenedores 4.813 GiB (`h0.json` → `verificaciones.0.5.docker_stats`). Durante la demo sin red, suma de picos 4.945 GiB (`ollama` 4.452, `qdrant` 0.409, `servicio` 0.075, `web` 0.009; `h9_memoria.json`) |
+| Disponibilidad sin red | funciones operativas sin internet | 100 % | 11 de 11 pasos del guion sin acceso a internet (`demo_sin_red.json`) |
+| Mantenibilidad | violaciones del contrato de capas | 0 | 0: «Contracts: 3 kept, 0 broken.»; las dos copias con un import prohibido rompen un contrato cada una (`contrato_capas.json`) |
 | Portabilidad | arranque en Windows con Docker Desktop | solo `docker compose`, sin scripts del host | pendiente (H9) en la laptop de la demo |
 
 # 5. Arquitectura
@@ -400,8 +402,11 @@ en ADR-03; pendiente (H7): exactitud de los enrutadores y costo de cada ruta en 
 Los parámetros que se mencionan aquí viven en `servicio/config/parametros.yaml` (o son el valor por defecto del código
 cuando el archivo no los define) y se exponen en `GET /configuracion`. La versión de configuración (un hash de los
 parámetros, los modelos, las versiones de los prompts y la versión del corpus) forma parte de las claves de la caché.
-pendiente (H7): valores finales calibrados de τ_dup, τ_consenso, τ_acuerdo y τ_tesauro, y los umbrales de los guardrails
-(`evaluacion/resultados/calibracion_h4.json`, `calibracion_h5.json` y los módulos de evaluación).
+Los umbrales calibrados con datos se escriben en `servicio/config/calibracion.yaml`, que se mezcla sobre
+`parametros.yaml` y guarda el archivo de origen de cada valor: τ_ret 0.7634, τ_consenso 0.7864, τ_busqueda 0.6086,
+τ_apego_visual 0.6547 y τ_consistencia 0.5738 (`calibracion_h4.json`); τ_fuera_dominio −0.0719, τ_texto_visible 0.0139
+y τ_inyeccion 0.8392 (`calibracion_h5.json`); τ_tesauro 0.89 (`calibracion_tesauro.json`). pendiente (H7): τ_dup, y
+τ_consenso y τ_acuerdo finales, que salen de `cache.json` y `enrutador.json`.
 
 ## 8.1 Construcción de contexto (C5)
 
@@ -442,7 +447,7 @@ en SQLite, sin Redis (ADR-04 y ADR-09).
 | Tarea | Prompt | Modelo preferido | Respaldo | `num_predict` | Temperatura | Imagen | Tiempo límite |
 |---|---|---|---|---|---|---|---|
 | P1 | describir la imagen | Qwen3.5-0.8B | — (la orquestación sigue sin descripción) | 350 | 0.2 | sí | 58 s |
-| P2 | ficha rápida | Qwen3.5-0.8B | — (ficha degradada) | 200 | 0.2 | sí | 58 s |
+| P2 | ficha rápida | Qwen3.5-0.8B | — (ficha degradada) | 260 | 0.2 | sí | 58 s |
 | P3 | ficha completa | LFM3-1.7B | Qwen3.5-0.8B (solo texto) | 600 | 0.2 | no | 90 s (64 s con Qwen) |
 | P4 | descomponer la búsqueda | LFM3-1.7B | Qwen3.5-0.8B | 200 | 0.0 | no | 90 s (64 s con Qwen) |
 | P5 | reformular la búsqueda | LFM3-1.7B | Qwen3.5-0.8B | 150 | 0.0 | no | 90 s (64 s con Qwen) |
@@ -453,6 +458,12 @@ Los tiempos límite son 1.5 veces el p95 medido en H0, redondeado hacia arriba (
 agrega al prompt el error del validador), pasa al modelo de respaldo si el preferido agota sus intentos y registra en T1
 el modelo, la tarea, los tokens, la duración, si se agotó el tiempo y si se usó el respaldo. Todas las llamadas llevan
 `think: false` y el JSON Schema del prompt en `format` (ADR-11).
+
+**Citas.** En el prompt, cada fuente lleva un alias corto (F1 para una foto similar, R1 para una regla, T1 para un término
+del tesauro). Para P2 y P3, el esquema que se envía al modelo tiene una clave por campo en `fuentes`, todas
+obligatorias, y cada cita solo puede ser uno de los alias de ese prompt (`enum`). El flujo traduce los alias a los ids
+reales y el guardrail `fuentes` quita lo que no corresponda. Con el esquema anterior (claves libres e ids completos), 4 de
+20 fichas de la aceptación tenían fuentes; con este, 20 de 20 (ADR-11; `h4_aceptacion.json`).
 
 ## 8.5 Ciclo de agente (C2)
 
@@ -549,6 +560,21 @@ por locale y por longitud de la consulta; con RAG contra sin RAG; la curva de τ
 la mejora del ciclo de agente; la latencia por capa en barras apiladas por ruta; y la curva de aprendizaje.
 
 ## 10.4 Análisis de errores
+
+**Hallazgos de la aceptación con modelos reales (H4).** Las pruebas con modelos falsos no los podían ver:
+- **Fuentes vacías.** LFM3 agrupaba las citas por tipo y sin prefijo, y Qwen inventaba claves, así que el guardrail las
+  quitaba todas: 4 de 20 fichas con fuentes (`h4_aceptacion_intento2_antes_de_fuentes.json`). La causa estaba en el
+  contrato de salida (C6), no en los modelos. Se corrigió con claves fijas, alias y gramática (§8.4): 20 de 20.
+- **Repetición hasta el límite de tokens.** En una foto, LFM3 llegó dos veces a los 600 tokens sin cerrar el JSON y el
+  respaldo con Qwen salvó la ficha, a costa de la latencia (`h4_incidente_lfm3_longitud.txt`). La cadena de respaldo del
+  gateway funcionó como se diseñó.
+- **Pico de latencia del embedding.** Un embedding de imagen tardó más de 5 s justo después de una generación de LFM3,
+  cuando los demás tardaron entre 1.6 y 2.2 s (`h4_incidente_embedding.txt`). El tiempo límite pasó a 15 s.
+- **Caso del ciclo de agente.** τ_ret es el p10 de `nuevas`, así que una foto al azar de una región excluida activa el
+  ciclo solo a veces. La aceptación y la demo eligen ahora el caso por recuperación pobre medida (ADR-07).
+- **Piso de relevancia de la búsqueda.** Con el p5 de los pares imagen–descripción propios, una consulta dejaba en
+  promedio 3.212 fotos de 600. Se cambió al p95 de los pares ajenos: 30.98 (ADR-03;
+  `calibracion_h4_piso_busqueda.json`).
 
 pendiente (H7): cinco casos fallidos comentados (por ejemplo, una ficha con poco apego visual, un falso positivo de un
 guardrail, una búsqueda compleja mal descompuesta, un duplicado no detectado y una foto de una región excluida que el

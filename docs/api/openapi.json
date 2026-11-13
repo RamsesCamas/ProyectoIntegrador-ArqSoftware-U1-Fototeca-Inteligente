@@ -1,0 +1,2854 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Fototeca Viva · API",
+    "description": "\n**Fototeca Viva** cataloga archivos fotográficos de forma accesible y trazable.\n\n- `POST /fichas` genera la ficha IPTC de una foto; cada campo indica su fuente.\n- `POST /busquedas` busca por texto en español o por foto y explica cada coincidencia.\n- `GET /duplicados` reporta casi duplicados.\n- `POST /retroalimentacion` liga la opinión del archivista a la traza; al validar una ficha, esta se vuelve un\n  ejemplo más para catalogar fotos parecidas (el archivo aprende sin fine-tuning).\n- `GET /metricas` resume latencias por capa, caché, guardrails, modelos, rutas, agente, retroalimentación y la\n  accesibilidad del archivo.\n\nTodas las respuestas llevan la cabecera `X-Traza-Id`. Los errores tienen la forma\n`{\"error\": {\"codigo\", \"mensaje\", \"traza_id\"}}`.\n\n> Las fichas y los resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.\n",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/fichas": {
+      "post": {
+        "tags": [
+          "Fichas"
+        ],
+        "summary": "Catalogar una foto (función principal)",
+        "description": "Genera la ficha catalográfica IPTC de una foto ya cargada (`{\"documento_id\": …}`) o de una foto nueva\nenviada en `multipart/form-data` (campo `foto`). Cada campo indica sus fuentes; `meta` describe la ruta, los\nmodelos, la caché, los guardrails, las iteraciones del agente y el tiempo por capa.",
+        "operationId": "crear_ficha_fichas_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "documento_id": {
+                    "type": "string",
+                    "title": "Documento Id",
+                    "examples": [
+                      "xm-000411001ff7dd4f"
+                    ]
+                  },
+                  "forzar_ruta": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "rapida",
+                          "completa"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Forzar Ruta"
+                  },
+                  "sin_rag": {
+                    "type": "boolean",
+                    "title": "Sin Rag",
+                    "default": false
+                  },
+                  "sin_cache": {
+                    "type": "boolean",
+                    "title": "Sin Cache",
+                    "default": false
+                  },
+                  "max_iter": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "maximum": 2.0,
+                        "minimum": 0.0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Max Iter"
+                  },
+                  "p1_previo": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "P1 Previo"
+                  },
+                  "modelo_composicion": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "vision",
+                          "composicion"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Modelo Composicion"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "documento_id"
+                ],
+                "title": "PeticionFicha"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "foto": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "foto"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaFicha"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Archivo de más de 10 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Formato no soportado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Bloqueado por un guardrail de entrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Modelo o base vectorial no disponible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Tiempo límite agotado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fichas/{documento_id}": {
+      "get": {
+        "tags": [
+          "Fichas"
+        ],
+        "summary": "Obtener la ficha guardada",
+        "operationId": "obtener_ficha_fichas__documento_id__get",
+        "parameters": [
+          {
+            "name": "documento_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Documento Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichaRegistrada"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lotes": {
+      "post": {
+        "tags": [
+          "Fichas"
+        ],
+        "summary": "Catalogar varias fotos (asíncrono)",
+        "description": "Un solo trabajador procesa las fichas de una en una; consulta el progreso con `GET /lotes/{lote_id}`.",
+        "operationId": "crear_lote_lotes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeticionLote"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaLoteCreado"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lotes/{lote_id}": {
+      "get": {
+        "tags": [
+          "Fichas"
+        ],
+        "summary": "Progreso y fichas de un lote",
+        "operationId": "obtener_lote_lotes__lote_id__get",
+        "parameters": [
+          {
+            "name": "lote_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lote Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaLote"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/busquedas": {
+      "post": {
+        "tags": [
+          "Búsquedas"
+        ],
+        "summary": "Buscar por texto en español o por foto",
+        "description": "Texto: guardrails (datos personales e inyección), caché exacta y semántica, enrutador simple/compleja (la\ncompleja se descompone con P4), recuperación texto→imagen y texto→texto con RRF, reformulación si no hay\nresultados y una razón por cada coincidencia. Foto: búsqueda imagen→imagen sin modelo de lenguaje.",
+        "operationId": "buscar_busquedas_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$defs": {
+                  "FiltrosBusqueda": {
+                    "properties": {
+                      "particion": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "archivo",
+                              "subida"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Particion",
+                        "description": "Limita la búsqueda al archivo catalogado o a las fotos subidas después"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "type": "object",
+                    "title": "FiltrosBusqueda"
+                  }
+                },
+                "properties": {
+                  "texto": {
+                    "type": "string",
+                    "maxLength": 300,
+                    "minLength": 2,
+                    "title": "Texto",
+                    "examples": [
+                      "mercado con frutas"
+                    ]
+                  },
+                  "k": {
+                    "type": "integer",
+                    "maximum": 48.0,
+                    "minimum": 1.0,
+                    "title": "K",
+                    "default": 12
+                  },
+                  "filtros": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/FiltrosBusqueda"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "sin_cache": {
+                    "type": "boolean",
+                    "title": "Sin Cache",
+                    "default": false
+                  },
+                  "forzar_ruta": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "simple",
+                          "compleja"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Forzar Ruta"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "texto"
+                ],
+                "title": "PeticionBusqueda"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "imagen": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "k": {
+                    "type": "integer",
+                    "default": 12
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "imagen"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaBusqueda"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Archivo de más de 10 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Formato no soportado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Bloqueado por un guardrail de entrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Modelo o base vectorial no disponible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Tiempo límite agotado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documentos": {
+      "post": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Cargar fotos o documentos normativos",
+        "description": "Fotos: se validan (contenido real, tamaño y lados), se les quita el EXIF sensible, se guardan, se calcula su\nembedding, se detectan casi duplicados y se indexan. Normas: se fragmentan (una regla por fragmento), se\nembeben y se indexan. Con un solo archivo, un rechazo devuelve su código (413, 415 o 422); con varios, cada\nresultado indica su error y la respuesta es 201 si al menos uno se cargó.",
+        "operationId": "cargar_documentos_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_cargar_documentos_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCarga"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Archivo de más de 10 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Formato no soportado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Bloqueado por un guardrail de entrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Modelo o base vectorial no disponible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Listar documentos indexados",
+        "operationId": "listar_documentos_get",
+        "parameters": [
+          {
+            "name": "tipo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "foto",
+                    "norma"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tipo"
+            }
+          },
+          {
+            "name": "pagina",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Pagina"
+            }
+          },
+          {
+            "name": "por_pagina",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 24,
+              "title": "Por Pagina"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaListado"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documentos/{documento_id}": {
+      "delete": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Eliminar un documento, sus vectores, su ficha y la caché afectada",
+        "operationId": "eliminar_documentos__documento_id__delete",
+        "parameters": [
+          {
+            "name": "documento_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Documento Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaEliminacion"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Modelo o base vectorial no disponible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fotos/{documento_id}/miniatura": {
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Miniatura JPEG (512 px como máximo, sin EXIF)",
+        "operationId": "miniatura_fotos__documento_id__miniatura_get",
+        "parameters": [
+          {
+            "name": "documento_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Documento Id"
+            }
+          },
+          {
+            "name": "lado",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 512,
+              "minimum": 64,
+              "default": 512,
+              "title": "Lado"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "image/jpeg": {}
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/retroalimentacion": {
+      "post": {
+        "tags": [
+          "Retroalimentación y métricas"
+        ],
+        "summary": "Registrar una opinión",
+        "description": "Liga la opinión (útil o no, comentario y correcciones) con la traza de la ficha o de la búsqueda, para\nanalizarla por ruta y por modelo. Con `validar_ficha`, aplica las correcciones, deja la ficha `validada`, calcula\nsu embedding y la inserta en las colecciones de ejemplos con `validada=true`: desde ese momento guía la ficha\nde las fotos parecidas (el archivo aprende de las correcciones sin fine-tuning). 404 si la traza no existe.",
+        "operationId": "retroalimentacion_retroalimentacion_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeticionRetroalimentacion"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaRetroalimentacion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Modelo o base vectorial no disponible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metricas": {
+      "get": {
+        "tags": [
+          "Retroalimentación y métricas"
+        ],
+        "summary": "Métricas de observabilidad y accesibilidad del archivo",
+        "description": "Latencia p50/p95 por endpoint, por etapa de cada flujo y por capa; aciertos de caché exactos y semánticos;\nactivaciones de guardrails; uso por modelo; rutas del enrutador; iteraciones del agente; retroalimentación por\nruta y por modelo; y accesibilidad del archivo (porcentaje de fotos con texto alternativo validado).",
+        "operationId": "metricas_metricas_get",
+        "parameters": [
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Fecha ISO 8601 (p. ej. 2026-11-08T00:00:00Z)",
+              "title": "Desde"
+            },
+            "description": "Fecha ISO 8601 (p. ej. 2026-11-08T00:00:00Z)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaMetricas"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/duplicados": {
+      "get": {
+        "tags": [
+          "Duplicados"
+        ],
+        "summary": "Grupos de casi duplicados",
+        "description": "Fotos que la ingesta detectó como casi duplicadas (recortes, recompresiones, marcos), agrupadas: si A se\nparece a B y B a C, las tres quedan en el mismo grupo.",
+        "operationId": "duplicados_duplicados_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/GrupoDuplicados"
+                  },
+                  "type": "array",
+                  "title": "Response Duplicados Duplicados Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Sistema"
+        ],
+        "summary": "Estado de cada componente",
+        "description": "Comprueba el servicio, Ollama (modelos descargados y cargados), Qdrant (colecciones y puntos), el\nalmacén de documentos y la caché. Devuelve 503 si un componente crítico no responde.",
+        "operationId": "salud_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaSalud"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Algún componente crítico no responde",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaSalud"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/configuracion": {
+      "get": {
+        "tags": [
+          "Sistema"
+        ],
+        "summary": "Modelos, parámetros y versiones activas",
+        "description": "Contenido de `config/parametros.yaml`, los modelos por rol, las versiones de los prompts y la versión de\nconfiguración (hash que forma parte de las claves de la caché).",
+        "operationId": "configuracion_configuracion_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaConfiguracion"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Accesibilidad": {
+        "properties": {
+          "fotos": {
+            "type": "integer",
+            "title": "Fotos"
+          },
+          "alt_validado": {
+            "type": "integer",
+            "title": "Alt Validado",
+            "description": "Fotos con ficha validada y texto alternativo no vacío"
+          },
+          "fichas_validadas": {
+            "type": "integer",
+            "title": "Fichas Validadas"
+          },
+          "requiere_revision": {
+            "type": "integer",
+            "title": "Requiere Revision"
+          },
+          "borrador": {
+            "type": "integer",
+            "title": "Borrador"
+          },
+          "sin_ficha": {
+            "type": "integer",
+            "title": "Sin Ficha"
+          },
+          "porcentaje_alt_validado": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Porcentaje Alt Validado",
+            "description": "Proporción (0–1) de fotos con texto alternativo validado"
+          },
+          "porcentaje_requiere_revision": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Porcentaje Requiere Revision"
+          },
+          "porcentaje_sin_ficha": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Porcentaje Sin Ficha"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fotos",
+          "alt_validado",
+          "fichas_validadas",
+          "requiere_revision",
+          "borrador",
+          "sin_ficha"
+        ],
+        "title": "Accesibilidad"
+      },
+      "ActivacionGuardrail": {
+        "properties": {
+          "verificacion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verificacion"
+          },
+          "resultado": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resultado"
+          },
+          "n": {
+            "type": "integer",
+            "title": "N"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n"
+        ],
+        "title": "ActivacionGuardrail"
+      },
+      "Body_cargar_documentos_post": {
+        "properties": {
+          "archivos": {
+            "items": {
+              "type": "string",
+              "contentMediaType": "application/octet-stream"
+            },
+            "type": "array",
+            "title": "Archivos",
+            "description": "Una o varias fotos (JPEG o PNG, ≤10 MB) o normas (HTML, Markdown, PDF o TXT)"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "foto",
+              "norma"
+            ],
+            "title": "Tipo",
+            "default": "foto"
+          },
+          "metadatos": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadatos",
+            "description": "JSON opcional, p. ej. {\"fuente\": \"...\", \"licencia\": \"...\"}"
+          }
+        },
+        "type": "object",
+        "required": [
+          "archivos"
+        ],
+        "title": "Body_cargar_documentos_post"
+      },
+      "DocumentoDuplicado": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "similitud": {
+            "type": "number",
+            "title": "Similitud",
+            "description": "Mayor similitud (coseno de imagen) con otra foto del grupo"
+          },
+          "titular": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titular"
+          },
+          "texto_alternativo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Texto Alternativo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "similitud"
+        ],
+        "title": "DocumentoDuplicado"
+      },
+      "DocumentoListado": {
+        "properties": {
+          "documento_id": {
+            "type": "string",
+            "title": "Documento Id"
+          },
+          "tipo": {
+            "type": "string",
+            "title": "Tipo"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "fecha": {
+            "type": "string",
+            "title": "Fecha"
+          },
+          "estado_ficha": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado Ficha"
+          },
+          "particion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Particion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_id",
+          "tipo",
+          "nombre",
+          "fecha"
+        ],
+        "title": "DocumentoListado"
+      },
+      "Duplicado": {
+        "properties": {
+          "documento_id": {
+            "type": "string",
+            "title": "Documento Id"
+          },
+          "similitud": {
+            "type": "number",
+            "title": "Similitud"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "exacto",
+              "semantico"
+            ],
+            "title": "Tipo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_id",
+          "similitud",
+          "tipo"
+        ],
+        "title": "Duplicado"
+      },
+      "ErrorDetalle": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo",
+            "examples": [
+              "no_encontrado"
+            ]
+          },
+          "mensaje": {
+            "type": "string",
+            "title": "Mensaje",
+            "examples": [
+              "El documento no existe."
+            ]
+          },
+          "traza_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Traza Id",
+            "examples": [
+              "c7f2a1b3"
+            ]
+          },
+          "mensaje_seguro": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mensaje Seguro"
+          },
+          "verificaciones": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verificaciones"
+          },
+          "detalle": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detalle"
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "mensaje"
+        ],
+        "title": "ErrorDetalle"
+      },
+      "Ficha": {
+        "properties": {
+          "titular": {
+            "type": "string",
+            "maxLength": 120,
+            "title": "Titular",
+            "default": ""
+          },
+          "descripcion": {
+            "type": "string",
+            "maxLength": 800,
+            "title": "Descripcion",
+            "default": ""
+          },
+          "texto_alternativo": {
+            "type": "string",
+            "maxLength": 250,
+            "title": "Texto Alternativo",
+            "description": "IPTC Alt Text (Accessibility): 250 caracteres o menos",
+            "default": ""
+          },
+          "descripcion_extendida": {
+            "type": "string",
+            "maxLength": 1200,
+            "title": "Descripcion Extendida",
+            "default": ""
+          },
+          "palabras_clave": {
+            "items": {
+              "$ref": "#/components/schemas/PalabraClave"
+            },
+            "type": "array",
+            "title": "Palabras Clave"
+          },
+          "advertencias": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Advertencias"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "borrador",
+              "validada",
+              "requiere_revision"
+            ],
+            "title": "Estado",
+            "default": "borrador"
+          }
+        },
+        "type": "object",
+        "title": "Ficha"
+      },
+      "FichaRegistrada": {
+        "properties": {
+          "documento_id": {
+            "type": "string",
+            "title": "Documento Id"
+          },
+          "ficha": {
+            "$ref": "#/components/schemas/Ficha"
+          },
+          "fuentes": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/Fuente"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Fuentes"
+          },
+          "origen": {
+            "type": "string",
+            "title": "Origen",
+            "default": "modelo"
+          },
+          "traza_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Traza Id"
+          },
+          "actualizada": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actualizada"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_id",
+          "ficha"
+        ],
+        "title": "FichaRegistrada",
+        "description": "Lo que se guarda por documento: la ficha, sus fuentes por campo y metadatos mínimos de origen."
+      },
+      "Fuente": {
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "regla",
+              "foto_similar",
+              "tesauro",
+              "referencia_humana",
+              "etiqueta_open_images",
+              "archivista"
+            ],
+            "title": "Tipo"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "titulo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titulo"
+          },
+          "puntaje": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Puntaje"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "extracto": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extracto"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tipo",
+          "id"
+        ],
+        "title": "Fuente",
+        "description": "De dónde salió un campo: una regla normativa, una foto similar ya catalogada o un término del tesauro."
+      },
+      "GrupoDuplicados": {
+        "properties": {
+          "grupo_id": {
+            "type": "string",
+            "title": "Grupo Id"
+          },
+          "documentos": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentoDuplicado"
+            },
+            "type": "array",
+            "title": "Documentos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "grupo_id",
+          "documentos"
+        ],
+        "title": "GrupoDuplicados"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MetaFicha": {
+        "properties": {
+          "ruta": {
+            "type": "string",
+            "title": "Ruta"
+          },
+          "modelos": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Modelos"
+          },
+          "cache": {
+            "type": "string",
+            "enum": [
+              "ninguna",
+              "exacta",
+              "semantica"
+            ],
+            "title": "Cache"
+          },
+          "guardrails": {
+            "additionalProperties": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Guardrails"
+          },
+          "iteraciones_agente": {
+            "type": "integer",
+            "title": "Iteraciones Agente"
+          },
+          "duplicado_de": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duplicado De"
+          },
+          "tiempo_ms": {
+            "type": "number",
+            "title": "Tiempo Ms"
+          },
+          "tiempos_por_capa_ms": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Tiempos Por Capa Ms"
+          },
+          "traza_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Traza Id"
+          },
+          "version_configuracion": {
+            "type": "string",
+            "title": "Version Configuracion"
+          },
+          "aviso": {
+            "type": "string",
+            "title": "Aviso"
+          },
+          "senales_enrutador": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Senales Enrutador"
+          },
+          "razones_enrutador": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Razones Enrutador"
+          },
+          "revision": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Revision"
+          },
+          "transiciones": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Transiciones"
+          },
+          "recuperacion": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recuperacion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ruta",
+          "modelos",
+          "cache",
+          "guardrails",
+          "iteraciones_agente",
+          "tiempo_ms",
+          "tiempos_por_capa_ms",
+          "traza_id",
+          "version_configuracion",
+          "aviso"
+        ],
+        "title": "MetaFicha"
+      },
+      "PalabraClave": {
+        "properties": {
+          "termino": {
+            "type": "string",
+            "title": "Termino"
+          },
+          "uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uri"
+          },
+          "origen": {
+            "type": "string",
+            "enum": [
+              "tesauro",
+              "libre"
+            ],
+            "title": "Origen",
+            "default": "libre"
+          },
+          "similitud": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similitud"
+          }
+        },
+        "type": "object",
+        "required": [
+          "termino"
+        ],
+        "title": "PalabraClave"
+      },
+      "Percentiles": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "p50_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P50 Ms"
+          },
+          "p95_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95 Ms"
+          },
+          "media_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Media Ms"
+          },
+          "max_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n"
+        ],
+        "title": "Percentiles"
+      },
+      "PeticionLote": {
+        "properties": {
+          "documento_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 200,
+            "minItems": 1,
+            "title": "Documento Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_ids"
+        ],
+        "title": "PeticionLote"
+      },
+      "PeticionRetroalimentacion": {
+        "properties": {
+          "traza_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 4,
+            "title": "Traza Id",
+            "description": "`meta.traza_id` de la ficha o de la búsqueda que se califica",
+            "examples": [
+              "c7f2a1b3"
+            ]
+          },
+          "util": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Util",
+            "description": "Útil (true) / no útil (false)"
+          },
+          "comentario": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comentario",
+            "examples": [
+              "El texto alternativo omite el toldo"
+            ]
+          },
+          "correcciones": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Correcciones",
+            "description": "Campos corregidos: titular, descripcion, texto_alternativo, descripcion_extendida (texto) o palabras_clave (lista de términos)",
+            "examples": [
+              {
+                "texto_alternativo": "Puesto de mercado con mangos y piñas bajo un toldo azul."
+              }
+            ]
+          },
+          "validar_ficha": {
+            "type": "boolean",
+            "title": "Validar Ficha",
+            "description": "Aplica las correcciones, deja la ficha `validada` y la promueve como ejemplo del RAG",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "traza_id"
+        ],
+        "title": "PeticionRetroalimentacion"
+      },
+      "RespuestaBusqueda": {
+        "properties": {
+          "resultados": {
+            "items": {
+              "$ref": "#/components/schemas/Resultado"
+            },
+            "type": "array",
+            "title": "Resultados"
+          },
+          "mensaje": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mensaje"
+          },
+          "consulta_interpretada": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Consulta Interpretada"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resultados",
+          "consulta_interpretada",
+          "meta"
+        ],
+        "title": "RespuestaBusqueda"
+      },
+      "RespuestaCarga": {
+        "properties": {
+          "documentos": {
+            "items": {
+              "$ref": "#/components/schemas/ResultadoDocumento"
+            },
+            "type": "array",
+            "title": "Documentos"
+          },
+          "creados": {
+            "type": "integer",
+            "title": "Creados"
+          },
+          "version_archivo": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Archivo"
+          },
+          "traza_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Traza Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentos",
+          "creados"
+        ],
+        "title": "RespuestaCarga"
+      },
+      "RespuestaConfiguracion": {
+        "properties": {
+          "version_configuracion": {
+            "type": "string",
+            "title": "Version Configuracion"
+          },
+          "version_servicio": {
+            "type": "string",
+            "title": "Version Servicio"
+          },
+          "version_corpus": {
+            "type": "string",
+            "title": "Version Corpus"
+          },
+          "modelos": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Modelos"
+          },
+          "versiones_prompts": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Versiones Prompts"
+          },
+          "parametros": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parametros"
+          },
+          "modo_evaluacion": {
+            "type": "boolean",
+            "title": "Modo Evaluacion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version_configuracion",
+          "version_servicio",
+          "version_corpus",
+          "modelos",
+          "versiones_prompts",
+          "parametros",
+          "modo_evaluacion"
+        ],
+        "title": "RespuestaConfiguracion"
+      },
+      "RespuestaEliminacion": {
+        "properties": {
+          "documento_id": {
+            "type": "string",
+            "title": "Documento Id"
+          },
+          "eliminado": {
+            "type": "boolean",
+            "title": "Eliminado"
+          },
+          "vectores_eliminados": {
+            "type": "integer",
+            "title": "Vectores Eliminados"
+          },
+          "entradas_cache_invalidadas": {
+            "type": "integer",
+            "title": "Entradas Cache Invalidadas"
+          },
+          "version_archivo": {
+            "type": "integer",
+            "title": "Version Archivo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_id",
+          "eliminado",
+          "vectores_eliminados",
+          "entradas_cache_invalidadas",
+          "version_archivo"
+        ],
+        "title": "RespuestaEliminacion"
+      },
+      "RespuestaError": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetalle"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "RespuestaError"
+      },
+      "RespuestaFicha": {
+        "properties": {
+          "documento_id": {
+            "type": "string",
+            "title": "Documento Id"
+          },
+          "ficha": {
+            "$ref": "#/components/schemas/Ficha"
+          },
+          "fuentes": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/Fuente"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Fuentes"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/MetaFicha"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_id",
+          "ficha",
+          "fuentes",
+          "meta"
+        ],
+        "title": "RespuestaFicha"
+      },
+      "RespuestaListado": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "pagina": {
+            "type": "integer",
+            "title": "Pagina"
+          },
+          "por_pagina": {
+            "type": "integer",
+            "title": "Por Pagina"
+          },
+          "documentos": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentoListado"
+            },
+            "type": "array",
+            "title": "Documentos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "pagina",
+          "por_pagina",
+          "documentos"
+        ],
+        "title": "RespuestaListado"
+      },
+      "RespuestaLote": {
+        "properties": {
+          "lote_id": {
+            "type": "string",
+            "title": "Lote Id"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "completadas": {
+            "type": "integer",
+            "title": "Completadas"
+          },
+          "fallidas": {
+            "type": "integer",
+            "title": "Fallidas"
+          },
+          "en_proceso": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "En Proceso"
+          },
+          "fichas": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Fichas"
+          },
+          "errores": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Errores"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lote_id",
+          "estado",
+          "total",
+          "completadas",
+          "fallidas",
+          "fichas",
+          "errores"
+        ],
+        "title": "RespuestaLote"
+      },
+      "RespuestaLoteCreado": {
+        "properties": {
+          "lote_id": {
+            "type": "string",
+            "title": "Lote Id"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lote_id",
+          "total"
+        ],
+        "title": "RespuestaLoteCreado"
+      },
+      "RespuestaMetricas": {
+        "properties": {
+          "desde": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde",
+            "description": "Inicio del periodo en UTC (null: todo el historial)"
+          },
+          "generado": {
+            "type": "string",
+            "title": "Generado"
+          },
+          "eventos_considerados": {
+            "type": "integer",
+            "title": "Eventos Considerados"
+          },
+          "latencia_por_endpoint": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Percentiles"
+            },
+            "type": "object",
+            "title": "Latencia Por Endpoint",
+            "description": "«MÉTODO /ruta/{id}» → p50/p95 en ms"
+          },
+          "latencia_por_capa": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/Percentiles"
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Latencia Por Capa",
+            "description": "Por flujo (fichas, busquedas) y etapa: guardrails, caché, contexto, enrutador, modelos y total"
+          },
+          "latencia_por_evento": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/Percentiles"
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Latencia Por Evento",
+            "description": "Por capa de la arquitectura (C1–C7, T1, T2) y evento medido"
+          },
+          "cache": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TasaCache"
+            },
+            "type": "object",
+            "title": "Cache"
+          },
+          "guardrails": {
+            "items": {
+              "$ref": "#/components/schemas/ActivacionGuardrail"
+            },
+            "type": "array",
+            "title": "Guardrails"
+          },
+          "bloqueos": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Bloqueos"
+          },
+          "modelos": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/UsoModelo"
+            },
+            "type": "object",
+            "title": "Modelos"
+          },
+          "rutas": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Rutas",
+            "description": "«flujo:ruta» → veces que se eligió"
+          },
+          "iteraciones_agente": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Iteraciones Agente",
+            "description": "Fichas: iteraciones del ciclo de agente → número de fichas"
+          },
+          "iteraciones_agente_busquedas": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Iteraciones Agente Busquedas",
+            "description": "Búsquedas: reformulaciones → número de búsquedas"
+          },
+          "retroalimentacion": {
+            "$ref": "#/components/schemas/ResumenRetroalimentacion"
+          },
+          "accesibilidad": {
+            "$ref": "#/components/schemas/Accesibilidad"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generado",
+          "eventos_considerados",
+          "latencia_por_endpoint",
+          "latencia_por_capa",
+          "latencia_por_evento",
+          "cache",
+          "guardrails",
+          "bloqueos",
+          "modelos",
+          "rutas",
+          "iteraciones_agente",
+          "iteraciones_agente_busquedas",
+          "retroalimentacion",
+          "accesibilidad"
+        ],
+        "title": "RespuestaMetricas"
+      },
+      "RespuestaRetroalimentacion": {
+        "properties": {
+          "registrado": {
+            "type": "boolean",
+            "title": "Registrado"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "traza_id": {
+            "type": "string",
+            "title": "Traza Id"
+          },
+          "documento_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Documento Id"
+          },
+          "ficha_validada": {
+            "type": "boolean",
+            "title": "Ficha Validada"
+          },
+          "version_archivo": {
+            "type": "integer",
+            "title": "Version Archivo",
+            "description": "Cambia al validar una ficha: invalida la caché de búsquedas"
+          },
+          "entradas_cache_invalidadas": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entradas Cache Invalidadas"
+          },
+          "ficha": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Ficha"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "La ficha ya validada (palabras clave normalizadas al tesauro)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "registrado",
+          "id",
+          "traza_id",
+          "ficha_validada",
+          "version_archivo"
+        ],
+        "title": "RespuestaRetroalimentacion"
+      },
+      "RespuestaSalud": {
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degradado",
+              "error"
+            ],
+            "title": "Estado"
+          },
+          "componentes": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Componentes"
+          },
+          "precalentamiento": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Precalentamiento"
+          },
+          "versiones": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Versiones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "estado",
+          "componentes",
+          "precalentamiento",
+          "versiones"
+        ],
+        "title": "RespuestaSalud"
+      },
+      "Resultado": {
+        "properties": {
+          "documento_id": {
+            "type": "string",
+            "title": "Documento Id"
+          },
+          "puntaje": {
+            "type": "number",
+            "title": "Puntaje"
+          },
+          "miniatura_url": {
+            "type": "string",
+            "title": "Miniatura Url"
+          },
+          "titular": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titular"
+          },
+          "texto_alternativo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Texto Alternativo"
+          },
+          "razones": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Razones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documento_id",
+          "puntaje",
+          "miniatura_url",
+          "razones"
+        ],
+        "title": "Resultado"
+      },
+      "ResultadoDocumento": {
+        "properties": {
+          "documento_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Documento Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "tipo": {
+            "type": "string",
+            "title": "Tipo"
+          },
+          "fragmentos": {
+            "type": "integer",
+            "title": "Fragmentos",
+            "default": 0
+          },
+          "ya_existia": {
+            "type": "boolean",
+            "title": "Ya Existia",
+            "default": false
+          },
+          "duplicados": {
+            "items": {
+              "$ref": "#/components/schemas/Duplicado"
+            },
+            "type": "array",
+            "title": "Duplicados"
+          },
+          "guardrails": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Guardrails"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDetalle"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "tipo"
+        ],
+        "title": "ResultadoDocumento"
+      },
+      "ResumenRetroalimentacion": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "util": {
+            "type": "integer",
+            "title": "Util"
+          },
+          "no_util": {
+            "type": "integer",
+            "title": "No Util"
+          },
+          "tasa_util": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tasa Util"
+          },
+          "con_comentario": {
+            "type": "integer",
+            "title": "Con Comentario"
+          },
+          "fichas_validadas": {
+            "type": "integer",
+            "title": "Fichas Validadas"
+          },
+          "campos_corregidos": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Campos Corregidos"
+          },
+          "por_ruta": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "type": "integer"
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Por Ruta",
+            "description": "Útil / no útil por ruta (rapida, completa, simple…)"
+          },
+          "por_modelo": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "type": "integer"
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Por Modelo",
+            "description": "Útil / no útil por modelo que intervino"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "util",
+          "no_util",
+          "con_comentario",
+          "fichas_validadas",
+          "campos_corregidos",
+          "por_ruta",
+          "por_modelo"
+        ],
+        "title": "ResumenRetroalimentacion"
+      },
+      "TasaCache": {
+        "properties": {
+          "consultas": {
+            "type": "integer",
+            "title": "Consultas"
+          },
+          "aciertos_exactos": {
+            "type": "integer",
+            "title": "Aciertos Exactos"
+          },
+          "aciertos_semanticos": {
+            "type": "integer",
+            "title": "Aciertos Semanticos"
+          },
+          "tasa_aciertos": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tasa Aciertos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "consultas",
+          "aciertos_exactos",
+          "aciertos_semanticos"
+        ],
+        "title": "TasaCache"
+      },
+      "UsoModelo": {
+        "properties": {
+          "llamadas": {
+            "type": "integer",
+            "title": "Llamadas"
+          },
+          "tokens_prompt": {
+            "type": "integer",
+            "title": "Tokens Prompt"
+          },
+          "tokens_salida": {
+            "type": "integer",
+            "title": "Tokens Salida"
+          },
+          "tiempo_ms": {
+            "type": "number",
+            "title": "Tiempo Ms"
+          },
+          "respaldos": {
+            "type": "integer",
+            "title": "Respaldos"
+          },
+          "tiempos_agotados": {
+            "type": "integer",
+            "title": "Tiempos Agotados"
+          },
+          "json_invalido": {
+            "type": "integer",
+            "title": "Json Invalido"
+          }
+        },
+        "type": "object",
+        "required": [
+          "llamadas",
+          "tokens_prompt",
+          "tokens_salida",
+          "tiempo_ms",
+          "respaldos",
+          "tiempos_agotados",
+          "json_invalido"
+        ],
+        "title": "UsoModelo"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Fichas",
+      "description": "Catalogación de fotos (ficha IPTC con fuentes) y lotes asíncronos"
+    },
+    {
+      "name": "Búsquedas",
+      "description": "Búsqueda por texto en español o por foto, con razones"
+    },
+    {
+      "name": "Documentos",
+      "description": "Carga de fotos y normas, listado, eliminación y miniaturas"
+    },
+    {
+      "name": "Duplicados",
+      "description": "Grupos de casi duplicados detectados al cargar las fotos"
+    },
+    {
+      "name": "Retroalimentación y métricas",
+      "description": "Opinión ligada a la traza, validación de fichas (promoción a ejemplo del RAG) y métricas de observabilidad y de accesibilidad del archivo"
+    },
+    {
+      "name": "Sistema",
+      "description": "Salud del servicio y configuración activa"
+    }
+  ]
+}
