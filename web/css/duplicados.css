@@ -11,7 +11,9 @@
 
 /* Grupos: una sección por grupo, con su resumen en prosa y la tira */
 .grupos { display: flex; flex-direction: column; gap: var(--e-6); }
-.grupos .panel + .panel { margin-top: 0; }
+/* El hueco entre grupos lo da el contenedor (flex); el h2 va pegado a su filete */
+.grupos > .panel { margin-top: 0; }
+.grupos > .panel > h2 { margin-top: 0; }
 .grupo-resumen { max-width: var(--ancho-lectura); margin: var(--e-1) 0 var(--e-4); color: var(--texto-suave); }
 .grupo-resumen .cifra { font-family: var(--fuente-mono); color: var(--texto); }
 

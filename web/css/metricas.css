@@ -35,7 +35,7 @@
 .seccion-metrica { scroll-margin-top: 3.5rem; }
 
 /* ── Cifras clave en prosa ─────────────────────────────────────────────────────────────────────────────────── */
-.resumen-metricas { margin: 0 0 var(--e-6); }
+.resumen-metricas { margin: 0 0 var(--e-5); }
 .cifras-prosa { max-width: 72ch; margin: 0; font-size: var(--t-3); line-height: 1.6; }
 .cifras-prosa .esqueleto.linea { max-width: 60ch; }
 .cifra, .nota-prosa .cifra, .flujo-resumen .cifra { font-family: var(--fuente-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -44,7 +44,8 @@
 /* ── Documento: secciones en una columna de lectura ────────────────────────────────────────────────────────── */
 .tablero { display: flex; flex-direction: column; gap: var(--e-7); max-width: 64rem; min-width: 0; }
 .tablero > .mensaje { margin: 0; }
-.tablero .panel + .panel { margin-top: 0; }
+/* El hueco entre secciones lo da el contenedor (flex): sin el margen superior de .panel de base.css */
+.tablero > .panel { margin-top: 0; }
 .tablero[aria-busy="true"] .seccion-metrica { opacity: .6; transition: opacity var(--transicion); }
 .seccion-metrica > h2 { margin: 0 0 var(--e-1); }
 .panel-nota { max-width: 72ch; margin: 0 0 var(--e-4); color: var(--texto-suave); }
