@@ -267,6 +267,16 @@ function desplegarCarga() {
 }
 
 // ── (c) Ficha = Inspector ──
+// La columna de la foto acompaña al inspector al desplazarse (pegajosa) solo si cabe entera en la ventana: si fuera más
+// alta, sus avisos de abajo quedarían ocultos hasta el final del inspector.
+let columnaFoto = null;
+const MARGEN_PEGAJOSA = 32;
+function ajustarColumnaFoto() {
+  if (columnaFoto?.isConnected) columnaFoto.classList.toggle("pegajosa", columnaFoto.offsetHeight + MARGEN_PEGAJOSA <= window.innerHeight);
+}
+const observadorColumna = new ResizeObserver(ajustarColumnaFoto);
+window.addEventListener("resize", ajustarColumnaFoto);
+
 function mostrarFicha(respuesta) {
   const { documento_id: doc, ficha, fuentes = {}, meta = {} } = respuesta;
   let original = structuredClone(ficha);
@@ -377,15 +387,17 @@ function mostrarFicha(respuesta) {
       el("p", { clase: "panel-auxiliar", texto: soloLectura ? "Solo lectura" : "Edítalos y valida la ficha" })),
     formulario);
 
+  const lateral = el("div", { clase: "ficha-lateral col-5" }, foto, panelProcedencia(fuentes),
+    listaAvisos.length ? el("div", { clase: "avisos" }, ...listaAvisos) : null);
   revision.replaceChildren(...[
     barra,
     soloLectura ? crearMensaje("Esta ficha es de solo lectura: viene del archivo inicial y no tiene traza, así que no se puede "
       + "calificar ni validar desde aquí.", "info") : null,
-    el("div", { clase: "reticula ficha-reticula" },
-      el("div", { clase: "ficha-lateral col-5" }, foto, panelProcedencia(fuentes),
-        listaAvisos.length ? el("div", { clase: "avisos" }, ...listaAvisos) : null),
-      inspector),
+    el("div", { clase: "reticula ficha-reticula" }, lateral, inspector),
     pieTecnico(meta)].filter(Boolean));
+  observadorColumna.disconnect();
+  columnaFoto = lateral;
+  observadorColumna.observe(lateral);
   revision.hidden = false;
   plegarCarga();
   // Foco en el título (sin anillo) y la ficha arriba de la ventana

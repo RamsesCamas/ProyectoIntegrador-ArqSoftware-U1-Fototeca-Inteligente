@@ -107,7 +107,7 @@
 .espera.terminada .espera-foto { display: none; }
 .espera.terminada .capas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
 @container contenido (min-width: 56rem) {
-  @media (min-height: 760px) { .ficha-lateral { position: sticky; top: var(--e-4); } }
+  .ficha-lateral.pegajosa { position: sticky; top: var(--e-4); }
   .espera-reticula:has(> .espera-foto) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   .espera-foto { border-radius: var(--radio-2) 0 0 var(--radio-2); }
   .espera-foto img { max-height: 24rem; }
@@ -133,8 +133,8 @@
 /* Columna de la foto: lupa oscura 4:3 con la foto en contain (≤ 60vh), procedencia y avisos */
 .ficha-lateral { display: grid; gap: var(--e-5); align-content: start; }
 figure.foto { min-width: 0; margin: 0; }
-.foto .boton-imagen { display: block; aspect-ratio: 4 / 3; max-height: 60vh; background: var(--lupa-fondo); border-radius: var(--radio-2);
-  box-shadow: var(--sombra-1); }
+.foto .boton-imagen { display: block; aspect-ratio: 4 / 3; max-height: min(60vh, 28rem); background: var(--lupa-fondo);
+  border-radius: var(--radio-2); box-shadow: var(--sombra-1); }
 .foto .boton-imagen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: var(--radio-2); }
 .foto .boton-imagen .lupa { z-index: 1; }
 .foto figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-1) var(--e-4);
@@ -218,6 +218,12 @@ figure.foto { min-width: 0; margin: 0; }
 .tarjeta-lote.pendiente { cursor: default; box-shadow: none; }
 .tarjeta-lote.pendiente:hover { border-color: var(--montura-borde); }
 .tarjeta-lote.pendiente .esqueleto.linea { width: 70%; margin: var(--e-1) var(--e-1) 0; }
+
+/* Contenido mediano (tableta, apilado): la foto a todo el ancho y debajo, lado a lado, la procedencia y los avisos */
+@container contenido (min-width: 40rem) and (max-width: 55.99rem) {
+  .ficha-lateral { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .ficha-lateral > figure.foto, .ficha-lateral > .procedencia:last-child { grid-column: 1 / -1; }
+}
 
 /* Contenido angosto (móvil): el lote en 2 columnas; la barra de la ficha apila su botón */
 @container contenido (max-width: 30rem) {
