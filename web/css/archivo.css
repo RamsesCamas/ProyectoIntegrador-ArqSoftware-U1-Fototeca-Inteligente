@@ -1,101 +1,89 @@
-/* Archivo · barra de herramientas (filtro segmentado y paginación), confirmación de borrado y tabla de documentos.
-   Solo maquetación y piezas propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página (T4).
+/* Archivo · filas de catálogo (v4 «Mesa de luz»): filtro como enlaces de texto, paginación, confirmación de borrado y
+   la tabla .catalogo de base.css (filetes finos, sin cajas). Solo maquetación y piezas propias, solo con var(--…).
+   Dueño: la tarea de la página (T4).
 
-   · Tabla con filas de 72 px: montura de 72 × 54 (borde de 4 px) y dos líneas de texto. «Tipo» solo con «Todos».
-   · ≥ 56rem de contenido: la envoltura no se desplaza y el encabezado de la tabla se pega a la ventana.
-   · 40–56rem: la envoltura se desplaza en horizontal.
-   · < 40rem (640 px): cada fila es una tarjeta (miniatura | título, id y estado | acción); sin Tipo ni Fecha. */
+   · Miniatura pequeña (64 × 48, recorte 4:3) en un marco de película fino; titular y, debajo, el id en mono.
+   · «Tipo» solo con «Todos». Fecha en mono, a la derecha.
+   · < 40rem (640 px) de contenido: cada fila en dos líneas (miniatura | titular, id y estado | Eliminar), sin Tipo ni Fecha. */
 
-/* ── Barra de herramientas y paginación (arriba y al final de la tabla) ───────────────────────────────────────── */
-.barra-archivo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-3) var(--e-5);
-  margin: 0 0 var(--e-4); }
-.barra-archivo .segmentado { flex: none; }
-.paginacion { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); min-width: 0; margin-left: auto; }
+/* ── Filtro y paginación ──────────────────────────────────────────────────────────────────────────────────── */
+.barra-archivo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--e-3) var(--e-6);
+  margin: 0 0 var(--e-3); }
+.filtro-tipo ul { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-5); margin: 0; padding: 0; }
+.filtro-tipo a { display: inline-block; padding: var(--e-1) 0; color: var(--texto); font-size: var(--t-3); text-decoration: none; }
+.filtro-tipo a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .35em; }
+.filtro-tipo a[aria-current="true"] { font-weight: var(--peso-fuerte); text-decoration: underline; text-decoration-thickness: 2px;
+  text-underline-offset: .35em; }
+.paginacion { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--e-1) var(--e-5); min-width: 0; }
+.paginacion-texto { margin: 0; color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+.paginacion-texto:empty { display: none; }
 .paginacion-abajo { justify-content: flex-end; margin-top: var(--e-4); }
-.paginacion-botones { display: flex; flex-wrap: wrap; gap: var(--e-2); }
-#pagina, #pagina-abajo { color: var(--texto-suave); font-variant-numeric: tabular-nums; }
-#pagina:empty, #pagina-abajo:empty { display: none; }
-.icono-atras { transform: scaleX(-1); }
-.paginacion .boton { padding-inline: var(--e-3); }
 
 #estado > .mensaje { margin-top: 0; }
 
-/* ── Confirmación de borrado: panel de peligro con la montura del documento (el rojo vive aquí) ─────────────── */
+/* ── Confirmación de borrado (el único lugar con el tono de error) ─────────────────────────────────────────── */
 .confirmacion { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--e-4) var(--e-5); margin: 0 0 var(--e-4);
-  padding: var(--e-4) var(--e-5); background: var(--superficie); border: 1px solid var(--error); border-left-width: 4px;
-  border-radius: var(--radio-2); box-shadow: var(--sombra-2); }
-.confirmacion > .montura { flex: none; }
+  padding: var(--e-4) var(--e-5); background: var(--superficie); border-left: 3px solid var(--error); }
+.confirmacion > .miniatura-marco { flex: none; }
 .confirmacion-cuerpo { flex: 1 1 20rem; min-width: 0; }
-.confirmacion h2 { display: flex; align-items: center; gap: var(--e-2); margin: 0; font-size: var(--t-3); color: var(--error); }
-.confirmacion h2 .icono { width: 20px; height: 20px; }
+.confirmacion h2 { margin: 0; font-size: var(--t-4); color: var(--error); }
 .confirmacion-documento { margin: var(--e-2) 0 0; }
 .confirmacion-documento strong { display: block; }
-.confirmacion-documento .documento-meta { white-space: normal; }
-.confirmacion-acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); margin-top: var(--e-4); }
+.confirmacion-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3) var(--e-5); margin-top: var(--e-4); }
 
-/* ── Montura de 72 × 54 (miniatura y confirmación) ─────────────────────────────────────────────────────────── */
-.tabla-archivo .montura, .confirmacion .montura { width: calc(72px + 2 * 4px + 2px); padding: 4px; }
-/* Filete interior sutil: una foto clara no se funde con el marco blanco */
-.tabla-archivo .montura img, .confirmacion .montura img { outline: 1px solid var(--borde-suave); outline-offset: -1px; }
-.montura-norma { display: grid; place-items: center; height: calc(54px + 2 * 4px + 2px); color: var(--texto-suave);
-  background: var(--superficie-2); }
-.montura-norma .icono { width: 24px; height: 24px; }
-.miniatura-esqueleto { display: block; height: 54px; }
+/* ── Miniatura en marco de película ─────────────────────────────────────────────────────────────────────────── */
+.miniatura-marco { display: block; width: calc(64px + 6px); padding: 3px; background: var(--pelicula); }
+.miniatura-marco img { display: block; width: 64px; height: 48px; object-fit: cover; }
+.miniatura-norma { display: grid; place-items: center; height: calc(48px + 6px); }
+.miniatura-norma span { font-size: var(--t-1); color: var(--superficie); }
+.miniatura-boton { display: block; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.miniatura-boton:focus-visible { outline-offset: 2px; }
+.miniatura-esqueleto { display: block; width: 64px; height: 48px; }
 
-/* ── Tabla ─────────────────────────────────────────────────────────────────────────────────────────────────── */
-.envoltura-archivo { margin-top: 0; }
-.tabla-archivo tbody td, .tabla-archivo tbody th { height: 4.5rem; padding-top: var(--e-1); padding-bottom: var(--e-1); }
+/* ── Filas de catálogo ─────────────────────────────────────────────────────────────────────────────────────── */
+.envoltura-catalogo { overflow-x: auto; }
+.tabla-archivo { width: 100%; }
+.tabla-archivo td, .tabla-archivo th { vertical-align: middle; }
 .tabla-archivo td { white-space: nowrap; }
-.tabla-archivo .celda-foto { width: 1%; padding-left: var(--e-4); }
-.miniatura-archivo { width: auto; }
+.tabla-archivo .col-foto { width: 1%; }
 /* «Tipo» sobra con el filtro Fotos o Normas: solo se ve con «Todos» */
 .tabla-archivo:not([data-filtro="todos"]) .col-tipo { display: none; }
-/* Documento: ocupa el ancho que sobra; titular (600, color de texto) y el id en mono gris, una línea cada uno */
-.tabla-archivo tbody .celda-documento { width: 100%; max-width: 0; }
-.documento-titular { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--peso-medio);
-  line-height: 1.5; }
+/* Documento: ocupa el ancho que sobra; titular y, debajo, el id en mono, una línea cada uno */
+.tabla-archivo tbody .col-documento { width: 100%; max-width: 0; }
+.documento-titular { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-3);
+  font-weight: var(--peso-medio); line-height: 1.4; }
 a.documento-titular { color: var(--texto); text-decoration: none; }
-a.documento-titular:hover, a.documento-titular:focus-visible { text-decoration: underline; text-decoration-color: var(--acento);
-  text-decoration-thickness: 2px; }
-.documento-meta { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--fuente-mono);
-  font-size: var(--t-1); font-weight: var(--peso-normal); line-height: 1.5; color: var(--texto-suave); }
-.documento-meta .id { overflow-wrap: normal; }
-.tabla-archivo tbody .celda-fecha { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
-/* Acciones: la cabecera y el botón alineados a la derecha de su columna */
+a.documento-titular:hover, a.documento-titular:focus-visible { text-decoration: underline; text-decoration-thickness: 1px;
+  text-underline-offset: .2em; }
+.documento-ref { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--peso-normal);
+  line-height: 1.5; }
+.documento-ref .id { overflow-wrap: normal; }
+.documento-nombre { font-size: var(--t-1); color: var(--texto-suave); }
+.tabla-archivo .col-fecha { text-align: right; }
+.tabla-archivo tbody .col-fecha { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
 .tabla-archivo .col-acciones { width: 1%; text-align: right; }
-.boton-eliminar { display: inline-grid; place-items: center; width: 2rem; height: 2rem; padding: 0; vertical-align: middle;
-  border: 1px solid transparent; border-radius: var(--radio-1); background: transparent; color: var(--texto-suave); cursor: pointer;
-  transition: background-color var(--transicion), color var(--transicion), border-color var(--transicion); }
-.boton-eliminar .icono { width: 20px; height: 20px; }
-.boton-eliminar:hover, .boton-eliminar:focus-visible { color: var(--error); background: var(--error-fondo); border-color: var(--error); }
+.tabla-archivo .eliminar { color: var(--texto-suave); }
+.tabla-archivo .eliminar:hover, .tabla-archivo .eliminar:focus-visible { color: var(--error); }
 .tabla-archivo .fila-cargando .esqueleto.linea { max-width: 8rem; }
-.tabla-archivo .fila-cargando .celda-documento .esqueleto.linea { max-width: 24rem; }
-.tabla-archivo .fila-aviso td { height: auto; padding: var(--e-6) var(--e-4); white-space: normal; }
-.aviso-tabla { display: flex; align-items: center; justify-content: center; gap: var(--e-2); margin: 0; color: var(--texto-suave); }
+.tabla-archivo .fila-cargando .col-documento .esqueleto.linea { max-width: 24rem; }
+.tabla-archivo .fila-aviso td { padding: var(--e-6) 0; white-space: normal; color: var(--texto-suave); }
+.tabla-archivo .fila-aviso p { margin: 0; }
 
-/* Encabezado pegajoso: con espacio de sobra, la envoltura no desplaza y el thead se pega a la ventana */
-@container contenido (min-width: 56rem) {
-  .envoltura-archivo { overflow: visible; }
-  .tabla-archivo thead th { top: 0; }
-  .tabla-archivo thead th:first-child { border-top-left-radius: var(--radio-2); }
-  .tabla-archivo thead th:last-child { border-top-right-radius: var(--radio-2); }
-}
-
-/* Contenido angosto (< 640 px): cada fila es una tarjeta. La cabecera queda para los lectores de pantalla. */
+/* Contenido angosto (< 640 px): cada fila en dos líneas. La cabecera queda para los lectores de pantalla. */
 @container contenido (max-width: 39.99rem) {
-  .envoltura-archivo { overflow: visible; }
+  .envoltura-catalogo { overflow: visible; }
   .tabla-archivo, .tabla-archivo tbody { display: block; }
   .tabla-archivo thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
-  .tabla-archivo tbody tr { display: grid; grid-template-columns: calc(72px + 2 * 4px + 2px) minmax(0, 1fr) auto;
+  .tabla-archivo tbody tr { display: grid; grid-template-columns: calc(64px + 6px) minmax(0, 1fr) auto;
     grid-template-areas: "foto documento accion" "foto estado accion"; align-items: center; gap: var(--e-1) var(--e-3);
-    padding: var(--e-3); border-bottom: 1px solid var(--borde-suave); }
-  .tabla-archivo tbody tr:last-child { border-bottom: 0; }
-  .tabla-archivo tbody td, .tabla-archivo tbody th { display: block; height: auto; min-width: 0; padding: 0; border: 0; }
-  .tabla-archivo tbody .celda-foto { grid-area: foto; width: auto; padding: 0; }
-  .tabla-archivo tbody .celda-documento { grid-area: documento; width: auto; max-width: none; }
-  .tabla-archivo tbody .celda-estado { grid-area: estado; }
+    padding: var(--e-3) 0; border-bottom: 1px solid var(--borde); }
+  /* .catalogo.tabla-archivo: más específico que «table.catalogo tbody td» de base.css (alto fijo de fila) */
+  .catalogo.tabla-archivo tbody td, .catalogo.tabla-archivo tbody th { display: block; height: auto; min-width: 0; padding: 0; border: 0; }
+  .tabla-archivo tbody .col-foto { grid-area: foto; width: auto; }
+  .tabla-archivo tbody .col-documento { grid-area: documento; width: auto; max-width: none; }
+  .tabla-archivo tbody .col-estado { grid-area: estado; }
   .tabla-archivo tbody .col-acciones { grid-area: accion; width: auto; }
-  .tabla-archivo tbody .col-tipo, .tabla-archivo tbody .celda-fecha { display: none; }
+  .catalogo.tabla-archivo tbody .col-tipo, .catalogo.tabla-archivo tbody .col-fecha { display: none; }
   .tabla-archivo tbody .fila-aviso { display: block; }
-  .paginacion-abajo { justify-content: flex-start; margin-left: 0; }
+  .paginacion-abajo { justify-content: flex-start; }
 }
