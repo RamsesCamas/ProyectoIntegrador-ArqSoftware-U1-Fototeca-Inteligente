@@ -1,11 +1,12 @@
-// Buscar: por texto (POST /api/busquedas JSON) o por foto (multipart). Cada resultado es una diapositiva que abre el
-// visor, con su rango y las razones por las que coincide (con sus similitudes); la consulta interpretada aparece cuando la
-// búsqueda fue compleja (la descompuso el modelo de lenguaje). La línea de #estado dice cuántos, por qué ruta y en
-// cuánto tiempo; el pie técnico, el resto.
+// Buscar · v4 «Mesa de luz»: por texto (POST /api/busquedas JSON) o por foto (multipart). La estructura es la de v3
+// (el campo, los ejemplos, la búsqueda por foto, los resultados con sus razones y la consulta interpretada); cambia la
+// piel: cada resultado es un fotograma de una hoja de contactos y su número de cuadro es el rango (una secuencia real).
+// El fotograma abre el visor; el titular, la ficha. La línea de #estado dice cuántos, por qué ruta y en cuánto tiempo;
+// el pie técnico, el resto. Inicio llega con ?q=… (busca al cargar) o con #con-foto (abre la búsqueda por foto).
 import { api, anunciar, el } from "./api.js";
-import { crearMensaje, mensaje, miniatura, numero, pieTecnico, segundos, verFotoGuardada } from "./comun.js";
-import { icono, ilustracion } from "./iconos.js";
+import * as comun from "./comun.js";
 
+const { crearMensaje, mensaje, miniatura, numero, pieTecnico, segundos, verFotoGuardada } = comun;
 const estado = document.getElementById("estado");
 const resultados = document.getElementById("resultados");
 const interpretada = document.getElementById("interpretada");
@@ -14,63 +15,55 @@ const consulta = document.getElementById("consulta");
 const formularioTexto = document.getElementById("formulario-texto");
 const formularioFoto = document.getElementById("formulario-imagen");
 const alternarFoto = document.getElementById("alternar-foto");
+const entradaFoto = document.getElementById("imagen");
 const botonBuscar = formularioTexto.querySelector("button[type=submit]");
 const VISIBLES_SIN_DIFERIR = 8;   // las dos primeras filas cargan de inmediato; el resto, al acercarse
 let turno = 0;                    // solo pinta la respuesta de la búsqueda más reciente
 
-const RUTAS = { simple: "ruta simple", compleja: "ruta compleja", imagen: "búsqueda por foto" };
+const RUTAS = { simple: "por la ruta simple", compleja: "por la ruta compleja", imagen: "con una foto" };
 const esPenalizacion = (razon) => /^penaliz/i.test(razon);
+/** Trazo de lápiz graso (comun.js · marcaLapiz); si la base aún no lo tiene, no se dibuja nada. */
+const lapiz = (tipo) => (typeof comun.marcaLapiz === "function" ? comun.marcaLapiz(tipo) : null);
 
-/** Icono de cada razón según de dónde sale la coincidencia (el texto de la razón siempre lo dice). */
-function iconoRazon(razon) {
-  if (esPenalizacion(razon)) return "alerta";
-  if (/imagen\s*→\s*imagen|foto parecida|imagen parecida/i.test(razon)) return "foto-similar";
-  if (/imagen/i.test(razon)) return "ojo";
-  if (/tesauro/i.test(razon)) return "tesauro";
-  if (/ficha/i.test(razon)) return "catalogar";
-  return "check";
-}
-
-function tarjeta(x, i) {
+/** Un resultado = un fotograma: la foto (abre el visor), el número de cuadro (el rango) y, bajo la tira, el pie con el
+ *  titular (lleva a la ficha) y las razones por las que coincide. */
+function cuadro(x, i) {
   const titular = x.titular || "Foto sin ficha";
   const alt = x.texto_alternativo || x.titular || `Resultado ${i + 1} (foto sin ficha)`;
   const idTitular = `resultado-${i + 1}`;
   const razones = x.razones || [];
-  return el("article", { clase: "resultado", "aria-labelledby": idTitular },
-    // La diapositiva abre la foto en grande con su ficha (visor); el titular lleva a la ficha completa
-    el("button", { type: "button", clase: "boton-imagen resultado-foto",
+  // Solo el rango: el orden sale de fusionar dos listas (RRF) con penalizaciones, y `puntaje` de la API es solo la
+  // similitud texto→imagen, que ya aparece en las razones (un puntaje junto al rango no cuadraba con el orden).
+  const item = el("li", { clase: "cuadro" }, el("article", { clase: "cuadro-articulo", "aria-labelledby": idTitular },
+    el("button", { type: "button", clase: "cuadro-foto", title: titular,
       onclick: () => verFotoGuardada(x.documento_id, { titulo: titular,
-        extra: [["Posición", `#${i + 1}`], ["Por qué coincide", razones.join(" · ")]] }) },
+        extra: [["Posición", numero(i + 1)], ["Por qué coincide", razones.join("; ")]] }) },
       miniatura(x.documento_id, { alt, diferida: i >= VISIBLES_SIN_DIFERIR }),
-      el("span", { clase: "lupa", "aria-hidden": "true" }, icono("lupa-foto"), "Ver en grande"),
       el("span", { clase: "solo-lectores", texto: " (ver en grande con su ficha)" })),
-    // Solo el rango: el orden sale de fusionar dos listas (RRF) con penalizaciones, y `puntaje` de la API es solo la
-    // similitud texto→imagen, que ya aparece en las razones. Mostrarlo como insignia junto al rango parecía un
-    // puntaje de orden que no cuadra (#1 con 0.70 sobre #3 con 0.73).
-    el("div", { clase: "resultado-meta" },
-      el("span", { clase: "rango" }, el("span", { clase: "solo-lectores", texto: "Posición " }), `#${i + 1}`)),
-    el("h3", { clase: "resultado-titular", id: idTitular },
-      el("a", { href: `catalogar.html?doc=${encodeURIComponent(x.documento_id)}`, title: titular, texto: titular })),
-    el("p", { clase: "solo-lectores", texto: "Por qué coincide:" }),
-    el("ul", { clase: "razones" }, razones.map((razon) => el("li", { clase: esPenalizacion(razon) ? "penalizada" : null },
-      icono(iconoRazon(razon)), el("span", { texto: razon })))));
+    el("span", { clase: "cuadro-num" }, el("span", { clase: "solo-lectores", texto: "Posición " }), numero(i + 1)),
+    el("div", { clase: "cuadro-pie" },
+      el("h3", { clase: "resultado-titular", id: idTitular },
+        el("a", { href: `catalogar.html?doc=${encodeURIComponent(x.documento_id)}`, title: titular, texto: titular })),
+      el("p", { clase: "solo-lectores", texto: "Por qué coincide:" }),
+      el("ul", { clase: "razones" }, razones.map((razon) => el("li", { clase: esPenalizacion(razon) ? "penalizada" : null },
+        esPenalizacion(razon) ? el("span", { clase: "razon-simbolo", "aria-hidden": "true", texto: "!" }) : null, razon))))));
+  const trazo = lapiz("circulo");
+  if (trazo) item.append(trazo);
+  return item;
 }
 
-/** Marcadores mientras llega la respuesta (div, no article: no son resultados). */
-const esqueletos = (n = 8) => Array.from({ length: n }, () => el("div", { clase: "resultado cargando", "aria-hidden": "true" },
-  el("span", { clase: "esqueleto foto" }), el("span", { clase: "esqueleto linea corta" }), el("span", { clase: "esqueleto linea" }),
-  el("span", { clase: "esqueleto linea" })));
+/** Marcadores mientras llega la respuesta (no son article: no son resultados). */
+const esqueletos = (n = 8) => el("ol", { clase: "tira hoja-resultados cargando", "aria-hidden": "true" },
+  Array.from({ length: n }, () => el("li", { clase: "cuadro cargando" }, el("span", { clase: "esqueleto foto" }))));
 
-/** Línea de resultados: cuántos · ruta · tiempo · caché (es el .mensaje de #estado cuando la búsqueda termina). */
+/** Línea de resultados, en prosa: cuántos, por qué ruta, en cuánto tiempo y si vino de la caché. */
 function resumen(meta, n) {
-  const partes = [
-    el("strong", { texto: n === 1 ? "1 resultado" : `${numero(n)} resultados` }),
-    RUTAS[meta.ruta] || (meta.ruta ? `ruta ${meta.ruta}` : null),
-    typeof meta.tiempo_ms === "number" ? el("span", { clase: "mono", texto: segundos(meta.tiempo_ms) }) : null,
-    meta.cache && meta.cache !== "ninguna" ? `desde la caché (${meta.cache})` : null,
-  ].filter(Boolean);
-  const linea = crearMensaje(partes.flatMap((p, k) => (k ? [el("span", { clase: "separador", "aria-hidden": "true", texto: "·" }), p] : [p])),
-    n ? "ok" : "info");
+  const partes = [el("strong", { texto: n === 1 ? "1 resultado" : `${numero(n)} resultados` })];
+  if (RUTAS[meta.ruta]) partes.push(` ${RUTAS[meta.ruta]}`);
+  if (typeof meta.tiempo_ms === "number") partes.push(" en ", el("span", { clase: "mono", texto: segundos(meta.tiempo_ms) }));
+  if (meta.cache && meta.cache !== "ninguna") partes.push(`, desde la caché (${meta.cache})`);
+  partes.push(".");
+  const linea = crearMensaje(partes, n ? "ok" : "info");
   linea.classList.add("resumen");
   return linea;
 }
@@ -79,18 +72,14 @@ const par = (termino, valor) => el("div", {}, el("dt", { texto: termino }), el("
 
 function pintarInterpretada(q) {
   const personas = q.filtros?.contiene_personas;
-  const terminos = q.terminos_tesauro || [];
   interpretada.replaceChildren(
-    el("header", { clase: "panel-cabecera" }, icono("bifurcacion"),
-      el("h2", { id: "titulo-interpretada", texto: "Consulta interpretada" }),
-      el("p", { clase: "panel-auxiliar", texto: "Así la descompuso el modelo de lenguaje" })),
+    el("h2", { id: "titulo-interpretada", texto: "Consulta interpretada" }),
+    el("p", { clase: "interpretada-nota", texto: "Así la descompuso el modelo de lenguaje." }),
     el("dl", { clase: "interpretada" },
       par("Qué debe verse", q.consulta_semantica || "—"),
       par("Qué excluir", (q.excluir || []).join(", ") || "Nada"),
       par("¿Con personas?", personas === true ? "Sí" : personas === false ? "No" : "Indistinto"),
-      par("Términos del tesauro", terminos.length
-        ? el("ul", { clase: "interpretada-chips" }, terminos.map((t) => el("li", {}, el("span", { clase: "chip chip-tesauro" }, icono("tesauro"), t))))
-        : "—")));
+      par("Términos del tesauro", (q.terminos_tesauro || []).join(", ") || "—")));
   interpretada.hidden = false;
 }
 
@@ -106,9 +95,10 @@ function mostrarResultados() {
 function pintar(cuerpo) {
   const r = cuerpo.resultados || [];
   const meta = cuerpo.meta || {};
-  resultados.replaceChildren(...(r.length ? r.map(tarjeta) : [el("div", { clase: "vacio" }, ilustracion("busqueda"),
-    el("h3", { texto: "Sin resultados" }),
-    el("p", { texto: cuerpo.mensaje || "Ninguna foto del archivo coincide lo suficiente. Prueba con otras palabras, con menos condiciones o con una foto parecida." }))]));
+  resultados.replaceChildren(r.length
+    ? el("ol", { clase: "tira hoja-resultados", "aria-labelledby": "titulo-resultados" }, r.map(cuadro))
+    : el("p", { clase: "resultados-inicial", texto: cuerpo.mensaje
+      || "Ninguna foto del archivo coincide lo suficiente. Prueba con otras palabras, con menos condiciones o con una foto parecida." }));
   if (meta.ruta === "compleja" && cuerpo.consulta_interpretada) pintarInterpretada(cuerpo.consulta_interpretada);
   else interpretada.hidden = true;
   tecnico.replaceChildren(pieTecnico(meta) || "");
@@ -116,14 +106,14 @@ function pintar(cuerpo) {
   // Con resultados, la ayuda larga se pliega (los ejemplos se quedan) y «Resultados» queda a la vista
   if (r.length) document.getElementById("zona-soltar").classList.add("con-resultados");
   mostrarResultados();
-  anunciar(r.length ? `${r.length === 1 ? "1 resultado" : `${r.length} resultados`}` : "Sin resultados");
+  anunciar(r.length ? (r.length === 1 ? "1 resultado" : `${r.length} resultados`) : "Sin resultados");
 }
 
 async function buscar(opciones, textoEspera) {
   const miTurno = ++turno;
   interpretada.hidden = true;
   tecnico.replaceChildren();
-  resultados.replaceChildren(...esqueletos());
+  resultados.replaceChildren(esqueletos());
   resultados.setAttribute("aria-busy", "true");
   botonBuscar.setAttribute("aria-busy", "true");
   mensaje(estado, textoEspera, "info");
@@ -150,14 +140,14 @@ formularioTexto.addEventListener("submit", (ev) => {
 });
 
 // Ejemplos: llenan el campo y buscan
-for (const boton of document.querySelectorAll(".ejemplo")) {
+for (const boton of document.querySelectorAll(".ejemplo[data-consulta]")) {
   boton.addEventListener("click", () => {
     consulta.value = boton.dataset.consulta;
     formularioTexto.requestSubmit();
   });
 }
 
-// «O busca con una foto» despliega el formulario de foto
+// «buscar con una foto» despliega el formulario de foto
 function mostrarFormularioFoto(abrir) {
   formularioFoto.hidden = !abrir;
   alternarFoto.setAttribute("aria-expanded", String(abrir));
@@ -165,7 +155,6 @@ function mostrarFormularioFoto(abrir) {
 alternarFoto.addEventListener("click", () => mostrarFormularioFoto(formularioFoto.hidden));
 
 // El nombre de la foto elegida, junto al botón (el input queda oculto a la vista pero enfocable)
-const entradaFoto = document.getElementById("imagen");
 entradaFoto.addEventListener("change", () => {
   document.getElementById("nombre-imagen").textContent = entradaFoto.files[0]?.name || "Ninguna foto elegida";
 });
@@ -179,7 +168,7 @@ formularioFoto.addEventListener("submit", (ev) => {
   buscar({ body: datos }, "Buscando fotos parecidas…");
 });
 
-// Todo el panel de búsqueda acepta una foto arrastrada
+// Toda la zona de búsqueda acepta una foto arrastrada
 const zona = document.getElementById("zona-soltar");
 zona.addEventListener("dragover", (e) => { e.preventDefault(); zona.classList.add("activa"); });
 zona.addEventListener("dragleave", (e) => { if (!zona.contains(e.relatedTarget)) zona.classList.remove("activa"); });
@@ -192,3 +181,13 @@ zona.addEventListener("drop", (e) => {
   entradaFoto.dispatchEvent(new Event("change"));
   formularioFoto.requestSubmit();
 });
+
+// Llegadas desde Inicio: ?q=… busca al cargar; #con-foto abre la búsqueda por foto
+const pedida = new URLSearchParams(location.search).get("q");
+if (pedida && pedida.trim().length >= 2) {
+  consulta.value = pedida.trim();
+  formularioTexto.requestSubmit();
+} else if (location.hash === "#con-foto") {
+  mostrarFormularioFoto(true);
+  entradaFoto.focus();
+}

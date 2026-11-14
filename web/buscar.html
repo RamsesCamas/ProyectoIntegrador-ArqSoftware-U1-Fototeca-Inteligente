@@ -50,42 +50,30 @@
           <div class="encabezado-acciones"></div>
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
-        <section id="zona-soltar" class="panel busqueda" aria-labelledby="titulo-busqueda">
+        <!-- La misma estructura de v3 (campo, ejemplos, búsqueda por foto, resultados con razones y consulta
+             interpretada) con la piel de la mesa de luz: los resultados son fotogramas y el número de cuadro es el rango -->
+        <section id="zona-soltar" class="busqueda" aria-labelledby="titulo-busqueda">
           <h2 id="titulo-busqueda" class="solo-lectores">Búsqueda</h2>
-          <form id="formulario-texto" class="panel-cuerpo" role="search">
+          <form id="formulario-texto" class="busqueda-mesa" role="search">
             <label for="consulta">¿Qué fotos buscas?</label>
-            <div class="buscador">
-              <div class="buscador-campo">
-                <svg class="icono buscador-lupa" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg>
-                <input id="consulta" name="consulta" type="search" minlength="2" maxlength="300" required autocomplete="off"
-                       aria-describedby="ayuda-consulta"
-                       placeholder="Describe la escena: qué se ve, dónde, qué excluir">
-              </div>
-              <button class="boton grande" type="submit"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg>Buscar</button>
+            <div class="busqueda-fila">
+              <input id="consulta" name="consulta" type="search" minlength="2" maxlength="300" required autocomplete="off"
+                     aria-describedby="ayuda-consulta" placeholder="Describe la escena: qué se ve, dónde, qué excluir">
+              <button class="boton" type="submit">Buscar</button>
             </div>
             <p id="ayuda-consulta" class="ayuda">En español. Las búsquedas con exclusiones o condiciones las interpreta un modelo de lenguaje y tardan unos segundos más.</p>
-            <div class="ejemplos">
-              <span id="titulo-ejemplos" class="ejemplos-titulo">Ejemplos:</span>
-              <ul class="ejemplos-lista" aria-labelledby="titulo-ejemplos">
-                <li><button type="button" class="chip ejemplo" data-consulta="mercado con frutas" title="mercado con frutas"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg><span class="ejemplo-texto">mercado con frutas</span></button></li>
-                <li><button type="button" class="chip ejemplo" data-consulta="personas cargando canastas en un mercado, sin vehículos" title="personas cargando canastas en un mercado, sin vehículos"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg><span class="ejemplo-texto">personas cargando canastas en un mercado, sin vehículos</span></button></li>
-              </ul>
-            </div>
+            <p class="ejemplos">Ejemplos: <button type="button" class="ejemplo" data-consulta="mercado con frutas">mercado con frutas</button>, <button type="button" class="ejemplo" data-consulta="personas cargando canastas en un mercado, sin vehículos">personas cargando canastas en un mercado, sin vehículos</button>. También puedes <button id="alternar-foto" class="ejemplo alternar-foto" type="button" aria-expanded="false" aria-controls="formulario-imagen">buscar con una foto</button>, o arrastrarla sobre esta zona.</p>
           </form>
-          <div class="panel-pie busqueda-pie">
-            <button id="alternar-foto" class="boton secundario" type="button" aria-expanded="false" aria-controls="formulario-imagen"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-lupa-foto"/></svg>O busca con una foto<svg class="icono alternar-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
-            <p class="ayuda busqueda-pie-ayuda">También puedes arrastrar una foto sobre este panel.</p>
-            <form id="formulario-imagen" class="busqueda-foto" hidden>
-              <label for="imagen">Foto de referencia</label>
-              <div class="busqueda-foto-fila">
-                <input id="imagen" class="archivo-oculto" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="nombre-imagen ayuda-imagen">
-                <label for="imagen" class="boton secundario elegir-foto"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-subir"/></svg>Elegir foto</label>
-                <span id="nombre-imagen" class="nombre-imagen">Ninguna foto elegida</span>
-                <button class="boton" type="submit"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto-similar"/></svg>Buscar parecidas</button>
-              </div>
-              <p id="ayuda-imagen" class="ayuda">JPEG o PNG. Se buscan en el archivo las fotos que más se le parecen.</p>
-            </form>
-          </div>
+          <form id="formulario-imagen" class="busqueda-foto" hidden>
+            <label for="imagen">Foto de referencia</label>
+            <div class="busqueda-foto-fila">
+              <input id="imagen" class="archivo-oculto" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="nombre-imagen ayuda-imagen">
+              <label for="imagen" class="boton elegir-foto">Elegir foto</label>
+              <span id="nombre-imagen" class="nombre-imagen">Ninguna foto elegida</span>
+              <button class="boton" type="submit">Buscar parecidas</button>
+            </div>
+            <p id="ayuda-imagen" class="ayuda">JPEG o PNG. Se buscan en el archivo las fotos que más se le parecen.</p>
+          </form>
         </section>
 
         <section class="zona-resultados" aria-labelledby="titulo-resultados">
@@ -93,13 +81,9 @@
             <h2 id="titulo-resultados">Resultados</h2>
             <div id="estado" aria-live="polite"></div>
           </div>
-          <section id="interpretada" class="panel" aria-labelledby="titulo-interpretada" hidden></section>
+          <section id="interpretada" class="interpretada-seccion" aria-labelledby="titulo-interpretada" hidden></section>
           <div id="resultados" class="resultados">
-            <div class="vacio inicial">
-              <svg class="vacio-ilustracion" aria-hidden="true" focusable="false"><use href="#il-busqueda"/></svg>
-              <h3>Todavía no has buscado nada</h3>
-              <p>Escribe qué quieres ver o usa un ejemplo. Cada resultado dice por qué coincide y abre la foto en grande con su ficha.</p>
-            </div>
+            <p class="resultados-inicial">Todavía no has buscado nada. Escribe qué quieres ver o usa un ejemplo: cada resultado dice por qué coincide y abre la foto en grande con su ficha.</p>
           </div>
           <div id="tecnico"></div>
         </section>
