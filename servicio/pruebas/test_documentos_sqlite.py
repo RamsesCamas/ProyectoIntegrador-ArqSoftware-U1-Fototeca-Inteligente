@@ -86,3 +86,13 @@ def test_version_archivo_incrementa(almacen):
     assert almacen.incrementar_version_archivo() == 1
     assert almacen.incrementar_version_archivo() == 2
     assert almacen.version_archivo() == 2
+
+
+def test_estado_no_falla_con_sondeos_simultaneos(almacen):
+    # /health corre en el threadpool: dos sondeos a la vez no deben pisarse la prueba de escritura del directorio.
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        estados = list(pool.map(lambda _: almacen.estado()["estado"], range(400)))
+    assert estados.count("error") == 0
+    assert not list((almacen.dir_fotos).iterdir())   # no deja archivos de prueba

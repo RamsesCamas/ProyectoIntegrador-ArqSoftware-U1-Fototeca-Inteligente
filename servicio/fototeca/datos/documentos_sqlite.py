@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -265,10 +266,11 @@ class DocumentosSqlite(BaseSqlite):
 
 
 def _escribible(directorio: Path) -> bool:
-    prueba = directorio / ".escritura"
+    # Un archivo temporal con nombre único por sondeo: con un nombre fijo, dos /health simultáneos se borraban el
+    # archivo de prueba entre sí y uno respondía 503 con el almacén en error.
     try:
-        prueba.write_bytes(b"ok")
-        prueba.unlink()
+        with tempfile.TemporaryFile(dir=directorio) as prueba:
+            prueba.write(b"ok")
         return True
     except OSError:
         return False
