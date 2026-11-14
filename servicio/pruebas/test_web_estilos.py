@@ -276,45 +276,39 @@ def _razon(tokens, uno: str, otro: str) -> float:
 
 TIPOS_CHIP = ["regla", "tesauro", "foto", "archivista", "referencia", "etiqueta"]
 TEXTO = [  # (primer plano, fondo): texto normal, ≥ 4.5:1
+    # Carbón y gris sobre la mesa, el papel y la mesa un tono abajo; enlaces en carbón
     ("texto", "fondo"), ("texto", "superficie"), ("texto", "superficie-2"), ("texto-suave", "fondo"),
     ("texto-suave", "superficie"), ("texto-suave", "superficie-2"), ("enlace", "fondo"), ("enlace", "superficie"),
-    ("enlace", "acento-fondo"), ("acento", "superficie"), ("acento", "acento-fondo"), ("acento-texto", "acento"),
-    ("acento-texto", "acento-hover"), ("texto", "acento-fondo"), ("texto-suave", "acento-fondo"),
-    ("cabecera-texto", "cabecera-fondo"), ("cabecera-texto-suave", "cabecera-fondo"), ("cabecera-texto", "nav-hover-fondo@cabecera-fondo"),
-    ("nav-activo-texto", "nav-activo-fondo"), ("aviso", "aviso-fondo"), ("aviso", "fondo"), ("aviso", "superficie"),
-    ("ok", "ok-fondo"), ("error", "error-fondo"), ("error", "superficie"), ("acento-texto", "error"), ("acento-texto", "error-hover"),
-    ("info", "info-fondo"), ("texto", "info-fondo"), ("texto-suave", "info-fondo"), ("texto", "aviso-fondo"),
-    ("texto", "chip-fondo"), ("texto-suave", "chip-fondo"), *[("texto", f"chip-{t}-fondo") for t in TIPOS_CHIP],
-    *[("texto-suave", f"chip-{t}-fondo") for t in TIPOS_CHIP],   # puntaje en mono dentro del chip
-    ("enlace", "chip-tesauro-fondo"), ("enlace", "chip-regla-fondo"),
-    ("insignia-foto-texto", "insignia-foto-fondo@foto-fondo"), ("insignia-foto-texto", "insignia-foto-fondo@lupa-fondo"),
-    ("pie-texto", "pie-fondo"),
-    # v3: barra lateral (y barra superior), cabeceras de panel, montura, lupa, mesa de luz y control segmentado
-    ("lateral-texto", "lateral-fondo"), ("lateral-texto-suave", "lateral-fondo"),
-    ("lateral-texto", "lateral-activo-fondo@lateral-fondo"), ("lateral-texto-suave", "lateral-activo-fondo@lateral-fondo"),
-    ("texto", "panel-cabecera-fondo"), ("texto-suave", "panel-cabecera-fondo"), ("enlace", "panel-cabecera-fondo"),
-    ("texto", "montura"), ("texto-suave", "montura"), ("lupa-texto", "lupa-fondo"), ("lupa-texto-suave", "lupa-fondo"),
-    ("texto", "mesa-fondo"), ("texto-suave", "mesa-fondo"), ("acento", "mesa-fondo"), ("superficie", "texto"),
-    ("texto-suave", "esqueleto-fondo"),
-    # Ronda 2: visor oscuro, franja neutra del aviso de IA y texto sobre el escenario claro de la foto
-    ("visor-texto", "visor-fondo"), ("visor-texto-suave", "visor-fondo"), ("texto", "franja-fondo"),
-    ("texto-suave", "franja-fondo"), ("lupa-texto", "lupa-fondo"), ("lupa-texto-suave", "lupa-fondo"),
-    ("insignia-foto-texto", "insignia-foto-fondo@visor-fondo"),
+    ("texto", "acento-fondo"), ("texto-suave", "acento-fondo"), ("texto", "nav-hover-fondo"),
+    # Botones: carbón con texto blanco (y su hover), el principal naranja con texto carbón, peligro con texto blanco
+    ("superficie", "texto"), ("superficie", "pelicula-hueco"), ("acento-texto", "acento"), ("acento-texto", "acento-hover"),
+    ("accion-texto", "accion"),
+    ("superficie", "error"), ("superficie", "error-hover"), ("error", "error-fondo"),
+    # Película: número de cuadro (y el resaltado en blanco)
+    ("pelicula-texto", "pelicula"), ("superficie", "pelicula"),
+    # Estado en texto sobre la mesa y el papel
+    ("ok", "fondo"), ("ok", "superficie"), ("aviso", "fondo"), ("aviso", "superficie"), ("error", "fondo"), ("error", "superficie"),
+    ("ok", "ok-fondo"), ("aviso", "aviso-fondo"), ("texto", "info-fondo"), ("texto-suave", "info-fondo"), ("info", "fondo"),
+    # Cabecera, pie, aviso de IA, notas al margen y esqueleto
+    ("cabecera-texto", "cabecera-fondo"), ("cabecera-texto-suave", "cabecera-fondo"), ("pie-texto", "pie-fondo"),
+    ("texto", "franja-fondo"), ("texto-suave", "franja-fondo"), ("texto-suave", "chip-fondo"),
+    *[("texto-suave", f"chip-{t}-fondo") for t in TIPOS_CHIP], ("texto-suave", "esqueleto-fondo"),
+    ("texto", "mesa-fondo"), ("texto-suave", "mesa-fondo"),
+    # Foto: escenario claro (contain), marca «Ver en grande» y el visor oscuro
+    ("lupa-texto", "lupa-fondo"), ("lupa-texto-suave", "lupa-fondo"),
+    ("insignia-foto-texto", "insignia-foto-fondo@lupa-fondo"), ("insignia-foto-texto", "insignia-foto-fondo@visor-fondo"),
+    ("visor-texto", "visor-fondo"), ("visor-texto-suave", "visor-fondo"), ("visor-texto", "visor-panel"),
+    ("visor-texto-suave", "visor-panel"),
 ]
-COMPONENTES = [  # (primer plano, fondo): bordes, foco, indicadores e iconos con significado, ≥ 3:1
-    ("borde-fuerte", "superficie"), ("borde-fuerte", "superficie-2"), ("borde-fuerte", "mesa-fondo"), ("acento", "superficie"),
-    ("foco", "fondo"), ("foco", "superficie"), ("foco", "aviso-fondo"), ("foco", "info-fondo"), ("foco", "panel-cabecera-fondo"),
-    ("foco-cabecera", "cabecera-fondo"), ("foco-cabecera", "lateral-fondo"), ("foco-cabecera", "visor-fondo"),
-    ("foco", "lupa-fondo"), ("foco", "franja-fondo"),
-    # Página actual del menú: el indicador naranja y el fondo activo se distinguen del grafito
-    ("nav-activo-fondo", "cabecera-fondo"), ("nav-activo-borde", "cabecera-fondo"), ("lateral-marca", "lateral-fondo"),
-    ("lateral-marca", "lateral-activo-fondo@lateral-fondo"),
-    ("chip-borde", "fondo"), ("chip-borde", "superficie"), ("chip-borde", "chip-fondo"),
-    *[(f"chip-{t}-borde", "fondo") for t in TIPOS_CHIP], *[(f"chip-{t}-borde", f"chip-{t}-fondo") for t in TIPOS_CHIP],
-    ("error", "superficie"), ("info", "info-fondo"), ("info", "superficie"), ("aviso", "aviso-fondo"), ("aviso", "superficie"),
-    # Medidor (relleno neutro, aviso y error contra su pista), progreso (neutro) y segmento elegido
-    ("grafica-1", "grafica-pista"), ("aviso", "grafica-pista"), ("error", "grafica-pista"), ("info", "superficie"),
-    ("texto", "superficie"),
+COMPONENTES = [  # (primer plano, fondo): bordes, foco, indicadores y trazos, ≥ 3:1
+    ("borde-fuerte", "superficie"), ("borde-fuerte", "fondo"), ("texto", "superficie"), ("nav-activo-borde", "cabecera-fondo"),
+    # El naranja: foco (3 px), trazos del lápiz y el límite del botón principal contra la mesa y el papel
+    ("foco", "fondo"), ("foco", "superficie"), ("foco", "superficie-2"), ("foco-cabecera", "pelicula"), ("foco-cabecera", "visor-fondo"),
+    ("lapiz", "fondo"), ("lapiz", "superficie"), ("lapiz", "pelicula"), ("accion", "fondo"), ("accion", "superficie"),
+    # Punto de estado (siempre con su texto) contra la mesa
+    ("ok-punto", "fondo"), ("aviso", "fondo"), ("error", "fondo"),
+    # Medidor y progreso contra su pista
+    ("aviso", "grafica-pista"), ("error", "grafica-pista"), ("texto", "grafica-pista"),
 ]
 
 
@@ -331,41 +325,43 @@ def test_contraste_aa_de_los_tokens(web):
     assert not fallas, "Pares de tokens bajo el mínimo AA:\n" + "\n".join(fallas)
 
 
-# ───────────────────────────── color por significado (crítica G5 · P1-03) ─────────────────────────────
-def _hsl(tokens: dict[str, str], nombre: str) -> tuple[float, float, float]:
-    r, g, b = (x / 255 for x in _color(tokens, nombre))
-    alto, bajo = max(r, g, b), min(r, g, b)
-    luz = (alto + bajo) / 2
-    if alto == bajo:
-        return 0.0, 0.0, luz
-    d = alto - bajo
-    sat = d / (2 - alto - bajo) if luz > 0.5 else d / (alto + bajo)
-    tono = ((g - b) / d % 6 if alto == r else (b - r) / d + 2 if alto == g else (r - g) / d + 4) * 60
-    return tono % 360, sat, luz
+# ───────────────────────────── color por significado (v4 «Mesa de luz») ─────────────────────────────
+NARANJA = ("lapiz", "accion", "foco", "foco-cabecera")
 
 
-def _distancia_tono(a: float, b: float) -> float:
-    return min(abs(a - b), 360 - abs(a - b))
+def _croma(tokens: dict[str, str], nombre: str) -> float:
+    r, g, b = _color(tokens, nombre)
+    return (max(r, g, b) - min(r, g, b)) / 255
 
 
-def test_color_por_significado(web):
-    """Verde, ámbar y rojo solo de estado; la procedencia no se confunde con el estado ni con el naranja de acción; los
-    datos y la información son neutros."""
+def test_naranja_solo_lapiz_y_accion_principal(web):
+    """El naranja es el lápiz graso: nunca color de texto; como relleno o borde, solo en la acción principal
+    (selectores con «primario»); como trazo, solo en el lápiz. El foco (outline) puede usarlo en cualquier lugar."""
+    hallazgos = []
+    uso = re.compile(r"var\(\s*--(?:" + "|".join(NARANJA) + r")\s*\)")
+    for nombre, texto in web["resto"].items():
+        for selector, cuerpo in re.findall(r"([^{}@;]+)\{([^{}]*)\}", texto):
+            sel = " ".join(selector.split())
+            for prop, valor in re.findall(r"([\w-]+)\s*:\s*([^;]+)", cuerpo):
+                if not uso.search(valor):
+                    continue
+                prop = prop.lower()
+                if prop.startswith("outline") or prop in ("accent-color", "caret-color"):
+                    continue
+                if prop == "color":
+                    hallazgos.append(f"{nombre}: «{sel}» usa el naranja como color de texto")
+                elif prop.startswith(("background", "border", "box-shadow")) and "primario" not in sel:
+                    hallazgos.append(f"{nombre}: «{sel}» usa el naranja en {prop} fuera de la acción principal")
+                elif prop == "stroke" and not re.search(r"lapiz|acento-trazo", sel):
+                    hallazgos.append(f"{nombre}: «{sel}» usa el naranja como trazo fuera del lápiz")
+    assert not hallazgos, "\n".join(hallazgos[:20])
+
+
+def test_datos_procedencia_e_informacion_neutros(web):
+    """Las series de datos (salvo la 5, reservada a «bloqueada»), las fuentes (notas al margen) y la información son
+    grises: croma ≤ 0.08 (los grises fríos de la mesa cuentan como neutros)."""
     tokens = web["tokens"]
-    reservados = {n: _hsl(tokens, n)[0] for n in ("ok", "aviso", "error", "acento")}
-    fallas = []
-    for tipo in TIPOS_CHIP:
-        tono, sat, _ = _hsl(tokens, f"chip-{tipo}-borde")
-        for nombre, otro in reservados.items():
-            if sat > 0.15 and _distancia_tono(tono, otro) < 30:
-                fallas.append(f"chip-{tipo}-borde ({tono:.0f}°) se confunde con --{nombre} ({otro:.0f}°)")
-    for n in (1, 2, 3, 4, 6, 7, 8):
-        _, sat, _ = _hsl(tokens, f"grafica-{n}")
-        if sat > 0.05:
-            fallas.append(f"--grafica-{n} no es neutra (saturación {sat:.2f}): los datos van en grises")
-    for nombre in ("info", "info-fondo", "franja-fondo"):
-        _, sat, _ = _hsl(tokens, nombre)
-        if sat > 0.08:
-            fallas.append(f"--{nombre} no es neutro (saturación {sat:.2f})")
+    nombres = [f"grafica-{n}" for n in (1, 2, 3, 4, 6, 7, 8)] + ["info", "info-fondo", "franja-fondo", "chip-borde"]
+    nombres += [f"chip-{t}-borde" for t in TIPOS_CHIP]
+    fallas = [f"--{n} no es neutro (croma {_croma(tokens, n):.2f})" for n in nombres if _croma(tokens, n) > 0.08]
     assert not fallas, "\n".join(fallas)
-

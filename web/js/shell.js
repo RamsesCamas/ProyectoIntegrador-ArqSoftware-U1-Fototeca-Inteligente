@@ -1,23 +1,30 @@
-// Shell de las 6 páginas (barra lateral o superior): inyecta el sprite de iconos y mantiene al día el bloque de estado
-// con GET /api/health al cargar y cada 60 s, en pausa mientras la pestaña está oculta. No usa ids de las páginas
-// (Inicio tiene su propio panel de estado) y solo cambia el DOM cuando cambia el estado: no es una región viva, para
-// no repetir avisos en los lectores de pantalla (Inicio ya anuncia los cambios).
-import { api, insignia } from "./api.js";
+// Shell de las 6 páginas (cabecera «Mesa de luz»): inyecta el sprite de iconos y mantiene al día el estado de la
+// derecha (un punto más el texto «Todo local, en verde») con GET /api/health al cargar y cada 60 s, en pausa mientras la
+// pestaña está oculta. No usa ids de las páginas (Inicio tiene su propio estado) y solo cambia el DOM cuando cambia el
+// estado: no es una región viva, para no repetir avisos en los lectores de pantalla (Inicio ya anuncia los cambios).
+import { api } from "./api.js";
 import "./iconos.js";
 
 const INTERVALO_MS = 60_000;
-const salud = document.querySelector(".lateral-salud");
+const punto = document.querySelector(".estado-local .punto-estado");
+const texto = document.querySelector(".estado-local-texto");
+// estado de /health → [color del punto, texto]. El color nunca va solo: el texto dice lo mismo.
+const ESTADOS = {
+  ok: ["ok", "Todo local, en verde"],
+  degradado: ["aviso", "Todo local, degradado"],
+  error: ["error", "Todo local, con fallas"],
+  sin_conexion: ["error", "Sin conexión con el servicio"],
+};
 let temporizador = null;
 let ultima = 0;
 let pintado = null;
 
 function pintar(estado) {
-  if (!salud || estado === pintado) return;
+  if (!texto || estado === pintado) return;
   pintado = estado;
-  const sr = document.createElement("span");
-  sr.className = "solo-lectores";
-  sr.textContent = "Estado del sistema: ";
-  salud.replaceChildren(sr, insignia(estado));
+  const [color, frase] = ESTADOS[estado] || ESTADOS.error;
+  if (punto) punto.dataset.estado = color;
+  texto.textContent = frase;
 }
 
 async function consultar() {
