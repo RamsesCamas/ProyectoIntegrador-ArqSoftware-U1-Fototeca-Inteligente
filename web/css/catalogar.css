@@ -1,8 +1,8 @@
 /* Catalogar · (a) carga en la mesa de luz, (b) espera informativa, (c) ficha como Inspector (y su variante de solo
-   lectura) y (d) lote. Solo maquetación y piezas propias, solo con var(--…): los tokens y los componentes compartidos
-   (panel, montura, chip, insignia, medidor, progreso, mensaje, pie técnico y visor) viven en base.css.
-   Dueño: la tarea de la página (T2). Las columnas responden al ancho real del contenido (consulta de contenedor sobre
-   main): 5/7 desde 56rem, que con la barra lateral o sin ella incluye 1000, 1280 y 1536 px de ventana. */
+   lectura, que en ?doc= es la página de la ficha) y (d) lote. Solo maquetación y piezas propias, solo con var(--…): los
+   tokens y los componentes compartidos (panel, montura, chip, insignia, progreso, mensaje, pie técnico y visor) viven
+   en base.css. Dueño: la tarea de la página (T2). Las columnas responden al ancho real del contenido (consulta de
+   contenedor sobre main): 5/7 desde 56rem, que con la barra lateral o sin ella incluye 1000, 1280 y 1536 px. */
 
 /* Flujo de la página: los bloques visibles se separan 24 px; los vacíos u ocultos no dejan hueco */
 .flujo { display: flex; flex-direction: column; gap: var(--e-5); min-width: 0; }
@@ -28,7 +28,8 @@
   letter-spacing: var(--tracking-titulos); }
 .zona-formatos { margin: 0; color: var(--texto-suave); }
 .zona-ayuda { max-width: 52ch; margin: var(--e-3) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
-/* «Elegir fotos» es la etiqueta de #fotos: el input queda oculto a la vista pero enfocable y su foco se ve en la etiqueta */
+/* «Elegir fotos» es la etiqueta de #fotos (primaria hasta que hay fotos): el input queda oculto a la vista pero
+   enfocable y su foco se ve en la etiqueta */
 .elegir { position: relative; margin-top: var(--e-4); }
 .elegir input[type="file"] { position: absolute; left: 0; top: 0; width: 1px; height: 1px; margin: 0; padding: 0; overflow: hidden;
   opacity: 0; }
@@ -45,7 +46,7 @@
 .vista-previa .fotograma { flex-wrap: wrap; gap: 0 var(--e-2); margin-top: 0; padding: 0; white-space: nowrap; }
 .vista-previa .boton-imagen { border-radius: 2px; }
 .vista-previa .mas-fotos { display: flex; align-items: center; justify-content: center; min-height: 6rem; padding: var(--e-3);
-  border: 1px dashed var(--borde-fuerte); border-radius: var(--radio-1); color: var(--texto-suave); text-align: center; }
+  border: 1px solid var(--borde); border-radius: var(--radio-1); color: var(--texto-suave); text-align: center; }
 .nombre-archivo { overflow: hidden; font-weight: var(--peso-medio); color: var(--texto); text-overflow: ellipsis; white-space: nowrap; }
 .carga-pie { gap: var(--e-3) var(--e-5); }
 .carga-pie .boton { flex: none; }
@@ -53,42 +54,68 @@
 .carga-estado.error { display: flex; align-items: flex-start; gap: var(--e-2); color: var(--error); font-weight: var(--peso-medio); }
 .carga-estado .icono { margin-top: 2px; }
 
-/* ── (b) Espera de una ficha (30–90 s en CPU): informativa, nunca verde de éxito ─────────────────────────────── */
-.espera { scroll-margin-top: var(--e-4); }
-.espera-reticula { display: grid; grid-template-columns: minmax(0, 1fr); }
-/* Lupa oscura con la vista previa local y una línea de escaneo sutil (sin ella con movimiento reducido) */
-.espera-foto { position: relative; display: flex; flex-direction: column; justify-content: center; gap: var(--e-3); min-width: 0;
-  min-height: 220px; margin: 0; padding: var(--e-4); background: var(--lupa-fondo); color: var(--lupa-texto);
-  border-radius: var(--radio-2) var(--radio-2) 0 0; }
-.espera-foto img { display: block; width: 100%; height: auto; max-height: 15rem; object-fit: contain; }
-.espera-foto figcaption { display: flex; justify-content: space-between; gap: var(--e-3); min-width: 0; font-size: var(--t-1);
-  color: var(--lupa-texto-suave); }
-.espera-foto figcaption .nombre-archivo { color: var(--lupa-texto); }
-.espera-foto figcaption .fotograma { flex: none; }
-.espera-foto::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+/* ── Marco de la foto: el mismo en la espera y en la ficha (4:3, contain sobre la lupa, ≤ 60vh y ≤ 28rem) ──────────── */
+figure.foto { min-width: 0; margin: 0; }
+.marco-foto { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; max-height: min(60vh, 28rem); padding: 0;
+  border: 0; border-radius: var(--radio-2); background: var(--lupa-fondo); box-shadow: var(--sombra-1); }
+.marco-foto img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; border-radius: var(--radio-2); }
+.marco-foto .lupa { z-index: 1; border-radius: var(--radio-1); }
+.foto figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-1) var(--e-4);
+  margin-top: var(--e-2); font-size: var(--t-1); color: var(--texto-suave); }
+.foto figcaption .fotograma { flex: none; }
+.foto-documento { min-width: 0; }
+.foto-estado { display: inline-flex; align-items: center; gap: var(--e-2); }
+/* Línea de escaneo sutil durante la espera (sin ella con movimiento reducido) */
+.marco-foto.escaneo::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
   background: linear-gradient(to bottom, transparent, var(--escaneo) 50%, transparent) no-repeat;
   background-size: 100% 4rem; background-position: 0 -4rem; animation: escaneo 3.2s ease-in-out infinite; }
 @keyframes escaneo { from { background-position: 0 -4rem; } to { background-position: 0 calc(100% + 4rem); } }
-@media (prefers-reduced-motion: reduce) { .espera-foto::after { display: none; } }
+@media (prefers-reduced-motion: reduce) { .marco-foto.escaneo::after { display: none; } }
 
-.espera-datos { min-width: 0; padding: var(--e-5); }
-.espera-datos h2 { margin: 0; font-size: var(--t-4); }
+/* ── Barra de la ficha (y de la espera, con la misma altura: la foto no salta al llegar la ficha) ───────────────── */
+.barra-ficha { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--e-3) var(--e-4);
+  min-height: calc(var(--alto-control) + 2 * var(--e-3) + 2px); padding: var(--e-3) var(--e-4) var(--e-3) var(--e-5);
+  background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-2); box-shadow: var(--sombra-1); }
+.barra-ficha-texto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); min-width: 0; }
+.barra-ficha h2 { flex: 0 1 auto; min-width: 0; margin: 0; font-size: var(--t-4); }
+.barra-ficha h2 > .icono { width: 22px; height: 22px; margin-right: var(--e-2); vertical-align: -.2em; color: var(--texto-suave); }
+.barra-ficha-nota { grid-column: 1 / -1; margin: 0; font-size: var(--t-1); color: var(--texto-suave); }
+/* Resumen de la generación en una línea; con los tiempos por capa, un botón que los despliega */
+.generacion { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-2); min-height: var(--objetivo-min);
+  margin: 0; font-size: var(--t-1); color: var(--texto-suave); }
+.generacion .icono { width: 16px; height: 16px; }
+.generacion.boton-enlace { color: var(--texto-suave); text-decoration: none; text-align: left; }
+.generacion-accion { display: inline-flex; align-items: center; gap: 2px; color: var(--enlace); font-weight: var(--peso-medio);
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.generacion:hover .generacion-accion { text-decoration-thickness: 2px; }
+.generacion-chevron { transition: transform var(--transicion); }
+.generacion[aria-expanded="true"] .generacion-chevron { transform: rotate(90deg); }
+.tiempos-ficha { grid-column: 1 / -1; padding-top: var(--e-3); border-top: 1px solid var(--borde-suave); }
+.tiempos-ficha h3 { margin: 0 0 var(--e-1); font-size: var(--t-1); color: var(--texto-suave); }
+.tiempos-ficha .capas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+
+/* ── (b) Espera de una ficha (30–90 s en CPU): informativa, nunca verde de éxito ─────────────────────────────── */
+.espera { scroll-margin-top: var(--e-4); }
 .nombre-en-titulo { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   vertical-align: bottom; }
-.espera .reloj { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-2); margin: var(--e-3) 0 0; }
+.espera .reloj { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-2); margin: 0; }
 .reloj-valor { font-family: var(--fuente-mono); font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1;
   letter-spacing: var(--tracking-titulos); }
 .reloj-etiqueta { color: var(--texto-suave); }
-.espera .progreso { margin-top: var(--e-4); }
-.progreso-escala { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e-1) var(--e-4); margin: var(--e-2) 0 0;
-  font-size: var(--t-1); color: var(--texto-suave); }
-.progreso-escala span { display: inline-flex; align-items: center; gap: var(--e-2); }
-.progreso-escala .valor { font-family: var(--fuente-mono); color: var(--texto); }
-.escala-marca { flex: none; width: 3px; height: .875rem; background: var(--texto); border-radius: 1px; }
-.espera-referencia { margin: var(--e-3) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
+/* Barra contra el p95: radio de 2 px, relleno en color de texto, marca del p50 en acento con su etiqueta debajo */
+.progreso.espera-progreso { height: .5rem; margin: var(--e-4) 0 0; overflow: visible; border: 0; border-radius: 2px;
+  background: var(--grafica-pista); box-shadow: inset 0 0 0 1px var(--borde); }
+.espera-progreso .progreso-relleno { background: var(--texto); border-radius: 2px; }
+.espera-progreso .progreso-marca { top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--acento);
+  box-shadow: 0 0 0 1px var(--superficie); }
+.espera-progreso.lenta .progreso-relleno { background: var(--aviso); }
+.progreso-escala { position: relative; height: 1.5rem; margin-top: var(--e-1); font-size: var(--t-1); color: var(--texto-suave); }
+.etiqueta-p50 { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.etiqueta-p50 .valor { font-family: var(--fuente-mono); color: var(--texto); }
+.espera-referencia { margin: var(--e-2) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
 .espera-datos h3 { margin: var(--e-5) 0 var(--e-2); font-size: var(--t-2); }
-/* Las 7 capas, con su icono y su p50 típico (al terminar, el tiempo real). No se marca una «etapa actual»: el servicio
-   no la reporta. */
+/* Las 7 capas, con su icono y un valor (p50 típico en la espera, tiempo real en la ficha). No se marca una «etapa
+   actual»: el servicio no la reporta. */
 .capas { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--e-6); margin: 0; padding: 0; list-style: none; }
 .capa { display: flex; align-items: center; gap: var(--e-3); min-width: 0; min-height: 2.5rem; padding: var(--e-1) 0;
   border-bottom: 1px solid var(--borde-suave); }
@@ -101,83 +128,92 @@
   color: var(--texto-suave); }
 .nota-espera .icono { margin-top: 1px; }
 .espera .mensaje { margin: var(--e-4) 0 0; }
-/* Pasado el p95: aviso (texto + color), la petición sigue en curso */
-.espera.lenta { border-color: var(--aviso-borde); }
+/* Pasado el p95: aviso (borde, reloj y mensaje), la petición sigue en curso */
+.espera.lenta .espera-datos { border-color: var(--aviso-borde); }
 .espera.lenta .reloj-valor { color: var(--aviso); }
-/* Terminada: sin la lupa (la ficha ya muestra la foto) y con las capas en rejilla */
-.espera.terminada .espera-foto { display: none; }
-.espera.terminada .capas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
-@container contenido (min-width: 56rem) {
-  .ficha-lateral.pegajosa { position: sticky; top: var(--e-4); }
-  .espera-reticula:has(> .espera-foto) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
-  .espera-foto { border-radius: var(--radio-2) 0 0 var(--radio-2); }
-  .espera-foto img { max-height: 24rem; }
-}
 
 /* ── (c) Ficha = Inspector ─────────────────────────────────────────────────────────────────────────────── */
 .revision { scroll-margin-top: var(--e-4); }
-/* Barra de la ficha: «Ficha IPTC», id, estado, ruta y tiempo; a la derecha «Catalogar otra foto» */
-.barra-ficha { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--e-3) var(--e-4);
-  padding: var(--e-3) var(--e-4) var(--e-3) var(--e-5); background: var(--superficie); border: 1px solid var(--borde);
-  border-radius: var(--radio-2); box-shadow: var(--sombra-1); }
-.barra-ficha-texto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); min-width: 0; }
-.barra-ficha h2 { flex: 0 1 auto; min-width: 0; margin: 0; font-size: var(--t-4); }
-.barra-ficha h2 > .icono { width: 22px; height: 22px; margin-right: var(--e-2); vertical-align: -.2em; color: var(--texto-suave); }
-.barra-ficha h2 .id { margin-left: var(--e-1); }
-.barra-ficha-datos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); min-width: 0; margin: 0; padding: 0; list-style: none; }
-.barra-ficha-tiempo { display: inline-flex; align-items: center; gap: var(--e-1); padding-left: var(--e-1); font-family: var(--fuente-mono);
-  font-size: var(--t-1); color: var(--texto-suave); white-space: nowrap; }
-.barra-ficha-tiempo .icono { width: 16px; height: 16px; }
-.revision > .mensaje { margin: var(--e-4) 0 0; }
 .ficha-reticula { margin-top: var(--e-5); }
+.revision.como-pagina > .ficha-reticula { margin-top: 0; }
 
-/* Columna de la foto: lupa oscura 4:3 con la foto en contain (≤ 60vh y ≤ 28rem), procedencia y avisos */
+/* Encabezado de página de la ficha guardada (?doc=): migas, h1 con el titular, estado y nota de solo lectura */
+.migas ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--e-2); margin: 0 0 var(--e-2); padding: 0;
+  font-size: var(--t-1); color: var(--texto-suave); }
+.migas li { display: inline-flex; align-items: center; gap: var(--e-2); min-width: 0; }
+.migas li + li::before { content: "›"; color: var(--texto-suave); }
+.migas a { display: inline-flex; align-items: center; min-height: var(--objetivo-min); font-weight: var(--peso-medio); }
+.encabezado-ficha-datos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); margin-top: var(--e-3); }
+.nota-solo-lectura { flex: 1 1 100%; margin: 0; font-size: var(--t-1); color: var(--texto-suave); }
+
+/* Columna de la foto: marco, procedencia y avisos */
 .ficha-lateral { display: grid; gap: var(--e-5); align-content: start; }
-figure.foto { min-width: 0; margin: 0; }
-.foto .boton-imagen { display: block; aspect-ratio: 4 / 3; max-height: min(60vh, 28rem); background: var(--lupa-fondo);
-  border-radius: var(--radio-2); box-shadow: var(--sombra-1); }
-.foto .boton-imagen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: var(--radio-2); }
-.foto .boton-imagen .lupa { z-index: 1; }
-.foto figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-1) var(--e-4);
-  margin-top: var(--e-2); font-size: var(--t-1); color: var(--texto-suave); }
-.foto-documento { min-width: 0; }
-.foto-estado { display: inline-flex; align-items: center; gap: var(--e-2); }
 .procedencia .panel-cuerpo { padding: var(--e-4) var(--e-5) var(--e-5); }
 .procedencia-campos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-2); margin: var(--e-4) 0 0;
   padding-top: var(--e-3); border-top: 1px solid var(--borde-suave); font-size: var(--t-1); color: var(--texto-suave); }
 .procedencia-campos .icono { width: 16px; height: 16px; }
-.procedencia-campos.completa { color: var(--ok); }
+.procedencia-campos.completa { flex-wrap: nowrap; align-items: flex-start; color: var(--ok); }
+.procedencia-campos.completa .icono { margin-top: 2px; }
+.procedencia-campos.completa span { flex: 1 1 auto; min-width: 0; }
 .avisos { display: grid; gap: var(--e-3); }
 .avisos .mensaje { margin: 0; }
 .aviso-titulo { font-weight: var(--peso-medio); }
 .aviso-grupo + .aviso-grupo { margin-top: var(--e-3); padding-top: var(--e-3); border-top: 1px solid var(--aviso-borde); }
 
-/* Inspector: secciones con filete, cada campo con su etiqueta, contador o medidor y su fila «Fuentes:» */
+/* Inspector: secciones con sobretítulo (14 px, seminegrita, gris, con regla encima); cada campo con su etiqueta, su
+   contador en mono a la derecha y su fila «Fuentes:» */
 .inspector .panel-cuerpo { padding: 0; }
-.seccion { min-width: 0; padding: var(--e-5); border-top: 1px solid var(--borde-suave); }
-.seccion:first-child { border-top: 0; }
-.seccion-titulo { margin: 0 0 var(--e-4); font-size: var(--t-3); }
+.seccion { min-width: 0; padding: var(--e-4) var(--e-5) var(--e-5); }
+.seccion + .seccion { padding-top: 0; }
+.seccion-titulo { margin: 0 0 var(--e-4); padding-top: var(--e-3); border-top: 1px solid var(--borde); font-size: var(--t-1);
+  font-weight: var(--peso-medio); letter-spacing: 0; color: var(--texto-suave); }
+.seccion:first-child .seccion-titulo { padding-top: 0; border-top: 0; }
 .campo-ficha { margin-bottom: var(--e-5); }
 .campo-ficha:last-child { margin-bottom: 0; }
 .campo-cabecera { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--e-3);
   margin-bottom: var(--e-1); }
-.campo-cabecera label { flex: 0 1 auto; min-width: 0; margin: 0; }
-.campo-cabecera .contador { flex: none; margin: 0; font-size: var(--t-1); color: var(--texto-suave); }
+.campo-cabecera :is(label, .etiqueta) { flex: 0 1 auto; min-width: 0; margin: 0; }
+.campo-cabecera .contador { flex: none; margin: 0; font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
+.contador[data-nivel="aviso"] { color: var(--aviso); font-weight: var(--peso-medio); }
+.contador[data-nivel="error"] { color: var(--error); font-weight: var(--peso-medio); }
 .inspector textarea { field-sizing: content; }
 .inspector:not(.solo-lectura) #campo-texto_alternativo { min-height: 5.25rem; }
 .inspector:not(.solo-lectura) :is(#campo-descripcion, #campo-descripcion_extendida) { min-height: 6.75rem; }
-.inspector .medidor { margin-top: var(--e-2); }
-/* Palabras clave: etiquetas (valor editable) y la fila para agregar */
-.palabra-tesauro a { display: inline-flex; align-items: center; gap: var(--e-1); min-height: var(--objetivo-min); }
-.palabra-tesauro .icono { width: 16px; height: 16px; color: var(--chip-tesauro-borde); }
-.etiquetas-vacio { color: var(--texto-suave); }
+.inspector :is(input, textarea)::placeholder { font-style: italic; }
+/* Barra del límite del texto alternativo: neutra; ámbar desde 225 y roja por encima de 250 («Excede» en el contador) */
+.barra-limite { position: relative; height: 4px; margin-top: var(--e-2); overflow: hidden; border-radius: 2px; background: var(--grafica-pista); }
+.barra-limite-relleno { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 2px; background: var(--borde-fuerte);
+  transition: width var(--transicion); }
+.barra-limite[data-nivel="aviso"] .barra-limite-relleno { background: var(--aviso); }
+.barra-limite[data-nivel="error"] .barra-limite-relleno { background: var(--error); }
+/* Campo vacío: «Sin contenido» en gris e itálica, sin aviso; su fila de fuentes dice que no aplica */
+.fuentes .sin-fuente.campo-vacio { font-style: italic; font-weight: var(--peso-normal); color: var(--texto-suave); }
+
+/* Solo lectura: texto plano con filete a la izquierda (las cajas son solo para editar) */
+.valor-ficha { margin: 0; padding: 2px 0 2px var(--e-3); border-left: 2px solid var(--borde); white-space: pre-line; }
+.valor-ficha.sin-contenido { font-style: italic; color: var(--texto-suave); }
+
+/* Palabras clave: chips cuadrados de texto y la tabla de qué fuente respalda cada una */
+.etiquetas-clave > .valor-ficha { list-style: none; }
+.etiqueta-clave:not(:has(.quitar)) { padding-right: .625rem; }
 .agregar-palabra { margin-top: var(--e-3); }
 .agregar-palabra .boton { flex: none; }
+.fuentes-palabras { margin-top: var(--e-3); }
+.tabla-palabras-envoltura { margin: 0; }
+.tabla-palabras { margin: 0; }
+.tabla.tabla-palabras :is(th, td) { height: 2.5rem; padding: var(--e-1) var(--e-4) var(--e-1) 0; white-space: nowrap; }
+.tabla-palabras tbody th { font-weight: var(--peso-medio); }
+.celda-fuente { display: inline-flex; align-items: center; gap: var(--e-1); }
+.enlace-externo { display: inline-grid; place-items: center; width: var(--objetivo-min); height: var(--objetivo-min);
+  border-radius: var(--radio-1); color: var(--texto-suave); }
+.enlace-externo:hover { background: var(--superficie-2); color: var(--enlace); }
+.enlace-externo .icono { width: 16px; height: 16px; }
+.fuentes-palabras > .fuentes { margin-top: var(--e-3); }
 
 /* «Tu opinión», compuesto como pie del inspector */
-.inspector-pie { display: grid; gap: var(--e-3); padding: var(--e-5); background: var(--panel-cabecera-fondo);
+.inspector-pie { display: grid; gap: var(--e-3); padding: var(--e-4) var(--e-5) var(--e-5); background: var(--panel-cabecera-fondo);
   border-top: 1px solid var(--borde); border-radius: 0 0 var(--radio-2) var(--radio-2); }
-.inspector-pie h4 { margin: 0; font-size: var(--t-3); }
+.inspector-pie .seccion-titulo { margin: 0; padding-top: 0; border-top: 0; }
 .inspector-pie p, .inspector-pie label { margin: 0; }
 .opinion-util { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); }
 .opinion-util p { font-weight: var(--peso-medio); }
@@ -186,17 +222,17 @@ figure.foto { min-width: 0; margin: 0; }
 #resultado-opinion:empty { display: none; }
 #resultado-opinion .mensaje { margin: 0; }
 
-/* Solo lectura: valores con estilo propio (sin borde punteado de control, alto al contenido, sin redimensionar) */
-.inspector.solo-lectura :is(input, textarea)[readonly] { border: 1px solid var(--borde); background: var(--superficie-2);
-  color: var(--texto); resize: none; cursor: default; }
-.inspector.solo-lectura textarea[readonly] { min-height: var(--alto-campo); }
-.inspector.solo-lectura :is(input, textarea)[readonly]:hover { border-color: var(--borde); }
-
 /* ── (d) Lote ──────────────────────────────────────────────────────────────────────────────────────────── */
 .lote-progreso { display: grid; gap: var(--e-2); margin-bottom: var(--e-5); }
 .lote-progreso:empty { display: none; }
 .lote-progreso p { margin: 0; }
 .lote-progreso .mensaje { margin: var(--e-2) 0 0; }
+/* Misma barra que la espera: radio de 2 px y relleno en color de texto */
+.lote-progreso progress { appearance: none; height: .5rem; border: 0; border-radius: 2px; background: var(--grafica-pista);
+  box-shadow: inset 0 0 0 1px var(--borde); }
+.lote-progreso progress::-webkit-progress-bar { border-radius: 2px; background: var(--grafica-pista); box-shadow: inset 0 0 0 1px var(--borde); }
+.lote-progreso progress::-webkit-progress-value { border-radius: 2px; background: var(--texto); }
+.lote-progreso progress::-moz-progress-bar { border-radius: 2px; background: var(--texto); }
 .lote-texto { font-weight: var(--peso-medio); }
 .lote-rejilla { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
   gap: var(--e-4); margin: 0; padding: 0; }
@@ -220,21 +256,24 @@ figure.foto { min-width: 0; margin: 0; }
 .tarjeta-lote.pendiente:hover { border-color: var(--montura-borde); }
 .tarjeta-lote.pendiente .esqueleto.linea { width: 70%; margin: var(--e-1) var(--e-1) 0; }
 
-/* Contenido mediano (tableta, apilado): la foto a todo el ancho y debajo, lado a lado, la procedencia y los avisos */
+/* ── Disposición por ancho del contenido ───────────────────────────────────────────────────────────────── */
+@container contenido (min-width: 56rem) {
+  .ficha-lateral.pegajosa { position: sticky; top: var(--e-4); }
+}
+/* Mediano (tableta, apilado): la foto a todo el ancho y debajo, lado a lado, la procedencia y los avisos */
 @container contenido (min-width: 40rem) and (max-width: 55.99rem) {
   .ficha-lateral { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
   .ficha-lateral > figure.foto, .ficha-lateral > .procedencia:last-child { grid-column: 1 / -1; }
 }
-
-/* Contenido angosto (móvil): el lote en 2 columnas; la barra de la ficha apila su botón */
+/* Angosto (móvil): el lote en 2 columnas; la barra de la ficha apila su botón */
 @container contenido (max-width: 30rem) {
   .lote-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); }
   .barra-ficha { grid-template-columns: minmax(0, 1fr); padding: var(--e-3) var(--e-4); }
   .barra-ficha > .boton { width: 100%; }
   .carga-pie .boton { width: 100%; }
   .zona-soltar { padding: var(--e-5) var(--e-4); }
-  .seccion, .inspector-pie { padding: var(--e-4); }
-  .espera-datos { padding: var(--e-4); }
+  .seccion { padding-inline: var(--e-4); }
+  .inspector-pie { padding-inline: var(--e-4); }
 }
 
 /* Pie técnico de la ficha con datos reales (guardrails y transiciones), para T5 en base.css: los estados de la máquina

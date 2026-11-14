@@ -1,8 +1,9 @@
 // Catalogar: subir fotos → espera informativa → ficha IPTC como Inspector (fuentes por campo) → opinión y validación.
-// Con varias fotos, un lote con su progreso. catalogar.html?doc=ID abre la ficha guardada (o la genera si no tiene).
+// Con varias fotos, un lote con su progreso. catalogar.html?doc=ID abre la ficha guardada como página propia (migas
+// «Archivo › id», h1 con el titular) o la genera si la foto todavía no tiene.
 import { api, anunciar, el, insignia } from "./api.js";
 import {
-  abrirVisor, CAPAS, crearMensaje, fuente, leyendaFuentes, medidor, mensaje, metadatosQuitados, miniatura, numero, ORDEN_CAPAS,
+  abrirVisor, CAPAS, crearMensaje, fuente, leyendaFuentes, mensaje, metadatosQuitados, miniatura, numero, ORDEN_CAPAS,
   pieTecnico, segundos, textoGuardrail, verFotoGuardada,
 } from "./comun.js";
 import { icono } from "./iconos.js";
@@ -13,13 +14,16 @@ const ETIQUETAS_CAMPO = {
 };
 const CAMPOS_TEXTO = ["titular", "texto_alternativo", "descripcion", "descripcion_extendida"];
 const MAXIMOS = { titular: 120, texto_alternativo: 250, descripcion: 800, descripcion_extendida: 1200 };
+const AVISO_ALT = 225;   // el texto alternativo pasa a ámbar desde aquí (y a rojo por encima de 250)
 const FILAS = { texto_alternativo: "3", descripcion: "4", descripcion_extendida: "4" };
 /** Icono de cada capa de la tubería (el mismo que en Inicio y Métricas). */
 const ICONO_CAPA = {
   guardrails_entrada: "escudo", cache: "rayo", contexto: "libros", enrutador: "bifurcacion",
   modelo_vision: "ojo", modelo_composicion: "pluma", guardrails_salida: "escudo-check",
 };
-const RUTAS = { rapida: "rápida", completa: "completa", cache: "caché" };
+const RUTAS = { rapida: "ruta rápida", completa: "ruta completa", cache: "desde la caché" };
+const NOTA_SOLO_LECTURA = "Ficha del archivo inicial, sin traza: se puede consultar, pero no calificar ni validar desde aquí.";
+const SIN_CONTENIDO = "Sin contenido";
 const OTRA_PESTANA = { target: "_blank", rel: "noopener" };
 const EXTERNO = "enlace externo, requiere internet";
 const MAX_PREVIAS = 24;
@@ -30,6 +34,8 @@ const $ = (id) => document.getElementById(id);
 const formularioCarga = $("formulario-carga");
 const botonCatalogar = $("boton-catalogar");
 const textoBoton = $("boton-catalogar-texto");
+const etiquetaElegir = document.querySelector(".elegir label");
+const textoElegir = $("texto-elegir");
 const estadoCarga = $("estado-carga");
 const entradaFotos = $("fotos");
 const zona = $("zona-soltar");
@@ -49,6 +55,7 @@ let ocupado = false;
 const tamano = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
 const plural = (n, uno, varios) => `${numero(n)} ${n === 1 ? uno : varios}`;
 const enc = encodeURIComponent;
+const vacio = (v) => !String(v ?? "").trim();
 /** Tiempo de reloj en m:ss (h:mm:ss si pasa de una hora). */
 function reloj(s) {
   const t = Math.max(0, Math.round(s));
@@ -58,72 +65,61 @@ function reloj(s) {
   return h ? `${h}:${String(m).padStart(2, "0")}:${ss}` : `${m}:${ss}`;
 }
 const desplazar = (nodo) => nodo.scrollIntoView({ block: "start", behavior: movimientoReducido.matches ? "auto" : "smooth" });
+const insigniaSoloLectura = () => el("span", { clase: "insignia neutra" }, icono("ojo"), "Solo lectura");
 
-// ── Fuentes de cada campo (trazabilidad) ──
-/** Flecha visible ↗ y texto para lectores de pantalla en los enlaces que salen del sistema (sin red no abren). */
-function marcaExterna(detalle = "") {
-  return [el("span", { clase: "externo", "aria-hidden": "true", texto: "↗" }),
-    el("span", { clase: "solo-lectores", texto: ` (${detalle}${EXTERNO}; se abre en otra pestaña)` })];
-}
-
+// ── Fuentes de cada campo (trazabilidad): un solo nombre por tipo, el de la leyenda ──
 const puntajeChip = (p) => (typeof p === "number" && Number.isFinite(p) ? el("span", { clase: "puntaje-chip", texto: p.toFixed(2) }) : null);
+const claseDe = (tipo) => `chip ${fuente(tipo).claseChip || `chip-${tipo}`}`;
 
 /**
- * Fuente de un campo como chip, con el icono, el color y la etiqueta de su tipo (los mismos de la leyenda): foto
- * similar (miniatura; abre el visor con la foto y la ficha del ejemplo), regla (su extracto en el título, legible sin
- * red), término del tesauro (con su URI), archivista, descripción humana de referencia o etiqueta de Open Images.
+ * Fuente de un campo como chip, con el icono, el color y el nombre de su tipo (los mismos de la leyenda) y el detalle
+ * solo si aporta: la regla concreta, el término del tesauro o la etiqueta. Una foto similar lleva su miniatura y abre el
+ * visor con la foto y la ficha del ejemplo; la regla lleva su extracto en el título (legible sin red).
  */
 function chipFuente(f) {
   const tipo = fuente(f.tipo);
-  const clase = `chip ${tipo.claseChip || `chip-${f.tipo}`}`;
+  const clase = claseDe(f.tipo);
   const puntaje = puntajeChip(f.puntaje);
+  const detalle = f.titulo || f.id;
   if (f.tipo === "foto_similar") {
-    return el("button", { type: "button", clase,
-      title: f.titulo ? `Foto similar: ${f.titulo} (ver en grande)` : `Foto similar ${f.id} (ver en grande)`,
+    return el("button", { type: "button", clase, title: `${tipo.etiqueta}: ${detalle} (ver en grande)`,
       onclick: () => verFotoGuardada(f.id, { titulo: "Foto similar usada como ejemplo",
         extra: [["Puntaje de recuperación", typeof f.puntaje === "number" ? f.puntaje.toFixed(2) : f.puntaje]] }) },
       el("img", { src: `/api/fotos/${enc(f.id)}/miniatura?lado=96`, alt: "", width: "24", height: "24", decoding: "async" }),
-      "Foto similar", puntaje,
-      el("span", { clase: "solo-lectores", texto: `: ${f.titulo || f.id} (ver la foto y su ficha)` }));
-  }
-  if (f.tipo === "tesauro") {
-    const texto = `Tesauro: ${f.titulo || f.id}`;
-    return /^https?:/.test(f.id || "")
-      ? el("a", { clase, href: f.id, ...OTRA_PESTANA, title: `${f.id} (${EXTERNO})` }, icono(tipo.icono), texto, puntaje,
-        ...marcaExterna("término del Tesauro de la UNESCO; "))
-      : el("span", { clase, title: f.id }, icono(tipo.icono), texto, puntaje);
+      tipo.etiqueta, puntaje, el("span", { clase: "solo-lectores", texto: `: ${detalle} (ver la foto y su ficha)` }));
   }
   if (f.tipo === "regla") {
-    const texto = `Regla: ${f.titulo || f.id}`;
     const titulo = f.extracto ? `${f.extracto}\n\nFragmento ${f.id}` : `Fragmento ${f.id}`;
     return f.url
-      ? el("a", { clase, href: f.url, ...OTRA_PESTANA, title: `${titulo}\n(${EXTERNO})` }, icono(tipo.icono), texto, puntaje,
-        ...marcaExterna(`fragmento ${f.id}; `))
-      : el("span", { clase, title: titulo }, icono(tipo.icono), texto, puntaje,
+      ? el("a", { clase, href: f.url, ...OTRA_PESTANA, title: `${titulo}\n(${EXTERNO})` }, icono(tipo.icono), `${tipo.etiqueta}: ${detalle}`, puntaje,
+        el("span", { clase: "externo", "aria-hidden": "true", texto: "↗" }),
+        el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id}; ${EXTERNO}; se abre en otra pestaña)` }))
+      : el("span", { clase, title: titulo }, icono(tipo.icono), `${tipo.etiqueta}: ${detalle}`, puntaje,
         el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id})` }));
   }
-  const texto = f.tipo === "archivista" ? "Corrección del archivista" : f.tipo === "referencia_humana" ? "Descripción humana de referencia"
-    : f.tipo === "etiqueta_open_images" ? `Etiqueta: ${f.titulo || f.id}` : `${tipo.etiqueta}: ${f.titulo || f.id}`;
-  return el("span", { clase, title: f.titulo || f.id }, icono(tipo.icono), texto, puntaje);
+  // Referencia humana y archivista: el tipo basta (el detalle, p. ej. el corpus y su licencia, va en el título)
+  const texto = f.tipo === "referencia_humana" || f.tipo === "archivista" ? tipo.etiqueta : `${tipo.etiqueta}: ${detalle}`;
+  return el("span", { clase, title: detalle }, icono(tipo.icono), texto, puntaje);
 }
 
 const sinFuente = () => el("span", { clase: "sin-fuente" }, icono("alerta"), "Sin fuente verificable");
+/** Un campo vacío no necesita fuente: se dice en gris, sin aviso (y no cuenta en «Procedencia»). */
+const noAplica = () => el("span", { clase: "sin-fuente campo-vacio", texto: "no aplica (sin contenido)" });
 
-function filaFuentes(id, fuentes) {
+function filaFuentes(id, fuentes, estaVacio) {
   const lista = fuentes || [];
   return el("div", { clase: "fuentes", id },
-    el("span", { clase: "fuentes-titulo", texto: "Fuentes:" }), lista.length ? lista.map(chipFuente) : sinFuente());
+    el("span", { clase: "fuentes-titulo", texto: "Fuentes:" }), lista.length ? lista.map(chipFuente) : estaVacio ? noAplica() : sinFuente());
 }
 
-const fuentesDe = (fuentes, campo) => (campo === "palabras_clave" ? (fuentes.palabras_clave || []).slice(0, 10) : fuentes[campo] || []);
-
-/** Panel «Procedencia de la ficha»: leyenda de los tipos de fuente con sus citas y los campos sin fuente verificable. */
-function panelProcedencia(fuentes) {
+/** Panel «Procedencia de la ficha»: leyenda de los tipos con sus citas y los campos CON texto que no citan fuente. */
+function panelProcedencia(ficha, fuentes) {
   const conteos = {};
   const sinCitas = [];
   for (const c of [...CAMPOS_TEXTO, "palabras_clave"]) {
-    const lista = fuentesDe(fuentes, c);
-    if (!lista.length) sinCitas.push(ETIQUETAS_CAMPO[c]);
+    const lista = fuentes[c] || [];
+    const conTexto = c === "palabras_clave" ? (ficha.palabras_clave || []).length > 0 : !vacio(ficha[c]);
+    if (conTexto && !lista.length) sinCitas.push(ETIQUETAS_CAMPO[c]);
     for (const f of lista) conteos[f.tipo] = (conteos[f.tipo] || 0) + 1;
   }
   const total = Object.values(conteos).reduce((a, b) => a + b, 0);
@@ -135,54 +131,111 @@ function panelProcedencia(fuentes) {
       sinCitas.length
         ? el("p", { clase: "procedencia-campos" }, el("span", { clase: "sin-fuente" }, icono("alerta"), "Sin fuente verificable:"),
           el("span", { texto: sinCitas.join(", ") }))
-        : el("p", { clase: "procedencia-campos completa" }, icono("check"), "Todos los campos citan al menos una fuente.")));
+        : el("p", { clase: "procedencia-campos completa" }, icono("check"),
+          el("span", { texto: "Todos los campos con contenido citan una fuente." }))));
 }
 
 // ── Campos de la ficha ──
+/**
+ * Un campo: etiqueta con su contador en mono a la derecha, el control (en edición) o el texto plano (en solo lectura) y
+ * su fila «Fuentes:». El texto alternativo lleva además una barra neutra: ámbar desde 225 y roja por encima de 250.
+ */
 function campoTexto(nombre, valor, fuentes, soloLectura) {
   const id = `campo-${nombre}`;
   const idContador = `${id}-contador`;
-  const vacio = soloLectura ? "Vacío" : nombre === "titular" ? "Vacío: escribe el titular antes de validar" : "Vacío";
-  const control = nombre === "titular"
-    ? el("input", { id, name: nombre, type: "text", value: valor || "", maxlength: MAXIMOS[nombre], readonly: soloLectura, placeholder: vacio,
-      autocomplete: "off" })
-    : el("textarea", { id, name: nombre, rows: FILAS[nombre], maxlength: MAXIMOS[nombre], readonly: soloLectura, placeholder: vacio }, valor || "");
-  control.setAttribute("aria-describedby", `${idContador} ${id}-fuentes`);
-  // Texto alternativo: medidor 0–250 (color por umbral más texto); los demás, contador «n/máx caracteres»
-  const conMedidor = nombre === "texto_alternativo";
-  let contador = conMedidor ? medidor(control.value.length, MAXIMOS[nombre], { id: idContador })
-    : el("span", { clase: "contador", id: idContador });
+  const max = MAXIMOS[nombre];
+  const estaVacio = vacio(valor);
+  const contador = el("span", { clase: "contador", id: idContador });
+  const etiqueta = soloLectura ? el("span", { clase: "etiqueta", id: `${id}-etiqueta`, texto: ETIQUETAS_CAMPO[nombre] })
+    : el("label", { for: id, texto: ETIQUETAS_CAMPO[nombre] });
+  let control;
+  if (soloLectura) {
+    control = el("p", { id, clase: `valor-ficha${estaVacio ? " sin-contenido" : ""}`, "aria-labelledby": `${id}-etiqueta`,
+      "aria-describedby": `${idContador} ${id}-fuentes` }, estaVacio ? SIN_CONTENIDO : valor);
+  } else {
+    control = nombre === "titular"
+      ? el("input", { id, name: nombre, type: "text", value: valor || "", maxlength: max, placeholder: SIN_CONTENIDO, autocomplete: "off" })
+      : el("textarea", { id, name: nombre, rows: FILAS[nombre], maxlength: max, placeholder: SIN_CONTENIDO }, valor || "");
+    control.setAttribute("aria-describedby", `${idContador} ${id}-fuentes`);
+  }
+  const relleno = nombre === "texto_alternativo" ? el("span", { clase: "barra-limite-relleno" }) : null;
+  const barra = relleno ? el("div", { clase: "barra-limite", "aria-hidden": "true" }, relleno) : null;
   const actualizar = () => {
-    if (conMedidor) {
-      const nuevo = medidor(control.value.length, MAXIMOS[nombre], { id: idContador });
-      contador.replaceWith(nuevo);
-      contador = nuevo;
-    } else {
-      contador.textContent = `${control.value.length}/${MAXIMOS[nombre]} caracteres`;
+    const n = soloLectura ? (valor || "").length : control.value.length;
+    const nivel = n > max ? "error" : barra && n >= AVISO_ALT ? "aviso" : "ok";
+    contador.dataset.nivel = nivel;
+    contador.replaceChildren(`${n}/${max}`, el("span", { clase: "solo-lectores", texto: " caracteres" }), n > max ? " · Excede" : "");
+    if (barra) {
+      barra.dataset.nivel = nivel;
+      relleno.style.width = `${Math.min(100, (n / max) * 100).toFixed(1)}%`;
     }
   };
-  control.addEventListener("input", actualizar);
-  // Enter en el titular no envía el formulario (el primer botón de envío es «Validar ficha»)
-  if (nombre === "titular") control.addEventListener("keydown", (ev) => { if (ev.key === "Enter") ev.preventDefault(); });
-  if (!conMedidor) actualizar();
-  return el("div", { clase: "campo campo-ficha" },
-    el("div", { clase: "campo-cabecera" }, el("label", { for: id, texto: ETIQUETAS_CAMPO[nombre] }), conMedidor ? null : contador),
-    control, conMedidor ? contador : null, filaFuentes(`${id}-fuentes`, fuentes));
+  if (!soloLectura) {
+    control.addEventListener("input", actualizar);
+    // Enter en el titular no envía el formulario (el primer botón de envío es «Validar ficha»)
+    if (nombre === "titular") control.addEventListener("keydown", (ev) => { if (ev.key === "Enter") ev.preventDefault(); });
+  }
+  actualizar();
+  return el("div", { clase: "campo campo-ficha" }, el("div", { clase: "campo-cabecera" }, etiqueta, contador),
+    control, barra, filaFuentes(`${id}-fuentes`, fuentes, estaVacio));
+}
+
+/**
+ * Qué fuente respalda cada palabra: su término del Tesauro de la UNESCO (con su puntaje) y, en las fichas del archivo
+ * inicial, la etiqueta de Open Images de la que salió (la fuente que la precede en la lista). Lo que no se puede
+ * asignar a una palabra (p. ej. las fotos similares) queda en una fila «Para todas las palabras».
+ */
+function origenPalabras(items, fuentes) {
+  const usadas = new Set();
+  const filas = items.map((p) => {
+    const i = fuentes.findIndex((f, j) => !usadas.has(j) && f.tipo === "tesauro" && ((p.uri && f.id === p.uri) || f.titulo === p.termino));
+    if (i >= 0) usadas.add(i);
+    const k = i > 0 && fuentes[i - 1].tipo === "etiqueta_open_images" && !usadas.has(i - 1) ? i - 1 : -1;
+    if (k >= 0) usadas.add(k);
+    return { p, tesauro: i >= 0 ? fuentes[i] : null, etiqueta: k >= 0 ? fuentes[k] : null };
+  });
+  const conEtiqueta = filas.some((f) => f.etiqueta);
+  const resto = fuentes.filter((_, j) => !usadas.has(j));
+  const celdaTesauro = (f) => el("span", { clase: "celda-fuente" },
+    el("span", { clase: claseDe("tesauro"), title: f.id }, icono(fuente("tesauro").icono), f.titulo || f.id, puntajeChip(f.puntaje)),
+    /^https?:/.test(f.id || "") ? el("a", { clase: "enlace-externo", href: f.id, ...OTRA_PESTANA, title: `${f.id} (${EXTERNO})`,
+      "aria-label": `${f.titulo || f.id} en el Tesauro de la UNESCO (${EXTERNO}; se abre en otra pestaña)` }, icono("externo")) : null);
+  const nodos = [];
+  if (filas.length) {
+    nodos.push(el("div", { clase: "desplazable tabla-palabras-envoltura" }, el("table", { clase: "tabla tabla-compacta tabla-palabras" },
+      el("caption", { clase: "solo-lectores", texto: "Fuente de cada palabra clave" }),
+      el("thead", {}, el("tr", {}, el("th", { scope: "col", texto: "Palabra" }), el("th", { scope: "col", texto: fuente("tesauro").etiqueta }),
+        conEtiqueta ? el("th", { scope: "col", texto: fuente("etiqueta_open_images").etiqueta }) : null)),
+      el("tbody", {}, filas.map(({ p, tesauro, etiqueta }) => el("tr", {},
+        el("th", { scope: "row", texto: p.termino }),
+        el("td", {}, tesauro ? celdaTesauro(tesauro) : el("span", { clase: "suave", texto: "Término libre" })),
+        conEtiqueta ? el("td", {}, etiqueta
+          ? el("span", { clase: claseDe("etiqueta_open_images"), title: etiqueta.id }, icono(fuente("etiqueta_open_images").icono), etiqueta.titulo || etiqueta.id)
+          : el("span", { clase: "suave", texto: "—" })) : null))))));
+  }
+  if (resto.length || !filas.length) {
+    nodos.push(el("div", { clase: "fuentes" }, el("span", { clase: "fuentes-titulo", texto: filas.length ? "Para todas las palabras:" : "Fuentes:" }),
+      resto.length ? resto.map(chipFuente) : noAplica()));
+  }
+  return nodos;
 }
 
 function campoPalabras(palabras, fuentes, soloLectura) {
   const lista = el("ul", { clase: "etiquetas-clave", id: "palabras-lista", "aria-labelledby": "palabras-titulo" });
   const items = [...palabras];
+  const todas = fuentes || [];
+  const origen = el("div", { clase: "fuentes-palabras", id: "campo-palabras_clave-fuentes" });
   const entrada = soloLectura ? null : el("input", { id: "palabra-nueva", type: "text", maxlength: "80", placeholder: "Nueva palabra clave",
     autocomplete: "off" });
-  const pintar = () => lista.replaceChildren(...(items.length ? items.map((p, i) => el("li", { clase: `etiqueta-clave palabra-${p.origen || "libre"}` },
-    p.origen === "tesauro" && p.uri
-      ? el("a", { href: p.uri, ...OTRA_PESTANA, title: `${p.uri} (${EXTERNO})` }, icono("tesauro"), p.termino, ...marcaExterna("término del tesauro; "))
-      : p.termino,
-    soloLectura ? null : el("button", { type: "button", clase: "quitar", "aria-label": `Quitar ${p.termino}`, onclick: () => {
-      items.splice(i, 1); pintar(); anunciar(`Se quitó ${p.termino}`); entrada.focus();
-    } }, icono("cerrar"))))
-    : [el("li", { clase: "etiquetas-vacio", texto: "Sin palabras clave" })]));
+  // Las palabras son chips cuadrados de texto (sin enlace): su término del tesauro, con su enlace, va en la tabla de abajo
+  const pintar = () => {
+    lista.replaceChildren(...(items.length ? items.map((p, i) => el("li", { clase: "etiqueta-clave" }, p.termino,
+      soloLectura ? null : el("button", { type: "button", clase: "quitar", "aria-label": `Quitar ${p.termino}`, onclick: () => {
+        items.splice(i, 1); pintar(); anunciar(`Se quitó ${p.termino}`); entrada.focus();
+      } }, icono("cerrar"))))
+      : [el("li", { clase: "valor-ficha sin-contenido", texto: SIN_CONTENIDO })]));
+    origen.replaceChildren(...origenPalabras(items, todas));
+  };
   const agregar = () => {
     const t = entrada.value.trim();
     if (!t) { entrada.focus(); return; }
@@ -204,12 +257,13 @@ function campoPalabras(palabras, fuentes, soloLectura) {
       soloLectura ? null : [el("label", { for: "palabra-nueva", clase: "solo-lectores", texto: "Agregar palabra clave" }),
         el("div", { clase: "fila agregar-palabra" }, entrada,
           el("button", { type: "button", clase: "boton secundario", onclick: agregar }, icono("mas"), "Agregar"))],
-      filaFuentes("campo-palabras_clave-fuentes", fuentesDe(fuentes, "palabras_clave"))),
+      origen),
     items,
     reemplazar: (nuevas) => { items.splice(0, items.length, ...nuevas); pintar(); },
   };
 }
 
+/** Sección del inspector con su sobretítulo (14 px, seminegrita, gris, con regla encima). */
 const seccion = (id, titulo, ...hijos) => el("div", { clase: "seccion", role: "group", "aria-labelledby": id },
   el("h4", { id, clase: "seccion-titulo", texto: titulo }), ...hijos);
 
@@ -236,17 +290,50 @@ function avisos(ficha, meta) {
   return nodos;
 }
 
-/** Insignia de la ruta que siguió la ficha (rápida, completa o caché), o de su origen si es una ficha guardada. */
-function insigniaRuta(meta, soloLectura) {
-  const conIcono = (clase, nombreIcono, texto) => el("span", { clase: `insignia ${clase}` }, icono(nombreIcono), texto);
-  if (soloLectura) return conIcono("neutra", "ojo", "Solo lectura");
-  if (meta.cache === "exacta" || meta.cache === "semantica") return conIcono("info", "rayo", meta.cache === "exacta" ? "Caché exacta" : "Caché semántica");
-  const ruta = meta.ruta || "";
-  if (ruta === "rapida") return conIcono("info", "bifurcacion", "Ruta rápida");
-  if (ruta === "completa") return conIcono("info", "bifurcacion", "Ruta completa");
-  if (ruta === "cache") return conIcono("info", "rayo", "Caché");
-  if (ruta.startsWith("guardada")) return conIcono("neutra", "archivo", "Ficha guardada");
-  return conIcono("neutra", "info", ruta || "Sin ruta");
+/** Las 7 capas con su icono y un valor por capa (p50 típico o tiempo real); devuelve la lista y sus celdas de valor. */
+function listaCapas() {
+  const valores = {};
+  const items = {};
+  const lista = el("ol", { clase: "capas", role: "list" }, ORDEN_CAPAS.map((k) => {
+    valores[k] = el("span", { clase: "capa-tiempo" });
+    items[k] = el("li", { clase: "capa" }, icono(ICONO_CAPA[k]), el("span", { clase: "capa-nombre", texto: CAPAS[k] }), valores[k]);
+    return items[k];
+  }));
+  return { lista, valores, items };
+}
+
+/**
+ * Resumen de la generación en una línea («Generada en 10.2 s · ruta rápida»). Si la respuesta trae los tiempos por capa,
+ * es un botón que despliega la lista con el tiempo real de cada capa (el pie técnico tiene además la barra apilada).
+ */
+function resumenGeneracion(meta) {
+  const partes = [];
+  if (typeof meta.tiempo_ms === "number") partes.push(`Generada en ${segundos(meta.tiempo_ms)}`);
+  const cache = meta.cache === "exacta" ? "caché exacta" : meta.cache === "semantica" ? "caché semántica" : null;
+  const ruta = cache || RUTAS[meta.ruta];
+  if (ruta) partes.push(ruta);
+  if (!partes.length) return { control: null, region: null };
+  const texto = partes.join(" · ");
+  const reales = meta.tiempos_por_capa_ms || {};
+  if (!ORDEN_CAPAS.some((k) => typeof reales[k] === "number")) {
+    return { control: el("p", { clase: "generacion" }, icono("reloj"), texto), region: null };
+  }
+  const { lista, valores, items } = listaCapas();
+  for (const k of ORDEN_CAPAS) {
+    const v = reales[k];
+    const usada = typeof v === "number" && v > 0;
+    items[k].classList.add(usada ? "usada" : "no-usada");
+    valores[k].textContent = usada ? segundos(v) : "no se usó";
+  }
+  const region = el("div", { clase: "tiempos-ficha", id: "tiempos-ficha", hidden: true },
+    el("h3", { texto: "Tiempo real de cada capa en esta ficha" }), lista);
+  const control = el("button", { type: "button", clase: "generacion boton-enlace", "aria-expanded": "false", "aria-controls": "tiempos-ficha",
+    onclick: (ev) => {
+      const abierto = ev.currentTarget.getAttribute("aria-expanded") === "true";
+      ev.currentTarget.setAttribute("aria-expanded", String(!abierto));
+      region.hidden = abierto;
+    } }, icono("reloj"), el("span", { texto }), el("span", { clase: "generacion-accion" }, "Tiempos por capa", icono("chevron", "generacion-chevron")));
+  return { control, region };
 }
 
 // ── Carga: plegar y desplegar ──
@@ -266,6 +353,46 @@ function desplegarCarga() {
   desplazar(formularioCarga);
 }
 
+// ── Encabezado de la ficha guardada (catalogar.html?doc=ID): la página es la ficha ──
+function migas(doc) {
+  return el("nav", { clase: "migas", "aria-label": "Ruta de navegación" }, el("ol", {},
+    el("li", {}, el("a", { href: "archivo.html", texto: "Archivo" })),
+    el("li", {}, el("span", { clase: "id", "aria-current": "page", texto: doc }))));
+}
+
+/** Módulo activo de origen (Archivo) en la navegación. */
+function marcarArchivoActivo() {
+  for (const a of document.querySelectorAll("nav.navegacion a")) {
+    if (a.getAttribute("href") === "archivo.html") a.setAttribute("aria-current", "page");
+    else a.removeAttribute("aria-current");
+  }
+}
+
+/** Mientras carga: migas y h1 provisional (sin id: la ficha aún no está lista). */
+function encabezadoProvisional(doc) {
+  const texto = document.querySelector(".encabezado-pagina .encabezado-texto");
+  if (!texto) return;
+  texto.replaceChildren(migas(doc), el("h1", { texto: `Ficha ${doc}` }));
+  marcarArchivoActivo();
+}
+
+/** Encabezado de página de la ficha: migas, h1 con el titular, estado, «Solo lectura» con su nota y la acción. */
+function encabezadoDeFicha(doc, ficha, soloLectura, estado) {
+  const titulo = el("h1", { id: "titulo-revision", tabindex: "-1", texto: ficha.titular || `Ficha ${doc}` });
+  const cabecera = document.querySelector(".encabezado-pagina");
+  const texto = cabecera?.querySelector(".encabezado-texto");
+  if (!texto) return titulo;
+  cabecera.classList.add("encabezado-ficha");
+  texto.replaceChildren(migas(doc), titulo,
+    el("div", { clase: "encabezado-ficha-datos" }, estado(), soloLectura ? insigniaSoloLectura() : null,
+      soloLectura ? el("p", { clase: "nota-solo-lectura", texto: NOTA_SOLO_LECTURA }) : null));
+  cabecera.querySelector(".encabezado-acciones")?.replaceChildren(
+    el("a", { clase: "boton secundario", href: "catalogar.html" }, icono("subir"), "Catalogar otra foto"));
+  marcarArchivoActivo();
+  document.title = `${ficha.titular || `Ficha ${doc}`} · Archivo · Fototeca Viva`;
+  return titulo;
+}
+
 // ── (c) Ficha = Inspector ──
 // La columna de la foto acompaña al inspector al desplazarse (pegajosa) solo si cabe entera en la ventana: si fuera más
 // alta, sus avisos de abajo quedarían ocultos hasta el final del inspector.
@@ -277,29 +404,35 @@ function ajustarColumnaFoto() {
 const observadorColumna = new ResizeObserver(ajustarColumnaFoto);
 window.addEventListener("resize", ajustarColumnaFoto);
 
-function mostrarFicha(respuesta) {
+/**
+ * Muestra una ficha. `comoPagina` (ficha guardada abierta con ?doc=): el encabezado de la página es el de la ficha.
+ * Si no, la ficha lleva su barra («Ficha IPTC», resumen de la generación y «Catalogar otra foto») y el pie de la foto
+ * dice el documento y su estado (una sola vez en la vista).
+ */
+function mostrarFicha(respuesta, { comoPagina = false } = {}) {
   const { documento_id: doc, ficha, fuentes = {}, meta = {} } = respuesta;
   let original = structuredClone(ficha);
   // Sin traza (fichas del archivo inicial): solo lectura, sin «Tu opinión» ni validación
   const soloLectura = !meta.traza_id;
-  const estados = [];   // insignias de estado (barra y pie de foto): se actualizan juntas al validar
+  const estados = [];   // insignias de estado: se actualizan juntas al validar
   const estado = () => { const n = el("span", { clase: "estado-ficha" }, insignia(ficha.estado)); estados.push(n); return n; };
 
-  // Barra de la ficha: «Ficha IPTC» + id · estado · ruta · tiempo · «Catalogar otra foto»
-  const titulo = el("h2", { id: "titulo-revision", tabindex: "-1" }, icono("catalogar"), "Ficha IPTC ",
-    el("span", { clase: "id", texto: doc }), soloLectura ? el("span", { clase: "solo-lectores", texto: " (solo lectura)" }) : null);
-  botonOtraFoto = el("button", { type: "button", clase: "boton secundario", id: "otra-foto", onclick: desplegarCarga },
-    icono("subir"), "Catalogar otra foto");
-  const tiempo = typeof meta.tiempo_ms === "number" ? el("li", { clase: "barra-ficha-tiempo" }, icono("reloj"),
-    el("span", { clase: "solo-lectores", texto: "Tiempo de generación: " }), segundos(meta.tiempo_ms)) : null;
-  const barra = el("header", { clase: "barra-ficha" },
-    el("div", { clase: "barra-ficha-texto" }, titulo,
-      el("ul", { clase: "barra-ficha-datos", "aria-label": "Estado de la ficha" },
-        el("li", {}, estado()), el("li", {}, insigniaRuta(meta, soloLectura)), tiempo)),
-    botonOtraFoto);
+  let titulo;
+  let barra = null;
+  if (comoPagina) {
+    titulo = encabezadoDeFicha(doc, ficha, soloLectura, estado);
+  } else {
+    titulo = el("h2", { id: "titulo-revision", tabindex: "-1" }, icono("catalogar"), "Ficha IPTC");
+    const { control, region } = resumenGeneracion(meta);
+    botonOtraFoto = el("button", { type: "button", clase: "boton secundario", id: "otra-foto", onclick: desplegarCarga },
+      icono("subir"), "Catalogar otra foto");
+    barra = el("header", { clase: "barra-ficha" },
+      el("div", { clase: "barra-ficha-texto" }, titulo, control, soloLectura ? insigniaSoloLectura() : null),
+      botonOtraFoto, region, soloLectura ? el("p", { clase: "barra-ficha-nota", texto: NOTA_SOLO_LECTURA }) : null);
+  }
 
-  // Inspector: Identificación, Accesibilidad, Descripción y Palabras clave
-  const palabras = campoPalabras(ficha.palabras_clave || [], fuentes, soloLectura);
+  // Inspector: Identificación, Accesibilidad, Descripciones y Palabras clave
+  const palabras = campoPalabras(ficha.palabras_clave || [], fuentes.palabras_clave, soloLectura);
   const destino = el("div", { id: "resultado-opinion", "aria-live": "polite" });
   const estadoUtil = { valor: null };
   let pie = null;
@@ -314,7 +447,7 @@ function mostrarFicha(respuesta) {
       } }, icono(nombreIcono), texto);
     grupoUtil.append(botonUtil(true, "Útil", "check"), botonUtil(false, "No útil", "error"));
     pie = el("footer", { clase: "inspector-pie", role: "group", "aria-labelledby": "titulo-opinion" },
-      el("h4", { id: "titulo-opinion", texto: "Tu opinión" }),
+      el("h4", { id: "titulo-opinion", clase: "seccion-titulo", texto: "Tu opinión" }),
       el("div", { clase: "opinion-util" }, el("p", { id: "pregunta-util", texto: "¿Te fue útil la ficha?" }), grupoUtil),
       el("div", { clase: "opinion-comentario" }, el("label", { for: "comentario", texto: "Comentario (opcional)" }),
         el("textarea", { id: "comentario", rows: "2", maxlength: "1000" })),
@@ -328,7 +461,7 @@ function mostrarFicha(respuesta) {
     el("div", { clase: "panel-cuerpo" },
       seccion("seccion-identificacion", "Identificación", campos.titular),
       seccion("seccion-accesibilidad", "Accesibilidad", campos.texto_alternativo),
-      seccion("seccion-descripcion", "Descripción", campos.descripcion, campos.descripcion_extendida),
+      seccion("seccion-descripciones", "Descripciones", campos.descripcion, campos.descripcion_extendida),
       seccion("palabras-titulo", "Palabras clave", palabras.nodo)),
     pie);
   formulario.addEventListener("submit", async (ev) => {
@@ -371,30 +504,27 @@ function mostrarFicha(respuesta) {
     }
   });
 
-  // Foto: lupa oscura (contain); el visor muestra la copia guardada y la ficha tal como está guardada (se actualiza al validar)
+  // Foto: el mismo marco que en la espera (contain sobre la lupa); el visor muestra la copia guardada y la ficha tal
+  // como está guardada (se actualiza al validar)
   const verGuardada = () => verFotoGuardada(doc, { titulo: "Foto guardada en el archivo", ficha: original, enlaceFicha: false,
     extra: [["Ruta", meta.ruta], ["Metadatos quitados al guardar", metadatosQuitados(meta)]] });
   const foto = el("figure", { clase: "foto" },
-    el("button", { type: "button", clase: "boton-imagen", "aria-label": "Ver en grande la foto guardada y su ficha", onclick: verGuardada },
+    el("button", { type: "button", clase: "boton-imagen marco-foto", "aria-label": "Ver en grande la foto guardada y su ficha", onclick: verGuardada },
       el("img", { src: `/api/fotos/${enc(doc)}/miniatura?lado=512`, width: "512", height: "384", decoding: "async",
         alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
       el("span", { clase: "lupa", "aria-hidden": "true" }, icono("lupa-foto"), "Ver en grande")),
-    el("figcaption", {}, el("span", { clase: "foto-documento" }, "Documento ", el("span", { clase: "id", texto: doc })),
+    comoPagina ? null : el("figcaption", {}, el("span", { clase: "foto-documento" }, "Documento ", el("span", { clase: "id", texto: doc })),
       el("span", { clase: "foto-estado" }, el("span", { clase: "solo-lectores", texto: " · " }), "Estado: ", estado())));
   const listaAvisos = avisos(ficha, meta);
   const inspector = el("section", { clase: `panel inspector col-7${soloLectura ? " solo-lectura" : ""}`, "aria-labelledby": "titulo-inspector" },
     el("header", { clase: "panel-cabecera" }, icono("pluma"), el("h3", { id: "titulo-inspector", texto: "Campos de la ficha" }),
-      el("p", { clase: "panel-auxiliar", texto: soloLectura ? "Solo lectura" : "Edítalos y valida la ficha" })),
+      soloLectura ? null : el("p", { clase: "panel-auxiliar", texto: "Edítalos y valida la ficha" })),
     formulario);
 
-  const lateral = el("div", { clase: "ficha-lateral col-5" }, foto, panelProcedencia(fuentes),
+  const lateral = el("div", { clase: "ficha-lateral col-5" }, foto, panelProcedencia(ficha, fuentes),
     listaAvisos.length ? el("div", { clase: "avisos" }, ...listaAvisos) : null);
-  revision.replaceChildren(...[
-    barra,
-    soloLectura ? crearMensaje("Esta ficha es de solo lectura: viene del archivo inicial y no tiene traza, así que no se puede "
-      + "calificar ni validar desde aquí.", "info") : null,
-    el("div", { clase: "reticula ficha-reticula" }, lateral, inspector),
-    pieTecnico(meta)].filter(Boolean));
+  revision.replaceChildren(...[barra, el("div", { clase: "reticula ficha-reticula" }, lateral, inspector), pieTecnico(meta)].filter(Boolean));
+  revision.classList.toggle("como-pagina", comoPagina);
   observadorColumna.disconnect();
   columnaFoto = lateral;
   observadorColumna.observe(lateral);
@@ -402,7 +532,7 @@ function mostrarFicha(respuesta) {
   plegarCarga();
   // Foco en el título (sin anillo) y la ficha arriba de la ventana
   titulo.focus({ preventScroll: true });
-  desplazar(revision);
+  desplazar(comoPagina ? document.querySelector(".encabezado-pagina") || revision : revision);
   anunciar(`Ficha lista: ${ficha.titular || "sin titular"}`);
 }
 
@@ -430,39 +560,37 @@ function marcarOcupado(si) {
 }
 
 /**
- * Panel de espera: a la izquierda la foto sobre la lupa oscura; a la derecha el tiempo transcurrido, la barra contra el
- * p95 de las fichas registradas (marca en el p50) y las 7 capas con su p50 típico. No inventa la etapa actual (el
- * servicio no la reporta). Al terminar, la lista se llena con los tiempos reales de meta.tiempos_por_capa_ms. No es
- * una región viva: los lectores de pantalla oyen un aviso cada 20 s (anunciar), no uno por segundo.
+ * Espera con la misma anatomía que tendrá la ficha: una barra de título arriba y, debajo, la foto en el mismo marco y
+ * lugar (contain sobre la lupa, con una línea de escaneo sutil) y un panel con el tiempo transcurrido, la barra contra
+ * el p95 de las fichas registradas (marca y etiqueta del p50) y los tiempos típicos por capa. No inventa la etapa actual
+ * (el servicio no la reporta). Al terminar, la ficha ocupa su lugar y sus tiempos reales quedan en su barra. No es una
+ * región viva: los lectores de pantalla oyen un aviso cada 20 s (anunciar), no uno por segundo.
  */
 function panelEspera({ nombre = null, src = null, alt = "", detalle = "" } = {}) {
   const inicio = Date.now();
   const transcurrido = () => (Date.now() - inicio) / 1000;
-  const titulo = el("h2", { id: "titulo-espera", tabindex: "-1" }, "Generando la ficha",
+  const titulo = el("h2", { id: "titulo-espera", tabindex: "-1" }, icono("reloj"), "Generando la ficha",
     nombre ? [" de «", el("span", { clase: "nombre-en-titulo", texto: nombre, title: nombre }), "»"] : null);
   const valorReloj = el("span", { clase: "reloj-valor", texto: "0:00" });
   const filaReloj = el("p", { clase: "reloj", "aria-hidden": "true" }, valorReloj, el("span", { clase: "reloj-etiqueta", texto: "transcurridos" }));
   const relleno = el("span", { clase: "progreso-relleno" });
   const marca = el("span", { clase: "progreso-marca" });
-  const barra = el("div", { clase: "progreso", "aria-hidden": "true", hidden: true }, relleno, marca);
-  const escala = el("p", { clase: "progreso-escala", hidden: true });
+  const barra = el("div", { clase: "progreso espera-progreso", "aria-hidden": "true", hidden: true }, relleno, marca);
+  const etiquetaP50 = el("span", { clase: "etiqueta-p50" });
+  const escala = el("div", { clase: "progreso-escala", "aria-hidden": "true", hidden: true }, etiquetaP50);
   const referencia = el("p", { clase: "espera-referencia", texto: "Consultando cuánto suelen tardar las fichas…" });
-  const subtitulo = el("h3", { texto: "Capas por las que pasa la foto" });
-  const tiempos = {};
-  const items = {};
-  const lista = el("ol", { clase: "capas", role: "list" }, ORDEN_CAPAS.map((k) => {
-    tiempos[k] = el("span", { clase: "capa-tiempo" });
-    items[k] = el("li", { clase: "capa" }, icono(ICONO_CAPA[k]), el("span", { clase: "capa-nombre", texto: CAPAS[k] }), tiempos[k]);
-    return items[k];
-  }));
+  const subtitulo = el("h3", { texto: "Tiempos típicos por capa (p50)" });
+  const { lista, valores } = listaCapas();
   let nota = el("p", { clase: "nota-espera" }, icono("info"),
     el("span", { texto: "La petición sigue en curso aunque no veas cambios: no recargues ni cierres la página." }));
-  const foto = src ? el("figure", { clase: "espera-foto" }, el("img", { src, alt, decoding: "async" }),
+  const foto = src ? el("figure", { clase: "foto col-5" }, el("div", { clase: "marco-foto escaneo" }, el("img", { src, alt, decoding: "async" })),
     nombre || detalle ? el("figcaption", {}, el("span", { clase: "nombre-archivo", texto: nombre || "" }),
       detalle ? el("span", { clase: "fotograma", texto: detalle }) : null) : null) : null;
-  const nodo = el("section", { clase: "panel espera", "aria-labelledby": "titulo-espera" },
-    el("div", { clase: "espera-reticula" }, foto,
-      el("div", { clase: "espera-datos" }, titulo, filaReloj, barra, escala, referencia, subtitulo, lista, nota)));
+  const datos = el("div", { clase: `panel espera-datos ${foto ? "col-7" : "col-12"}` },
+    el("div", { clase: "panel-cuerpo" }, filaReloj, barra, escala, referencia, subtitulo, lista, nota));
+  const nodo = el("section", { clase: "espera", "aria-labelledby": "titulo-espera" },
+    el("header", { clase: "barra-ficha barra-espera" }, el("div", { clase: "barra-ficha-texto" }, titulo)),
+    el("div", { clase: "reticula ficha-reticula" }, foto, datos));
   let p50 = null;
   let p95 = null;
   let vigente = true;
@@ -496,53 +624,30 @@ function panelEspera({ nombre = null, src = null, alt = "", detalle = "" } = {})
     }
     p50 = f.total.p50_ms / 1000;
     p95 = f.total.p95_ms / 1000;
-    marca.style.left = `${Math.min(100, (p50 / p95) * 100).toFixed(1)}%`;
+    const posicion = Math.min(100, (p50 / p95) * 100);
+    marca.style.left = `${posicion.toFixed(1)}%`;
+    etiquetaP50.style.left = `${Math.min(88, Math.max(12, posicion)).toFixed(1)}%`;
+    etiquetaP50.replaceChildren("p50 ", el("span", { clase: "valor", texto: reloj(p50) }));
     barra.hidden = false;
-    escala.replaceChildren(
-      el("span", {}, el("span", { clase: "escala-marca", "aria-hidden": "true" }), "Marca: p50", el("span", { clase: "valor", texto: reloj(p50) })),
-      el("span", {}, "Fin de la barra: p95", el("span", { clase: "valor", texto: reloj(p95) })));
     escala.hidden = false;
-    referencia.textContent = `Según las ${numero(f.total.n)} fichas registradas en las métricas: la mitad termina antes de `
-      + `${reloj(p50)} y el 95 % antes de ${reloj(p95)}.`;
-    subtitulo.textContent = "Capas por las que pasa la foto (p50 de cada una)";
-    for (const k of ORDEN_CAPAS) if (f[k]?.n) tiempos[k].textContent = `p50 ${segundos(f[k].p50_ms)}`;
+    referencia.textContent = `Según las ${numero(f.total.n)} fichas registradas: la mitad termina antes de ${reloj(p50)} (la marca) `
+      + `y la barra se llena en el p95, ${reloj(p95)}.`;
+    for (const k of ORDEN_CAPAS) if (f[k]?.n) valores[k].textContent = segundos(f[k].p50_ms);
     tic();
   });
+  const detener = () => {
+    vigente = false;
+    clearInterval(reloj1s);
+    nodo.remove();
+  };
   return {
     nodo,
     enfocar: () => {
       titulo.focus({ preventScroll: true });
       desplazar(nodo);
     },
-    terminar: (meta = {}) => {
-      vigente = false;
-      clearInterval(reloj1s);
-      const total = typeof meta.tiempo_ms === "number" ? meta.tiempo_ms : transcurrido() * 1000;
-      nodo.classList.remove("lenta");
-      barra.classList.remove("lenta");
-      nodo.classList.add("terminada");
-      titulo.textContent = `Ficha generada en ${segundos(total)}`;
-      filaReloj.remove();
-      nota.remove();
-      foto?.remove();
-      if (p95) relleno.style.width = `${Math.min(100, (total / 1000 / p95) * 100).toFixed(1)}%`;
-      referencia.textContent = [meta.ruta ? `Ruta: ${RUTAS[meta.ruta] || meta.ruta}.` : "",
-        p50 ? `La mitad de las fichas termina antes de ${reloj(p50)} y el 95 % antes de ${reloj(p95)}.` : ""].filter(Boolean).join(" ");
-      subtitulo.textContent = "Tiempo real de cada capa en esta ficha";
-      const reales = meta.tiempos_por_capa_ms || {};
-      for (const k of ORDEN_CAPAS) {
-        const v = reales[k];
-        const usada = typeof v === "number" && v > 0;
-        items[k].classList.toggle("usada", usada);
-        items[k].classList.toggle("no-usada", !usada);
-        tiempos[k].textContent = usada ? segundos(v) : "no se usó";
-      }
-    },
-    fallar: () => {
-      vigente = false;
-      clearInterval(reloj1s);
-      nodo.remove();
-    },
+    terminar: detener,   // la ficha ocupa su lugar; sus tiempos reales quedan en la barra de la ficha
+    fallar: detener,
   };
 }
 
@@ -565,7 +670,7 @@ async function generarFicha(opciones, vista = {}) {
   window.addEventListener("beforeunload", avisarAlSalir);
   try {
     const { cuerpo } = await api("/fichas", { method: "POST", ...opciones });
-    panel.terminar(cuerpo.meta || {});
+    panel.terminar();
     mostrarFicha(cuerpo);
   } catch (e) {
     panel.fallar();
@@ -654,6 +759,15 @@ function estadoDeCarga(texto, error = false) {
   estadoCarga.replaceChildren(...(error ? [icono("error"), el("span", { texto })] : [texto]));
 }
 
+/** Jerarquía de la carga: sin fotos, «Elegir fotos» es la acción primaria y «Catalogar» se ve deshabilitado (sigue
+ *  enfocable y explica qué falta); con fotos, «Catalogar» pasa a primaria. */
+function marcarHayFotos(hay) {
+  etiquetaElegir.classList.toggle("secundario", hay);
+  textoElegir.textContent = hay ? "Elegir otras fotos" : "Elegir fotos";
+  if (hay) botonCatalogar.removeAttribute("aria-disabled");
+  else botonCatalogar.setAttribute("aria-disabled", "true");
+}
+
 /** Vista previa de las fotos elegidas, antes de subirlas: se ven tal como están en tu equipo. */
 function mostrarElegidas(archivos) {
   urlsPrevias.forEach((u) => URL.revokeObjectURL(u));
@@ -683,6 +797,7 @@ function mostrarElegidas(archivos) {
   const otros = archivos.length - imagenes.length;
   const nota = otros ? ` ${plural(otros, "archivo no es", "archivos no son")} JPEG ni PNG: el servicio ${otros === 1 ? "lo" : "los"} rechazará.` : "";
   textoBoton.textContent = archivos.length > 1 ? `Catalogar ${numero(archivos.length)} fotos` : archivos.length ? "Catalogar la foto" : "Catalogar";
+  marcarHayFotos(archivos.length > 0);
   estadoDeCarga(!archivos.length ? "Elige una o varias fotos para empezar."
     : archivos.length === 1 ? `Lista para catalogar: verás su ficha al terminar.${nota}`
       : `Se catalogarán en lote, con barra de progreso.${nota}`, Boolean(otros) && !imagenes.length);
@@ -731,10 +846,11 @@ zona.addEventListener("drop", (e) => {
 window.addEventListener("dragover", (e) => { if (!zona.contains(e.target)) e.preventDefault(); });
 window.addEventListener("drop", (e) => { if (!zona.contains(e.target)) e.preventDefault(); });
 
-// catalogar.html?doc=ID → muestra la ficha guardada (o la genera si la foto todavía no tiene)
+// catalogar.html?doc=ID → la ficha guardada como página (o se genera si la foto todavía no tiene)
 const doc = new URLSearchParams(location.search).get("doc");
 if (doc) {
   plegarCarga();
+  encabezadoProvisional(doc);
   mensaje(progreso, `Cargando la ficha de ${doc}…`, "info");
   (async () => {
     try {
@@ -742,7 +858,8 @@ if (doc) {
       progreso.replaceChildren();
       if (cuerpo?.ficha) {
         mostrarFicha({ documento_id: doc, ficha: cuerpo.ficha, fuentes: cuerpo.fuentes,
-          meta: { traza_id: cuerpo.traza_id, ruta: `guardada (${cuerpo.origen})`, cache: "ninguna", modelos: {}, tiempos_por_capa_ms: {} } });
+          meta: { traza_id: cuerpo.traza_id, ruta: `guardada (${cuerpo.origen})`, cache: "ninguna", modelos: {}, tiempos_por_capa_ms: {} } },
+        { comoPagina: true });
       } else {
         await generarFicha({ headers: { "Content-Type": "application/json" }, body: JSON.stringify({ documento_id: doc }) },
           { src: `/api/fotos/${enc(doc)}/miniatura?lado=512`, alt: `Foto ${doc}`, detalle: doc });
@@ -752,4 +869,6 @@ if (doc) {
       mostrarError(progreso, e);
     }
   })();
+} else {
+  marcarHayFotos(false);
 }
