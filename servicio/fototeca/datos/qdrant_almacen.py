@@ -48,7 +48,11 @@ def _filtro_qdrant(filtro: dict | None) -> dict | None:
 class QdrantAlmacen:
     def __init__(self, url: str, tiempo_limite_s: float = 60.0):
         self.url = url.rstrip("/")
-        self._http = httpx.Client(base_url=self.url, timeout=httpx.Timeout(5.0, read=tiempo_limite_s))
+        # Sin compresión: httpx pide gzip por defecto, Qdrant comprime hasta las respuestas de 1 KB y, en conexiones
+        # keep-alive, muchas llegaban ~40 ms tarde: cada GET /collections/{n} de /health (menos de 1 ms con
+        # `identity`) y algunas búsquedas. Ollama no comprime sus respuestas: su cliente no necesita este ajuste.
+        self._http = httpx.Client(base_url=self.url, timeout=httpx.Timeout(5.0, read=tiempo_limite_s),
+                                  headers={"Accept-Encoding": "identity"})
         self._dimensiones: dict[str, int] = {}
 
     def _pedir(self, metodo: str, ruta: str, **kw) -> dict:

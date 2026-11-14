@@ -1,6 +1,8 @@
 """C1 · GET /health, GET /configuracion, cabecera X-Traza-Id, formato de errores y docs sin CDN."""
 from __future__ import annotations
 
+from pruebas.conftest import imagen_bytes
+
 
 def test_health_en_verde(cliente_api):
     r = cliente_api.get("/health")
@@ -37,10 +39,24 @@ def test_error_404_en_espanol_con_traza(cliente_api):
 
 
 def test_eventos_ligados_a_la_traza(cliente_api, contenedor):
-    r = cliente_api.get("/health")
+    r = cliente_api.post("/documentos", data={"tipo": "foto"},
+                         files=[("archivos", ("foto.jpg", imagen_bytes(), "image/jpeg"))])
+    assert r.status_code == 201, r.text
     eventos = contenedor.sumidero_eventos.consultar(traza_id=r.headers["X-Traza-Id"])
     capas = {(e.capa, e.evento) for e in eventos}
-    assert ("C2", "health") in capas and ("C1", "peticion") in capas
+    assert {("C1", "peticion"), ("C2", "ingesta_foto"), ("C7", "embedding_imagen")} <= capas
+
+
+def test_health_no_se_registra_como_evento(cliente_api, contenedor):
+    """Los sondeos de salud (healthcheck de Docker cada 15 s y la web) no son uso del sistema: ni la petición (C1)
+    ni la verificación (C2) dejan eventos, tampoco con un 503. La respuesta conserva su traza."""
+    antes = len(contenedor.sumidero_eventos.consultar())
+    r = cliente_api.get("/health")
+    assert r.status_code == 200 and len(r.headers["X-Traza-Id"]) == 8
+    assert contenedor.sumidero_eventos.consultar(traza_id=r.headers["X-Traza-Id"]) == []
+    contenedor.cliente_llm.disponible = False
+    assert cliente_api.get("/health").status_code == 503
+    assert len(contenedor.sumidero_eventos.consultar()) == antes
 
 
 def test_docs_sin_cdn(cliente_api):

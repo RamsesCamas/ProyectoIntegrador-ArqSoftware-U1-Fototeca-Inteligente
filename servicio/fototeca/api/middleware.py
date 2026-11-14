@@ -9,7 +9,9 @@ from starlette.requests import Request
 from fototeca.observabilidad.registro import registrar
 from fototeca.observabilidad.traza import nueva_traza
 
-_SIN_REGISTRO = ("/docs", "/openapi.json", "/estaticos")
+# Sin evento: la documentación y sus recursos, y los sondeos de salud (el healthcheck de Docker cada 15 s y la web).
+# Los sondeos no son uso del sistema y eran la mayoría de los eventos que lee GET /metricas.
+_SIN_REGISTRO = ("/docs", "/openapi.json", "/estaticos", "/health")
 
 
 class MiddlewareTraza(BaseHTTPMiddleware):

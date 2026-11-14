@@ -20,7 +20,9 @@ import json
 from PIL import Image
 
 from fototeca.dominio import colecciones as col
-from fototeca.observabilidad.metricas import plantilla_ruta
+from fototeca.observabilidad.metricas import EVENTOS_CON_DETALLE, agregar, plantilla_ruta
+from fototeca.observabilidad.puertos import EventoCapa
+from fototeca.observabilidad.registro import ahora_iso
 from pruebas.conftest import imagen_bytes
 
 P1 = json.dumps({"tipo": "fotografia", "descripcion_visual": "Un puesto de frutas con mangos bajo un toldo azul.",
@@ -306,6 +308,37 @@ def test_metricas_filtra_por_fecha(cliente_api, contenedor):
         "2999-01-01T06:00:00+00:00"
     r = cliente_api.get("/metricas", params={"desde": "ayer"})
     assert r.status_code == 400 and r.json()["error"]["codigo"] == "peticion_invalida"
+
+
+def test_metricas_sin_sondeos_de_salud_y_con_las_mismas_claves(cliente_api, contenedor):
+    """GET /metricas conserva sus claves y deja fuera /health: los sondeos nuevos ya no se registran y los que
+    quedaron guardados se omiten al leer. Fuera de eso, agrega lo mismo que la lectura completa de `consultar`."""
+    doc = _subir(cliente_api, imagen_bytes(color=ORIGINAL))
+    ficha = _catalogar(cliente_api, contenedor, doc)
+    cliente_api.post("/busquedas", json={"texto": "mercado con frutas"})
+    _opinar(cliente_api, ficha["meta"]["traza_id"], util=True)
+    assert cliente_api.get("/health").status_code == 200
+    sumidero = contenedor.sumidero_eventos
+    for traza in ("5a1d0001", "5a1d0002"):     # sondeos guardados antes de que /health dejara de registrarse
+        sumidero.registrar(EventoCapa(ts=ahora_iso(), traza_id=traza, capa="C2", evento="health", duracion_ms=351.0,
+                                      resultado="ok"))
+        sumidero.registrar(EventoCapa(ts=ahora_iso(), traza_id=traza, capa="C1", evento="peticion", duracion_ms=352.0,
+                                      detalle={"metodo": "GET", "endpoint": "/health", "estado_http": 200}))
+
+    m = cliente_api.get("/metricas").json()
+    assert CLAVES_METRICAS <= set(m), CLAVES_METRICAS - set(m)
+    endpoints = set(m["latencia_por_endpoint"])
+    assert {"POST /documentos", "POST /fichas", "POST /busquedas", "POST /retroalimentacion"} <= endpoints
+    assert "GET /health" not in endpoints
+    assert "health" not in m["latencia_por_evento"].get("C2", {})
+    assert m["modelos"] and m["guardrails"] and m["rutas"] and m["cache"]["fichas"]["consultas"] == 1
+
+    def es_sondeo(e: EventoCapa) -> bool:
+        return (e.capa, e.evento) == ("C2", "health") or (e.capa == "C1" and e.detalle.get("endpoint") == "/health")
+
+    completa = [e for e in sumidero.consultar() if not es_sondeo(e)]
+    assert len(completa) == len(sumidero.consultar()) - 4
+    assert agregar(sumidero.consultar_para_metricas(con_detalle=EVENTOS_CON_DETALLE)) == agregar(completa)
 
 
 def test_plantilla_de_ruta_agrupa_por_endpoint():

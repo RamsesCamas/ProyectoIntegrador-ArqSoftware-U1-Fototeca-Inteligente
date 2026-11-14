@@ -55,6 +55,8 @@ class DocumentoResumen:
     fecha: str
     estado_ficha: str | None = None
     particion: str | None = None
+    titular: str | None = None                 # titular y texto alternativo de la ficha guardada (None si no hay)
+    texto_alternativo: str | None = None
 
 
 @dataclass

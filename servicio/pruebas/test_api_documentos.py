@@ -8,6 +8,7 @@ from PIL import Image
 from fototeca.dominio import colecciones as col
 from fototeca.guardrails.entrada.exif import detectar
 from pruebas.conftest import imagen_bytes
+from pruebas.test_api_observabilidad import ORIGINAL, _catalogar, _subir, _tablero
 from pruebas.test_guardrails_entrada import con_exif_sensible
 
 
@@ -58,6 +59,24 @@ def test_listar_y_eliminar_borra_vectores(cliente_api, contenedor):
     assert contenedor.almacen_vectorial.contar(col.FOTOS_IMG, {"documento_id": doc}) == 0
     assert cliente_api.delete(f"/documentos/{doc}").status_code == 404
     assert cliente_api.get(f"/fotos/{doc}/miniatura").status_code == 404
+
+
+def test_listado_trae_titular_y_texto_alternativo_de_la_ficha(cliente_api, contenedor):
+    """La página Archivo usa el texto alternativo como `alt` de cada miniatura sin pedir una ficha por foto."""
+    con_ficha = _subir(cliente_api, imagen_bytes(color=ORIGINAL), "a.jpg")
+    sin_ficha = _subir(cliente_api, _tablero(), "tablero.jpg")
+    _catalogar(cliente_api, contenedor, con_ficha)
+    guardada = cliente_api.get(f"/fichas/{con_ficha}").json()["ficha"]
+    assert guardada["titular"] and guardada["texto_alternativo"]
+
+    listado = cliente_api.get("/documentos", params={"tipo": "foto"}).json()
+    docs = {d["documento_id"]: d for d in listado["documentos"]}
+    assert listado["total"] == 2 and set(docs) == {con_ficha, sin_ficha}
+    assert docs[con_ficha]["titular"] == guardada["titular"]
+    assert docs[con_ficha]["texto_alternativo"] == guardada["texto_alternativo"]
+    assert docs[con_ficha]["estado_ficha"] == guardada["estado"]
+    assert docs[sin_ficha]["titular"] is None and docs[sin_ficha]["texto_alternativo"] is None
+    assert docs[sin_ficha]["estado_ficha"] is None
 
 
 def test_rechazos_con_codigos_documentados(cliente_api):

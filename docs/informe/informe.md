@@ -910,7 +910,7 @@ La documentación OpenAPI completa la genera el servicio en `http://localhost:80
 | `GET /health` | Estado de servicio, Ollama, Qdrant, almacén y caché, y precalentamiento de los modelos | 200 | 503 |
 | `GET /configuracion` | Modelos, parámetros, versiones de los prompts y versión de configuración | 200 | — |
 | `POST /documentos` | Cargar fotos (`tipo=foto`) o normas (`tipo=norma`) en `multipart/form-data` | 201 | 400, 413, 415, 422, 503 |
-| `GET /documentos` | Listar documentos (`tipo`, `pagina`, `por_pagina`) | 200 | 400 |
+| `GET /documentos` | Listar documentos (`tipo`, `pagina`, `por_pagina`), con el titular y el texto alternativo de su ficha | 200 | 400 |
 | `DELETE /documentos/{id}` | Eliminar un documento, sus vectores, su ficha y la caché afectada | 200 | 404, 503 |
 | `GET /fotos/{id}/miniatura` | Miniatura JPEG de 512 px como máximo, sin EXIF | 200 | 404 |
 | `POST /fichas` | **Función principal:** catalogar una foto (`{"documento_id"}` o `multipart` con `foto`) | 200 | 400, 404, 413, 415, 422, 503, 504 |

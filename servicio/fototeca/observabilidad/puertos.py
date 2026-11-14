@@ -1,6 +1,7 @@
 """Puerto de T1: dónde se guardan los eventos de cada capa."""
 from __future__ import annotations
 
+from collections.abc import Collection
 from dataclasses import asdict, dataclass, field
 from typing import Protocol
 
@@ -28,3 +29,9 @@ class SumideroEventos(Protocol):
 
     def consultar(self, desde: str | None = None, traza_id: str | None = None,
                   limite: int | None = None) -> list[EventoCapa]: ...
+
+    def consultar_para_metricas(self, desde: str | None = None,
+                                con_detalle: Collection[tuple[str, str]] = ()) -> list[EventoCapa]:
+        """Lectura ligera para `GET /metricas`: sin los sondeos de salud guardados y con `detalle` solo de los tipos
+        (capa, evento) de `con_detalle` (los demás llegan con `detalle` vacío)."""
+        ...

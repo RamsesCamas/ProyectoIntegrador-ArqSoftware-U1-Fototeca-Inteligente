@@ -19,6 +19,10 @@ import numpy as np
 from fototeca.observabilidad.puertos import EventoCapa
 
 EVENTOS_CIERRE = {"ficha_completa": "fichas", "busqueda_completa": "busquedas"}
+# Tipos de evento (capa, evento) cuyo `detalle` lee `agregar`; de los demás solo usa capa, evento y duración.
+# GET /metricas decodifica el JSON de `detalle` solo de estos: si `agregar` empieza a leer el de otro, agrégalo aquí.
+EVENTOS_CON_DETALLE = frozenset({("C1", "peticion"), ("C3", "bloqueo"), ("C6", "llamada_modelo"),
+                                 *(("C2", evento) for evento in EVENTOS_CIERRE)})
 # Un segmento de ruta con dígitos o guiones (xm-…, up-…, norma-…) o hexadecimal largo (lotes) es un identificador.
 _IDENTIFICADOR = re.compile(r"^(?=.*[\d-])[\w.-]+$|^[0-9a-f]{8,}$")
 

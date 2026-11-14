@@ -1,0 +1,132 @@
+{
+  "modulo": "carga_web",
+  "descripcion": "Tiempos de carga de los datos que pide cada página de la web, medidos a través de nginx (como el navegador).",
+  "corridas": {
+    "antes": {
+      "fecha": "2026-11-13T23:25:50+00:00",
+      "url": "http://web/api",
+      "version_configuracion": "9edf360414cb",
+      "hardware": {
+        "plataforma": "Linux-6.10.14-linuxkit-aarch64-with-glibc2.36",
+        "cpus": 8
+      },
+      "metodo": "20 repeticiones por medición tras 2 de calentamiento, desde un contenedor en la red de compose a través de nginx; 6 conexiones en paralelo como el navegador",
+      "listado_trae_texto_alternativo": false,
+      "peticiones_de_datos_archivo": 25,
+      "mediciones": {
+        "health": {
+          "n": 20,
+          "p50_ms": 345.9,
+          "p95_ms": 362.5,
+          "min_ms": 267.4,
+          "max_ms": 366.8
+        },
+        "metricas": {
+          "n": 20,
+          "p50_ms": 506.6,
+          "p95_ms": 516.7,
+          "min_ms": 447.7,
+          "max_ms": 527.5
+        },
+        "datos_inicio_en_paralelo": {
+          "n": 20,
+          "p50_ms": 506.9,
+          "p95_ms": 516.4,
+          "min_ms": 484.3,
+          "max_ms": 522.9
+        },
+        "documentos_24": {
+          "n": 20,
+          "p50_ms": 5.6,
+          "p95_ms": 6.9,
+          "min_ms": 4.8,
+          "max_ms": 7.1
+        },
+        "datos_archivo_con_alt": {
+          "n": 20,
+          "p50_ms": 85.7,
+          "p95_ms": 103.9,
+          "min_ms": 79.7,
+          "max_ms": 124.7
+        },
+        "ficha_guardada": {
+          "n": 20,
+          "p50_ms": 3.7,
+          "p95_ms": 4.4,
+          "min_ms": 3.1,
+          "max_ms": 5.5
+        },
+        "busqueda_simple_repetida": {
+          "n": 20,
+          "p50_ms": 177.4,
+          "p95_ms": 294.5,
+          "min_ms": 94.6,
+          "max_ms": 751.3
+        }
+      }
+    },
+    "despues": {
+      "fecha": "2026-11-14T00:16:48+00:00",
+      "url": "http://web/api",
+      "version_configuracion": "9edf360414cb",
+      "hardware": {
+        "plataforma": "Linux-6.10.14-linuxkit-aarch64-with-glibc2.36",
+        "cpus": 8
+      },
+      "metodo": "20 repeticiones por medición tras 2 de calentamiento, desde un contenedor en la red de compose a través de nginx; 6 conexiones en paralelo como el navegador",
+      "listado_trae_texto_alternativo": true,
+      "peticiones_de_datos_archivo": 1,
+      "mediciones": {
+        "health": {
+          "n": 20,
+          "p50_ms": 13.3,
+          "p95_ms": 14.6,
+          "min_ms": 11.6,
+          "max_ms": 15.0
+        },
+        "metricas": {
+          "n": 20,
+          "p50_ms": 185.7,
+          "p95_ms": 198.6,
+          "min_ms": 162.3,
+          "max_ms": 203.3
+        },
+        "datos_inicio_en_paralelo": {
+          "n": 20,
+          "p50_ms": 189.9,
+          "p95_ms": 201.1,
+          "min_ms": 165.1,
+          "max_ms": 203.1
+        },
+        "documentos_24": {
+          "n": 20,
+          "p50_ms": 6.0,
+          "p95_ms": 6.7,
+          "min_ms": 5.2,
+          "max_ms": 6.7
+        },
+        "datos_archivo_con_alt": {
+          "n": 20,
+          "p50_ms": 6.4,
+          "p95_ms": 8.2,
+          "min_ms": 5.3,
+          "max_ms": 28.5
+        },
+        "ficha_guardada": {
+          "n": 20,
+          "p50_ms": 4.0,
+          "p95_ms": 4.5,
+          "min_ms": 3.5,
+          "max_ms": 4.6
+        },
+        "busqueda_simple_repetida": {
+          "n": 20,
+          "p50_ms": 177.8,
+          "p95_ms": 200.7,
+          "min_ms": 164.8,
+          "max_ms": 219.4
+        }
+      }
+    }
+  }
+}

@@ -47,6 +47,9 @@ class DocumentoListado(BaseModel):
     fecha: str
     estado_ficha: str | None = None
     particion: str | None = None
+    titular: str | None = Field(None, description="Titular de la ficha guardada; null si no hay ficha o está vacío")
+    texto_alternativo: str | None = Field(None, description="Texto alternativo de la ficha guardada (el `alt` de la "
+                                                            "miniatura); null si no hay ficha o está vacío")
 
 
 class RespuestaListado(BaseModel):

@@ -168,8 +168,12 @@ class DocumentosSqlite(BaseSqlite):
         return ruta.read_bytes()
 
     def listar(self, tipo: str | None, pagina: int, por_pagina: int) -> list[DocumentoResumen]:
-        sql = ("SELECT d.documento_id, d.tipo, d.nombre, d.fecha, d.particion, f.estado FROM documentos d "
-               "LEFT JOIN fichas f ON f.documento_id = d.documento_id")
+        # El titular y el texto alternativo salen de la ficha guardada (vacío → None): así la web no pide una ficha
+        # por cada miniatura del listado.
+        sql = ("SELECT d.documento_id, d.tipo, d.nombre, d.fecha, d.particion, f.estado,"
+               " NULLIF(json_extract(f.contenido, '$.ficha.titular'), '') AS titular,"
+               " NULLIF(json_extract(f.contenido, '$.ficha.texto_alternativo'), '') AS texto_alternativo"
+               " FROM documentos d LEFT JOIN fichas f ON f.documento_id = d.documento_id")
         args: list = []
         if tipo:
             sql += " WHERE d.tipo=?"
@@ -178,7 +182,8 @@ class DocumentosSqlite(BaseSqlite):
         args += [int(por_pagina), int((pagina - 1) * por_pagina)]
         with self.conexion() as con:
             filas = con.execute(sql, args).fetchall()
-        return [DocumentoResumen(f["documento_id"], f["tipo"], f["nombre"], f["fecha"], f["estado"], f["particion"])
+        return [DocumentoResumen(f["documento_id"], f["tipo"], f["nombre"], f["fecha"], f["estado"], f["particion"],
+                                 titular=f["titular"], texto_alternativo=f["texto_alternativo"])
                 for f in filas]
 
     def contar(self, tipo: str | None = None) -> int:

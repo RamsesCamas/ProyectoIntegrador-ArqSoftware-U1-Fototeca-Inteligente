@@ -6,7 +6,7 @@ import time
 
 from fototeca.datos.puertos import AlmacenCache, AlmacenDocumentos, AlmacenVectorial, ClienteLLM
 from fototeca.dominio.configuracion import Configuracion
-from fototeca.observabilidad.registro import medir, registrar
+from fototeca.observabilidad.registro import registrar
 
 # Nombre y descripción legibles de cada componente (la web los muestra tal cual, sin conocer los recursos).
 DESCRIPCIONES = {
@@ -32,21 +32,21 @@ class FlujoSalud:
         self._inicio = time.time()
 
     def verificar(self) -> dict:
-        with medir("C2", "health") as d:
-            componentes = {
-                "ollama": self.cliente_llm.estado(),
-                "qdrant": self.almacen_vectorial.estado(),
-                "almacen": self.almacen_documentos.estado(),
-                "cache": self.almacen_cache.estado(),
-            }
-            criticos = ("ollama", "qdrant", "almacen")
-            if any(componentes[c].get("estado") != "ok" for c in criticos):
-                estado = "error"
-            elif componentes["cache"].get("estado") != "ok" or self.precalentamiento.get("estado") == "en_curso":
-                estado = "degradado"
-            else:
-                estado = "ok"
-            d["resultado"] = estado
+        # Sin evento en la bitácora (como la petición C1 a /health): lo sondean el healthcheck de Docker cada 15 s y
+        # la web, no es uso del sistema, y sus eventos eran la mayoría de los que lee GET /metricas.
+        componentes = {
+            "ollama": self.cliente_llm.estado(),
+            "qdrant": self.almacen_vectorial.estado(),
+            "almacen": self.almacen_documentos.estado(),
+            "cache": self.almacen_cache.estado(),
+        }
+        criticos = ("ollama", "qdrant", "almacen")
+        if any(componentes[c].get("estado") != "ok" for c in criticos):
+            estado = "error"
+        elif componentes["cache"].get("estado") != "ok" or self.precalentamiento.get("estado") == "en_curso":
+            estado = "degradado"
+        else:
+            estado = "ok"
         componentes = {"servicio": {"estado": "ok", "segundos_activo": round(time.time() - self._inicio)},
                        **componentes}
         for clave, (nombre, descripcion) in DESCRIPCIONES.items():

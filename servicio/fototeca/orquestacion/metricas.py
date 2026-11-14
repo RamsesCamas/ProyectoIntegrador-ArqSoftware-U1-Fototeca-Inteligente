@@ -5,7 +5,7 @@ import hashlib
 from datetime import datetime, timezone
 
 from fototeca.datos.puertos import AlmacenDocumentos
-from fototeca.observabilidad.metricas import agregar
+from fototeca.observabilidad.metricas import EVENTOS_CON_DETALLE, agregar
 from fototeca.observabilidad.puertos import SumideroEventos
 from fototeca.retroalimentacion.servicio import ServicioRetroalimentacion
 
@@ -18,8 +18,10 @@ class FlujoMetricas:
         self.documentos = documentos
 
     def obtener(self, desde: str | None = None) -> dict:
-        """`desde`: instante ISO 8601 en UTC (la API lo normaliza) a partir del cual se cuentan eventos y opiniones."""
-        datos = agregar(self.sumidero.consultar(desde=desde))
+        """`desde`: instante ISO 8601 en UTC (la API lo normaliza) a partir del cual se cuentan eventos y opiniones.
+
+        Los eventos se leen sin los sondeos de salud y con `detalle` solo de los tipos que usa la agregación."""
+        datos = agregar(self.sumidero.consultar_para_metricas(desde=desde, con_detalle=EVENTOS_CON_DETALLE))
         datos["retroalimentacion"] = self.retroalimentacion.resumen(desde)
         datos["accesibilidad"] = self.accesibilidad()     # estado actual del archivo (no depende de `desde`)
         datos["desde"] = desde

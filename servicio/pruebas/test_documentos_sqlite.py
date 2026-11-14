@@ -55,6 +55,18 @@ def test_fichas_listado_y_conteo(almacen):
     assert almacen.contar_fichas() == {"validada": 1}
     resumen = almacen.listar("foto", 1, 10)
     assert resumen[0].estado_ficha == "validada"
+    assert (resumen[0].titular, resumen[0].texto_alternativo) == ("Mercado", "Puesto de frutas")
+
+
+def test_listado_sin_ficha_o_con_campos_vacios_da_none(almacen):
+    sin_ficha = almacen.guardar_foto(jpeg((10, 20, 30)), {"nombre": "a.jpg"})
+    sin_alt = almacen.guardar_foto(jpeg((90, 90, 90)), {"nombre": "b.jpg"})
+    almacen.guardar_ficha(sin_alt, FichaRegistrada(documento_id=sin_alt, ficha=Ficha(titular="Calle")))
+    listado = {d.documento_id: d for d in almacen.listar("foto", 1, 10)}
+    assert (listado[sin_ficha].estado_ficha, listado[sin_ficha].titular, listado[sin_ficha].texto_alternativo) == \
+        (None, None, None)
+    assert (listado[sin_alt].estado_ficha, listado[sin_alt].titular, listado[sin_alt].texto_alternativo) == \
+        ("borrador", "Calle", None)
 
 
 def test_eliminar_borra_archivo_ficha_y_duplicados(almacen):
