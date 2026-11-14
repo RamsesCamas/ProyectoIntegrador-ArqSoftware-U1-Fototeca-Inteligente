@@ -123,9 +123,8 @@ const noAplica = () => el("span", { clase: "sin-fuente campo-vacio", texto: "no 
 function filaFuentes(id, fuentes, estaVacio, { descartadas = false, campo = "" } = {}) {
   const lista = fuentes || [];
   const rotulo = descartadas && lista.length ? "Fuente del texto descartado:" : `Fuentes${campo ? ` de ${campo.toLocaleLowerCase("es")}` : ""}:`;
-  return el("div", { clase: `fuentes nota-campo${descartadas && lista.length ? " fuentes-descartadas" : ""}`, id },
-    el("span", { clase: "llave", "aria-hidden": "true" }),
-    el("span", { clase: `fuentes-titulo${descartadas && lista.length ? "" : " rotulo-nota"}`, texto: rotulo }),
+  return el("div", { clase: `fuentes${descartadas && lista.length ? " fuentes-descartadas" : ""}`, id },
+    el("span", { clase: "fuentes-titulo", texto: rotulo }),
     lista.length ? lista.map((f) => chipFuente(f, { descartada: descartadas })) : estaVacio ? noAplica() : sinFuente());
 }
 
@@ -275,12 +274,12 @@ function campoTexto(nombre, valor, fuentes, soloLectura, { descarte = null, nota
   actualizar();
   let nota = filaFuentes(`${id}-fuentes`, fuentes, estaVacio, { descartadas: Boolean(descarte), campo: ETIQUETAS_CAMPO[nombre] });
   // El campo que pide atención lleva el lápiz graso junto a su rótulo (el texto del aviso dice por qué)
-  const nodo = el("div", { clase: `celda campo campo-ficha campo-${nombre}${descarte ? " atencion campo-descartado" : ""}` },
-    el("div", { clase: "campo-cabecera" }, el("span", { clase: "campo-rotulo" }, etiqueta, descarte ? lapiz("subrayado") : null, marca), contador),
+  const nodo = el("div", { clase: `campo campo-ficha campo-${nombre}${descarte ? " atencion campo-descartado" : ""}` },
+    el("div", { clase: "campo-cabecera" }, el("span", { clase: "campo-rotulo" }, etiqueta, descarte ? lapiz("subrayado") : null), marca, contador),
     control, barra, avisoCampo);
-  const fila = el("div", { clase: "fila-ficha" }, nodo, nota);
+  const margen = el("div", { clase: "notas-margen" }, nota);
   return {
-    fila,
+    filas: [nodo, margen],
     nodo,
     control,
     /** Tras validar: marca de edición (dato del formulario), fuentes guardadas (dato de la API) y, si el campo ya tiene
@@ -308,13 +307,12 @@ function campoPalabras(palabras, fuentes, soloLectura) {
   const lista = el("ul", { clase: "etiquetas-clave", id: "palabras-lista", "aria-labelledby": "palabras-titulo" });
   const items = [...palabras];
   let todas = fuentes || [];
-  const nota = el("div", { clase: "fuentes nota-campo", id: "campo-palabras_clave-fuentes" });
+  const nota = el("div", { clase: "fuentes", id: "campo-palabras_clave-fuentes" });
   const marca = el("span", { clase: "marca-archivista", hidden: true, texto: "Editadas por el archivista" });
   const entrada = soloLectura ? null : el("input", { id: "palabra-nueva", type: "text", maxlength: "80", placeholder: "Nueva palabra clave",
     autocomplete: "off" });
   // Las palabras son etiquetas cuadradas de texto (sin enlace); qué fuente respalda cada una va en «Procedencia»
-  const pintarNota = () => nota.replaceChildren(el("span", { clase: "llave", "aria-hidden": "true" }),
-    el("span", { clase: "fuentes-titulo rotulo-nota", texto: "Fuentes de las palabras clave:" }),
+  const pintarNota = () => nota.replaceChildren(el("span", { clase: "fuentes-titulo", texto: "Fuentes de las palabras clave:" }),
     ...(todas.length ? todas.slice(0, 10).map((f) => chipFuente(f)) : [items.length ? sinFuente() : noAplica()]));
   const pintar = () => {
     lista.replaceChildren(...(items.length ? items.map((p, i) => el("li", { clase: "etiqueta-clave" }, p.termino,
@@ -340,16 +338,16 @@ function campoPalabras(palabras, fuentes, soloLectura) {
   };
   entrada?.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); agregar(); } });
   pintar();
-  const celda = el("div", { clase: "celda campo campo-ficha campo-palabras_clave" },
+  const celda = el("div", { clase: "campo campo-ficha campo-palabras_clave" },
     el("div", { clase: "campo-cabecera" }, el("span", { clase: "campo-rotulo" },
-      el("span", { clase: "rotulo-campo", id: "palabras-titulo", texto: "Palabras clave" }), marca)),
+      el("span", { clase: "rotulo-campo", id: "palabras-titulo", texto: "Palabras clave" })), marca),
     el("p", { clase: "campo-ayuda", texto: "Normalizadas al Tesauro de la UNESCO cuando hay un término cercano." }),
     lista,
     soloLectura ? null : [el("label", { for: "palabra-nueva", clase: "solo-lectores", texto: "Agregar palabra clave" }),
       el("div", { clase: "fila agregar-palabra" }, entrada,
         el("button", { type: "button", clase: "boton", onclick: agregar }, "Agregar"))]);
   return {
-    fila: el("div", { clase: "fila-ficha" }, celda, nota),
+    filas: [celda, el("div", { clase: "notas-margen" }, nota)],
     items,
     /** Tras validar: las palabras normalizadas que devolvió la API, sus fuentes guardadas y la marca de edición. */
     validado(nuevas, nuevasFuentes, editado) {
@@ -606,7 +604,7 @@ function mostrarFicha(respuesta, { modo = "pagina", origen = "catalogar" } = {})
       ? el("a", { clase: "boton", href: "catalogar.html", texto: "Catalogar otra foto" })
       : el("button", { type: "button", clase: "boton", id: "otra-foto", onclick: desplegarCarga, texto: "Catalogar otra foto" });
     ponerEncabezado([migas(origen, doc), titulo,
-      el("div", { clase: "encabezado-ficha-datos" }, estado(), soloLectura ? insigniaSoloLectura() : null, generacion,
+      el("div", { clase: "encabezado-ficha-datos" }, soloLectura ? insigniaSoloLectura() : null, generacion,
         soloLectura ? el("p", { clase: "nota-solo-lectura", texto: NOTA_SOLO_LECTURA }) : null),
       tiempos], [otra]);
     marcarModulo(origen === "archivo" ? "archivo.html" : "catalogar.html");
@@ -654,11 +652,11 @@ function mostrarFicha(respuesta, { modo = "pagina", origen = "catalogar" } = {})
   }
   const formulario = el("form", { clase: `ficha${soloLectura ? " solo-lectura" : ""}`, id: "formulario-ficha", "aria-labelledby": "titulo-inspector" },
     el("div", { clase: "etiqueta" },
-      el("div", { clase: "fila-ficha cabeza" },
-        el("div", { clase: "celda etiqueta-cabeza" }, el("h2", { id: "titulo-inspector", texto: "Ficha IPTC" }),
-          el("p", { clase: "etiqueta-ayuda", texto: soloLectura ? "Solo lectura." : "Edita los campos y valida la ficha." })),
-        el("div", { clase: "nota-campo nota-cabeza" }, el("span", { clase: "rotulo-nota", texto: "Fuentes de cada campo" }))),
-      ...CAMPOS_TEXTO.map((c) => campos[c].fila), palabras.fila),
+      el("div", { clase: "etiqueta-cabeza" },
+        el("h2", { id: "titulo-inspector", clase: "etiqueta-tipo", texto: "Ficha IPTC" }),
+        el("p", { clase: "etiqueta-id" }, el("span", { texto: doc }), estado()),
+        el("p", { clase: "etiqueta-ayuda", texto: soloLectura ? "Ficha guardada: solo lectura." : "Edita los campos y valida la ficha." })),
+      ...CAMPOS_TEXTO.flatMap((c) => campos[c].filas), ...palabras.filas),
     pie, acciones);
 
   // Foto: el mismo marco que en la espera (contain sobre la lupa); el visor muestra la copia guardada y la ficha tal
@@ -797,7 +795,7 @@ function panelEspera({ nombre = null, src = null, alt = "", detalle = "", origen
   const foto = src ? el("figure", { clase: "foto" }, el("div", { clase: "marco-pelicula" }, el("img", { src, alt, decoding: "async" })),
     nombre || detalle ? el("figcaption", {}, el("span", { clase: "nombre-archivo", texto: nombre || "" }),
       detalle ? el("span", { clase: "fotograma", texto: detalle }) : null) : null) : null;
-  const datos = el("div", { clase: "etiqueta espera-datos" },
+  const datos = el("div", { clase: "espera-datos" },
     el("p", { clase: "espera-rotulo", texto: "Tiempo transcurrido contra lo típico" }), barra, escala, referencia, subtitulo, lista, nota);
   const nodo = el("section", { clase: "espera", "aria-labelledby": "titulo-espera" },
     el("div", { clase: `mesa-ficha${foto ? "" : " sin-foto"}` }, foto ? el("div", { clase: "ficha-foto" }, foto) : null, datos));
@@ -901,7 +899,7 @@ function tarjetaLote(f, i) {
     el("button", { type: "button", clase: "cuadro-foto", "aria-label": `Revisar la ficha ${i + 1}: ${f.ficha.titular || "sin titular"}`,
       onclick: () => mostrarFicha(f, { modo: "barra" }) },
       miniatura(f.documento_id, { alt: f.ficha.texto_alternativo || "", diferida: i >= 8 }),
-      el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: String(i + 1) })),
+      el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: String(i + 1) }), lapiz("circulo")),
     el("div", { clase: "cuadro-pie" }, el("p", { clase: "cuadro-titular", texto: f.ficha.titular || "Sin titular" }), insignia(f.ficha.estado)));
 }
 
@@ -1022,7 +1020,7 @@ function mostrarElegidas(archivos) {
       el("button", { type: "button", clase: "cuadro-foto", "aria-label": `Ver en grande ${a.name}`,
         onclick: () => abrirVisor({ src: url, alt: `Foto elegida: ${a.name}`, titulo: `Foto elegida: ${a.name}`, datos: datos(),
           nota: "Es el archivo original, todavía en tu equipo: aún no se ha subido." }) },
-        img, el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: String(i + 1) })),
+        img, el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: String(i + 1) }), lapiz("circulo")),
       el("button", { type: "button", clase: "quitar quitar-foto", "aria-label": `Quitar ${a.name}`, title: `Quitar ${a.name}`,
         onclick: () => quitarElegida(a) }, icono("cerrar")),
       el("div", { clase: "cuadro-pie" }, el("span", { clase: "nombre-archivo", texto: a.name, title: a.name }),
