@@ -127,7 +127,6 @@
 }
 
 /* Configuración activa: valores técnicos en mono */
-.configuracion dd.mono { overflow-wrap: anywhere; }
 .configuracion .lista-simple li + li { margin-top: 2px; }
 
 /* ── Gráficas (marcado de comun.js, T1): ajustes de esta página ────────────────────────────────────────────── */
