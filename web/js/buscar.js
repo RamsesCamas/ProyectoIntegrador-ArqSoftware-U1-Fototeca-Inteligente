@@ -155,9 +155,38 @@ function mostrarFormularioFoto(abrir) {
 }
 alternarFoto.addEventListener("click", () => mostrarFormularioFoto(formularioFoto.hidden));
 
-// El nombre de la foto elegida, junto al botón (el input queda oculto a la vista pero enfocable)
+// La foto elegida se ve como un fotograma suelto sobre la mesa, entera y con sus medidas y su peso, para saber con qué
+// se busca. Es una URL local del navegador (no se sube nada hasta pulsar «Buscar parecidas»).
+const figuraReferencia = document.getElementById("foto-referencia");
+const imagenReferencia = document.getElementById("foto-referencia-img");
+const datosReferencia = document.getElementById("foto-referencia-datos");
+const peso = (b) => (b >= 1024 * 1024 ? `${(b / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
+let urlReferencia = null;
+
+function mostrarReferencia(archivo) {
+  if (urlReferencia) URL.revokeObjectURL(urlReferencia);
+  urlReferencia = null;
+  if (!archivo) {
+    figuraReferencia.hidden = true;
+    imagenReferencia.removeAttribute("src");
+    datosReferencia.textContent = "";
+    return;
+  }
+  urlReferencia = URL.createObjectURL(archivo);
+  imagenReferencia.alt = `Foto de referencia: ${archivo.name}`;
+  datosReferencia.textContent = peso(archivo.size);
+  imagenReferencia.onload = () => {
+    datosReferencia.textContent = `${comun.numero(imagenReferencia.naturalWidth)} × ${comun.numero(imagenReferencia.naturalHeight)} px, ${peso(archivo.size)}`;
+  };
+  imagenReferencia.onerror = () => { figuraReferencia.hidden = true; };
+  imagenReferencia.src = urlReferencia;
+  figuraReferencia.hidden = false;
+}
+
+// El nombre de la foto elegida, junto al botón (el input queda oculto a la vista pero enfocable), y su vista previa
 entradaFoto.addEventListener("change", () => {
   document.getElementById("nombre-imagen").textContent = entradaFoto.files[0]?.name || "Ninguna foto elegida";
+  mostrarReferencia(entradaFoto.files[0]);
 });
 
 formularioFoto.addEventListener("submit", (ev) => {

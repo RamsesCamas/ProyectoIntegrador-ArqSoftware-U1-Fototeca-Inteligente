@@ -33,6 +33,14 @@
 .nombre-imagen { flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4;
   color: var(--texto-suave); }
 .busqueda-foto .ayuda { margin: var(--e-2) 0 0; }
+/* La foto elegida como referencia: un fotograma suelto sobre la mesa, entera (contain, no recortada a 4:3, para ver
+   exactamente con qué se busca), con «Referencia» en el borde de la película y sus medidas debajo. No es clicable ni
+   lleva lápiz: el lápiz marca los resultados. El margen izquierdo deja ver la banda de película (5 px de sombra). */
+.foto-referencia { margin: var(--e-3) 0 0; padding-left: 5px; }
+.foto-referencia .cuadro { width: min(100%, 15rem); }
+.foto-referencia .cuadro-foto { cursor: default; }
+.foto-referencia .cuadro-foto img { object-fit: contain; }
+.foto-referencia-datos { margin-top: var(--e-2); font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
 
 /* ── Resultados ── */
 .zona-resultados { margin-top: var(--e-6); }
