@@ -132,7 +132,11 @@ export function pieTecnico(meta) {
       el("span", { clase: "resumen-tecnico", texto: resumenTecnico(meta) })),
     el("div", { clase: "pie-tecnico-cuerpo" },
       el("dl", {}, filas.flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { clase: k === "Traza" ? "id" : null, texto: v ?? "—" })])),
-      tiempos.length ? barraApilada(tiempos, { titulo: "Tiempo por capa de esta petición" }) : null,
+      // Una barra por capa con escala común (no apilada: con las series en gris, la apilada no se leía). Los tiempos de
+      // UNA petición sí se suman, así que la proporción del total es válida aquí (en Métricas no: son medianas).
+      tiempos.length ? barras(tiempos.map(({ etiqueta, valor }) => ({ etiqueta, valor })), {
+        titulo: "Tiempo por capa de esta petición", formato: segundos, encabezado: "Capa", columnaValor: "Tiempo",
+        extras: [{ titulo: "Proporción", texto: (f) => porcentaje(f.valor / tiempos.reduce((s, x) => s + x.valor, 0)) }] }) : null,
       guardrails.length ? el("div", { clase: "desplazable" }, el("table", { clase: "tabla tabla-compacta" },
         el("caption", { texto: "Guardrails aplicados" }),
         el("thead", {}, el("tr", {}, ["Etapa", "Verificación", "Resultado"].map((h) => el("th", { scope: "col", texto: h })))),
