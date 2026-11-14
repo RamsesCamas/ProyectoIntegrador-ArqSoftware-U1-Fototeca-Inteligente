@@ -77,12 +77,13 @@ a.documento-titular:hover, a.documento-titular:focus-visible { text-decoration: 
   .tabla-archivo tbody tr { display: grid; grid-template-columns: calc(64px + 6px) minmax(0, 1fr) auto;
     grid-template-areas: "foto documento accion" "foto estado accion"; align-items: center; gap: var(--e-1) var(--e-3);
     padding: var(--e-3) 0; border-bottom: 1px solid var(--borde); }
-  .tabla-archivo tbody td, .tabla-archivo tbody th { display: block; height: auto; min-width: 0; padding: 0; border: 0; }
+  /* .catalogo.tabla-archivo: más específico que «table.catalogo tbody td» de base.css (alto fijo de fila) */
+  .catalogo.tabla-archivo tbody td, .catalogo.tabla-archivo tbody th { display: block; height: auto; min-width: 0; padding: 0; border: 0; }
   .tabla-archivo tbody .col-foto { grid-area: foto; width: auto; }
   .tabla-archivo tbody .col-documento { grid-area: documento; width: auto; max-width: none; }
   .tabla-archivo tbody .col-estado { grid-area: estado; }
   .tabla-archivo tbody .col-acciones { grid-area: accion; width: auto; }
-  .tabla-archivo tbody .col-tipo, .tabla-archivo tbody .col-fecha { display: none; }
+  .catalogo.tabla-archivo tbody .col-tipo, .catalogo.tabla-archivo tbody .col-fecha { display: none; }
   .tabla-archivo tbody .fila-aviso { display: block; }
   .paginacion-abajo { justify-content: flex-start; }
 }
