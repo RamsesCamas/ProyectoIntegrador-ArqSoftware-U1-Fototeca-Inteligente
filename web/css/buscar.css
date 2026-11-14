@@ -1,30 +1,113 @@
-/* Buscar · búsqueda por texto o por foto, consulta interpretada y resultados con razones. Solo maquetación y piezas
-   propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado
-   de v1 al sistema v3. */
+/* Buscar · «Buscar en el archivo»: panel de búsqueda (texto, ejemplos y foto), línea de resultados, consulta
+   interpretada y resultados como diapositivas. Solo maquetación y piezas propias, solo con var(--…) (los tokens viven
+   en base.css). Dueño: la tarea de la página (T3). Columnas por ancho del contenido: 4 a 1280, 3 a 1000, 2 a 768 y 1
+   en móvil (5 a 1536). */
 
-.busqueda .fila > input[type="search"] { flex: 1 1 18rem; }
-.busqueda .fila > .boton { min-height: var(--alto-campo); }
-.busqueda-foto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); margin-top: var(--e-4);
-  padding-top: var(--e-4); border-top: 1px solid var(--borde-suave); }
-.busqueda-foto > * { min-width: 0; }
-.busqueda-foto label { margin: 0; }
-.busqueda-foto .ayuda { flex: 1 1 100%; margin: 0; }
+/* ── Panel de búsqueda ── */
+.busqueda { transition: border-color var(--transicion), background-color var(--transicion); }
 .busqueda.activa { border-style: dashed; border-color: var(--acento); background: var(--acento-fondo); }
+.busqueda label[for="consulta"] { margin-bottom: var(--e-2); font-size: var(--t-3); }
+.buscador { display: flex; flex-wrap: wrap; align-items: stretch; gap: var(--e-3); }
+.buscador-campo { position: relative; flex: 1 1 20rem; min-width: 0; }
+.buscador-campo input[type="search"] { min-height: var(--alto-control-grande); padding-left: 2.75rem; font-size: var(--t-3); }
+.buscador-lupa { position: absolute; top: 50%; left: var(--e-4); width: 20px; height: 20px; transform: translateY(-50%);
+  color: var(--texto-suave); pointer-events: none; }
+.buscador .boton.grande { flex: none; }
+.boton[aria-busy="true"] .icono { display: none; }
+#ayuda-consulta { max-width: var(--ancho-lectura); margin-top: var(--e-2); }
 
-#interpretada .tarjeta { margin-top: var(--e-4); }
-#interpretada h2 { margin: 0 0 var(--e-3); font-size: var(--t-3); }
+/* Ejemplos: chips que llenan el campo y buscan */
+.ejemplos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); margin-top: var(--e-4); }
+.ejemplos-titulo { font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto-suave); }
+.ejemplos-lista { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-2); min-width: 0; margin: 0; padding: 0; }
+.ejemplos-lista > li { min-width: 0; max-width: 100%; }
+.chip.ejemplo { cursor: pointer; }
+.chip.ejemplo .icono { color: var(--texto-suave); }
 
-.resultados { margin-top: var(--e-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
-.resultado { display: flex; flex-direction: column; gap: var(--e-1); padding: var(--e-3); }
-.resultado img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio-1);
-  background: var(--lupa-fondo); }
-.resultado h3 { margin: var(--e-2) 0 0; font-size: var(--t-2); }
-.resultado h3 a { display: inline-block; padding-block: .2em; }
-.puntaje { margin: 0; font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
-.razones { margin: var(--e-1) 0 0; padding-left: 1.1rem; font-size: var(--t-1); color: var(--texto-suave); }
+/* Pie: «O busca con una foto» despliega el formulario de foto */
+.busqueda-pie { gap: var(--e-2) var(--e-4); }
+.busqueda-pie-ayuda { margin: 0; }
+.alternar-chevron { width: 16px; height: 16px; transform: rotate(90deg); transition: transform var(--transicion); }
+#alternar-foto[aria-expanded="true"] .alternar-chevron { transform: rotate(-90deg); }
+.busqueda-foto { flex: 1 1 100%; min-width: 0; margin-top: var(--e-1); padding-top: var(--e-4); border-top: 1px solid var(--borde-suave); }
+.busqueda-foto-fila { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); }
+.busqueda-foto-fila > * { min-width: 0; }
+/* El input de archivo queda oculto a la vista pero enfocable; su etiqueta-botón muestra el foco */
+.archivo-oculto { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.elegir-foto { margin: 0; }
+.archivo-oculto:focus-visible + .elegir-foto { outline: var(--foco-ancho) solid var(--foco); outline-offset: 2px; }
+.nombre-imagen { flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4;
+  font-size: var(--t-1); color: var(--texto-suave); }
+.busqueda-foto .ayuda { margin: var(--e-2) 0 0; }
 
-/* Con ratón, «Ver en grande» aparece al pasar o enfocar (la cuadrícula queda limpia); en pantallas táctiles, siempre */
+/* ── Resultados ── */
+.zona-resultados { margin-top: var(--e-6); }
+.resultados-barra { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-5); margin-bottom: var(--e-4); }
+.resultados-barra h2 { margin: 0; }
+#estado { flex: 1 1 18rem; min-width: 0; }
+#estado .mensaje { margin: 0; }
+/* La línea de resultados terminada es un mensaje sin caja: cuántos · ruta · tiempo · caché */
+#estado .mensaje.resumen { padding: var(--e-1) 0 var(--e-1) 1.75rem; background: none; border-left: 0; color: var(--texto); }
+.mensaje.resumen .mensaje-icono { left: 0; top: calc(var(--e-1) + 2px); color: var(--ok); }
+.mensaje.resumen.info .mensaje-icono { color: var(--info); }
+.mensaje.resumen .separador { margin: 0 var(--e-2); color: var(--texto-suave); }
+
+/* Consulta interpretada: panel compacto (4 columnas en escritorio) */
+#interpretada { margin-bottom: var(--e-5); }
+#interpretada .panel-cabecera { min-height: 3rem; padding-block: var(--e-2); }
+#interpretada .interpretada { grid-template-columns: minmax(0, 1fr); gap: var(--e-3) var(--e-5); padding: var(--e-4) var(--e-5); }
+#interpretada .interpretada > div { min-width: 0; }
+#interpretada dt { font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto-suave); }
+#interpretada dd { margin: var(--e-1) 0 0; }
+.interpretada-chips { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-2); margin: 0; padding: 0; }
+.interpretada-chips > li { min-width: 0; max-width: 100%; }
+
+/* Rejilla de diapositivas */
+.resultados { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-4); }
+.resultados > .vacio { grid-column: 1 / -1; }
+.resultado { display: flex; flex-direction: column; min-width: 0; padding: 6px 6px var(--e-3); background: var(--montura);
+  border: 1px solid var(--montura-borde); border-radius: var(--radio-2); box-shadow: var(--sombra-1);
+  transition: border-color var(--transicion), box-shadow var(--transicion); }
+.resultado:hover, .resultado:focus-within { border-color: var(--borde-fuerte); box-shadow: var(--sombra-2); }
+.resultado-foto img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; background: var(--lupa-fondo); }
+.resultado-meta { display: flex; align-items: center; justify-content: space-between; gap: var(--e-2); margin: var(--e-3) var(--e-2) 0; }
+.rango { font-family: var(--fuente-mono); font-size: var(--t-1); font-weight: var(--peso-fuerte); font-variant-numeric: tabular-nums;
+  color: var(--texto); }
+.resultado-titular { margin: var(--e-2) var(--e-2) 0; font-size: var(--t-2); line-height: 1.4; }
+/* Titular de 2 líneas como máximo (el completo, en title y en la ficha) */
+.resultado-titular a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.razones { list-style: none; display: flex; flex-direction: column; gap: var(--e-1); margin: var(--e-2) var(--e-2) 0; padding: 0;
+  font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+.razones > li { display: flex; align-items: flex-start; gap: var(--e-2); min-width: 0; }
+.razones > li > span { min-width: 0; }
+.razones .icono { flex: none; width: 16px; height: 16px; margin-top: 2px; }
+.razones > li.penalizada { color: var(--aviso); }
+.resultado.cargando { gap: var(--e-2); }
+.resultado.cargando .esqueleto.linea { margin: 0 var(--e-2); }
+.resultados > .vacio.inicial { padding-block: var(--e-6); }
+
+/* Con ratón, «Ver en grande» aparece al pasar o enfocar (la rejilla queda limpia); en pantallas táctiles, siempre */
 @media (hover: hover) {
   .resultado .lupa { visibility: hidden; }
   .resultado .boton-imagen:is(:hover, :focus-visible) .lupa { visibility: visible; }
+}
+
+/* ── Disposición por ancho del contenido ── */
+/* Móvil: «Buscar» ocupa todo el ancho debajo del campo */
+@container contenido (max-width: 35.99rem) {
+  .buscador .boton.grande { flex: 1 1 100%; }
+}
+@container contenido (min-width: 36rem) {
+  .resultados { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #interpretada .interpretada { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container contenido (min-width: 54rem) {
+  .resultados { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #interpretada .interpretada { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, .8fr) minmax(0, 1.8fr); }
+}
+@container contenido (min-width: 62rem) {
+  .resultados { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@container contenido (min-width: 76rem) {
+  .resultados { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
