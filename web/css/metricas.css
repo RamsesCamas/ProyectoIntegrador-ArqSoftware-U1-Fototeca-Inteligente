@@ -45,6 +45,21 @@
   .banda-cifras { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
+/* ── Barra de anclas: fija bajo el borde superior al desplazarse; en móvil se desplaza en horizontal ───────────── */
+.anclas { position: sticky; top: 0; z-index: 5; margin: calc(-1 * var(--e-4)) 0 var(--e-5); padding: var(--e-2) 0;
+  background: var(--fondo); border-bottom: 1px solid var(--borde); }
+.anclas ul { list-style: none; display: flex; gap: var(--e-1); margin: 0; padding: 0; overflow-x: auto; scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(to right, var(--texto) calc(100% - 2rem), transparent);
+  mask-image: linear-gradient(to right, var(--texto) calc(100% - 2rem), transparent); }
+.anclas li { flex: none; }
+.anclas li:last-child { padding-right: 2rem; }
+.anclas a { display: inline-flex; align-items: center; min-height: 2rem; padding: 0 var(--e-2); border-radius: var(--radio-1);
+  color: var(--texto-suave); font-size: var(--t-1); font-weight: var(--peso-medio); text-decoration: none; white-space: nowrap;
+  transition: background-color var(--transicion), color var(--transicion); }
+.anclas a:hover { background: var(--superficie-2); color: var(--texto); text-decoration: underline; text-decoration-color: var(--acento); }
+/* Los paneles que alcanza un ancla quedan bajo la barra fija, no tapados por ella */
+.panel-metrica { scroll-margin-top: 4.5rem; }
+
 /* ── Tablero: paneles a todo el ancho y dos columnas equilibradas ──────────────────────────────────────────── */
 .tablero { display: flex; flex-direction: column; gap: var(--e-5); min-width: 0; }
 .tablero > .mensaje { margin: 0; }
@@ -89,7 +104,7 @@
 .datos-linea { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-4); margin: 0 0 var(--e-4); padding: 0;
   color: var(--texto-suave); }
 .datos-linea li { min-width: 0; }
-.datos-linea strong { color: var(--texto); font-variant-numeric: tabular-nums; }
+.datos-linea strong { color: var(--texto); font-family: var(--fuente-mono); font-size: var(--t-1); font-variant-numeric: tabular-nums; }
 
 /* Cifra destacada de Accesibilidad */
 .destacado { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-3); margin-bottom: var(--e-2); }
@@ -97,8 +112,25 @@
   font-variant-numeric: tabular-nums; }
 .destacado-texto { flex: 1 1 12rem; min-width: 0; margin: 0; color: var(--texto-suave); }
 
-/* Resumen de guardrails por resultado */
-.resumen-insignias { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-2); margin: 0 0 var(--e-2); padding: 0; }
+/* Guardrails: una tabla por resultado y las aprobadas plegadas */
+.subtitulo-panel { margin: var(--e-4) 0 0; font-size: var(--t-2); }
+.figura-resultado figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-2); }
+.figura-resultado figcaption .suave { font-weight: var(--peso-normal); }
+.tablero .figura-resultado { margin: var(--e-3) 0 var(--e-4); }
+
+/* Aprobadas de Guardrails: una línea con su tabla plegable */
+.plegable { margin-top: var(--e-4); border-top: 1px solid var(--borde-suave); }
+.plegable summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-1) var(--e-3);
+  min-height: 2.75rem; padding: var(--e-2) 0; cursor: pointer; list-style: none; }
+.plegable summary::-webkit-details-marker { display: none; }
+.plegable summary::before { content: ""; flex: none; width: .5rem; height: .5rem; margin: 0 var(--e-1); border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform var(--transicion); }
+.plegable[open] summary::before { transform: rotate(45deg); }
+.plegable-titulo { flex: 1 1 auto; min-width: 0; }
+.plegable-titulo strong { font-family: var(--fuente-mono); font-size: var(--t-1); }
+.plegable-accion { font-size: var(--t-1); color: var(--enlace); }
+.plegable summary:hover .plegable-accion { text-decoration: underline; }
+.plegable .grafica { margin-top: var(--e-2); }
 
 /* Latencia por capa: fichas y búsquedas, y la tabla por capa de la arquitectura */
 .latencias { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-5) var(--e-6); }
@@ -107,6 +139,8 @@
 .flujo h3 .icono, .por-evento h3 .icono { width: 20px; height: 20px; color: var(--texto-suave); }
 .flujo-resumen { margin: var(--e-1) 0 var(--e-3); font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
 .por-evento { margin-top: var(--e-5); padding-top: var(--e-5); border-top: 1px solid var(--borde-suave); }
+.nota-percentiles { display: flex; align-items: flex-start; gap: var(--e-2); margin: var(--e-4) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
+.nota-percentiles .icono { width: 18px; height: 18px; margin-top: 1px; }
 @container contenido (min-width: 56rem) {
   .latencias { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -129,20 +163,24 @@
 /* Configuración activa: valores técnicos en mono */
 .configuracion .lista-simple li + li { margin-top: 2px; }
 
+/* Uso por modelo: detalle con los modelos en columnas */
+.detalle-modelos { margin: var(--e-4) 0 0; }
+.detalle-modelos caption { text-align: left; }
+.detalle-modelos td.num { font-family: var(--fuente-mono); }
+
 /* ── Gráficas (marcado de comun.js, T1): ajustes de esta página ────────────────────────────────────────────── */
 .tablero .grafica { margin: var(--e-4) 0 var(--e-5); }
 .tablero .panel-cuerpo > .grafica:first-child, .tablero .cache-cuerpo > .grafica { margin-top: 0; }
 .tablero .panel-cuerpo > .grafica:last-child, .tablero .flujo > .grafica:last-child,
 .tablero .por-evento > .grafica:last-child, .tablero .cache-cuerpo > .grafica { margin-bottom: 0; }
 .tablero .grafica figcaption { margin-bottom: var(--e-2); }
-.tablero svg.barra-apilada { height: 1.75rem; }
 /* Cabeceras numéricas de una sola palabra (p50, Tasa, Activaciones…): sin el mínimo de 6rem que necesitan las de
-   varias palabras, para que las tablas quepan en media columna. «Uso por modelo» conserva el de base.css. */
+   varias palabras, para que las tablas quepan en media columna. */
 .tablero .tabla-barras thead th.num { min-width: 0; white-space: nowrap; }
-#sec-modelos .tabla-barras thead th.num { min-width: 6rem; white-space: normal; }
+/* Toda cifra en mono (las columnas extra también, no solo la del valor) */
+.tablero .tabla-barras td.num { font-family: var(--fuente-mono); }
 .tablero .tabla-barras .celda-barra { width: 20%; }
 /* Filas de 33 px: más densas que las de 37 px de base.css (tablero con muchas filas) */
 .tablero .tabla-barras th, .tablero .tabla-barras td { padding-top: 6px; padding-bottom: 6px; }
 /* Ids técnicos (capa · evento, modelos, endpoints): en mono, como en el resto de la web */
 .etiquetas-mono .tabla-barras tbody th { font-family: var(--fuente-mono); }
-#sec-modelos .tabla-barras tbody th { white-space: nowrap; }
