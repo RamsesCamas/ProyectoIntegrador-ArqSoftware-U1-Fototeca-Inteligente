@@ -27,10 +27,13 @@ pantalla» describe lo que debe verse en cada paso, para ensayar y para grabar e
 - [ ] Medir en la laptop de la demo cuánto tarda una ficha por la ruta completa. Las latencias de referencia de la
       verificación de viabilidad son de otra máquina: P1 de Qwen tuvo una p50 de 34.28 s y P3 de Qwen solo texto, que
       compone desde R3 (ADR-01), una p50 de 35.583 s (`evaluacion/resultados/h0.json` → `verificaciones.0.6`). En la prueba sin red del equipo de desarrollo
-      (Mac M1 Pro, repetida con la configuración final: rediseño v3 de la web y τ_excluir calibrado), el paso 2 tardó
-      34.75 s por la ruta rápida, el 4b 65.02 s y el 5 63.33 s
-      (`evaluacion/resultados/demo_sin_red.json`). [AUTOR: anotar aquí la latencia medida en la laptop de la demo y
-      ajustar los tiempos del guion.]
+      (Mac M1 Pro, repetida con la configuración final: rediseño v4 de la web, τ_excluir y tiempos límite calibrados),
+      el paso 2 tardó 46.07 s por la ruta rápida, el 4b 91.01 s y el 5 95.64 s
+      (`evaluacion/resultados/demo_sin_red.json`), con el navegador y otras aplicaciones compitiendo por la CPU: las
+      llamadas a los modelos (que corren en CPU) fueron más lentas que con el equipo libre. [AUTOR: anotar aquí la
+      latencia medida en la laptop de la demo y ajustar los tiempos del guion.]
+- [ ] Antes de presentar, cerrar el navegador que no se use (pestañas pesadas, video) y otras aplicaciones: los
+      modelos corren en la CPU y compiten con ellas; dejar abierta solo la pestaña de Fototeca Viva.
 - [ ] Ensayar el guion completo dos veces con el cronómetro y grabar el video del plan B.
 - [x] Verificar el guion de forma automática sin red: 11 de 11 pasos con `docker-compose.sinred.yml`
       (`evaluacion/resultados/demo_sin_red.json`). Repetirlo en la laptop de la demo y después de la evaluación:

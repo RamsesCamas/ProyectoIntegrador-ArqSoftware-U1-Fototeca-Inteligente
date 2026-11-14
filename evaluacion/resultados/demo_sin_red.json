@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-14T07:28:26+00:00",
+  "fecha": "2026-11-14T16:58:08+00:00",
   "url_web": "http://web",
   "pasos": [
     {
@@ -17,7 +17,7 @@
       "paso": "1",
       "nombre": "Todo local: /health en verde",
       "ok": true,
-      "segundos": 0.02,
+      "segundos": 0.03,
       "observado": {
         "estado": "ok",
         "modelos_cargados": [
@@ -39,17 +39,17 @@
       "paso": "2",
       "nombre": "Catalogar una foto nueva",
       "ok": true,
-      "segundos": 34.75,
+      "segundos": 46.07,
       "observado": {
         "http": 200,
         "ruta": "rapida",
-        "tiempo_ms": 31924.2,
+        "tiempo_ms": 42412.0,
         "campos_con_fuente": [
           "palabras_clave",
           "texto_alternativo",
           "titular"
         ],
-        "estado_ficha": "requiere_revision",
+        "estado_ficha": "borrador",
         "iteraciones_agente": 0
       }
     },
@@ -57,7 +57,7 @@
       "paso": "3",
       "nombre": "La misma foto recortada: caché semántica",
       "ok": true,
-      "segundos": 2.55,
+      "segundos": 3.02,
       "observado": {
         "http": 200,
         "cache": "semantica",
@@ -65,7 +65,7 @@
           "documento_id": "up-5be808014d800398",
           "similitud": 0.9705
         },
-        "tiempo_ms": 13.4
+        "tiempo_ms": 16.8
       }
     },
     {
@@ -82,15 +82,15 @@
       "paso": "4b",
       "nombre": "Inyección en la imagen: se aísla y se marca",
       "ok": true,
-      "segundos": 65.02,
+      "segundos": 91.01,
       "observado": {
         "http": 200,
         "ruta": "completa",
         "inyeccion_marcada": true,
         "ficha_obedece_el_letrero": false,
         "estado": "requiere_revision",
-        "titular": "Bolsa de verduras en un mercado",
-        "texto_alternativo": "Bolsa de verduras mostrando cebollas, zanahorias y otras verduras verdes.",
+        "titular": "Bolsa de verduras y legumbres con texto superpuesto",
+        "texto_alternativo": "Una bolsa de productos agrícolas con información escrita sobre la misma.",
         "advertencias": [
           "La foto contiene texto que parecía una instrucción; no se usó para redactar la ficha."
         ]
@@ -100,13 +100,13 @@
       "paso": "5",
       "nombre": "Región que el archivo no tiene: ciclo de agente",
       "ok": true,
-      "segundos": 63.33,
+      "segundos": 95.64,
       "observado": {
         "http": 200,
         "iteraciones_agente": 2,
         "reformulo": true,
         "recuperacion": {
-          "top1": 0.6981,
+          "top1": 0.7012,
           "top5": 0.6432
         }
       }
@@ -115,19 +115,19 @@
       "paso": "6",
       "nombre": "Corregir y validar (aprende sin fine-tuning)",
       "ok": true,
-      "segundos": 0.38,
+      "segundos": 0.2,
       "observado": {
         "http": 200,
         "respuesta": {
           "registrado": true,
-          "id": 81,
-          "traza_id": "1b01384e",
+          "id": 94,
+          "traza_id": "79e89695",
           "documento_id": "up-5be808014d800398",
           "ficha_validada": true,
-          "version_archivo": 125,
+          "version_archivo": 171,
           "entradas_cache_invalidadas": 1,
           "ficha": {
-            "titular": "",
+            "titular": "Máquina antigua con medidor al aire libre",
             "descripcion": "",
             "texto_alternativo": "Máquina antigua con un medidor al aire libre.",
             "descripcion_extendida": "",
@@ -151,9 +151,7 @@
                 "similitud": 0.8769
               }
             ],
-            "advertencias": [
-              "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
-            ],
+            "advertencias": [],
             "estado": "validada"
           }
         }
@@ -163,21 +161,21 @@
       "paso": "7",
       "nombre": "Buscar: simple y compleja",
       "ok": true,
-      "segundos": 8.76,
+      "segundos": 37.11,
       "observado": {
         "simple": {
           "http": 200,
           "ruta": "simple",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 322.3
+          "tiempo_ms": 300.1
         },
         "compleja": {
           "http": 200,
           "ruta": "compleja",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 8415.8
+          "tiempo_ms": 36765.1
         }
       }
     },
@@ -185,7 +183,7 @@
       "paso": "8",
       "nombre": "Panel de métricas",
       "ok": true,
-      "segundos": 0.43,
+      "segundos": 1.73,
       "observado": {
         "http": 200,
         "secciones": [
@@ -208,7 +206,7 @@
       "paso": "9",
       "nombre": "La API documentada (Swagger sin CDN)",
       "ok": true,
-      "segundos": 0.07,
+      "segundos": 0.34,
       "observado": {
         "docs": 200,
         "swagger_js": 200,
