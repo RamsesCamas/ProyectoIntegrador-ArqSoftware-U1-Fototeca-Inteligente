@@ -193,6 +193,11 @@ del día de la presentación. Los embeddings de las fotos son el paso más largo
 4. Opcional, para ahorrar tiempo: copia de un equipo ya preparado la carpeta `data/` y los volúmenes `ollama_modelos`,
    `qdrant_datos` y `sqlite_datos` (por ejemplo, con `docker run --rm -v <volumen>:/v -v "$PWD:/r" alpine tar czf
    /r/<volumen>.tgz -C /v .`, y lo inverso para restaurar).
+5. Si el equipo ya estaba preparado y el repositorio cambió, `git pull` y luego `docker compose up -d --build`. El
+   código y los umbrales calibrados (`servicio/config/calibracion.yaml`) van dentro de la imagen del servicio, así que
+   hay que reconstruirla; la web se actualiza sola porque `web/` va montada. Hazlo con internet: si cambió
+   `requirements.txt`, la reconstrucción descarga paquetes. Después, espera a que `/health` diga «ok» con los modelos
+   precalentados y repite el ensayo sin red.
 
 ## 10. Después de la evaluación
 
