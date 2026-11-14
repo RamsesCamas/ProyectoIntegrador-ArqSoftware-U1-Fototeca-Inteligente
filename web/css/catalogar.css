@@ -24,6 +24,11 @@
 .zona-soltar > .icono-48 { margin-bottom: var(--e-2); color: var(--texto-suave); transition: color var(--transicion); }
 .zona-soltar.activa { border-style: solid; border-color: var(--acento); background-color: var(--acento-fondo); }
 .zona-soltar.activa > .icono-48 { color: var(--acento); }
+/* Con fotos elegidas, la mesa se compacta a una franja (la hoja de contactos es lo importante) */
+.zona-soltar.compacta { flex-direction: row; flex-wrap: wrap; gap: var(--e-2) var(--e-4); min-height: 0; padding: var(--e-3) var(--e-4); }
+.zona-soltar.compacta > .icono-48, .zona-soltar.compacta .zona-formatos, .zona-soltar.compacta .zona-ayuda { display: none; }
+.zona-soltar.compacta .zona-titulo { font-size: var(--t-2); }
+.zona-soltar.compacta .elegir { margin: 0; }
 .zona-titulo { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); line-height: var(--interlineado-titulos);
   letter-spacing: var(--tracking-titulos); }
 .zona-formatos { margin: 0; color: var(--texto-suave); }
@@ -42,6 +47,9 @@
 .vista-previa { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
   gap: var(--e-4); margin: 0; padding: 0; }
 .vista-previa li { min-width: 0; }
+.vista-previa .montura { position: relative; }
+.quitar-foto { position: absolute; top: 10px; right: 10px; z-index: 1; border: 1px solid var(--borde); background: var(--superficie);
+  box-shadow: var(--sombra-1); }
 .vista-previa .montura figcaption { flex-direction: column; gap: 0; }
 .vista-previa .fotograma { flex-wrap: wrap; gap: 0 var(--e-2); margin-top: 0; padding: 0; white-space: nowrap; }
 .vista-previa .boton-imagen { border-radius: 2px; }
@@ -91,19 +99,21 @@ figure.foto { min-width: 0; margin: 0; }
 .generacion-chevron { transition: transform var(--transicion); }
 .generacion[aria-expanded="true"] .generacion-chevron { transform: rotate(90deg); }
 .tiempos-ficha { grid-column: 1 / -1; padding-top: var(--e-3); border-top: 1px solid var(--borde-suave); }
-.tiempos-ficha h3 { margin: 0 0 var(--e-1); font-size: var(--t-1); color: var(--texto-suave); }
+.tiempos-ficha h2 { margin: 0 0 var(--e-1); font-size: var(--t-1); color: var(--texto-suave); }
 .tiempos-ficha .capas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
 
 /* ── (b) Espera de una ficha (30–90 s en CPU): informativa, nunca verde de éxito ─────────────────────────────── */
 .espera { scroll-margin-top: var(--e-4); }
 .nombre-en-titulo { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   vertical-align: bottom; }
-.espera .reloj { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-2); margin: 0; }
-.reloj-valor { font-family: var(--fuente-mono); font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1;
-  letter-spacing: var(--tracking-titulos); }
+.encabezado-ficha .reloj { display: inline-flex; align-items: baseline; gap: var(--e-2); margin: 0; }
+.encabezado-ficha .reloj .icono { align-self: center; width: 18px; height: 18px; color: var(--texto-suave); }
+.reloj-valor { font-family: var(--fuente-mono); font-size: var(--t-5); font-weight: var(--peso-fuerte); line-height: 1.1; }
 .reloj-etiqueta { color: var(--texto-suave); }
+.encabezado-pagina.espera-lenta .reloj-valor { color: var(--aviso); }
+.espera-rotulo { margin: 0; font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto-suave); }
 /* Barra contra el p95: radio de 2 px, relleno en color de texto, marca del p50 en acento con su etiqueta debajo */
-.progreso.espera-progreso { height: .5rem; margin: var(--e-4) 0 0; overflow: visible; border: 0; border-radius: 2px;
+.progreso.espera-progreso { height: .5rem; margin: var(--e-3) 0 0; overflow: visible; border: 0; border-radius: 2px;
   background: var(--grafica-pista); box-shadow: inset 0 0 0 1px var(--borde); }
 .espera-progreso .progreso-relleno { background: var(--texto); border-radius: 2px; }
 .espera-progreso .progreso-marca { top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--acento);
@@ -113,7 +123,7 @@ figure.foto { min-width: 0; margin: 0; }
 .etiqueta-p50 { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
 .etiqueta-p50 .valor { font-family: var(--fuente-mono); color: var(--texto); }
 .espera-referencia { margin: var(--e-2) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
-.espera-datos h3 { margin: var(--e-5) 0 var(--e-2); font-size: var(--t-2); }
+.espera-datos h2 { margin: var(--e-5) 0 var(--e-2); font-size: var(--t-2); }
 /* Las 7 capas, con su icono y un valor (p50 típico en la espera, tiempo real en la ficha). No se marca una «etapa
    actual»: el servicio no la reporta. */
 .capas { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--e-6); margin: 0; padding: 0; list-style: none; }
@@ -130,7 +140,6 @@ figure.foto { min-width: 0; margin: 0; }
 .espera .mensaje { margin: var(--e-4) 0 0; }
 /* Pasado el p95: aviso (borde, reloj y mensaje), la petición sigue en curso */
 .espera.lenta .espera-datos { border-color: var(--aviso-borde); }
-.espera.lenta .reloj-valor { color: var(--aviso); }
 
 /* ── (c) Ficha = Inspector ─────────────────────────────────────────────────────────────────────────────── */
 .revision { scroll-margin-top: var(--e-4); }
@@ -145,6 +154,9 @@ figure.foto { min-width: 0; margin: 0; }
 .migas a { display: inline-flex; align-items: center; min-height: var(--objetivo-min); font-weight: var(--peso-medio); }
 .encabezado-ficha-datos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); margin-top: var(--e-3); }
 .nota-solo-lectura { flex: 1 1 100%; margin: 0; font-size: var(--t-1); color: var(--texto-suave); }
+.encabezado-ficha h1.sin-titular { font-style: italic; color: var(--texto-suave); }
+.migas-actual { display: inline-block; max-width: 24ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+.encabezado-ficha .tiempos-ficha { margin-top: var(--e-3); }
 
 /* Columna de la foto: marco, procedencia y avisos */
 .ficha-lateral { display: grid; gap: var(--e-5); align-content: start; }
@@ -159,6 +171,20 @@ figure.foto { min-width: 0; margin: 0; }
 .avisos .mensaje { margin: 0; }
 .aviso-titulo { font-weight: var(--peso-medio); }
 .aviso-grupo + .aviso-grupo { margin-top: var(--e-3); padding-top: var(--e-3); border-top: 1px solid var(--aviso-borde); }
+.avisos .aviso-titulo .boton-enlace { min-height: var(--objetivo-min); color: inherit; font-weight: var(--peso-fuerte); }
+.lista-guardrails { font-family: var(--fuente-mono); font-size: var(--t-1); }
+/* Después de validar: lo resuelto, neutro y plegado */
+.aviso-resuelto { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-2); }
+.aviso-resuelto summary { display: flex; align-items: center; gap: var(--e-2); min-height: 2.75rem; padding: var(--e-2) var(--e-4);
+  list-style: none; cursor: pointer; border-radius: var(--radio-2); font-weight: var(--peso-medio); color: var(--texto); }
+.aviso-resuelto summary::-webkit-details-marker { display: none; }
+.aviso-resuelto summary::before { content: ""; flex: none; width: .5rem; height: .5rem; margin: 0 .25rem; border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform var(--transicion); }
+.aviso-resuelto[open] summary::before { transform: rotate(45deg); }
+.aviso-resuelto summary .icono { width: 18px; height: 18px; color: var(--texto-suave); }
+.aviso-resuelto-cuerpo { padding: 0 var(--e-4) var(--e-4); font-size: var(--t-1); color: var(--texto-suave); }
+.aviso-resuelto-cuerpo ul { margin: var(--e-1) 0 0; padding-left: var(--e-5); }
+.aviso-resuelto .aviso-grupo + .aviso-grupo { border-top-color: var(--borde-suave); }
 
 /* Inspector: secciones con sobretítulo (14 px, seminegrita, gris, con regla encima); cada campo con su etiqueta, su
    contador en mono a la derecha y su fila «Fuentes:» */
@@ -186,6 +212,22 @@ figure.foto { min-width: 0; margin: 0; }
   transition: width var(--transicion); }
 .barra-limite[data-nivel="aviso"] .barra-limite-relleno { background: var(--aviso); }
 .barra-limite[data-nivel="error"] .barra-limite-relleno { background: var(--error); }
+/* Campo que un guardrail vació: borde de aviso y la explicación en línea bajo el control (ligada con aria-describedby) */
+.campo-descartado :is(input, textarea) { border-color: var(--aviso); box-shadow: inset 0 0 0 1px var(--aviso); }
+.aviso-campo { display: flex; align-items: flex-start; gap: var(--e-2); margin: var(--e-2) 0 0; padding: var(--e-2) var(--e-3);
+  border-left: 3px solid var(--aviso); border-radius: var(--radio-1); background: var(--aviso-fondo); color: var(--aviso);
+  font-size: var(--t-1); font-weight: var(--peso-medio); line-height: 1.45; }
+.aviso-campo .icono, .nota-campo .icono { flex: none; width: 16px; height: 16px; margin-top: 2px; }
+/* Campo que la ruta no genera: nota neutra */
+.nota-campo { display: flex; align-items: flex-start; gap: var(--e-2); margin: var(--e-2) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
+/* Las citas del texto descartado ya no respaldan nada: borde discontinuo y su rótulo lo dice */
+.fuentes-descartadas .chip { border-style: dashed; }
+/* Marca de lo que corrigió el archivista (dato del formulario; su fuente la devuelve la API) */
+.campo-rotulo { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-2); min-width: 0; }
+.marca-archivista { display: inline-flex; align-items: center; gap: var(--e-1); margin: 0; font-size: var(--t-1);
+  font-weight: var(--peso-medio); color: var(--chip-archivista-borde); }
+.marca-archivista .icono { width: 16px; height: 16px; }
+p.marca-archivista { margin-bottom: var(--e-2); }
 /* Campo vacío: «Sin contenido» en gris e itálica, sin aviso; su fila de fuentes dice que no aplica */
 .fuentes .sin-fuente.campo-vacio { font-style: italic; font-weight: var(--peso-normal); color: var(--texto-suave); }
 
@@ -212,13 +254,21 @@ figure.foto { min-width: 0; margin: 0; }
 
 /* «Tu opinión», compuesto como pie del inspector */
 .inspector-pie { display: grid; gap: var(--e-3); padding: var(--e-4) var(--e-5) var(--e-5); background: var(--panel-cabecera-fondo);
-  border-top: 1px solid var(--borde); border-radius: 0 0 var(--radio-2) var(--radio-2); }
+  border-top: 1px solid var(--borde); }
 .inspector-pie .seccion-titulo { margin: 0; padding-top: 0; border-top: 0; }
 .inspector-pie p, .inspector-pie label { margin: 0; }
 .opinion-util { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); }
 .opinion-util p { font-weight: var(--peso-medio); }
 .opinion-comentario { display: grid; gap: var(--e-1); }
-.acciones-ficha { margin-top: var(--e-1); }
+.boton.boton-opinion { border-color: var(--borde-fuerte); background: var(--superficie); color: var(--texto); }
+.boton.boton-opinion:hover { background: var(--superficie-2); }
+.boton-opinion .icono-pulsado { display: none; }
+.boton.boton-opinion[aria-pressed="true"], .boton.boton-opinion[aria-pressed="true"]:hover { border-color: var(--texto);
+  background: var(--superficie-2); color: var(--texto); box-shadow: inset 0 0 0 1px var(--texto); }
+.boton-opinion[aria-pressed="true"] .icono-pulsado { display: inline-block; }
+/* «Validar ficha» siempre a la mano: las acciones quedan fijas abajo mientras el inspector está a la vista */
+.acciones-ficha { position: sticky; bottom: 0; z-index: 2; display: grid; gap: var(--e-3); padding: var(--e-3) var(--e-5);
+  background: var(--superficie); border-top: 1px solid var(--borde); border-radius: 0 0 var(--radio-2) var(--radio-2); }
 #resultado-opinion:empty { display: none; }
 #resultado-opinion .mensaje { margin: 0; }
 
