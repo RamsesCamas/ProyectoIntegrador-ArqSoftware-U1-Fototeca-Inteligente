@@ -18,6 +18,10 @@
 /* Tira corta: fotogramas de ancho fijo (no se estiran a todo el ancho con 2 o 3 fotos) */
 .tira-corta { grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 17rem)); }
 .cuadro-referencia { font-family: var(--fuente-texto); }
+/* En móvil, dos por fila: las fotos de un grupo se comparan lado a lado */
+@container contenido (max-width: 35.99rem) {
+  .tira-corta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
 /* Pie del fotograma, en la mesa: titular (2 líneas) e id en una línea con elipsis (el id completo en title) */
 .cuadro-pie { min-width: 0; }
