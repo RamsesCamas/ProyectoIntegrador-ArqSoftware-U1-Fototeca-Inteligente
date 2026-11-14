@@ -1,5 +1,5 @@
 // Buscar: por texto (POST /api/busquedas JSON) o por foto (multipart). Cada resultado es una diapositiva que abre el
-// visor, con su rango, su puntaje y las razones por las que coincide; la consulta interpretada aparece cuando la
+// visor, con su rango y las razones por las que coincide (con sus similitudes); la consulta interpretada aparece cuando la
 // búsqueda fue compleja (la descompuso el modelo de lenguaje). La línea de #estado dice cuántos, por qué ruta y en
 // cuánto tiempo; el pie técnico, el resto.
 import { api, anunciar, el } from "./api.js";
@@ -18,7 +18,6 @@ const botonBuscar = formularioTexto.querySelector("button[type=submit]");
 const VISIBLES_SIN_DIFERIR = 8;   // las dos primeras filas cargan de inmediato; el resto, al acercarse
 let turno = 0;                    // solo pinta la respuesta de la búsqueda más reciente
 
-const puntaje = (p) => (typeof p === "number" ? p.toFixed(2) : p ?? "—");
 const RUTAS = { simple: "ruta simple", compleja: "ruta compleja", imagen: "búsqueda por foto" };
 const esPenalizacion = (razon) => /^penaliz/i.test(razon);
 
@@ -41,14 +40,15 @@ function tarjeta(x, i) {
     // La diapositiva abre la foto en grande con su ficha (visor); el titular lleva a la ficha completa
     el("button", { type: "button", clase: "boton-imagen resultado-foto",
       onclick: () => verFotoGuardada(x.documento_id, { titulo: titular,
-        extra: [["Puntaje", puntaje(x.puntaje)], ["Por qué coincide", razones.join(" · ")]] }) },
+        extra: [["Posición", `#${i + 1}`], ["Por qué coincide", razones.join(" · ")]] }) },
       miniatura(x.documento_id, { alt, diferida: i >= VISIBLES_SIN_DIFERIR }),
       el("span", { clase: "lupa", "aria-hidden": "true" }, icono("lupa-foto"), "Ver en grande"),
       el("span", { clase: "solo-lectores", texto: " (ver en grande con su ficha)" })),
+    // Solo el rango: el orden sale de fusionar dos listas (RRF) con penalizaciones, y `puntaje` de la API es solo la
+    // similitud texto→imagen, que ya aparece en las razones. Mostrarlo como insignia junto al rango parecía un
+    // puntaje de orden que no cuadra (#1 con 0.70 sobre #3 con 0.73).
     el("div", { clase: "resultado-meta" },
-      el("span", { clase: "rango" }, el("span", { clase: "solo-lectores", texto: "Posición " }), `#${i + 1}`),
-      el("span", { clase: "insignia neutra mono puntaje", title: "Puntaje de la búsqueda: más alto, más parecido" },
-        el("span", { clase: "solo-lectores", texto: "Puntaje " }), puntaje(x.puntaje))),
+      el("span", { clase: "rango" }, el("span", { clase: "solo-lectores", texto: "Posición " }), `#${i + 1}`)),
     el("h3", { clase: "resultado-titular", id: idTitular },
       el("a", { href: `catalogar.html?doc=${encodeURIComponent(x.documento_id)}`, title: titular, texto: titular })),
     el("p", { clase: "solo-lectores", texto: "Por qué coincide:" }),
