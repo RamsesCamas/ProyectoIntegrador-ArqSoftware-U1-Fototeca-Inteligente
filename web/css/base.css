@@ -572,7 +572,10 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 .visor-cabecera { display: flex; align-items: center; gap: var(--e-4); min-height: 3.5rem; padding: var(--e-2) var(--e-3) var(--e-2) var(--e-5);
   border-bottom: 1px solid var(--borde-suave); }
 .visor-cabecera h2 { flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--t-3); }
+.visor-cabecera .visor-icono { width: 20px; height: 20px; color: var(--texto-suave); }
 .visor-cabecera .boton { flex: none; }
+.visor-cabecera .boton.fantasma { color: var(--texto); }
+.visor-cabecera .boton.fantasma:hover { background: var(--superficie-2); }
 .visor-cuerpo { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1 1 auto; min-height: 0; overflow: auto; }
 .visor-cuerpo figure { display: flex; flex-direction: column; justify-content: center; gap: var(--e-3); min-width: 0; margin: 0;
   padding: var(--e-4); background: var(--lupa-fondo); color: var(--lupa-texto); }
@@ -624,7 +627,7 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   text-align: left; vertical-align: middle; font-variant-numeric: tabular-nums; }
 .tabla-barras td { white-space: nowrap; }
 .tabla-barras .num { text-align: right; }
-.tabla-barras thead th { font-weight: var(--peso-medio); color: var(--texto-suave); border-bottom: 1px solid var(--borde); }
+.tabla-barras thead th { font-weight: var(--peso-medio); color: var(--texto-suave); border-bottom: 1px solid var(--borde); white-space: nowrap; }
 .tabla-barras tbody th { min-width: 7rem; font-weight: var(--peso-normal); }
 .tabla-barras .celda-barra { width: 32%; min-width: 5rem; }
 .tabla-barras .valor { font-family: var(--fuente-mono); font-weight: var(--peso-medio); }

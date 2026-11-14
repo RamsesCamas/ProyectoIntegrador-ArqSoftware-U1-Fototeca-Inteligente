@@ -1,7 +1,8 @@
 // Componentes comunes de la web: pie técnico plegable, gráficas SVG propias (sin bibliotecas) con su tabla
-// equivalente, visor de fotos y utilidades de formato. Los colores NO viven aquí: cada serie es una clase .serie-N
-// de estilos.css (tokens --grafica-N).
+// equivalente, visor de fotos, mensajes, medidor, tipos de fuente y utilidades de formato. Los colores NO viven aquí:
+// cada serie es una clase .serie-N y cada componente una clase de css/base.css (tokens --…).
 import { api, el, ETIQUETA_ESTADO, insignia } from "./api.js";
+import { icono } from "./iconos.js";
 
 export const CAPAS = {
   guardrails_entrada: "Guardrails de entrada", cache: "Caché", contexto: "Contexto (RAG)", enrutador: "Enrutador",
@@ -49,12 +50,13 @@ export function textoGuardrail(g) {
  */
 export function barraApilada(partes, { titulo = "Tiempo por capa", formato = segundos } = {}) {
   const total = partes.reduce((s, p) => s + p.valor, 0) || 1;
-  const grafica = svg("svg", { viewBox: "0 0 100 8", preserveAspectRatio: "none", class: "barra-apilada",
+  // Sin viewBox: x y ancho en % del ancho real (los extremos redondeados los da el CSS, sin deformarse)
+  const grafica = svg("svg", { class: "barra-apilada",
     role: "img", "aria-label": `${titulo}: ${partes.map((p) => `${p.etiqueta} ${formato(p.valor)}`).join(", ")}` });
   let x = 0;
   partes.forEach((p) => {
     const w = (p.valor / total) * 100;
-    const r = svg("rect", { x, y: 0, width: w, height: 8, class: claseSerie(serieDe(p)) });
+    const r = svg("rect", { x: `${x.toFixed(3)}%`, y: 0, width: `${w.toFixed(3)}%`, height: "100%", class: claseSerie(serieDe(p)) });
     const t = svg("title");
     t.textContent = `${p.etiqueta}: ${formato(p.valor)}`;
     r.append(t);
@@ -63,10 +65,11 @@ export function barraApilada(partes, { titulo = "Tiempo por capa", formato = seg
   });
   const tabla = el("table", { clase: "tabla tabla-compacta" },
     el("caption", { clase: "solo-lectores", texto: `${titulo} (tabla equivalente)` }),
-    el("thead", {}, el("tr", {}, ["Capa", "Tiempo", "Proporción"].map((h) => el("th", { scope: "col", texto: h })))),
+    el("thead", {}, el("tr", {}, el("th", { scope: "col", texto: "Capa" }), el("th", { scope: "col", clase: "num", texto: "Tiempo" }),
+      el("th", { scope: "col", clase: "num", texto: "Proporción" }))),
     el("tbody", {}, partes.map((p) => el("tr", {},
       el("th", { scope: "row" }, el("span", { clase: `muestra ${claseSerie(serieDe(p))}`, "aria-hidden": "true" }), p.etiqueta),
-      el("td", { texto: formato(p.valor) }), el("td", { texto: porcentaje(p.valor / total) })))));
+      el("td", { clase: "num", texto: formato(p.valor) }), el("td", { clase: "num", texto: porcentaje(p.valor / total) })))));
   return el("figure", { clase: "grafica" }, el("figcaption", { texto: titulo }), grafica, tabla);
 }
 
@@ -82,13 +85,17 @@ export function barras(filas, { titulo, formato = (v) => numero(v), maximo, enca
     el("div", { clase: "desplazable" }, el("table", { clase: "tabla-barras" },
       el("thead", {}, el("tr", {}, el("th", { scope: "col", texto: encabezado }),
         el("th", { scope: "col" }, el("span", { clase: "solo-lectores", texto: "Gráfica" })),
-        el("th", { scope: "col", texto: columnaValor }), extras.map((x) => el("th", { scope: "col", texto: x.titulo })))),
+        el("th", { scope: "col", clase: "num", texto: columnaValor }), extras.map((x) => el("th", { scope: "col", clase: "num", texto: x.titulo })))),
       el("tbody", {}, filas.map((f) => {
-        const barra = svg("svg", { viewBox: "0 0 100 10", preserveAspectRatio: "none", class: "barra-svg", "aria-hidden": "true", focusable: "false" });
-        barra.append(svg("rect", { x: 0, y: 1, height: 8, width: Math.max(0.5, Math.min(100, ((f.valor || 0) / max) * 100)),
-          class: claseSerie(serieDe(f)) }));
+        // Sin viewBox (unidades en px, anchos en % del real): pista al 100 %, rejilla tenue a 25/50/75 % y la barra
+        // con extremos redondeados encima
+        const barra = svg("svg", { class: "barra-svg", "aria-hidden": "true", focusable: "false" });
+        barra.append(svg("rect", { class: "pista", x: 0, y: 3, width: "100%", height: 10, rx: 5 }));
+        for (const x of ["25%", "50%", "75%"]) barra.append(svg("line", { class: "rejilla-linea", x1: x, x2: x, y1: 0, y2: 16 }));
+        const ancho = Math.max(0.5, Math.min(100, ((f.valor || 0) / max) * 100));
+        barra.append(svg("rect", { x: 0, y: 3, height: 10, rx: 5, width: `${ancho.toFixed(2)}%`, class: claseSerie(serieDe(f)) }));
         return el("tr", {}, el("th", { scope: "row", texto: f.etiqueta }), el("td", { clase: "celda-barra" }, barra),
-          el("td", { clase: "valor", texto: formato(f.valor) }), extras.map((x) => el("td", { texto: x.texto(f) })));
+          el("td", { clase: "valor num", texto: formato(f.valor) }), extras.map((x) => el("td", { clase: "num", texto: x.texto(f) })));
       })))));
 }
 
@@ -118,20 +125,72 @@ export function pieTecnico(meta) {
   ];
   if (meta.razones_enrutador?.length) filas.push(["Enrutador", meta.razones_enrutador.join(" · ")]);
   return el("details", { clase: "pie-tecnico" },
-    el("summary", {}, "Pie técnico ", el("span", { clase: "resumen-tecnico", texto: `(${resumenTecnico(meta)})` })),
-    el("dl", {}, filas.flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { texto: v ?? "—" })])),
-    tiempos.length ? barraApilada(tiempos, { titulo: "Tiempo por capa de esta petición" }) : null,
-    guardrails.length ? el("table", { clase: "tabla tabla-compacta" },
-      el("caption", { texto: "Guardrails aplicados" }),
-      el("thead", {}, el("tr", {}, ["Etapa", "Verificación", "Resultado"].map((h) => el("th", { scope: "col", texto: h })))),
-      el("tbody", {}, guardrails.map(([etapa, g]) => el("tr", {}, el("td", { texto: etapa }),
-        el("th", { scope: "row", texto: g.verificacion }), el("td", { texto: textoGuardrail(g).slice(g.verificacion.length + 2) }))))) : null,
-    meta.transiciones?.length ? el("p", { clase: "transiciones", texto: `Estados: ${meta.transiciones.join(" · ")}` }) : null);
+    el("summary", {}, icono("cpu"), el("span", { clase: "pie-tecnico-titulo", texto: "Pie técnico" }),
+      el("span", { clase: "resumen-tecnico", texto: resumenTecnico(meta) })),
+    el("div", { clase: "pie-tecnico-cuerpo" },
+      el("dl", {}, filas.flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { clase: k === "Traza" ? "id" : null, texto: v ?? "—" })])),
+      tiempos.length ? barraApilada(tiempos, { titulo: "Tiempo por capa de esta petición" }) : null,
+      guardrails.length ? el("div", { clase: "desplazable" }, el("table", { clase: "tabla tabla-compacta" },
+        el("caption", { texto: "Guardrails aplicados" }),
+        el("thead", {}, el("tr", {}, ["Etapa", "Verificación", "Resultado"].map((h) => el("th", { scope: "col", texto: h })))),
+        el("tbody", {}, guardrails.map(([etapa, g]) => el("tr", {}, el("td", { texto: etapa }),
+          el("th", { scope: "row", texto: g.verificacion }), el("td", { texto: textoGuardrail(g).slice(g.verificacion.length + 2) })))))) : null,
+      meta.transiciones?.length ? el("p", { clase: "transiciones", texto: `Estados: ${meta.transiciones.join(" · ")}` }) : null));
 }
 
-/** Mensaje en un contenedor. Tipos: error (role=alert), ok, info (progreso, conteos y estados vacíos) y aviso. */
+const ICONO_MENSAJE = { ok: "check", info: "info", aviso: "alerta", error: "error" };
+
+/**
+ * Nodo de mensaje con su icono a la izquierda. Tipos: error (role=alert), ok, info (progreso, conteos y estados
+ * vacíos) y aviso. `contenido` es texto o nodos (p. ej. un párrafo y una lista).
+ */
+export function crearMensaje(contenido, tipo = "error") {
+  return el("div", { clase: `mensaje ${tipo} con-icono`, role: tipo === "error" ? "alert" : "status" },
+    icono(ICONO_MENSAJE[tipo] || "info", "mensaje-icono"), el("div", { clase: "mensaje-texto" }, contenido));
+}
+
+/** Mensaje en un contenedor (reemplaza lo que hubiera). */
 export function mensaje(contenedor, texto, tipo = "error") {
-  contenedor.replaceChildren(el("div", { clase: `mensaje ${tipo}`, role: tipo === "error" ? "alert" : "status", texto }));
+  contenedor.replaceChildren(crearMensaje(texto, tipo));
+}
+
+/**
+ * Medidor «valor/límite» (p. ej. el texto alternativo: 0–250). Color por umbral MÁS texto: hasta `aviso` (fracción
+ * del límite) es ok; desde ahí, aviso; por encima del límite, error. La barra es decorativa; el texto lo dice todo.
+ */
+export function medidor(valor, limite, { aviso = 0.9, unidad = "caracteres", id = null } = {}) {
+  const fraccion = limite > 0 ? valor / limite : 0;
+  const nivel = fraccion > 1 ? "error" : fraccion >= aviso ? "aviso" : "ok";
+  const relleno = el("span", { clase: "medidor-relleno" });
+  relleno.style.width = `${Math.min(100, fraccion * 100).toFixed(1)}%`;
+  return el("div", { clase: "medidor", "data-nivel": nivel, id },
+    el("span", { clase: "medidor-barra", "aria-hidden": "true" }, relleno),
+    el("span", { clase: "medidor-texto", texto: `${numero(valor)}/${numero(limite)}${unidad ? ` ${unidad}` : ""}` }));
+}
+
+/**
+ * Tipos de fuente de la ficha (trazabilidad): el mismo icono, clase de color y etiqueta en toda la web.
+ * `claseChip` conserva las clases de los chips existentes (.chip-foto para las fotos similares).
+ */
+export const FUENTES = {
+  referencia_humana: { etiqueta: "Referencia humana", icono: "referencia", claseChip: "chip-referencia_humana" },
+  foto_similar: { etiqueta: "Foto similar", icono: "foto-similar", claseChip: "chip-foto" },
+  regla: { etiqueta: "Regla", icono: "regla", claseChip: "chip-regla" },
+  tesauro: { etiqueta: "Tesauro", icono: "tesauro", claseChip: "chip-tesauro" },
+  archivista: { etiqueta: "Archivista", icono: "archivista", claseChip: "chip-archivista" },
+  etiqueta_open_images: { etiqueta: "Etiqueta de Open Images", icono: "etiqueta", claseChip: "chip-etiqueta_open_images" },
+};
+const FUENTE_GENERICA = { etiqueta: "Otra fuente", icono: "info", claseChip: "" };
+export const fuente = (tipo) => FUENTES[tipo] || { ...FUENTE_GENERICA, etiqueta: tipo || FUENTE_GENERICA.etiqueta };
+
+/** Leyenda de los tipos de fuente con cuántas citas hay de cada uno: { tipo: n }. Los tipos sin citas no aparecen. */
+export function leyendaFuentes(conteos) {
+  const tipos = Object.keys(FUENTES).filter((t) => conteos[t]).concat(Object.keys(conteos).filter((t) => !FUENTES[t] && conteos[t]));
+  return el("ul", { clase: "leyenda-fuentes", "aria-label": "Tipos de fuente de la ficha" }, tipos.map((t) => {
+    const f = fuente(t);
+    return el("li", {}, el("span", { clase: `chip ${f.claseChip}` }, icono(f.icono), f.etiqueta),
+      el("span", { clase: "conteo", texto: `${numero(conteos[t])} ${conteos[t] === 1 ? "cita" : "citas"}` }));
+  }));
 }
 
 /** Ejecuta `fn` ahora si la pestaña está visible, o en cuanto vuelva a estarlo (no se piden datos en segundo plano). */
@@ -158,11 +217,12 @@ let turnoVisor = 0;
 function crearVisor() {
   const dialogo = el("dialog", { id: "visor", clase: "visor", "aria-labelledby": "visor-titulo" },
     el("div", { clase: "visor-cabecera" },
+      icono("lupa-foto", "visor-icono"),
       el("h2", { id: "visor-titulo" }),
-      el("button", { type: "button", clase: "boton secundario", onclick: () => dialogo.close() }, "Cerrar")),
+      el("button", { type: "button", clase: "boton fantasma", onclick: () => dialogo.close() }, icono("cerrar"), "Cerrar")),
     el("div", { clase: "visor-cuerpo" },
       el("figure", {}, el("img", { id: "visor-imagen", alt: "" }), el("figcaption", { id: "visor-medidas" })),
-      el("div", {}, el("dl", { id: "visor-datos" }), el("div", { id: "visor-extra" }))));
+      el("div", { clase: "visor-panel" }, el("dl", { id: "visor-datos" }), el("div", { id: "visor-extra", clase: "visor-extra" }))));
   // Un clic fuera de la caja (sobre el fondo) también cierra
   dialogo.addEventListener("click", (ev) => { if (ev.target === dialogo) dialogo.close(); });
   dialogo.addEventListener("close", () => {
@@ -174,10 +234,13 @@ function crearVisor() {
   return dialogo;
 }
 
+// Datos que son identificadores técnicos: van en mono (y pueden partirse en cualquier punto)
+const DATOS_ID = new Set(["Documento", "Traza", "Fragmento"]);
+
 function pintarDatos(datos) {
   visor.querySelector("#visor-datos").replaceChildren(...datos
     .filter(([, v]) => v !== null && v !== undefined && v !== "")
-    .flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { texto: String(v) })]));
+    .flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { clase: DATOS_ID.has(k) ? "id" : null, texto: String(v) })]));
 }
 
 /** Abre el visor. `datos` es una lista de pares [etiqueta, valor]; `enlace` = { href, texto } abre en otra pestaña. */
@@ -195,7 +258,7 @@ export function abrirVisor({ src, alt, titulo, datos = [], nota = "", enlace = n
   img.src = src;
   pintarDatos(datos);
   visor.querySelector("#visor-extra").replaceChildren(...(enlace ? [el("p", {},
-    el("a", { href: enlace.href, target: "_blank", rel: "noopener" }, enlace.texto,
+    el("a", { href: enlace.href, target: "_blank", rel: "noopener" }, enlace.texto, icono("externo", "icono-16"),
       el("span", { clase: "solo-lectores", texto: " (se abre en otra pestaña)" })))] : []));
   if (!visor.open) {
     visor.origen = document.activeElement;
