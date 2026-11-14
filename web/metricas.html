@@ -50,19 +50,22 @@
           <div class="encabezado-acciones"></div>
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
-        <form id="periodo" class="tarjeta periodo">
-          <label for="desde">Desde</label>
-          <select id="desde">
-            <option value="">Todo el historial</option>
-            <option value="1">Última hora</option>
-            <option value="24">Últimas 24 horas</option>
-          </select>
-          <button class="boton secundario" type="submit">Actualizar</button>
-        </form>
-        <section id="estado" aria-live="polite"></section>
-        <section aria-labelledby="titulo-cifras">
+        <!-- Estado y periodo: metricas.js los pasa a .encabezado-acciones (a la derecha del h1) -->
+        <div id="acciones-metricas" class="acciones-metricas" hidden>
+          <div id="estado" class="estado-metricas" aria-live="polite"></div>
+          <form id="periodo" class="periodo">
+            <label for="desde">Periodo</label>
+            <select id="desde">
+              <option value="">Todo el historial</option>
+              <option value="1">Última hora</option>
+              <option value="24">Últimas 24 horas</option>
+            </select>
+            <button class="boton secundario" type="submit" id="actualizar"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-actualizar"/></svg>Actualizar</button>
+          </form>
+        </div>
+        <section class="seccion-cifras" aria-labelledby="titulo-cifras">
           <h2 id="titulo-cifras" class="solo-lectores">Cifras clave</h2>
-          <div id="cifras-clave" class="cifras-clave"></div>
+          <div id="cifras-clave" class="banda-cifras"></div>
         </section>
         <div id="panel" class="tablero"></div>
         <!-- ═══ Fin del contenido de la página ═══ -->

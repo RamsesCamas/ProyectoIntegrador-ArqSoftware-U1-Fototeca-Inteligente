@@ -1,29 +1,148 @@
-/* Métricas · periodo, cifras clave y el tablero de secciones con sus gráficas y tablas. Solo maquetación y piezas
-   propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado
-   de v1 al sistema v3. */
+/* Métricas · encabezado con estado y periodo, banda de cifras clave y tablero de paneles con sus gráficas y tablas.
+   Solo maquetación y piezas propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página (T4).
 
-.periodo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); padding: var(--e-3) var(--e-4); }
+   Disposición (consultas sobre el ancho real del contenido, el contenedor «contenido» de main):
+   · ≥ 60rem: estado y periodo a la derecha del h1; banda de 6 cifras en una fila.
+   · ≥ 56rem: paneles de tablas angostas en dos columnas equilibradas (.reticula > .col-6); fichas y búsquedas lado a
+     lado en «Latencia por capa». Las tablas anchas (caché, modelos, endpoints) van siempre a todo el ancho.
+   · < 36rem: banda de 2 × 3 y todo en una columna; las tablas que no caben se desplazan en horizontal. */
+
+/* ── Encabezado: «✓ Actualizado …» arriba y «Periodo [▾] [Actualizar]» debajo ─────────────────────────────── */
+.acciones-metricas { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-2) var(--e-5);
+  width: 100%; min-width: 0; }
+.encabezado-pagina .encabezado-acciones { flex: 1 1 100%; }
+.periodo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); min-width: 0; margin: 0; }
 .periodo label { margin: 0; }
 .periodo select { width: auto; min-width: 12rem; }
+.estado-metricas { min-width: 0; }
+.estado-metricas:empty { display: none; }
+/* El estado es una línea compacta (no una caja): icono y texto del color del tipo */
+.estado-metricas .mensaje { margin: 0; padding: var(--e-1) 0 var(--e-1) 1.75rem; border-left: 0; background: transparent;
+  font-size: var(--t-1); line-height: 1.45; }
+.estado-metricas .mensaje-icono { left: 0; top: calc(var(--e-1) + 1px); width: 18px; height: 18px; }
+.estado-metricas .mensaje.error { padding: var(--e-2) var(--e-3) var(--e-2) 2.25rem; background: var(--error-fondo);
+  border-left: 4px solid currentColor; }
+.estado-metricas .mensaje.error .mensaje-icono { left: var(--e-3); top: calc(var(--e-2) + 1px); }
 
-/* Cifras clave: 1 columna en móvil, 2 a ancho medio y 3 × 2 desde 44rem (con 6 en una fila, las etiquetas largas
-   quedan en cajas de menos de 12ch con 3 líneas; la banda de 6 la diseña la tarea de la página) */
-.cifras-clave { display: grid; gap: var(--e-3); grid-template-columns: minmax(0, 1fr); margin: var(--e-4) 0; }
-.cifras-clave .cifra { padding: var(--e-3) var(--e-4); }
-.cifras-clave .cifra-valor { font-size: var(--t-5); }
-
-/* Tablero: secciones en 2 columnas equilibradas; las anchas ocupan las dos */
-.tablero { columns: 2 24rem; column-gap: var(--e-4); }
-.tablero > section { break-inside: avoid; margin: 0 0 var(--e-4); }
-.tablero > .ancha { column-span: all; }
-.tablero .cifra-valor { margin: 0; font-size: var(--t-6); font-weight: var(--peso-fuerte); }
-.latencias { display: grid; gap: var(--e-2) var(--e-5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); }
-.latencias > * { min-width: 0; }
-.latencias h3 { font-size: var(--t-2); }
-
-@container contenido (min-width: 28rem) {
-  .cifras-clave { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@container contenido (min-width: 60rem) {
+  .encabezado-pagina .encabezado-acciones { flex: 0 1 auto; }
+  .acciones-metricas { flex-direction: column; align-items: flex-end; width: auto; }
+  .periodo { justify-content: flex-end; }
 }
-@container contenido (min-width: 44rem) {
-  .cifras-clave { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* ── Banda de cifras clave: 2 × 3 → 3 × 2 → 6 en una fila ───────────────────────────────────────────────────── */
+.banda-cifras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); margin: 0 0 var(--e-5); }
+.banda-cifras .cifra { padding: var(--e-4); }
+.banda-cifras .cifra-sub { margin: 0; }
+.cifra-cargando { min-height: 9.5rem; }
+.cifra-cargando .esqueleto { margin: var(--e-1) 0; }
+.icono-esqueleto { width: 20px; height: 20px; }
+.valor-esqueleto { width: 60%; height: 2rem; }
+@container contenido (min-width: 36rem) {
+  .banda-cifras { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+@container contenido (min-width: 60rem) {
+  .banda-cifras { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+/* ── Tablero: paneles a todo el ancho y dos columnas equilibradas ──────────────────────────────────────────── */
+.tablero { display: flex; flex-direction: column; gap: var(--e-5); min-width: 0; }
+.tablero > .mensaje { margin: 0; }
+.columna-paneles { display: flex; flex-direction: column; gap: var(--e-5); }
+/* El hueco lo dan los contenedores flex: sin el margen de «panel tras panel» de base.css */
+.tablero .panel + .panel { margin-top: 0; }
+.tablero[aria-busy="true"] .panel-metrica { opacity: .6; transition: opacity var(--transicion); }
+
+/* Panel de métrica: el h2 (con su icono) es hijo directo de la sección y, con el texto auxiliar, forma la franja de
+   cabecera del sistema (.panel-cabecera) en una rejilla de dos columnas. */
+.panel-metrica { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; }
+.panel-metrica > h2 { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--e-3); min-width: 0; min-height: 3.5rem; margin: 0;
+  padding: var(--e-3) var(--e-5); background: var(--panel-cabecera-fondo); border-bottom: 1px solid var(--borde-suave);
+  border-radius: var(--radio-2) var(--radio-2) 0 0; font-size: var(--t-3); }
+.panel-metrica > h2 .icono { width: 20px; height: 20px; color: var(--texto-suave); }
+.panel-metrica.con-auxiliar > h2 { grid-column: 1; border-top-right-radius: 0; padding-right: var(--e-3); }
+.panel-metrica > .panel-auxiliar { grid-column: 2; grid-row: 1; display: flex; align-items: center; margin: 0;
+  padding: var(--e-3) var(--e-5) var(--e-3) 0; background: var(--panel-cabecera-fondo); border-bottom: 1px solid var(--borde-suave);
+  border-top-right-radius: var(--radio-2); font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave);
+  white-space: nowrap; font-variant-numeric: tabular-nums; }
+.panel-metrica > .panel-cuerpo { grid-column: 1 / -1; min-width: 0; }
+/* Contenido angosto (móvil): el texto auxiliar baja a su propia línea, alineado con el título */
+@container contenido (max-width: 35.99rem) {
+  .panel-metrica { grid-template-columns: minmax(0, 1fr); }
+  .panel-metrica > h2 { padding-inline: var(--e-4); }
+  .panel-metrica.con-auxiliar > h2 { min-height: 0; padding-bottom: 0; border-bottom: 0; border-top-right-radius: var(--radio-2); }
+  .panel-metrica > .panel-auxiliar { grid-column: 1; grid-row: 2; padding: var(--e-1) var(--e-4) var(--e-3) calc(var(--e-4) + 20px + var(--e-3));
+    border-top-right-radius: 0; white-space: normal; }
+}
+
+/* Esqueletos de carga */
+.panel-cargando-cabecera { min-height: 3.5rem; padding: var(--e-4) var(--e-5); background: var(--panel-cabecera-fondo);
+  border-bottom: 1px solid var(--borde-suave); border-radius: var(--radio-2) var(--radio-2) 0 0; }
+.panel-cargando-cabecera .esqueleto { margin: 0; }
+.panel-cargando .bloque.alto { height: 14rem; }
+
+/* Error al cargar por primera vez */
+.error-carga .icono-48 { color: var(--error); }
+
+/* ── Piezas de los paneles ─────────────────────────────────────────────────────────────────────────────────── */
+/* Datos en línea («37 útiles · 28 no útiles · …») */
+.datos-linea { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-4); margin: 0 0 var(--e-4); padding: 0;
+  color: var(--texto-suave); }
+.datos-linea li { min-width: 0; }
+.datos-linea strong { color: var(--texto); font-variant-numeric: tabular-nums; }
+
+/* Cifra destacada de Accesibilidad */
+.destacado { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-3); margin-bottom: var(--e-2); }
+.destacado-valor { margin: 0; font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1; letter-spacing: var(--tracking-titulos);
+  font-variant-numeric: tabular-nums; }
+.destacado-texto { flex: 1 1 12rem; min-width: 0; margin: 0; color: var(--texto-suave); }
+
+/* Resumen de guardrails por resultado */
+.resumen-insignias { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-2); margin: 0 0 var(--e-2); padding: 0; }
+
+/* Latencia por capa: fichas y búsquedas, y la tabla por capa de la arquitectura */
+.latencias { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-5) var(--e-6); }
+.flujo { min-width: 0; }
+.flujo h3, .por-evento h3 { display: flex; align-items: center; gap: var(--e-2); margin: 0; font-size: var(--t-3); }
+.flujo h3 .icono, .por-evento h3 .icono { width: 20px; height: 20px; color: var(--texto-suave); }
+.flujo-resumen { margin: var(--e-1) 0 var(--e-3); font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
+.por-evento { margin-top: var(--e-5); padding-top: var(--e-5); border-top: 1px solid var(--borde-suave); }
+@container contenido (min-width: 56rem) {
+  .latencias { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Caché: la tabla y, al lado, los umbrales que usa (de /api/configuracion) */
+.cache-cuerpo { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-2) var(--e-6); align-items: start; }
+.umbrales { min-width: 0; padding: var(--e-4); background: var(--superficie-2); border-radius: var(--radio-2); }
+.umbrales h3 { font-size: var(--t-2); }
+.umbrales-nota { margin: var(--e-1) 0 var(--e-3); font-size: var(--t-1); color: var(--texto-suave); }
+.umbrales dl { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: var(--e-1) var(--e-4); margin: 0; }
+.umbrales dt { font-weight: var(--peso-medio); }
+.umbrales dd { margin: 0; }
+.umbrales .umbral { display: block; font-family: var(--fuente-mono); font-size: var(--t-1); line-height: 1.6; }
+.umbrales .vigencia { display: block; font-size: var(--t-1); color: var(--texto-suave); }
+@container contenido (min-width: 56rem) {
+  .cache-cuerpo { grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); }
+  .cache-cuerpo .grafica { margin-top: 0; }
+}
+
+/* Configuración activa: valores técnicos en mono */
+.configuracion .lista-simple li + li { margin-top: 2px; }
+
+/* ── Gráficas (marcado de comun.js, T1): ajustes de esta página ────────────────────────────────────────────── */
+.tablero .grafica { margin: var(--e-4) 0 var(--e-5); }
+.tablero .panel-cuerpo > .grafica:first-child, .tablero .cache-cuerpo > .grafica { margin-top: 0; }
+.tablero .panel-cuerpo > .grafica:last-child, .tablero .flujo > .grafica:last-child,
+.tablero .por-evento > .grafica:last-child, .tablero .cache-cuerpo > .grafica { margin-bottom: 0; }
+.tablero .grafica figcaption { margin-bottom: var(--e-2); }
+.tablero svg.barra-apilada { height: 1.75rem; }
+/* Cabeceras numéricas de una sola palabra (p50, Tasa, Activaciones…): sin el mínimo de 6rem que necesitan las de
+   varias palabras, para que las tablas quepan en media columna. «Uso por modelo» conserva el de base.css. */
+.tablero .tabla-barras thead th.num { min-width: 0; white-space: nowrap; }
+#sec-modelos .tabla-barras thead th.num { min-width: 6rem; white-space: normal; }
+.tablero .tabla-barras .celda-barra { width: 20%; }
+/* Filas de 33 px: más densas que las de 37 px de base.css (tablero con muchas filas) */
+.tablero .tabla-barras th, .tablero .tabla-barras td { padding-top: 6px; padding-bottom: 6px; }
+/* Ids técnicos (capa · evento, modelos, endpoints): en mono, como en el resto de la web */
+.etiquetas-mono .tabla-barras tbody th { font-family: var(--fuente-mono); }
+#sec-modelos .tabla-barras tbody th { white-space: nowrap; }

@@ -1,23 +1,54 @@
-/* Duplicados · grupos de casi duplicados y estado vacío. Solo maquetación y piezas propias, solo con var(--…) (los
-   tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado de v1 al sistema v3. */
+/* Duplicados · grupos de casi duplicados (panel con diapositivas lado a lado) y estado vacío. Solo maquetación y
+   piezas propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página (T4).
 
-.grupo + .grupo { margin-top: var(--e-4); }
-.grupo h2 { margin-top: 0; font-size: var(--t-3); }
-.fila-fotos { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr)); gap: var(--e-3);
-  margin: 0; padding: 0; }
-.fila-fotos li { min-width: 0; }
-.fila-fotos img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio-1);
-  background: var(--lupa-fondo); }
-.fila-fotos li p { margin: var(--e-1) 0 0; }
-.fila-fotos .puntaje { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
+   Las diapositivas usan .montura.contener: la foto entera dentro del marco 4:3, para comparar recortes y marcos. */
 
-/* Estado vacío de v1 (sin grupos todavía) */
-.estado-vacio { border-style: dashed; border-color: var(--borde-fuerte); }
-.estado-vacio h2 { margin-top: 0; font-size: var(--t-3); }
-.estado-vacio ol { margin: var(--e-2) 0; padding-left: var(--e-5); }
-.estado-vacio li + li { margin-top: var(--e-1); }
+.umbral { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto); white-space: nowrap; }
 
-@media (hover: hover) {
-  .fila-fotos .lupa { visibility: hidden; }
-  .fila-fotos .boton-imagen:is(:hover, :focus-visible) .lupa { visibility: visible; }
+/* Resumen («2 grupos · 5 fotos casi duplicadas») */
+.estado-duplicados:empty { display: none; }
+.estado-duplicados > .mensaje { margin-top: 0; }
+.resumen-grupos { display: flex; align-items: center; gap: var(--e-2); margin: 0 0 var(--e-4); color: var(--texto-suave); }
+.resumen-grupos .icono { width: 20px; height: 20px; }
+
+/* Grupos */
+.grupos { display: flex; flex-direction: column; gap: var(--e-5); }
+.grupos .panel + .panel { margin-top: 0; }
+.grupo .panel-cabecera > .icono { color: var(--texto-suave); }
+.grupo h2 { font-size: var(--t-3); }
+.grupo-similitud { font-weight: var(--peso-normal); color: var(--texto-suave); }
+
+/* Diapositivas: tantas como quepan (≥ 17rem: tres por fila a 1000 y 1280 px, fotos grandes para comparar); en móvil, dos */
+.diapositivas { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--e-5) var(--e-4); margin: 0; }
+.diapositiva { display: flex; flex-direction: column; gap: var(--e-2); min-width: 0; }
+.diapositiva .montura { margin: 0; }
+.diapositiva .fotograma { align-items: baseline; }
+.diapositiva .fotograma .id { min-width: 0; }
+.diapositiva .similitud { flex: none; font-family: var(--fuente-mono); font-weight: var(--peso-medio); color: var(--texto); }
+.diapositiva-titular { margin: 0; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  line-height: 1.4; }
+.diapositiva-titular a { font-weight: var(--peso-medio); text-decoration: none; }
+.diapositiva-titular a:hover, .diapositiva-titular a:focus-visible { text-decoration: underline; }
+@container contenido (max-width: 35.99rem) {
+  .diapositivas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4) var(--e-3); }
+  /* Sin espacio para el id y la similitud en una línea: la similitud arriba y el id debajo */
+  .diapositiva .fotograma { flex-direction: column-reverse; align-items: flex-start; gap: 0; }
 }
+
+/* «Ver» sobre la foto: a la vista solo al pasar el puntero o con el foco (en pantallas táctiles, siempre) */
+@media (hover: hover) {
+  .diapositiva .lupa { visibility: hidden; }
+  .diapositiva .boton-imagen:is(:hover, :focus-visible) .lupa { visibility: visible; }
+}
+
+/* Carga */
+.grupo-cargando .panel-cabecera .esqueleto { width: 16rem; margin: 0; }
+.grupo-cargando .esqueleto.foto { display: block; }
+
+/* Estado vacío */
+.vacio-pasos { max-width: 60ch; text-align: left; }
+.vacio-pasos-titulo { margin: 0 0 var(--e-1); font-weight: var(--peso-medio); color: var(--texto); }
+.vacio-pasos ol { margin: 0; }
+.vacio-pasos li + li { margin-top: var(--e-1); }
+.vacio .boton { margin-top: var(--e-2); }
