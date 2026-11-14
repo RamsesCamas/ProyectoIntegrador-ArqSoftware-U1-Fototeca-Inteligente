@@ -106,6 +106,7 @@
   --grafica-pista: #efefed;                    /* pista (100 %) detrás de cada barra */
   --esqueleto-fondo: #e9e9e6;
   --esqueleto-brillo: #f7f7f5;
+  --sombra-desplazable: rgba(0, 0, 0, .16);    /* aviso de que una tabla ancha se desplaza en horizontal */
   --sombra-1: 0 1px 2px rgba(0, 0, 0, .06), 0 1px 3px rgba(0, 0, 0, .06);     /* reposo */
   --sombra-2: 0 12px 32px rgba(0, 0, 0, .18), 0 2px 8px rgba(0, 0, 0, .10);   /* elevación y diálogos */
 
@@ -512,6 +513,15 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 .tabla-envoltura .tabla tbody tr:last-child > * { border-bottom: 0; }
 .tabla-envoltura.con-altura { max-height: 70vh; overflow: auto; }
 .desplazable { overflow-x: auto; }
+/* Sombras de desplazamiento: aparecen en el borde por el que queda contenido (fondo «local» que tapa la sombra) */
+.desplazable, .tabla-envoltura {
+  background:
+    linear-gradient(to right, var(--superficie) 30%, transparent) left center / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--superficie) 30%, transparent) right center / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--sombra-desplazable), transparent) left center / .875rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--sombra-desplazable), transparent) right center / .875rem 100% no-repeat scroll,
+    var(--superficie); }
+.desplazable .tabla-barras, .desplazable .tabla, .tabla-envoltura .tabla { background: transparent; }
 
 /* 4m. Definiciones (consulta interpretada, configuración): término y valor, sin desborde */
 .interpretada { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: var(--e-2) var(--e-5); margin: 0; }
@@ -628,6 +638,7 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
 .tabla-barras td { white-space: nowrap; }
 .tabla-barras .num { text-align: right; }
 .tabla-barras thead th { font-weight: var(--peso-medio); color: var(--texto-suave); border-bottom: 1px solid var(--borde); white-space: nowrap; }
+.tabla-barras thead th.num { min-width: 6rem; white-space: normal; }
 .tabla-barras tbody th { min-width: 7rem; font-weight: var(--peso-normal); }
 .tabla-barras .celda-barra { width: 32%; min-width: 5rem; }
 .tabla-barras .valor { font-family: var(--fuente-mono); font-weight: var(--peso-medio); }

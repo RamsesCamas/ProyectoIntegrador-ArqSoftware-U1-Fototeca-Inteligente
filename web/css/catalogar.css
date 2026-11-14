@@ -21,7 +21,7 @@
   border-radius: var(--radio-2); background: var(--info-fondo); color: var(--texto); }
 .espera h2 { margin: 0; font-size: var(--t-3); color: var(--info); }
 .espera p { margin: var(--e-1) 0; }
-.espera .reloj { margin: var(--e-2) 0 0; font-family: var(--fuente-mono); font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1; }
+.espera .reloj { margin: var(--e-2) 0 0; font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1; }
 .espera .reloj small { font-family: var(--fuente-texto); font-size: var(--t-1); font-weight: var(--peso-normal); color: var(--texto-suave); }
 .barra-tiempo { position: relative; height: .75rem; margin: var(--e-3) 0 var(--e-1); border: 1px solid var(--info);
   border-radius: var(--radio-pastilla); background: var(--superficie); overflow: hidden; }

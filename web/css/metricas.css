@@ -6,8 +6,8 @@
 .periodo label { margin: 0; }
 .periodo select { width: auto; min-width: 12rem; }
 
-/* Cifras clave: 1 columna en móvil, 2 y 3 a anchos medios y las 6 en una fila solo cuando cada etiqueta cabe en
-   dos líneas (≥ 72rem de contenido) */
+/* Cifras clave: 1 columna en móvil, 2 a ancho medio y 3 × 2 desde 44rem (con 6 en una fila, las etiquetas largas
+   quedan en cajas de menos de 12ch con 3 líneas; la banda de 6 la diseña la tarea de la página) */
 .cifras-clave { display: grid; gap: var(--e-3); grid-template-columns: minmax(0, 1fr); margin: var(--e-4) 0; }
 .cifras-clave .cifra { padding: var(--e-3) var(--e-4); }
 .cifras-clave .cifra-valor { font-size: var(--t-5); }
@@ -26,7 +26,4 @@
 }
 @container contenido (min-width: 44rem) {
   .cifras-clave { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@container contenido (min-width: 72rem) {
-  .cifras-clave { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
