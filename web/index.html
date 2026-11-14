@@ -53,29 +53,67 @@
           </div>
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
-        <section aria-labelledby="titulo-componentes">
-          <h2 id="titulo-componentes">Estado del sistema</h2>
-          <div class="estado-sistema">
-            <p id="estado-general" aria-live="polite">Consultando el estado…</p>
-            <p id="precalentamiento" class="suave"></p>
+        <section id="panel-estado" class="panel" aria-labelledby="titulo-estado">
+          <header class="panel-cabecera">
+            <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-servidor"/></svg>
+            <h2 id="titulo-estado">Estado del sistema</h2>
+            <p id="estado-general" aria-live="polite"><span class="solo-lectores">Estado general: </span><span class="insignia neutra"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-reloj"/></svg>Consultando…</span></p>
+            <p class="panel-auxiliar estado-meta"><span id="version-configuracion">Configuración <span class="mono">—</span></span><span id="precalentamiento"></span></p>
+          </header>
+          <div id="componentes" class="franja" aria-busy="true">
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
           </div>
-          <div id="componentes" class="rejilla componentes"></div>
         </section>
 
-        <section aria-labelledby="titulo-archivo">
-          <h2 id="titulo-archivo">El archivo</h2>
-          <div id="cifras" class="rejilla cifras-inicio" aria-live="polite"><p class="suave">Consultando el archivo…</p></div>
+        <section class="seccion-cifras" aria-labelledby="titulo-cifras">
+          <h2 id="titulo-cifras">El archivo en cifras</h2>
+          <div id="cifras" class="cifras-inicio" aria-live="polite" aria-busy="true">
+            <div class="cifra cargando"><span class="esqueleto linea corta"></span><span class="esqueleto bloque-cifra"></span><span class="esqueleto linea"></span></div>
+            <div class="cifra cargando"><span class="esqueleto linea corta"></span><span class="esqueleto bloque-cifra"></span><span class="esqueleto linea"></span></div>
+            <div class="cifra cargando"><span class="esqueleto linea corta"></span><span class="esqueleto bloque-cifra"></span><span class="esqueleto linea"></span></div>
+            <div class="cifra cargando"><span class="esqueleto linea corta"></span><span class="esqueleto bloque-cifra"></span><span class="esqueleto linea"></span></div>
+          </div>
         </section>
 
-        <section aria-labelledby="titulo-accesos">
-          <h2 id="titulo-accesos">Accesos rápidos</h2>
-          <ul class="rejilla accesos">
-            <li><a class="tarjeta acceso" href="catalogar.html"><strong>Catalogar fotos</strong><span>Sube una o varias fotos y revisa su ficha con fuentes.</span></a></li>
-            <li><a class="tarjeta acceso" href="buscar.html"><strong>Buscar</strong><span>Por texto en español o con una foto parecida.</span></a></li>
-            <li><a class="tarjeta acceso" href="duplicados.html"><strong>Casi duplicados</strong><span>Grupos de fotos casi iguales, lado a lado.</span></a></li>
-            <li><a class="tarjeta acceso" href="archivo.html"><strong>Archivo</strong><span>Fotos y normas cargadas, con el estado de su ficha.</span></a></li>
-            <li><a class="tarjeta acceso" href="metricas.html"><strong>Métricas</strong><span>Latencias por capa, caché, guardrails y accesibilidad.</span></a></li>
-          </ul>
+        <div class="reticula inicio-columnas">
+          <section id="panel-muestra" class="panel col-8" aria-labelledby="titulo-muestra">
+            <header class="panel-cabecera">
+              <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto"/></svg>
+              <h2 id="titulo-muestra">Muestra del archivo</h2>
+              <p class="panel-auxiliar">Haz clic en una foto para verla con su ficha</p>
+            </header>
+            <div class="panel-cuerpo">
+              <ul id="muestra" class="hoja-contactos" aria-busy="true"></ul>
+            </div>
+          </section>
+
+          <section id="panel-tareas" class="panel col-4" aria-labelledby="titulo-tareas">
+            <header class="panel-cabecera">
+              <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-flecha"/></svg>
+              <h2 id="titulo-tareas">Tareas</h2>
+            </header>
+            <ul class="accesos">
+              <li><a class="acceso" href="catalogar.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg></span><span class="acceso-texto"><strong>Catalogar fotos</strong><span>Sube fotos y revisa su ficha con fuentes.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="buscar.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg></span><span class="acceso-texto"><strong>Buscar en el archivo</strong><span>Por texto en español o con una foto.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="duplicados.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-duplicados"/></svg></span><span class="acceso-texto"><strong>Revisar duplicados</strong><span>Grupos de fotos casi iguales, lado a lado.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="archivo.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-archivo"/></svg></span><span class="acceso-texto"><strong>Explorar el archivo</strong><span>Fotos y normas con el estado de su ficha.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="metricas.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-metricas"/></svg></span><span class="acceso-texto"><strong>Ver métricas</strong><span>Latencia por capa, caché, guardrails y accesibilidad.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+            </ul>
+          </section>
+        </div>
+
+        <section id="panel-tuberia" class="panel" aria-labelledby="titulo-tuberia">
+          <header class="panel-cabecera">
+            <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg>
+            <h2 id="titulo-tuberia">Cómo se genera una ficha</h2>
+            <p id="tuberia-auxiliar" class="panel-auxiliar">Las 7 capas que recorre cada foto, en orden</p>
+          </header>
+          <ol id="tuberia" class="tuberia"></ol>
+          <p id="tuberia-total" class="panel-pie" hidden></p>
         </section>
         <!-- ═══ Fin del contenido de la página ═══ -->
       </main>
