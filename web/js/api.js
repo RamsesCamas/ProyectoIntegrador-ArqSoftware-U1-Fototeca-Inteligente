@@ -1,5 +1,4 @@
 // Cliente de la API. La web SOLO habla con /api/* (nginx lo reenvía al servicio). Nunca con los modelos.
-import { icono } from "./iconos.js";
 
 export class ErrorApi extends Error {
   constructor(mensaje, { estado, cuerpo, traza } = {}) {
@@ -77,16 +76,13 @@ export const ETIQUETA_ESTADO = {
   borrador: "Borrador", validada: "Validada", requiere_revision: "Requiere revisión", sin_conexion: "Sin conexión",
 };
 
-// Variante visual (clase de .insignia en base.css) e icono de cada estado: el texto siempre dice el estado, el color
-// y el icono lo refuerzan. Un borrador es normal (neutra); «requiere revisión» y «degradado» son avisos.
+// Variante de cada estado (clase de .insignia en base.css): texto con símbolo (✓, !, ×), sin píldora. El símbolo lo
+// dibuja el CSS en ::before, así que el texto del nodo es solo la etiqueta («Validada»). Un borrador es normal (neutra).
 const VARIANTE_ESTADO = {
-  ok: ["ok", "check"], listo: ["ok", "check"], validada: ["ok", "check"],
-  degradado: ["aviso", "alerta"], requiere_revision: ["aviso", "alerta"],
-  error: ["error", "error"], sin_conexion: ["error", "error"],
-  en_curso: ["info", "reloj"], pendiente: ["info", "reloj"], borrador: ["neutra", "pluma"],
+  ok: "ok", listo: "ok", validada: "ok", degradado: "aviso", requiere_revision: "aviso",
+  error: "error", sin_conexion: "error", en_curso: "info", pendiente: "info", borrador: "neutra",
 };
 
 export function insignia(estado) {
-  const [clase, nombreIcono] = VARIANTE_ESTADO[estado] || ["neutra", "info"];
-  return el("span", { clase: `insignia ${clase}` }, icono(nombreIcono), ETIQUETA_ESTADO[estado] || estado);
+  return el("span", { clase: `insignia ${VARIANTE_ESTADO[estado] || "neutra"}`, texto: ETIQUETA_ESTADO[estado] || estado });
 }
