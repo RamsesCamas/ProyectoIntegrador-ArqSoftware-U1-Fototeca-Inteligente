@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Archivo · Fototeca Viva</title>
   <link rel="stylesheet" href="css/estilos.css">
+  <link rel="modulepreload" href="js/api.js">
+  <link rel="modulepreload" href="js/comun.js">
   <script type="module" src="js/archivo.js"></script>
 </head>
 <body>
@@ -29,7 +31,7 @@
   </div>
   <main id="contenido" class="contenedor">
     <h1>Archivo</h1>
-    <form id="filtros" class="fila tarjeta">
+    <form id="filtros" class="tarjeta filtros">
       <label for="tipo">Tipo de documento</label>
       <select id="tipo" name="tipo">
         <option value="foto">Fotos</option>
@@ -40,11 +42,13 @@
     <section id="estado" aria-live="polite"></section>
     <div id="confirmacion" class="tarjeta confirmacion" role="alertdialog" aria-modal="false"
          aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-texto" hidden></div>
-    <table class="tabla">
-      <caption class="solo-lectores">Documentos del archivo</caption>
-      <thead><tr><th scope="col">Vista</th><th scope="col">Documento</th><th scope="col">Tipo</th><th scope="col">Ficha</th><th scope="col">Fecha</th><th scope="col">Acciones</th></tr></thead>
-      <tbody id="filas"></tbody>
-    </table>
+    <div class="tabla-envoltura" role="region" aria-labelledby="titulo-tabla" tabindex="0">
+      <table class="tabla tabla-archivo">
+        <caption id="titulo-tabla" class="solo-lectores">Documentos del archivo</caption>
+        <thead><tr><th scope="col">Vista</th><th scope="col">Documento</th><th scope="col">Tipo</th><th scope="col">Ficha</th><th scope="col">Fecha</th><th scope="col">Acciones</th></tr></thead>
+        <tbody id="filas"></tbody>
+      </table>
+    </div>
     <nav class="paginacion fila" aria-label="Paginación">
       <button class="boton secundario" type="button" id="anterior">Anterior</button>
       <span id="pagina" aria-live="polite"></span>

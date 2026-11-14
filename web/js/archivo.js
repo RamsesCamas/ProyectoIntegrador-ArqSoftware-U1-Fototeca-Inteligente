@@ -1,9 +1,12 @@
 // Archivo: GET /api/documentos (paginado) y DELETE /api/documentos/{id} con confirmación en la página (sin
-// window.confirm). Las miniaturas usan como `alt` el texto alternativo de su ficha (GET /api/fichas/{id}).
-import { api, anunciar, el, ETIQUETA_ESTADO } from "./api.js";
-import { mensaje, verFotoGuardada } from "./comun.js";
+// window.confirm). Cada documento trae `titular` y `texto_alternativo` de su ficha (null si no tiene): el `alt` de la
+// miniatura y el titular salen de ahí, sin una petición por fila. Respaldo para una API anterior que no los traiga:
+// solo entonces se pide GET /api/fichas/{id} por cada foto con ficha.
+import { api, anunciar, el, insignia } from "./api.js";
+import { mensaje, numero, verFotoGuardada } from "./comun.js";
 
 const POR_PAGINA = 24;
+const VISIBLES_SIN_DIFERIR = 8;   // filas que suelen verse sin desplazarse: sus miniaturas no se difieren
 const parametros = new URLSearchParams(location.search);
 let pagina = Math.max(1, Number(parametros.get("pagina")) || 1);
 const estado = document.getElementById("estado");
@@ -24,7 +27,8 @@ function pedirConfirmacion(doc, origen) {
   const cancelar = el("button", { type: "button", clase: "boton secundario", onclick: cerrarConfirmacion }, "Cancelar");
   confirmacion.replaceChildren(
     el("h2", { id: "confirmacion-titulo", texto: `¿Eliminar «${doc.nombre}»?` }),
-    el("p", { id: "confirmacion-texto", texto: `Se borrarán ${doc.documento_id}, sus vectores, su ficha y las entradas de caché que dependen de él. No se puede deshacer.` }),
+    el("p", { id: "confirmacion-texto", texto: `Se borrarán ${doc.documento_id}${doc.titular ? ` («${doc.titular}»)` : ""}, sus vectores, `
+      + "su ficha y las entradas de caché que dependen de él. No se puede deshacer." }),
     el("div", { clase: "fila" },
       el("button", { type: "button", clase: "boton peligro", onclick: () => { alCerrar = null; cerrarConfirmacion(); eliminar(doc); } }, "Sí, eliminar"),
       cancelar));
@@ -36,7 +40,7 @@ confirmacion.addEventListener("keydown", (ev) => { if (ev.key === "Escape") cerr
 async function eliminar(doc) {
   try {
     const { cuerpo } = await api(`/documentos/${encodeURIComponent(doc.documento_id)}`, { method: "DELETE" });
-    const texto = `Eliminado ${cuerpo.documento_id}: ${cuerpo.vectores_eliminados} vectores y ${cuerpo.entradas_cache_invalidadas} entradas de caché.`;
+    const texto = `Eliminado ${cuerpo.documento_id}: ${numero(cuerpo.vectores_eliminados)} vectores y ${numero(cuerpo.entradas_cache_invalidadas)} entradas de caché.`;
     await cargar();
     mensaje(estado, texto, "ok");
     anunciar(texto);
@@ -44,14 +48,50 @@ async function eliminar(doc) {
   selectorTipo.focus();   // la fila ya no existe: el foco vuelve a un punto estable de la página
 }
 
-/** Reemplaza el `alt` provisional de cada miniatura por el texto alternativo de su ficha. */
-async function altDesdeFichas(filas) {
-  await Promise.all(filas.map(async ({ doc, img }) => {
+/** Respaldo (API sin `titular`/`texto_alternativo`): completa cada fila con su ficha (GET /api/fichas/{id}). */
+async function completarDesdeFichas(filas) {
+  await Promise.all(filas.map(async ({ doc, img, enlace, id }) => {
     try {
       const { cuerpo } = await api(`/fichas/${encodeURIComponent(doc.documento_id)}`, { aceptar: [404] });
-      if (cuerpo?.ficha?.texto_alternativo) img.alt = cuerpo.ficha.texto_alternativo;
-    } catch { /* se conserva el alt provisional */ }
+      const ficha = cuerpo?.ficha;
+      if (ficha?.texto_alternativo) img.alt = ficha.texto_alternativo;
+      if (ficha?.titular) {
+        doc.titular = ficha.titular;
+        enlace.textContent = ficha.titular;
+        id.textContent = `${doc.nombre} · ${doc.documento_id}`;
+      }
+    } catch { /* se conservan el alt y el nombre provisionales */ }
   }));
+}
+
+function fila(d, i, pendientes) {
+  const traeCampos = "texto_alternativo" in d;   // API nueva: los campos vienen (aunque sean null)
+  const titular = traeCampos ? d.titular : null;
+  let vista = "—";
+  let img = null;
+  if (d.tipo === "foto") {
+    img = el("img", { src: `/api/fotos/${encodeURIComponent(d.documento_id)}/miniatura?lado=96`,
+      alt: (traeCampos && d.texto_alternativo) || `Foto ${d.nombre}`, width: "64", height: "48",
+      loading: i >= VISIBLES_SIN_DIFERIR ? "lazy" : null, decoding: "async" });
+    // Clic en la miniatura: la foto en grande con lo que el archivo guardó de ella (su ficha)
+    vista = el("button", { type: "button", clase: "boton-imagen miniatura-archivo",
+      onclick: () => verFotoGuardada(d.documento_id, { titulo: titular || d.nombre, extra: [["Fecha de carga", (d.fecha || "").slice(0, 10)]] }) },
+      img, el("span", { clase: "solo-lectores", texto: " (ver en grande)" }));
+  }
+  const enlace = d.tipo === "foto"
+    ? el("a", { href: `catalogar.html?doc=${encodeURIComponent(d.documento_id)}`, texto: titular || d.nombre })
+    : el("span", { clase: "nombre", texto: d.nombre });
+  const id = el("span", { clase: "id", texto: titular ? `${d.nombre} · ${d.documento_id}` : d.documento_id });
+  if (d.tipo === "foto" && d.estado_ficha && !traeCampos) pendientes.push({ doc: d, img, enlace, id });
+  const boton = el("button", { type: "button", clase: "boton discreto peligro", "aria-label": `Eliminar ${d.nombre}`,
+    onclick: (ev) => pedirConfirmacion(d, ev.currentTarget) }, "Eliminar…");
+  return el("tr", { "data-documento": d.documento_id },
+    el("td", {}, vista),
+    el("th", { scope: "row", clase: "celda-documento" }, enlace, id),
+    el("td", { texto: d.tipo === "foto" ? "Foto" : "Norma" }),
+    el("td", {}, d.estado_ficha ? insignia(d.estado_ficha) : el("span", { clase: "suave", texto: d.tipo === "foto" ? "Sin ficha" : "—" })),
+    el("td", { texto: (d.fecha || "").slice(0, 10) }),
+    el("td", {}, boton));
 }
 
 async function cargar() {
@@ -60,33 +100,15 @@ async function cargar() {
   if (tipo) params.set("tipo", tipo);
   try {
     const { cuerpo } = await api(`/documentos?${params}`);
+    estado.replaceChildren();
     const total = Math.max(1, Math.ceil(cuerpo.total / POR_PAGINA));
-    document.getElementById("pagina").textContent = `Página ${pagina} de ${total} · ${cuerpo.total} documentos`;
+    document.getElementById("pagina").textContent = `Página ${numero(pagina)} de ${numero(total)} · ${numero(cuerpo.total)} documentos`;
     document.getElementById("anterior").disabled = pagina <= 1;
     document.getElementById("siguiente").disabled = pagina >= total;
-    const conFicha = [];
-    document.getElementById("filas").replaceChildren(...cuerpo.documentos.map((d) => {
-      let vista = "—";
-      if (d.tipo === "foto") {
-        const img = el("img", { src: `/api/fotos/${encodeURIComponent(d.documento_id)}/miniatura?lado=96`, alt: `Foto ${d.nombre}`, width: "64" });
-        if (d.estado_ficha) conFicha.push({ doc: d, img });
-        // Clic en la miniatura: la foto en grande con lo que el archivo guardó de ella (su ficha)
-        vista = el("button", { type: "button", clase: "boton-imagen miniatura-archivo", "aria-label": `Ver en grande ${d.nombre}`,
-          onclick: () => verFotoGuardada(d.documento_id, { titulo: d.nombre, extra: [["Fecha de carga", (d.fecha || "").slice(0, 10)]] }) }, img);
-      }
-      const boton = el("button", { type: "button", clase: "boton secundario", "aria-label": `Eliminar ${d.nombre}`,
-        onclick: (ev) => pedirConfirmacion(d, ev.currentTarget) }, "Eliminar");
-      return el("tr", { "data-documento": d.documento_id },
-        el("td", {}, vista),
-        el("th", { scope: "row" }, d.tipo === "foto" ? el("a", { href: `catalogar.html?doc=${encodeURIComponent(d.documento_id)}`, texto: d.nombre }) : d.nombre,
-          el("span", { clase: "id", texto: ` ${d.documento_id}` })),
-        el("td", { texto: d.tipo === "foto" ? "Foto" : "Norma" }),
-        el("td", { texto: d.estado_ficha ? (ETIQUETA_ESTADO[d.estado_ficha] || d.estado_ficha) : d.tipo === "foto" ? "Sin ficha" : "—" }),
-        el("td", { texto: (d.fecha || "").slice(0, 10) }),
-        el("td", {}, boton));
-    }));
-    if (!cuerpo.documentos.length) mensaje(estado, "No hay documentos con ese filtro.", "ok");
-    altDesdeFichas(conFicha);
+    const pendientes = [];
+    document.getElementById("filas").replaceChildren(...cuerpo.documentos.map((d, i) => fila(d, i, pendientes)));
+    if (!cuerpo.documentos.length) mensaje(estado, "No hay documentos con ese filtro.", "info");
+    if (pendientes.length) completarDesdeFichas(pendientes);
   } catch (e) { mensaje(estado, e.message); }
 }
 

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Inicio · Fototeca Viva</title>
   <link rel="stylesheet" href="css/estilos.css">
+  <link rel="modulepreload" href="js/api.js">
+  <link rel="modulepreload" href="js/comun.js">
   <script type="module" src="js/inicio.js"></script>
 </head>
 <body>
@@ -33,12 +35,18 @@
     <p class="intro">Fototeca Viva genera fichas catalográficas IPTC con texto alternativo, detecta casi duplicados y busca
       por texto o por foto. Todo corre en este equipo, sin servicios en la nube.</p>
 
-    <p id="estado-general" aria-live="polite">Consultando el estado…</p>
-    <p id="precalentamiento" class="intro"></p>
+    <section aria-labelledby="titulo-componentes">
+      <div class="estado-sistema">
+        <p id="estado-general" aria-live="polite">Consultando el estado…</p>
+        <p id="precalentamiento" class="suave"></p>
+      </div>
+      <h2 id="titulo-componentes" class="solo-lectores">Componentes</h2>
+      <div id="componentes" class="rejilla componentes"></div>
+    </section>
 
     <section aria-labelledby="titulo-archivo">
       <h2 id="titulo-archivo">El archivo</h2>
-      <div id="cifras" class="rejilla" aria-live="polite"><p>Consultando el archivo…</p></div>
+      <div id="cifras" class="rejilla cifras-inicio" aria-live="polite"><p class="suave">Consultando el archivo…</p></div>
     </section>
 
     <section aria-labelledby="titulo-accesos">
@@ -50,11 +58,6 @@
         <li><a class="tarjeta acceso" href="archivo.html"><strong>Archivo</strong><span>Fotos y normas cargadas, con el estado de su ficha.</span></a></li>
         <li><a class="tarjeta acceso" href="metricas.html"><strong>Métricas</strong><span>Latencias por capa, caché, guardrails y accesibilidad.</span></a></li>
       </ul>
-    </section>
-
-    <section aria-labelledby="titulo-componentes">
-      <h2 id="titulo-componentes">Componentes</h2>
-      <div id="componentes" class="rejilla"></div>
     </section>
   </main>
 

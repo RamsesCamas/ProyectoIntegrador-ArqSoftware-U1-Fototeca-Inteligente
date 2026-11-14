@@ -1,6 +1,9 @@
 // Catalogar: subir fotos → ficha (o lote) → revisar con fuentes → retroalimentación y validación.
 import { api, anunciar, el, ETIQUETA_ESTADO, insignia } from "./api.js";
-import { abrirVisor, mensaje, metadatosQuitados, pieTecnico, textoGuardrail, verFotoGuardada } from "./comun.js";
+import {
+  abrirVisor, CAPAS, claseSerie, duracion, mensaje, metadatosQuitados, miniatura, numero, ORDEN_CAPAS, pieTecnico, segundos,
+  SERIE_CAPA, textoGuardrail, verFotoGuardada,
+} from "./comun.js";
 
 const ETIQUETAS_CAMPO = {
   titular: "Titular", texto_alternativo: "Texto alternativo", descripcion: "Descripción",
@@ -8,54 +11,81 @@ const ETIQUETAS_CAMPO = {
 };
 const CAMPOS_TEXTO = ["titular", "texto_alternativo", "descripcion", "descripcion_extendida"];
 const MAXIMOS = { titular: 120, texto_alternativo: 250, descripcion: 800, descripcion_extendida: 1200 };
+const formularioCarga = document.getElementById("formulario-carga");
+const botonCatalogar = document.getElementById("boton-catalogar");
+const entradaFotos = document.getElementById("fotos");
+const plegada = document.getElementById("carga-plegada");
+const textoPlegada = document.getElementById("carga-plegada-texto");
+const espera = document.getElementById("espera");
 const progreso = document.getElementById("progreso");
 const revision = document.getElementById("revision");
+const seccionLote = document.getElementById("lote");
 const OTRA_PESTANA = { target: "_blank", rel: "noopener" };
+const EXTERNO = "enlace externo, requiere internet";
 const vistaPrevia = document.getElementById("vista-previa");
 const MAX_PREVIAS = 24;
+const ANUNCIO_CADA_S = 20;   // lectores de pantalla: un aviso de progreso cada 20 s, no cada segundo
+const movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)");
 let urlsPrevias = [];
+let ocupado = false;
 
 const tamano = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
+const puntajeTexto = (p) => (typeof p === "number" && Number.isFinite(p) ? ` · ${p.toFixed(2)}` : "");
+
+/** Flecha visible ↗ y texto para lectores de pantalla en los enlaces que salen del sistema (sin red no abren). */
+function marcaExterna(detalle = "") {
+  return [el("span", { clase: "externo", "aria-hidden": "true", texto: "↗" }),
+    el("span", { clase: "solo-lectores", texto: ` (${detalle}${EXTERNO}; se abre en otra pestaña)` })];
+}
 
 /**
  * Fuente de un campo como chip: foto similar (con miniatura; abre el visor con la foto y la ficha del ejemplo), regla,
- * término del tesauro (con su URI) o archivista.
+ * término del tesauro (con su URI), archivista, descripción humana de referencia o etiqueta de Open Images.
  */
 function chipFuente(f) {
-  const puntaje = f.puntaje != null ? ` · ${f.puntaje}` : "";
+  const puntaje = puntajeTexto(f.puntaje);
   if (f.tipo === "foto_similar") {
     return el("button", { type: "button", clase: "chip chip-foto",
       title: f.titulo ? `Foto similar: ${f.titulo} (ver en grande)` : `Foto similar ${f.id} (ver en grande)`,
       onclick: () => verFotoGuardada(f.id, { titulo: "Foto similar usada como ejemplo",
-        extra: [["Puntaje de recuperación", f.puntaje]] }) },
-      el("img", { src: `/api/fotos/${encodeURIComponent(f.id)}/miniatura?lado=96`, alt: "", width: "24", height: "24" }),
+        extra: [["Puntaje de recuperación", typeof f.puntaje === "number" ? f.puntaje.toFixed(2) : f.puntaje]] }) },
+      el("img", { src: `/api/fotos/${encodeURIComponent(f.id)}/miniatura?lado=96`, alt: "", width: "24", height: "24", decoding: "async" }),
       `Foto similar${puntaje}`,
       el("span", { clase: "solo-lectores", texto: `: ${f.titulo || f.id} (ver la foto y su ficha)` }));
   }
   if (f.tipo === "tesauro") {
     const texto = `Tesauro: ${f.titulo || f.id}${puntaje}`;
     return /^https?:/.test(f.id || "")
-      ? el("a", { clase: "chip chip-tesauro", href: f.id, ...OTRA_PESTANA, title: f.id }, texto,
-        el("span", { clase: "solo-lectores", texto: ` (URI ${f.id}, se abre en otra pestaña)` }))
+      ? el("a", { clase: "chip chip-tesauro", href: f.id, ...OTRA_PESTANA, title: `${f.id} (${EXTERNO})` }, texto,
+        ...marcaExterna("término del Tesauro de la UNESCO; "))
       : el("span", { clase: "chip chip-tesauro", title: f.id }, texto);
   }
   if (f.tipo === "regla") {
     const texto = `Regla: ${f.titulo || f.id}${puntaje}`;
-    const extra = el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id})` });
+    // El extracto de la regla va en el título: se puede leer sin red, aunque el enlace a la norma no abra
+    const titulo = f.extracto ? `${f.extracto}\n\nFragmento ${f.id}` : `Fragmento ${f.id}`;
     return f.url
-      ? el("a", { clase: "chip chip-regla", href: f.url, ...OTRA_PESTANA, title: f.id }, texto, extra)
-      : el("span", { clase: "chip chip-regla", title: `Fragmento ${f.id}` }, texto, extra);
+      ? el("a", { clase: "chip chip-regla", href: f.url, ...OTRA_PESTANA, title: `${titulo}\n(${EXTERNO})` }, texto,
+        ...marcaExterna(`fragmento ${f.id}; `))
+      : el("span", { clase: "chip chip-regla", title: titulo }, texto, el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id})` }));
   }
   const texto = f.tipo === "archivista" ? "Corrección del archivista" : f.tipo === "referencia_humana" ? "Descripción humana de referencia"
     : f.tipo === "etiqueta_open_images" ? `Etiqueta: ${f.titulo || f.id}` : `${f.tipo}: ${f.id}`;
-  return el("span", { clase: `chip chip-${f.tipo}`, title: f.id }, texto + puntaje);
+  return el("span", { clase: `chip chip-${f.tipo}`, title: f.titulo || f.id }, texto + puntaje);
 }
 
-function campoEditable(nombre, valor, fuentes) {
+function filaFuentes(id, fuentes, conSinFuente = true) {
+  const lista = fuentes || [];
+  return el("div", { clase: "fuentes", id },
+    el("span", { clase: "fuentes-titulo", texto: "Fuentes:" }),
+    lista.length ? lista.map(chipFuente) : conSinFuente ? el("span", { clase: "sin-fuente", texto: "Sin fuente verificable" }) : null);
+}
+
+function campoEditable(nombre, valor, fuentes, soloLectura) {
   const id = `campo-${nombre}`;
   const control = nombre === "titular"
-    ? el("input", { id, name: nombre, type: "text", value: valor || "", maxlength: MAXIMOS[nombre] })
-    : el("textarea", { id, name: nombre, rows: nombre === "texto_alternativo" ? "3" : "4", maxlength: MAXIMOS[nombre] }, valor || "");
+    ? el("input", { id, name: nombre, type: "text", value: valor || "", maxlength: MAXIMOS[nombre], readonly: soloLectura })
+    : el("textarea", { id, name: nombre, rows: nombre === "texto_alternativo" ? "3" : "4", maxlength: MAXIMOS[nombre], readonly: soloLectura }, valor || "");
   const contador = el("span", { clase: "contador", id: `${id}-contador` });
   const actualizar = () => { contador.textContent = `${control.value.length}/${MAXIMOS[nombre]} caracteres`; };
   control.addEventListener("input", actualizar);
@@ -64,35 +94,31 @@ function campoEditable(nombre, valor, fuentes) {
   control.setAttribute("aria-describedby", `${id}-contador ${id}-fuentes`);
   actualizar();
   return el("div", { clase: "campo" },
-    el("label", { for: id, texto: ETIQUETAS_CAMPO[nombre] }), control, contador,
-    el("div", { clase: "fuentes", id: `${id}-fuentes` },
-      el("span", { clase: "solo-lectores", texto: "Fuentes: " }),
-      (fuentes || []).length ? fuentes.map(chipFuente) : el("span", { clase: "sin-fuente", texto: "Sin fuente verificable" })));
+    el("label", { for: id, texto: ETIQUETAS_CAMPO[nombre] }), control, contador, filaFuentes(`${id}-fuentes`, fuentes));
 }
 
-function campoPalabras(palabras, fuentes) {
+function campoPalabras(palabras, fuentes, soloLectura) {
   const lista = el("ul", { clase: "palabras", id: "palabras-lista", "aria-label": "Palabras clave de la ficha" });
   const items = [...palabras];
-  const pintar = () => lista.replaceChildren(...items.map((p, i) => el("li", { clase: `chip chip-${p.origen}` },
+  const entrada = soloLectura ? null : el("input", { id: "palabra-nueva", type: "text", maxlength: "80" });
+  const pintar = () => lista.replaceChildren(...items.map((p, i) => el("li", { clase: `palabra palabra-${p.origen || "libre"}` },
     p.origen === "tesauro" && p.uri
-      ? el("a", { href: p.uri, ...OTRA_PESTANA, title: p.uri }, p.termino, el("span", { clase: "solo-lectores", texto: " (término del tesauro, se abre en otra pestaña)" }))
+      ? el("a", { href: p.uri, ...OTRA_PESTANA, title: `${p.uri} (${EXTERNO})` }, p.termino, " ", ...marcaExterna("término del tesauro; "))
       : p.termino,
-    el("button", { type: "button", clase: "quitar", "aria-label": `Quitar ${p.termino}`, onclick: () => {
+    soloLectura ? null : el("button", { type: "button", clase: "quitar", "aria-label": `Quitar ${p.termino}`, onclick: () => {
       items.splice(i, 1); pintar(); anunciar(`Se quitó ${p.termino}`); entrada.focus();
     } }, "×"))));
-  const entrada = el("input", { id: "palabra-nueva", type: "text", maxlength: "80" });
   const agregar = () => {
     const t = entrada.value.trim();
     if (t) { items.push({ termino: t, origen: "libre" }); pintar(); entrada.value = ""; entrada.focus(); anunciar(`Se agregó ${t}`); }
   };
-  entrada.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); agregar(); } });
+  entrada?.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); agregar(); } });
   pintar();
   return {
     nodo: el("div", { clase: "campo" }, el("p", { clase: "etiqueta", id: "palabras-titulo", texto: "Palabras clave" }), lista,
-      el("label", { for: "palabra-nueva", clase: "solo-lectores", texto: "Agregar palabra clave" }),
-      el("div", { clase: "fila" }, entrada, el("button", { type: "button", clase: "boton secundario", onclick: agregar }, "Agregar palabra")),
-      el("div", { clase: "fuentes", id: "campo-palabras_clave-fuentes" }, el("span", { clase: "solo-lectores", texto: "Fuentes: " }),
-        (fuentes || []).slice(0, 10).map(chipFuente))),
+      soloLectura ? null : [el("label", { for: "palabra-nueva", clase: "solo-lectores", texto: "Agregar palabra clave" }),
+        el("div", { clase: "fila" }, entrada, el("button", { type: "button", clase: "boton secundario", onclick: agregar }, "Agregar palabra"))],
+      filaFuentes("campo-palabras_clave-fuentes", (fuentes || []).slice(0, 10), false)),
     items,
     reemplazar: (nuevas) => { items.splice(0, items.length, ...nuevas); pintar(); },
   };
@@ -101,9 +127,10 @@ function campoPalabras(palabras, fuentes) {
 function avisos(ficha, meta) {
   const nodos = [];
   if (meta?.duplicado_de) {
+    const sim = meta.duplicado_de.similitud;
     nodos.push(el("div", { clase: "mensaje aviso", role: "status" },
       "Posible duplicado de ", el("a", { href: `catalogar.html?doc=${encodeURIComponent(meta.duplicado_de.documento_id)}`, texto: meta.duplicado_de.documento_id }),
-      ` (similitud ${meta.duplicado_de.similitud}). Se reutilizó su ficha: revísala antes de validarla.`));
+      ` (similitud ${typeof sim === "number" ? sim.toFixed(2) : sim}). Se reutilizó su ficha: revísala antes de validarla.`));
   }
   if (ficha.advertencias?.length) {
     nodos.push(el("div", { clase: "mensaje aviso" }, el("p", { texto: "Advertencias:" }), el("ul", {}, ficha.advertencias.map((a) => el("li", { texto: a })))));
@@ -119,38 +146,57 @@ function avisos(ficha, meta) {
   return nodos;
 }
 
-function mostrarFicha(respuesta) {
+/** Pliega el formulario de carga a una barra con «Catalogar otra foto» (la ficha queda arriba, a la vista). */
+function plegarCarga(texto) {
+  formularioCarga.hidden = true;
+  plegada.hidden = false;
+  textoPlegada.textContent = texto;
+}
+
+function desplegarCarga() {
+  plegada.hidden = true;
+  formularioCarga.hidden = false;
+  formularioCarga.reset();
+  mostrarElegidas([]);
+  entradaFotos.focus();
+}
+
+function mostrarFicha(respuesta, { nombre = null } = {}) {
   const { documento_id: doc, ficha, fuentes = {}, meta = {} } = respuesta;
   let original = structuredClone(ficha);
   revision.hidden = false;
-  const estadoFicha = el("span", {}, insignia(ficha.estado));
-  const palabras = campoPalabras(ficha.palabras_clave || [], fuentes.palabras_clave);
-  const estadoUtil = { valor: null };
-  const grupoUtil = el("div", { clase: "fila", role: "group", "aria-labelledby": "pregunta-util" });
-  const botonUtil = (valor, texto) => el("button", { type: "button", clase: "boton secundario", "aria-pressed": "false",
-    onclick: (ev) => {
-      const pulsado = ev.currentTarget.getAttribute("aria-pressed") === "true";
-      estadoUtil.valor = pulsado ? null : valor;
-      grupoUtil.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", "false"));
-      if (!pulsado) ev.currentTarget.setAttribute("aria-pressed", "true");
-    } }, texto);
-  grupoUtil.append(botonUtil(true, "Útil"), botonUtil(false, "No útil"));
-  const destino = el("div", { id: "resultado-opinion", "aria-live": "polite" });
+  // Sin traza (fichas del archivo inicial): solo lectura, sin «Tu opinión» ni validación
   const sinTraza = !meta.traza_id;
-  const formulario = el("form", { clase: "ficha", id: "formulario-ficha" },
-    CAMPOS_TEXTO.map((c) => campoEditable(c, ficha[c], fuentes[c])),
-    palabras.nodo,
-    el("fieldset", { clase: "opinion", disabled: sinTraza }, el("legend", { texto: "Tu opinión" }),
+  const estadoFicha = el("span", {}, insignia(ficha.estado));
+  const palabras = campoPalabras(ficha.palabras_clave || [], fuentes.palabras_clave, sinTraza);
+  const destino = el("div", { id: "resultado-opinion", "aria-live": "polite" });
+  const estadoUtil = { valor: null };
+  let opinion = null;
+  let acciones = null;
+  if (!sinTraza) {
+    const grupoUtil = el("div", { clase: "fila", role: "group", "aria-labelledby": "pregunta-util" });
+    const botonUtil = (valor, texto) => el("button", { type: "button", clase: "boton secundario", "aria-pressed": "false",
+      onclick: (ev) => {
+        const pulsado = ev.currentTarget.getAttribute("aria-pressed") === "true";
+        estadoUtil.valor = pulsado ? null : valor;
+        grupoUtil.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", "false"));
+        if (!pulsado) ev.currentTarget.setAttribute("aria-pressed", "true");
+      } }, texto);
+    grupoUtil.append(botonUtil(true, "Útil"), botonUtil(false, "No útil"));
+    opinion = el("fieldset", { clase: "opinion" }, el("legend", { texto: "Tu opinión" }),
       el("p", { id: "pregunta-util", clase: "etiqueta", texto: "¿Te fue útil la ficha?" }), grupoUtil,
       el("label", { for: "comentario", texto: "Comentario (opcional)" }),
-      el("textarea", { id: "comentario", rows: "2", maxlength: "1000" })),
-    sinTraza ? el("p", { clase: "mensaje aviso", texto: "Esta ficha no tiene traza (viene del archivo inicial); no se puede calificar ni validar desde aquí." }) : null,
-    el("div", { clase: "fila" },
-      el("button", { type: "submit", clase: "boton", value: "validar", disabled: sinTraza, texto: "Validar ficha" }),
-      el("button", { type: "submit", clase: "boton secundario", value: "opinar", disabled: sinTraza, texto: "Solo enviar opinión" })),
-    destino);
+      el("textarea", { id: "comentario", rows: "2", maxlength: "1000" }));
+    acciones = el("div", { clase: "fila" },
+      el("button", { type: "submit", clase: "boton", value: "validar", texto: "Validar ficha" }),
+      el("button", { type: "submit", clase: "boton secundario", value: "opinar", texto: "Solo enviar opinión" }));
+  }
+  const formulario = el("form", { clase: "ficha", id: "formulario-ficha" },
+    CAMPOS_TEXTO.map((c) => campoEditable(c, ficha[c], fuentes[c], sinTraza)),
+    palabras.nodo, opinion, acciones, destino);
   formulario.addEventListener("submit", async (ev) => {
     ev.preventDefault();
+    if (sinTraza) return;
     const validar = ev.submitter?.value === "validar";
     const correcciones = {};
     for (const c of CAMPOS_TEXTO) {
@@ -188,46 +234,181 @@ function mostrarFicha(respuesta) {
   // El visor muestra la copia guardada y la ficha tal como está guardada (se actualiza al validar)
   const verGuardada = () => verFotoGuardada(doc, { titulo: "Foto guardada en el archivo", ficha: original, enlaceFicha: false,
     extra: [["Ruta", meta.ruta], ["Metadatos quitados al guardar", metadatosQuitados(meta)]] });
+  const titulo = el("h2", { id: "titulo-revision", tabindex: "-1", texto: sinTraza ? "Ficha guardada (solo lectura)" : "Revisa la ficha" });
   revision.replaceChildren(
-    el("h2", { id: "titulo-revision", tabindex: "-1", texto: "Revisa la ficha" }),
+    titulo,
     el("div", { clase: "revision" },
       el("figure", { clase: "foto" },
         el("button", { type: "button", clase: "boton-imagen", "aria-label": "Ver en grande la foto guardada y su ficha", onclick: verGuardada },
-          el("img", { src: `/api/fotos/${encodeURIComponent(doc)}/miniatura`, alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
+          el("img", { src: `/api/fotos/${encodeURIComponent(doc)}/miniatura`, width: "512", height: "384", decoding: "async",
+            alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
           el("span", { clase: "lupa", "aria-hidden": "true", texto: "Ver en grande" })),
         el("figcaption", {}, `Documento ${doc} · Estado: `, estadoFicha)),
-      el("div", {}, ...avisos(ficha, meta), formulario)),
+      el("div", {},
+        sinTraza ? el("p", { clase: "mensaje info", texto: "Esta ficha es de solo lectura: viene del archivo inicial y no tiene traza, "
+          + "así que no se puede calificar ni validar desde aquí." }) : null,
+        ...avisos(ficha, meta), formulario)),
     pieTecnico(meta));
-  document.getElementById("titulo-revision").focus();
+  plegarCarga(nombre ? `Ficha de «${nombre}».` : `Ficha del documento ${doc}.`);
+  // Foco en el título (sin anillo) y la ficha arriba de la ventana
+  titulo.focus({ preventScroll: true });
+  titulo.scrollIntoView({ block: "start", behavior: movimientoReducido.matches ? "auto" : "smooth" });
   anunciar(`Ficha lista: ${ficha.titular || "sin titular"}`);
 }
 
-function cronometro(texto) {
-  const inicio = Date.now();
-  const nodo = el("p", { clase: "mensaje ok", role: "status" });
-  const tic = () => { nodo.textContent = `${texto} (${Math.round((Date.now() - inicio) / 1000)} s)`; };
-  tic();
-  const id = setInterval(tic, 1000);
-  return { nodo, parar: () => clearInterval(id) };
+// ── Espera de una ficha (30–70 s en CPU) ──
+let tiemposPromesa = null;
+/** Latencias de las fichas registradas (GET /api/metricas → latencia_por_capa.fichas), una sola vez por página. */
+function tiemposTipicos() {
+  tiemposPromesa ||= api("/metricas").then(({ cuerpo }) => {
+    const f = cuerpo?.latencia_por_capa?.fichas;
+    return f?.total?.n ? f : null;
+  }).catch(() => { tiemposPromesa = null; return null; });
+  return tiemposPromesa;
 }
 
-async function catalogarUna(archivo) {
-  const reloj = cronometro("Generando la ficha: describiendo la foto, buscando ejemplos y reglas…");
-  progreso.replaceChildren(reloj.nodo);
-  const datos = new FormData();
-  datos.append("foto", archivo);
+function avisarAlSalir(ev) {
+  ev.preventDefault();
+  ev.returnValue = "";
+}
+
+function marcarOcupado(si) {
+  ocupado = si;
+  botonCatalogar.disabled = si;
+  if (si) botonCatalogar.setAttribute("aria-busy", "true");
+  else botonCatalogar.removeAttribute("aria-busy");
+}
+
+/**
+ * Panel de espera: tiempo transcurrido, barra contra el p95 de las fichas registradas (marca en el p50) y la lista de
+ * capas; al terminar, la lista se llena con los tiempos reales de meta.tiempos_por_capa_ms. No es una región viva:
+ * los lectores de pantalla oyen un aviso cada 20 s (anunciar), no uno por segundo.
+ */
+function panelEspera(nombre) {
+  const inicio = Date.now();
+  const transcurrido = () => (Date.now() - inicio) / 1000;
+  const titulo = el("h2", { id: "titulo-espera", tabindex: "-1", texto: nombre ? `Generando la ficha de «${nombre}»` : "Generando la ficha" });
+  const reloj = el("p", { clase: "reloj", "aria-hidden": "true" });
+  const relleno = el("span", { clase: "relleno" });
+  const marca = el("span", { clase: "marca-p50" });
+  const barra = el("div", { clase: "barra-tiempo", "aria-hidden": "true", hidden: true }, relleno, marca);
+  const referencia = el("p", { texto: "Consultando cuánto suelen tardar las fichas…" });
+  const subtitulo = el("h3", { texto: "Capas por las que pasa la foto" });
+  const tiempos = {};
+  const items = {};
+  const lista = el("ol", { clase: "capas", role: "list" }, ORDEN_CAPAS.map((k) => {
+    tiempos[k] = el("span", { clase: "capa-tiempo" });
+    items[k] = el("li", {}, el("span", { clase: `muestra ${claseSerie(SERIE_CAPA[k])}`, "aria-hidden": "true" }),
+      el("span", { clase: "capa-nombre", texto: CAPAS[k] }), tiempos[k]);
+    return items[k];
+  }));
+  const nota = el("p", { clase: "nota-espera", texto: "La petición sigue en curso aunque no veas cambios: no recargues ni cierres la página." });
+  const nodo = el("div", { clase: "espera" }, titulo, reloj, barra, referencia, subtitulo, lista, nota);
+  let p50 = null;
+  let p95 = null;
+  let vigente = true;
+  let siguienteAnuncio = ANUNCIO_CADA_S;
+  const tic = () => {
+    const s = transcurrido();
+    reloj.replaceChildren(duracion(s), el("small", { texto: " transcurridos" }));
+    if (p95) {
+      relleno.style.width = `${Math.min(100, (s / p95) * 100).toFixed(1)}%`;
+      if (s > p95 && !nodo.classList.contains("lenta")) {
+        nodo.classList.add("lenta");
+        nota.textContent = "Está tardando más que de costumbre, pero la petición sigue en curso: no recargues ni cierres la página.";
+      }
+    }
+    if (s >= siguienteAnuncio) {
+      siguienteAnuncio += ANUNCIO_CADA_S;
+      anunciar(`Generando la ficha: ${duracion(s)} transcurridos${p50 ? `; suele tardar ${duracion(p50)}` : ""}.`);
+    }
+  };
+  tic();
+  const reloj1s = setInterval(tic, 1000);
+  tiemposTipicos().then((f) => {
+    if (!vigente) return;
+    if (!f) {
+      referencia.textContent = "Todavía no hay fichas registradas en las métricas para estimar la espera.";
+      return;
+    }
+    p50 = f.total.p50_ms / 1000;
+    p95 = f.total.p95_ms / 1000;
+    referencia.textContent = `Según las ${numero(f.total.n)} fichas registradas, suele tardar ${duracion(p50)} (p50) `
+      + `y el 95 % termina antes de ${duracion(p95)} (p95). La barra llega al final en el p95; la marca es el p50.`;
+    marca.style.left = `${Math.min(100, (p50 / p95) * 100).toFixed(1)}%`;
+    barra.hidden = false;
+    subtitulo.textContent = "Capas por las que pasa la foto (p50 de cada una)";
+    for (const k of ORDEN_CAPAS) if (f[k]?.n) tiempos[k].textContent = `p50 ${segundos(f[k].p50_ms)}`;
+    tic();
+  });
+  return {
+    nodo,
+    enfocar: () => {
+      titulo.focus({ preventScroll: true });
+      nodo.scrollIntoView({ block: "nearest", behavior: movimientoReducido.matches ? "auto" : "smooth" });
+    },
+    terminar: (meta = {}) => {
+      vigente = false;
+      clearInterval(reloj1s);
+      const total = typeof meta.tiempo_ms === "number" ? meta.tiempo_ms : transcurrido() * 1000;
+      nodo.classList.remove("lenta");
+      nodo.classList.add("terminada");
+      titulo.textContent = `Ficha generada en ${segundos(total)}`;
+      reloj.remove();
+      nota.remove();
+      if (p95) relleno.style.width = `${Math.min(100, (total / 1000 / p95) * 100).toFixed(1)}%`;
+      referencia.textContent = [meta.ruta ? `Ruta: ${meta.ruta}.` : "", p50 ? `Lo típico es ${duracion(p50)} (p50) y ${duracion(p95)} (p95).` : ""]
+        .filter(Boolean).join(" ");
+      subtitulo.textContent = "Tiempo real de cada capa en esta ficha";
+      const reales = meta.tiempos_por_capa_ms || {};
+      for (const k of ORDEN_CAPAS) {
+        const v = reales[k];
+        const usada = typeof v === "number" && v > 0;
+        items[k].classList.toggle("usada", usada);
+        tiempos[k].textContent = usada ? segundos(v) : "no se usó";
+      }
+    },
+    fallar: () => {
+      vigente = false;
+      clearInterval(reloj1s);
+      nodo.remove();
+    },
+  };
+}
+
+/** POST /api/fichas con el panel de espera, el botón desactivado y el aviso al salir de la página. */
+async function generarFicha(opciones, nombre) {
+  if (ocupado) return;
+  const panel = panelEspera(nombre);
+  espera.replaceChildren(panel.nodo);
+  progreso.replaceChildren();
+  marcarOcupado(true);
+  panel.enfocar();
+  window.addEventListener("beforeunload", avisarAlSalir);
   try {
-    const { cuerpo } = await api("/fichas", { method: "POST", body: datos });
-    progreso.replaceChildren();
-    mostrarFicha(cuerpo);
-  } catch (e) { mensaje(progreso, e.message); } finally { reloj.parar(); }
+    const { cuerpo } = await api("/fichas", { method: "POST", ...opciones });
+    panel.terminar(cuerpo.meta || {});
+    mostrarFicha(cuerpo, { nombre });
+  } catch (e) {
+    panel.fallar();
+    mensaje(progreso, e.message);
+    const aviso = progreso.firstElementChild;
+    if (aviso) { aviso.tabIndex = -1; aviso.focus(); }
+  } finally {
+    window.removeEventListener("beforeunload", avisarAlSalir);
+    marcarOcupado(false);
+  }
 }
 
 async function catalogarLote(archivos) {
+  if (ocupado) return;
   const datos = new FormData();
   datos.append("tipo", "foto");
   for (const a of archivos) datos.append("archivos", a);
-  mensaje(progreso, `Subiendo ${archivos.length} fotos…`, "ok");
+  espera.replaceChildren();
+  marcarOcupado(true);
+  mensaje(progreso, `Subiendo ${archivos.length} fotos…`, "info");
+  anunciar(`Subiendo ${archivos.length} fotos…`);
   try {
     const { cuerpo: carga } = await api("/documentos", { method: "POST", body: datos });
     const ids = [...new Set(carga.documentos.filter((d) => !d.error).map((d) => d.documento_id))];
@@ -239,24 +420,36 @@ async function catalogarLote(archivos) {
     const barra = el("progress", { max: String(lote.total), value: "0", id: "barra-lote", "aria-label": "Progreso del lote" });
     const texto = el("p", { role: "status" });
     const errores = el("div");
-    progreso.replaceChildren(barra, texto, nota, errores);
-    document.getElementById("lote").hidden = false;
+    // El progreso vive dentro de la sección del lote: catalogar otra foto mientras tanto no lo borra
+    progreso.replaceChildren();
+    document.getElementById("lote-progreso").replaceChildren(barra, texto, nota, errores);
+    const lista = document.getElementById("lista-lote");
+    lista.replaceChildren();
+    seccionLote.hidden = false;
+    let pintadas = 0;
     const consultar = async () => {
       try {
         const { cuerpo: estado } = await api(`/lotes/${encodeURIComponent(lote.lote_id)}`);
         barra.value = estado.completadas + estado.fallidas;
         texto.textContent = `${estado.completadas} de ${estado.total} fichas listas${estado.fallidas ? ` · ${estado.fallidas} fallidas` : ""}`;
         errores.replaceChildren(...(estado.errores || []).map((e) => el("p", { clase: "mensaje error", texto: `${e.documento_id}: ${e.mensaje}` })));
-        document.getElementById("lista-lote").replaceChildren(...estado.fichas.map((f) => el("button", { type: "button", clase: "tarjeta tarjeta-boton", onclick: () => mostrarFicha(f) },
-          el("img", { src: `/api/fotos/${encodeURIComponent(f.documento_id)}/miniatura?lado=256`, alt: f.ficha.texto_alternativo || `Foto ${f.documento_id}` }),
+        // Solo se agregan las tarjetas nuevas: las ya pintadas no se vuelven a pedir ni pierden el foco
+        lista.append(...(estado.fichas || []).slice(pintadas).map((f, i) => el("button", { type: "button", clase: "tarjeta tarjeta-boton",
+          onclick: () => mostrarFicha(f) },
+          miniatura(f.documento_id, { alt: f.ficha.texto_alternativo || `Foto ${f.documento_id}`, diferida: pintadas + i >= 4 }),
           el("strong", { texto: f.ficha.titular || f.documento_id }),
           el("span", { texto: `Estado: ${ETIQUETA_ESTADO[f.ficha.estado] || f.ficha.estado} · revisar` }))));
+        pintadas = (estado.fichas || []).length;
         if (estado.estado !== "terminado") setTimeout(consultar, 3000);
         else anunciar(`El lote terminó: ${estado.completadas} fichas listas${estado.fallidas ? `, ${estado.fallidas} fallidas` : ""}.`);
       } catch (e) { mensaje(errores, e.message); }
     };
     consultar();
-  } catch (e) { mensaje(progreso, e.message); }
+  } catch (e) {
+    mensaje(progreso, e.message);
+  } finally {
+    marcarOcupado(false);
+  }
 }
 
 /** Vista previa de las fotos elegidas, antes de subirlas: se ven tal como están en tu equipo. */
@@ -269,7 +462,7 @@ function mostrarElegidas(archivos) {
   const items = visibles.map((a, i) => {
     const url = urlsPrevias[i];
     const medidas = el("span", {});
-    const img = el("img", { src: url, alt: `Vista previa de ${a.name}` });
+    const img = el("img", { src: url, alt: `Vista previa de ${a.name}`, decoding: "async" });
     const datos = () => [["Archivo", a.name], ["Tamaño", tamano(a.size)], ["Tipo", a.type],
       ["Medidas originales", img.naturalWidth ? `${img.naturalWidth} × ${img.naturalHeight} px` : null],
       ["Al guardarla", "El servicio quita el GPS, el número de serie de la cámara y los datos del autor antes de guardarla."]];
@@ -284,18 +477,27 @@ function mostrarElegidas(archivos) {
   });
   if (imagenes.length > visibles.length) items.push(el("li", { clase: "id", texto: `y ${imagenes.length - visibles.length} fotos más` }));
   vistaPrevia.replaceChildren(...items);
+  if (imagenes.length === 1) tiemposTipicos();   // se adelanta la consulta del tiempo típico para la espera
   if (imagenes.length) anunciar(imagenes.length === 1 ? "1 foto elegida: puedes verla antes de catalogar" : `${imagenes.length} fotos elegidas`);
 }
 
-document.getElementById("fotos").addEventListener("change", (ev) => mostrarElegidas([...ev.target.files]));
+entradaFotos.addEventListener("change", (ev) => mostrarElegidas([...ev.target.files]));
+document.getElementById("otra-foto").addEventListener("click", desplegarCarga);
 
-document.getElementById("formulario-carga").addEventListener("submit", (ev) => {
+formularioCarga.addEventListener("submit", (ev) => {
   ev.preventDefault();
-  const archivos = [...document.getElementById("fotos").files];
+  if (ocupado) return;   // un solo POST a la vez, aunque se pulse Enter o el botón dos veces
+  const archivos = [...entradaFotos.files];
   if (!archivos.length) return;
   revision.hidden = true;
-  document.getElementById("lote").hidden = true;
-  if (archivos.length === 1) catalogarUna(archivos[0]); else catalogarLote(archivos);
+  if (archivos.length === 1) {
+    const datos = new FormData();
+    datos.append("foto", archivos[0]);
+    generarFicha({ body: datos }, archivos[0].name);
+  } else {
+    seccionLote.hidden = true;
+    catalogarLote(archivos);
+  }
 });
 
 const zona = document.getElementById("zona-soltar");
@@ -304,7 +506,7 @@ zona.addEventListener("dragleave", () => zona.classList.remove("activa"));
 zona.addEventListener("drop", (e) => {
   e.preventDefault();
   zona.classList.remove("activa");
-  document.getElementById("fotos").files = e.dataTransfer.files;
+  entradaFotos.files = e.dataTransfer.files;
   mostrarElegidas([...e.dataTransfer.files]);
 });
 
@@ -318,13 +520,7 @@ if (doc) {
         mostrarFicha({ documento_id: doc, ficha: cuerpo.ficha, fuentes: cuerpo.fuentes,
           meta: { traza_id: cuerpo.traza_id, ruta: `guardada (${cuerpo.origen})`, cache: "ninguna", modelos: {}, tiempos_por_capa_ms: {} } });
       } else {
-        const reloj = cronometro("Generando la ficha…");
-        progreso.replaceChildren(reloj.nodo);
-        try {
-          const { cuerpo: r } = await api("/fichas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ documento_id: doc }) });
-          progreso.replaceChildren();
-          mostrarFicha(r);
-        } finally { reloj.parar(); }
+        await generarFicha({ headers: { "Content-Type": "application/json" }, body: JSON.stringify({ documento_id: doc }) }, null);
       }
     } catch (e) { mensaje(progreso, e.message); }
   })();

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Buscar · Fototeca Viva</title>
   <link rel="stylesheet" href="css/estilos.css">
+  <link rel="modulepreload" href="js/api.js">
+  <link rel="modulepreload" href="js/comun.js">
   <script type="module" src="js/buscar.js"></script>
 </head>
 <body>
@@ -30,26 +32,25 @@
 
   <main id="contenido" class="contenedor">
     <h1>Buscar en el archivo</h1>
-    <p class="intro">Describe en español lo que quieres ver, o arrastra una foto para encontrar otras parecidas.
+    <p class="intro">Describe en español lo que quieres ver, o busca con una foto para encontrar otras parecidas.
       Cada resultado explica por qué coincide.</p>
 
-    <form id="formulario-texto" class="tarjeta busqueda">
-      <label for="consulta" class="etiqueta">¿Qué fotos buscas?</label>
-      <div class="fila">
-        <input id="consulta" name="consulta" type="search" minlength="2" maxlength="300" required
-               placeholder="Por ejemplo: personas cargando canastas en un mercado, sin vehículos">
-        <button class="boton" type="submit">Buscar</button>
-      </div>
-    </form>
-
-    <form id="formulario-imagen" class="tarjeta">
-      <label for="imagen" class="etiqueta">O busca con una foto</label>
-      <div id="zona-soltar" class="zona-soltar">
-        <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png">
-        <p>También puedes arrastrar la foto aquí.</p>
-      </div>
-      <button class="boton secundario" type="submit">Buscar parecidas</button>
-    </form>
+    <section id="zona-soltar" class="tarjeta busqueda" aria-label="Búsqueda">
+      <form id="formulario-texto">
+        <label for="consulta" class="etiqueta">¿Qué fotos buscas?</label>
+        <div class="fila">
+          <input id="consulta" name="consulta" type="search" minlength="2" maxlength="300" required
+                 placeholder="Por ejemplo: personas cargando canastas en un mercado, sin vehículos">
+          <button class="boton" type="submit">Buscar</button>
+        </div>
+      </form>
+      <form id="formulario-imagen" class="busqueda-foto">
+        <label for="imagen">O busca con una foto:</label>
+        <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="ayuda-imagen">
+        <button class="boton secundario discreto" type="submit">Buscar parecidas</button>
+        <p id="ayuda-imagen" class="ayuda">También puedes arrastrar la foto sobre este recuadro.</p>
+      </form>
+    </section>
 
     <section id="estado" aria-live="polite"></section>
     <section id="interpretada" hidden></section>

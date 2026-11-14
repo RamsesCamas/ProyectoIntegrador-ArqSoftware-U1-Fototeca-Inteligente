@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catalogar · Fototeca Viva</title>
   <link rel="stylesheet" href="css/estilos.css">
+  <link rel="modulepreload" href="js/api.js">
+  <link rel="modulepreload" href="js/comun.js">
   <script type="module" src="js/catalogar.js"></script>
 </head>
 <body>
@@ -31,7 +33,8 @@
   <main id="contenido" class="contenedor">
     <h1>Catalogar fotos</h1>
     <p class="intro">Sube una foto para obtener su ficha IPTC con texto alternativo, o varias para catalogarlas en lote.
-      Cada campo indica de dónde salió. Generar una ficha en CPU toma tiempo: la página muestra los segundos transcurridos.</p>
+      Cada campo indica de dónde salió. Generar una ficha en CPU toma tiempo: mientras tanto verás los segundos
+      transcurridos y cuánto suele tardar.</p>
 
     <form id="formulario-carga" class="tarjeta">
       <label for="fotos" class="etiqueta">Fotos (JPEG o PNG, hasta 10 MB cada una)</label>
@@ -42,10 +45,16 @@
       <ul id="vista-previa" class="vista-previa" aria-label="Fotos elegidas (vista previa)" hidden></ul>
       <button class="boton" type="submit" id="boton-catalogar">Catalogar</button>
     </form>
+    <div id="carga-plegada" class="tarjeta carga-plegada" hidden>
+      <p id="carga-plegada-texto"></p>
+      <button class="boton secundario" type="button" id="otra-foto">Catalogar otra foto</button>
+    </div>
 
+    <div id="espera"></div>
     <section id="progreso" aria-live="polite" class="progreso-region"></section>
     <section id="lote" aria-labelledby="titulo-lote" hidden>
       <h2 id="titulo-lote">Fichas del lote</h2>
+      <div id="lote-progreso"></div>
       <div id="lista-lote" class="rejilla"></div>
     </section>
     <section id="revision" aria-labelledby="titulo-revision" hidden></section>
