@@ -16,14 +16,15 @@
 
 /* ── 1. Tokens ─────────────────────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* 1a. Color · paleta «Mesa de luz» (valores de e253cb1, sin cambios): grises neutros que no tiñen las fotos,
-     grafito y el naranja del lápiz graso solo para lo que importa. */
+  /* 1a. Color · paleta «Mesa de luz»: grises neutros que no tiñen las fotos, grafito y el naranja del lápiz graso solo
+     para la acción. COLOR POR SIGNIFICADO (ronda 2): verde, ámbar y rojo SOLO para estado (insignias, mensajes, medidor
+     y progreso); la procedencia tiene 4 familias exclusivas (chips); los datos van en grises; la información, neutra. */
   --fondo: #f2f2f0;
   --superficie: #ffffff;
   --superficie-2: #f2f2f1;
   --texto: #161616;
   --texto-suave: #474747;
-  --borde: #cdcdcb;
+  --borde: #c0c0bd;                  /* un paso más oscuro que v1: se lava menos en el proyector */
   --borde-fuerte: #6b6b6b;
   --enlace: #8c2f00;
   --acento: #a33600;
@@ -48,22 +49,25 @@
   --error: #960e34;
   --error-hover: #7a0b2a;
   --error-fondo: #fce6ec;
-  --info: #264c7a;
-  --info-fondo: #e5ecf5;
-  --chip-fondo: #f0f0ef;
+  --info: #3d3d3d;                   /* información y progreso: NEUTROS (el azul es solo de la procedencia «regla») */
+  --info-fondo: #ececea;
+  /* Procedencia (chips de fuente y su leyenda): 4 familias EXCLUSIVAS, ninguna de estado ni el naranja de acción.
+     Normas = azul acero · Vocabularios (tesauro, etiquetas) = petróleo · Personas (referencia humana, archivista) =
+     morado · Imagen (foto similar) = grafito. El tipo también va escrito y con su icono. */
+  --chip-fondo: #efefee;
   --chip-borde: #6b6b6b;
-  --chip-regla-fondo: #e6ecf6;
-  --chip-regla-borde: #3e5c94;
-  --chip-tesauro-fondo: #e2f1e7;
-  --chip-tesauro-borde: #2f7548;
-  --chip-foto-fondo: #ececec;
-  --chip-foto-borde: #4f4f4f;
-  --chip-archivista-fondo: #fdebe1;
-  --chip-archivista-borde: #b23a00;
-  --chip-referencia-fondo: #eee7f6;
-  --chip-referencia-borde: #6c4fa1;
-  --chip-etiqueta-fondo: #e1f0f2;
-  --chip-etiqueta-borde: #2b7380;
+  --chip-regla-fondo: #e3ebf7;
+  --chip-regla-borde: #2f5689;
+  --chip-tesauro-fondo: #dcefef;
+  --chip-tesauro-borde: #11646c;
+  --chip-foto-fondo: #e9e9e8;
+  --chip-foto-borde: #4a4a4a;
+  --chip-archivista-fondo: #f3e5f1;
+  --chip-archivista-borde: #7a3a70;
+  --chip-referencia-fondo: #ece6f6;
+  --chip-referencia-borde: #5e4596;
+  --chip-etiqueta-fondo: #e4f2f3;
+  --chip-etiqueta-borde: #2b6c74;
   --foto-fondo: #1b1b1b;
   --insignia-foto-fondo: rgba(27, 27, 27, .9);
   --insignia-foto-texto: #ffffff;
@@ -71,17 +75,18 @@
   --pie-fondo: #1b1b1b;
   --pie-texto: #d4d4d4;
   --pie-borde: #ff7a29;
-  /* Series de las gráficas (≥ 3:1 sobre la superficie). El color va por CLAVE de capa (comun.js · SERIE_CAPA):
-     1 total y serie por defecto, 2 modelo de visión, 3 contexto, 4 guardrails, 6 caché, 7 enrutador y 8 modelo de
-     composición. La 5 (carmesí, igual que --error) se reserva para «bloqueada» y errores. */
-  --grafica-1: #2f5f98;
-  --grafica-2: #18582e;
-  --grafica-3: #a26700;
-  --grafica-4: #6c4fa1;
+  /* Datos: barras en grises sobre una pista gris clara (≥ 3:1 sobre la superficie y la pista). --grafica-1 es la serie
+     por omisión de barras(). Las 2…8 (sin tonos de estado ni de procedencia) solo distinguen las capas en la barra
+     apilada del pie técnico, que sí suma: son los tiempos de UNA petición. 2 modelo de visión, 3 contexto,
+     4 guardrails, 6 caché, 7 enrutador y 8 modelo de composición. La 5 (carmesí = --error) queda para «bloqueada». */
+  --grafica-1: #3a3a3a;
+  --grafica-2: #262626;
+  --grafica-3: #6e6e6e;
+  --grafica-4: #7a7a7a;
   --grafica-5: #960e34;
-  --grafica-6: #00778a;
-  --grafica-7: #6f6f6f;
-  --grafica-8: #2b2b2b;
+  --grafica-6: #575757;
+  --grafica-7: #7f7f7f;
+  --grafica-8: #4a4a4a;
   --sombra: 0 1px 2px rgba(0, 0, 0, .12);
   --sombra-visor: 0 12px 40px rgba(0, 0, 0, .35);
 
@@ -92,18 +97,22 @@
   --lateral-activo-fondo: rgba(255, 255, 255, .08);
   --lateral-borde: rgba(255, 255, 255, .16);   /* filetes internos del grafito */
   --lateral-marca: #ff7a29;                    /* SOLO decorativa: barra de 3 px y filetes, nunca texto */
-  --panel-cabecera-fondo: #f7f7f5;
-  --borde-suave: #e3e3e0;                      /* separadores internos (filas, cabeceras de panel) */
+  --panel-cabecera-fondo: #ededea;             /* un paso más marcado que v1, para el proyector */
+  --borde-suave: #d7d7d4;                      /* separadores internos (filas, cabeceras de panel) */
   --montura: #ffffff;                          /* marco de diapositiva */
-  --montura-borde: #d4d4d1;
-  --lupa-fondo: #111111;                       /* fondo de la foto en la ficha y en el visor */
-  --lupa-texto: #e4e4e4;
-  --lupa-texto-suave: #b8b8b8;
+  --montura-borde: #c4c4c1;
+  --lupa-fondo: #e6e6e3;                       /* escenario de la foto (ficha, espera, duplicados): gris de mesa de luz */
+  --lupa-texto: #161616;
+  --lupa-texto-suave: #474747;
+  --visor-fondo: #111111;                      /* el visor sí es oscuro, como un lightbox */
+  --visor-texto: #e4e4e4;
+  --visor-texto-suave: #b8b8b8;
+  --franja-fondo: #e7e7e4;                     /* franja neutra del aviso de IA */
   --mesa-fondo: #fafaf8;                       /* zona de carga «mesa de luz» */
   --mesa-rejilla: #e6e6e2;                     /* retícula tenue de la mesa de luz */
   --escaneo: rgba(255, 255, 255, .22);         /* línea de escaneo sobre la lupa durante la espera */
-  --grafica-rejilla: #e3e3e0;                  /* rejilla tenue de las gráficas */
-  --grafica-pista: #efefed;                    /* pista (100 %) detrás de cada barra */
+  --grafica-rejilla: #d7d7d4;                  /* rejilla tenue de las gráficas */
+  --grafica-pista: #e5e5e2;                    /* pista (100 %) detrás de cada barra */
   --esqueleto-fondo: #e9e9e6;
   --esqueleto-brillo: #f7f7f5;
   --sombra-desplazable: rgba(0, 0, 0, .16);    /* aviso de que una tabla ancha se desplaza en horizontal */
@@ -239,19 +248,20 @@ code, kbd, samp, .mono { font-family: var(--fuente-mono); font-size: var(--t-1);
 .app { min-height: 100vh; }
 .app-principal { display: flex; flex-direction: column; min-width: 0; min-height: 100vh; }
 
-/* Barra de grafito. Por omisión (< 1100 px) es una barra superior de dos filas: marca y estado arriba, navegación
-   horizontal abajo (se desplaza si no cabe; sin menú hamburguesa). Desde 1100 px es la barra lateral fija. */
-.lateral { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--e-4); padding: var(--e-3) var(--e-4) 0;
+/* Barra de grafito. Por omisión (< 1000 px) es una barra superior compacta de dos filas: marca y estado arriba,
+   navegación horizontal abajo (se desplaza si no cabe, con un degradado en el borde; sin menú hamburguesa). De 1000 a
+   1099 px es UNA barra de 56 px (marca · módulos · estado). Desde 1100 px es la barra lateral fija. */
+.lateral { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--e-4); padding: var(--e-2) var(--e-4) 0;
   background: var(--lateral-fondo); color: var(--lateral-texto); }
 .lateral :focus-visible { outline-color: var(--foco-cabecera); }
 .marca { order: 1; display: flex; align-items: center; gap: var(--e-3); min-width: 0; padding: var(--e-1) 0;
   color: var(--lateral-texto); text-decoration: none; }
 .marca:hover .marca-nombre { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
-.logo { flex: none; width: 32px; height: 32px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.logo { flex: none; width: 28px; height: 28px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .logo-montura, .logo-ventana { stroke: currentColor; }
 .logo-trazo { stroke: var(--lateral-marca); stroke-width: 2.5; }
 .marca-texto { display: flex; flex-direction: column; min-width: 0; }
-.marca-nombre { font-size: var(--t-3); font-weight: var(--peso-medio); line-height: 1.2; letter-spacing: var(--tracking-titulos);
+.marca-nombre { font-size: var(--t-2); font-weight: var(--peso-medio); line-height: 1.2; letter-spacing: var(--tracking-titulos);
   white-space: nowrap; }
 .marca-lema { display: none; margin-top: 2px; font-size: var(--t-1); line-height: 1.3; color: var(--lateral-texto-suave); }
 
@@ -260,14 +270,17 @@ code, kbd, samp, .mono { font-family: var(--fuente-mono); font-size: var(--t-1);
 .lateral-local { display: flex; align-items: center; gap: var(--e-2); font-size: var(--t-1); line-height: 1.3;
   color: var(--lateral-texto-suave); }
 .lateral-local .icono { width: 18px; height: 18px; }
-.lateral-local-texto { white-space: nowrap; }
+.lateral-local { cursor: default; }
+/* Fuera de la barra lateral, «Todo local · sin internet» queda para lectores de pantalla (y en el title): a la vista,
+   el icono y la insignia */
+.lateral-local-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 .lateral-salud { display: flex; align-items: center; min-height: var(--objetivo-min); }
 
-.navegacion { order: 3; flex: 1 0 100%; min-width: 0; margin: var(--e-2) calc(-1 * var(--e-4)) 0; }
+.navegacion { order: 3; flex: 1 0 100%; min-width: 0; margin: var(--e-1) calc(-1 * var(--e-4)) 0; }
 .navegacion ul { list-style: none; display: flex; gap: var(--e-1); margin: 0; padding: 0 var(--e-4); overflow-x: auto;
   scrollbar-width: thin; }
 .navegacion li { flex: none; }
-.navegacion a { display: flex; align-items: center; gap: var(--e-2); min-height: 2.75rem; padding: 0 var(--e-3);
+.navegacion a { display: flex; align-items: center; gap: var(--e-2); min-height: 2.5rem; padding: 0 10px;
   border-radius: var(--radio-1) var(--radio-1) 0 0; color: var(--lateral-texto-suave); font-weight: var(--peso-medio);
   text-decoration: none; white-space: nowrap; transition: background-color var(--transicion), color var(--transicion); }
 .navegacion a .icono { width: 20px; height: 20px; }
@@ -275,12 +288,21 @@ code, kbd, samp, .mono { font-family: var(--fuente-mono); font-size: var(--t-1);
 .navegacion a[aria-current="page"] { background: var(--lateral-activo-fondo); color: var(--lateral-texto);
   box-shadow: inset 0 -3px 0 var(--lateral-marca); }
 .navegacion a:focus-visible { outline-offset: -3px; }
+/* Pista de que la barra de módulos se desplaza: el borde por el que queda contenido se desvanece (shell.js pone las
+   clases según scrollLeft). La máscara solo usa el canal alfa: cualquier token opaco sirve. */
+.navegacion ul.mas-der { -webkit-mask-image: linear-gradient(to left, transparent, var(--texto) 2.5rem);
+  mask-image: linear-gradient(to left, transparent, var(--texto) 2.5rem); }
+.navegacion ul.mas-izq { -webkit-mask-image: linear-gradient(to right, transparent, var(--texto) 2.5rem);
+  mask-image: linear-gradient(to right, transparent, var(--texto) 2.5rem); }
+.navegacion ul.mas-izq.mas-der {
+  -webkit-mask-image: linear-gradient(to right, transparent, var(--texto) 2.5rem, var(--texto) calc(100% - 2.5rem), transparent);
+  mask-image: linear-gradient(to right, transparent, var(--texto) 2.5rem, var(--texto) calc(100% - 2.5rem), transparent); }
 
 /* Aviso de IA (role=note), visible en todas las páginas */
-.aviso-ia { background: var(--aviso-fondo); color: var(--aviso); border-bottom: 1px solid var(--aviso-borde); }
+.aviso-ia { background: var(--franja-fondo); color: var(--texto-suave); border-bottom: 1px solid var(--borde); }
 .aviso-ia p { display: flex; align-items: flex-start; gap: var(--e-2); max-width: calc(var(--contenido-max) + 2 * var(--e-6));
-  margin: 0 auto; padding: var(--e-2) var(--e-4); font-size: var(--t-1); line-height: 1.45; }
-.aviso-ia .icono { width: 18px; height: 18px; margin-top: 1px; }
+  margin: 0 auto; padding: var(--e-1) var(--e-4); font-size: var(--t-1); line-height: 1.25rem; }
+.aviso-ia .icono { width: 16px; height: 16px; margin-top: 2px; }
 
 /* Contenido: 1280 px como máximo, 32 px de margen en escritorio y 16 en móvil. Es el contenedor de consulta. */
 main { flex: 1 0 auto; width: 100%; max-width: calc(var(--contenido-max) + 2 * var(--e-6)); margin-inline: auto;
@@ -288,10 +310,10 @@ main { flex: 1 0 auto; width: 100%; max-width: calc(var(--contenido-max) + 2 * v
 
 /* 3c. Encabezado de página: h1 · descripción (máx. 70ch) · acciones a la derecha */
 .encabezado-pagina { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
-  gap: var(--e-4) var(--e-6); margin-bottom: var(--e-6); padding: var(--e-5) 0 var(--e-5); border-bottom: 1px solid var(--borde); }
+  gap: var(--e-3) var(--e-6); margin-bottom: var(--e-4); padding: 20px 0 0; }
 .encabezado-texto { flex: 1 1 30rem; min-width: 0; }
 .encabezado-pagina h1 { font-size: var(--t-5); }
-.encabezado-descripcion { max-width: var(--ancho-lectura); margin: var(--e-2) 0 0; color: var(--texto-suave); }
+.encabezado-descripcion { max-width: var(--ancho-lectura); margin: var(--e-1) 0 0; color: var(--texto-suave); }
 .encabezado-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3); min-width: 0; }
 .encabezado-acciones:empty { display: none; }
 
@@ -321,8 +343,11 @@ main { flex: 1 0 auto; width: 100%; max-width: calc(var(--contenido-max) + 2 * v
 .boton.grande { min-height: var(--alto-control-grande); padding: var(--e-2) var(--e-5); font-size: var(--t-3); }
 .boton.discreto { min-height: 2.25rem; padding: var(--e-1) var(--e-3); font-size: var(--t-1); }
 .boton[aria-pressed="true"], .boton[aria-pressed="true"]:hover { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); }
-.boton:disabled, .boton:disabled:hover, .boton[aria-disabled="true"] { background: var(--superficie-2); color: var(--texto-suave);
-  border: 1px dashed var(--borde-fuerte); box-shadow: none; cursor: not-allowed; }
+.boton:disabled, .boton[aria-disabled="true"] { opacity: .45; box-shadow: none; cursor: not-allowed; }
+.boton:disabled:hover { background: var(--acento); border-color: var(--acento); }
+.boton.secundario:disabled:hover { background: var(--superficie); border-color: var(--acento); }
+.boton.peligro:disabled:hover { background: var(--error); border-color: var(--error); }
+.boton.fantasma:disabled:hover, .boton.discreto.peligro:disabled:hover { background: transparent; }
 .boton[aria-busy="true"] { cursor: progress; }
 .boton[aria-busy="true"]::before { content: ""; flex: none; width: 1em; height: 1em; border: 2px solid currentColor;
   border-right-color: transparent; border-radius: 50%; animation: girar .8s linear infinite; }
@@ -344,7 +369,7 @@ textarea { resize: vertical; }
 select { appearance: none; padding-right: var(--e-7); cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, var(--texto) 50%), linear-gradient(135deg, var(--texto) 50%, transparent 50%);
   background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; }
-input[readonly], textarea[readonly] { background: var(--superficie-2); border-style: dashed; }
+input[readonly], textarea[readonly] { background: var(--superficie-2); border-color: var(--borde); }
 input[type="file"] { max-width: 100%; font-size: var(--t-1); }
 input[type="file"]::file-selector-button { min-height: var(--alto-control); margin-right: var(--e-3); padding: var(--e-2) var(--e-4);
   border: 1px solid var(--acento); border-radius: var(--radio-1); background: var(--superficie); color: var(--acento);
@@ -465,8 +490,8 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 /* 4i. Medidor: barra con valor y límite («123/250»). Color por umbral (data-nivel) MÁS texto. */
 .medidor { display: flex; align-items: center; gap: var(--e-3); min-width: 0; margin-top: var(--e-1); }
 .medidor-barra { position: relative; flex: 1 1 8rem; min-width: 4rem; height: .5rem; overflow: hidden;
-  background: var(--grafica-pista); border-radius: var(--radio-pastilla); box-shadow: inset 0 0 0 1px var(--borde); }
-.medidor-relleno { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--ok); border-radius: inherit;
+  background: var(--grafica-pista); border-radius: 2px; box-shadow: inset 0 0 0 1px var(--borde); }
+.medidor-relleno { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--grafica-1); border-radius: inherit;
   transition: width var(--transicion); }
 .medidor[data-nivel="aviso"] .medidor-relleno { background: var(--aviso); }
 .medidor[data-nivel="error"] .medidor-relleno { background: var(--error); }
@@ -476,7 +501,7 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 
 /* 4j. Progreso de la espera: relleno contra el p95 y marca del p50 (línea oscura con halo blanco) */
 .progreso { position: relative; height: .75rem; margin: var(--e-3) 0 var(--e-1); background: var(--superficie);
-  border: 1px solid var(--info); border-radius: var(--radio-pastilla); overflow: hidden; }
+  border: 1px solid var(--info); border-radius: 2px; overflow: hidden; }
 .progreso-relleno { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--info); transition: width 1s linear; }
 .progreso-marca { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1px; background: var(--texto);
   box-shadow: 0 0 0 1px var(--superficie); }
@@ -537,7 +562,7 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 
 /* 4n. Estado vacío: ilustración original + título + texto + acción */
 .vacio { display: flex; flex-direction: column; align-items: center; gap: var(--e-3); padding: var(--e-7) var(--e-5);
-  text-align: center; background: var(--superficie); border: 1px dashed var(--borde-fuerte); border-radius: var(--radio-2); }
+  text-align: center; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-2); }
 .vacio-ilustracion { width: 120px; height: 96px; color: var(--texto-suave); fill: none; stroke: currentColor; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round; }
 /* Dentro de <use> no cruzan los selectores de ancestro: la clase se estiliza sola (se aplica al símbolo original) */
@@ -571,7 +596,7 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
   background: none; color: inherit; text-align: left; cursor: zoom-in; }
 .boton-imagen img { display: block; }
 .boton-imagen .lupa { position: absolute; right: var(--e-2); bottom: var(--e-2); display: inline-flex; align-items: center; gap: .35em;
-  padding: .125rem .625rem; border-radius: var(--radio-pastilla); background: var(--insignia-foto-fondo); color: var(--insignia-foto-texto);
+  padding: .125rem .625rem; border-radius: var(--radio-1); background: var(--insignia-foto-fondo); color: var(--insignia-foto-texto);
   font-size: var(--t-1); font-weight: var(--peso-medio); line-height: 1.4; }
 .boton-imagen .lupa .icono { width: 16px; height: 16px; }
 .boton-imagen:hover .lupa { text-decoration: underline; }
@@ -591,9 +616,10 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 .visor-cabecera .boton.fantasma:hover { background: var(--superficie-2); }
 .visor-cuerpo { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1 1 auto; min-height: 0; overflow: auto; }
 .visor-cuerpo figure { display: flex; flex-direction: column; justify-content: center; gap: var(--e-3); min-width: 0; margin: 0;
-  padding: var(--e-4); background: var(--lupa-fondo); color: var(--lupa-texto); }
-.visor-cuerpo img { display: block; width: 100%; max-height: 60vh; object-fit: contain; margin: 0 auto; }
-.visor-cuerpo figcaption { font-size: var(--t-1); color: var(--lupa-texto-suave); }
+  padding: var(--e-4); background: var(--visor-fondo); color: var(--visor-texto); }
+/* Nunca se amplía: la copia del archivo mide 512 px como máximo y se vería blanda; el pie dice a qué escala se ve */
+.visor-cuerpo img { display: block; width: auto; max-width: 100%; height: auto; max-height: 60vh; margin: 0 auto; }
+.visor-cuerpo figcaption { font-size: var(--t-1); color: var(--visor-texto-suave); }
 .visor-panel { min-width: 0; padding: var(--e-5); }
 .visor dl { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; }
 .visor dt { font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto-suave); }
@@ -630,7 +656,7 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
    tenue y color por CLAVE de capa (.serie-N). */
 .grafica { min-width: 0; margin: var(--e-3) 0 var(--e-5); }
 .grafica figcaption { margin-bottom: var(--e-2); font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto); }
-svg.barra-apilada { display: block; width: 100%; height: 1.5rem; border-radius: var(--radio-1); overflow: hidden; background: var(--grafica-pista); }
+svg.barra-apilada { display: block; width: 100%; height: 1.5rem; border-radius: 2px; overflow: hidden; background: var(--grafica-pista); }
 svg.barra-apilada rect { stroke: var(--superficie); stroke-width: 1px; }
 svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
 .barra-svg .pista { fill: var(--grafica-pista); }
@@ -670,21 +696,27 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   .navegacion { margin-inline: calc(-1 * var(--e-6)); }
   .navegacion ul { padding-inline: var(--e-6); }
   .aviso-ia p, .pie p { padding-inline: var(--e-6); }
-  .marca-lema { display: block; }
-  .encabezado-pagina { padding-top: var(--e-6); }
   .encabezado-pagina h1 { font-size: var(--t-6); }
   .visor-cuerpo { grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr); }
   .visor-cuerpo figure { padding: var(--e-5); }
   .visor-cuerpo img { max-height: calc(100vh - 12rem); }
 }
-/* Móvil: la etiqueta «Todo local · sin internet» queda para los lectores de pantalla; el icono y la insignia, a la vista */
+/* Móvil */
 @media (max-width: 599.98px) {
-  .lateral-local-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
   .panel-cabecera, .panel-pie { padding-inline: var(--e-4); }
   .panel-cuerpo { padding: var(--e-4); }
   .interpretada, .pie-tecnico dl { grid-template-columns: minmax(0, 1fr); gap: 0 var(--e-4); }
   .interpretada dd, .pie-tecnico dd { margin-bottom: var(--e-2); }
   .visor { width: calc(100vw - 1rem); max-height: calc(100vh - 1rem); }
+}
+
+/* De 1000 a 1099 px: UNA barra de 56 px (marca · módulos · estado), sin lema ni texto del estado */
+@media (min-width: 1000px) and (max-width: 1099.98px) {
+  .lateral { flex-wrap: nowrap; height: 56px; padding: 0 var(--e-5); gap: var(--e-4); }
+  .navegacion { order: 2; flex: 1 1 auto; align-self: stretch; margin: 0; }
+  .navegacion ul { height: 100%; padding: 0; }
+  .navegacion a { height: 100%; border-radius: 0; }
+  .lateral-estado { order: 3; flex: none; margin-left: 0; }
 }
 
 /* Barra lateral fija desde 1100 px: 216 px de grafito a la izquierda; la navegación es vertical y el elemento activo
@@ -695,8 +727,10 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   .lateral { position: sticky; top: 0; z-index: 10; align-self: start; flex-direction: column; flex-wrap: nowrap; align-items: stretch;
     gap: 0; height: 100vh; padding: var(--e-5) var(--e-3) var(--e-4); overflow-y: auto; }
   .marca { padding: 0 var(--e-2) var(--e-5); border-bottom: 1px solid var(--lateral-borde); }
+  .logo { width: 32px; height: 32px; }
+  .marca-nombre { font-size: var(--t-3); }
   .marca-texto { padding-top: 2px; }
-  .marca-lema { white-space: normal; }
+  .marca-lema { display: block; white-space: normal; }
   .navegacion { flex: none; margin: var(--e-4) 0 0; }
   .navegacion ul { flex-direction: column; gap: 2px; padding: 0; overflow: visible; }
   .navegacion a { min-height: 2.5rem; padding: 0 var(--e-3); border-radius: var(--radio-1); }
@@ -704,7 +738,7 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   .lateral-estado { order: 4; flex-direction: column; align-items: flex-start; gap: var(--e-2); margin: auto 0 0;
     padding: var(--e-4) var(--e-2) 0; border-top: 1px solid var(--lateral-borde); }
   .lateral-local { align-items: flex-start; }
-  .lateral-local-texto { white-space: normal; }
+  .lateral-local-texto { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; }
 }
 
 @media (prefers-reduced-motion: reduce) {
