@@ -1,78 +1,244 @@
-/* Catalogar · carga, espera, ficha (revisión), solo lectura y lote. Solo maquetación y piezas propias, solo con
-   var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado de v1 al sistema v3. */
+/* Catalogar · (a) carga en la mesa de luz, (b) espera informativa, (c) ficha como Inspector (y su variante de solo
+   lectura) y (d) lote. Solo maquetación y piezas propias, solo con var(--…): los tokens y los componentes compartidos
+   (panel, montura, chip, insignia, medidor, progreso, mensaje, pie técnico y visor) viven en base.css.
+   Dueño: la tarea de la página (T2). Las columnas responden al ancho real del contenido (consulta de contenedor sobre
+   main): 5/7 desde 56rem, que con la barra lateral o sin ella incluye 1000, 1280 y 1536 px de ventana. */
 
-/* (a) Carga: zona para soltar fotos sobre la «mesa de luz» y vista previa local */
-.zona-soltar { margin: var(--e-2) 0 var(--e-4); padding: var(--e-4); border: 2px dashed var(--borde-fuerte); border-radius: var(--radio-3);
-  background: var(--mesa-fondo); }
-.zona-soltar.activa { border-style: solid; border-color: var(--acento); background: var(--acento-fondo); }
-.zona-soltar p { margin: var(--e-2) 0 0; color: var(--texto-suave); }
-.carga-plegada { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-2) var(--e-4);
-  padding: var(--e-3) var(--e-4); }
-.carga-plegada p { flex: 1 1 16rem; min-width: 0; margin: 0; }
-.vista-previa { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
-  gap: var(--e-3); margin: 0 0 var(--e-4); padding: 0; }
-.vista-previa li { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: var(--t-1); }
-.vista-previa img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid var(--montura-borde);
-  border-radius: var(--radio-1); background: var(--lupa-fondo); }
-.nombre-archivo { overflow: hidden; font-weight: var(--peso-medio); text-overflow: ellipsis; white-space: nowrap; }
+/* Flujo de la página: los bloques visibles se separan 24 px; los vacíos u ocultos no dejan hueco */
+.flujo { display: flex; flex-direction: column; gap: var(--e-5); min-width: 0; }
+.flujo > * { min-width: 0; }
+.flujo > :empty:not([aria-live]) { display: none; }
+/* Una región viva vacía sigue en el árbol de accesibilidad (para que sus avisos se lean), pero no deja hueco */
+.flujo > [aria-live]:empty { position: absolute; }
+#progreso > .mensaje { margin: 0; }
 
-/* (b) Espera de una ficha (30–70 s en CPU): informativa, nunca verde de éxito */
-.espera { margin: var(--e-4) 0; padding: var(--e-4) var(--e-5); border: 1px solid var(--info); border-left-width: 4px;
-  border-radius: var(--radio-2); background: var(--info-fondo); color: var(--texto); }
-.espera h2 { margin: 0; font-size: var(--t-3); color: var(--info); }
-.espera p { margin: var(--e-1) 0; }
-.espera .reloj { margin: var(--e-2) 0 0; font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1; }
-.espera .reloj small { font-family: var(--fuente-texto); font-size: var(--t-1); font-weight: var(--peso-normal); color: var(--texto-suave); }
-.barra-tiempo { position: relative; height: .75rem; margin: var(--e-3) 0 var(--e-1); border: 1px solid var(--info);
-  border-radius: var(--radio-pastilla); background: var(--superficie); overflow: hidden; }
-.barra-tiempo .relleno { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--info); transition: width 1s linear; }
-.barra-tiempo .marca-p50 { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1px; background: var(--texto);
-  box-shadow: 0 0 0 1px var(--superficie); }
-.espera.lenta { border-color: var(--aviso); background: var(--aviso-fondo); }
-.espera.lenta h2 { color: var(--aviso); }
-.espera.lenta .barra-tiempo { border-color: var(--aviso); }
-.espera.lenta .relleno { background: var(--aviso); }
-.espera h3 { margin: var(--e-4) 0 var(--e-1); font-size: var(--t-1); }
-.capas { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: var(--e-1) var(--e-5);
-  margin: 0; padding: 0; list-style: none; font-size: var(--t-1); counter-reset: capa; }
-.capas li { display: flex; align-items: center; gap: var(--e-2); min-width: 0; padding: var(--e-1) 0; border-bottom: 1px solid var(--borde);
-  counter-increment: capa; }
-.capas li::before { content: counter(capa) "."; flex: none; min-width: 1.3em; color: var(--texto-suave); font-variant-numeric: tabular-nums; }
-.capas .capa-nombre { flex: 1 1 auto; min-width: 0; }
-.capas .capa-tiempo { flex: none; font-family: var(--fuente-mono); color: var(--texto-suave); }
-.capas .usada .capa-tiempo { color: var(--texto); font-weight: var(--peso-medio); }
-.nota-espera { font-size: var(--t-1); color: var(--texto-suave); }
+/* ── (a) Carga ─────────────────────────────────────────────────────────────────────────────────────────── */
+/* Mesa de luz: retícula tenue de 24 px (gradientes con tokens), radio 12 y borde punteado que se ilumina al arrastrar */
+.zona-soltar { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--e-1);
+  min-height: 220px; padding: var(--e-6) var(--e-5); text-align: center; border: 2px dashed var(--borde-fuerte);
+  border-radius: var(--radio-3); background-color: var(--mesa-fondo);
+  background-image: linear-gradient(var(--mesa-rejilla) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mesa-rejilla) 1px, transparent 1px);
+  background-size: 24px 24px; background-position: center center;
+  transition: border-color var(--transicion), background-color var(--transicion); }
+.zona-soltar > .icono-48 { margin-bottom: var(--e-2); color: var(--texto-suave); transition: color var(--transicion); }
+.zona-soltar.activa { border-style: solid; border-color: var(--acento); background-color: var(--acento-fondo); }
+.zona-soltar.activa > .icono-48 { color: var(--acento); }
+.zona-titulo { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); line-height: var(--interlineado-titulos);
+  letter-spacing: var(--tracking-titulos); }
+.zona-formatos { margin: 0; color: var(--texto-suave); }
+.zona-ayuda { max-width: 52ch; margin: var(--e-3) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
+/* «Elegir fotos» es la etiqueta de #fotos: el input queda oculto a la vista pero enfocable y su foco se ve en la etiqueta */
+.elegir { position: relative; margin-top: var(--e-4); }
+.elegir input[type="file"] { position: absolute; left: 0; top: 0; width: 1px; height: 1px; margin: 0; padding: 0; overflow: hidden;
+  opacity: 0; }
+.elegir label { margin: 0; cursor: pointer; }
+.elegir:focus-within label { outline: var(--foco-ancho) solid var(--foco); outline-offset: 2px; }
 
-/* (c) Ficha: la foto (pegajosa) junto a los campos */
-#titulo-revision { margin-top: var(--e-6); }
-.revision { display: grid; grid-template-columns: minmax(16rem, 2fr) minmax(0, 3fr); gap: var(--e-5); align-items: start; }
-.revision > * { min-width: 0; }
-.revision .foto { position: sticky; top: var(--e-4); margin: 0; }
-.revision .foto .boton-imagen { border-radius: var(--radio-2); background: var(--lupa-fondo); }
-.revision .foto img { display: block; width: 100%; height: auto; max-height: 60vh; object-fit: contain; border-radius: var(--radio-2);
-  background: var(--lupa-fondo); }
-.revision .foto figcaption { margin-top: var(--e-2); font-size: var(--t-1); color: var(--texto-suave); }
-.revision .foto figcaption .insignia { margin-left: var(--e-1); }
-fieldset.opinion { margin: var(--e-4) 0; padding: var(--e-3) var(--e-4) var(--e-4); border: 1px solid var(--borde); border-radius: var(--radio-2);
-  background: var(--superficie); }
-fieldset.opinion legend { padding: 0 var(--e-1); font-weight: var(--peso-fuerte); }
-/* Palabras clave de la ficha (valor editable): mismo aspecto que .etiqueta-clave de base.css */
-.palabras { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-2); margin: var(--e-1) 0 var(--e-2); padding: 0; }
-.palabra { display: inline-flex; align-items: center; gap: var(--e-1); max-width: 100%; min-height: 2rem; padding: .125rem .25rem .125rem .625rem;
-  border: 1.5px solid var(--borde-fuerte); border-radius: var(--radio-1); background: var(--superficie); font-size: var(--t-1);
-  font-weight: var(--peso-medio); }
-.palabra a { color: var(--texto); }
-.palabra:not(:has(.quitar)) { padding-right: .625rem; }
+/* Hoja de contactos de las fotos elegidas (vista previa local, antes de subirlas) */
+.elegidas { margin-top: var(--e-5); }
+.elegidas-titulo { margin: 0 0 var(--e-3); font-weight: var(--peso-medio); }
+.vista-previa { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+  gap: var(--e-4); margin: 0; padding: 0; }
+.vista-previa li { min-width: 0; }
+.vista-previa .montura figcaption { flex-direction: column; gap: 0; }
+.vista-previa .fotograma { flex-wrap: wrap; gap: 0 var(--e-2); margin-top: 0; padding: 0; white-space: nowrap; }
+.vista-previa .boton-imagen { border-radius: 2px; }
+.vista-previa .mas-fotos { display: flex; align-items: center; justify-content: center; min-height: 6rem; padding: var(--e-3);
+  border: 1px dashed var(--borde-fuerte); border-radius: var(--radio-1); color: var(--texto-suave); text-align: center; }
+.nombre-archivo { overflow: hidden; font-weight: var(--peso-medio); color: var(--texto); text-overflow: ellipsis; white-space: nowrap; }
+.carga-pie { gap: var(--e-3) var(--e-5); }
+.carga-pie .boton { flex: none; }
+.carga-estado { flex: 1 1 16rem; min-width: 0; margin: 0; color: var(--texto-suave); }
+.carga-estado.error { display: flex; align-items: flex-start; gap: var(--e-2); color: var(--error); font-weight: var(--peso-medio); }
+.carga-estado .icono { margin-top: 2px; }
 
-/* (d) Lote: tarjetas resultado que abren su ficha */
-#lista-lote { margin-top: var(--e-3); }
-.tarjeta-boton { display: flex; flex-direction: column; gap: var(--e-1); width: 100%; font: inherit; }
-.tarjeta-boton img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio-1);
-  background: var(--lupa-fondo); }
-.tarjeta-boton:hover { background: var(--acento-fondo); }
+/* ── (b) Espera de una ficha (30–90 s en CPU): informativa, nunca verde de éxito ─────────────────────────────── */
+.espera { scroll-margin-top: var(--e-4); }
+.espera-reticula { display: grid; grid-template-columns: minmax(0, 1fr); }
+/* Lupa oscura con la vista previa local y una línea de escaneo sutil (sin ella con movimiento reducido) */
+.espera-foto { position: relative; display: flex; flex-direction: column; justify-content: center; gap: var(--e-3); min-width: 0;
+  min-height: 220px; margin: 0; padding: var(--e-4); background: var(--lupa-fondo); color: var(--lupa-texto);
+  border-radius: var(--radio-2) var(--radio-2) 0 0; }
+.espera-foto img { display: block; width: 100%; height: auto; max-height: 15rem; object-fit: contain; }
+.espera-foto figcaption { display: flex; justify-content: space-between; gap: var(--e-3); min-width: 0; font-size: var(--t-1);
+  color: var(--lupa-texto-suave); }
+.espera-foto figcaption .nombre-archivo { color: var(--lupa-texto); }
+.espera-foto figcaption .fotograma { flex: none; }
+.espera-foto::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(to bottom, transparent, var(--escaneo) 50%, transparent) no-repeat;
+  background-size: 100% 4rem; background-position: 0 -4rem; animation: escaneo 3.2s ease-in-out infinite; }
+@keyframes escaneo { from { background-position: 0 -4rem; } to { background-position: 0 calc(100% + 4rem); } }
+@media (prefers-reduced-motion: reduce) { .espera-foto::after { display: none; } }
 
-/* Columnas angostas: la foto arriba y los campos abajo */
-@container contenido (max-width: 40rem) {
-  .revision { grid-template-columns: minmax(0, 1fr); }
-  .revision .foto { position: static; }
+.espera-datos { min-width: 0; padding: var(--e-5); }
+.espera-datos h2 { margin: 0; font-size: var(--t-4); }
+.nombre-en-titulo { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  vertical-align: bottom; }
+.espera .reloj { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--e-2); margin: var(--e-3) 0 0; }
+.reloj-valor { font-family: var(--fuente-mono); font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1;
+  letter-spacing: var(--tracking-titulos); }
+.reloj-etiqueta { color: var(--texto-suave); }
+.espera .progreso { margin-top: var(--e-4); }
+.progreso-escala { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e-1) var(--e-4); margin: var(--e-2) 0 0;
+  font-size: var(--t-1); color: var(--texto-suave); }
+.progreso-escala span { display: inline-flex; align-items: center; gap: var(--e-2); }
+.progreso-escala .valor { font-family: var(--fuente-mono); color: var(--texto); }
+.escala-marca { flex: none; width: 3px; height: .875rem; background: var(--texto); border-radius: 1px; }
+.espera-referencia { margin: var(--e-3) 0 0; font-size: var(--t-1); color: var(--texto-suave); }
+.espera-datos h3 { margin: var(--e-5) 0 var(--e-2); font-size: var(--t-2); }
+/* Las 7 capas, con su icono y su p50 típico (al terminar, el tiempo real). No se marca una «etapa actual»: el servicio
+   no la reporta. */
+.capas { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--e-6); margin: 0; padding: 0; list-style: none; }
+.capa { display: flex; align-items: center; gap: var(--e-3); min-width: 0; min-height: 2.5rem; padding: var(--e-1) 0;
+  border-bottom: 1px solid var(--borde-suave); }
+.capa > .icono { width: 20px; height: 20px; color: var(--texto-suave); }
+.capa-nombre { flex: 1 1 auto; min-width: 0; }
+.capa-tiempo { flex: none; font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); white-space: nowrap; }
+.capa.usada .capa-tiempo { color: var(--texto); font-weight: var(--peso-medio); }
+.capa.no-usada .capa-nombre { color: var(--texto-suave); }
+.nota-espera { display: flex; align-items: flex-start; gap: var(--e-2); margin: var(--e-4) 0 0; font-size: var(--t-1);
+  color: var(--texto-suave); }
+.nota-espera .icono { margin-top: 1px; }
+.espera .mensaje { margin: var(--e-4) 0 0; }
+/* Pasado el p95: aviso (texto + color), la petición sigue en curso */
+.espera.lenta { border-color: var(--aviso-borde); }
+.espera.lenta .reloj-valor { color: var(--aviso); }
+/* Terminada: sin la lupa (la ficha ya muestra la foto) y con las capas en rejilla */
+.espera.terminada .espera-foto { display: none; }
+.espera.terminada .capas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+@container contenido (min-width: 56rem) {
+  .ficha-lateral.pegajosa { position: sticky; top: var(--e-4); }
+  .espera-reticula:has(> .espera-foto) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .espera-foto { border-radius: var(--radio-2) 0 0 var(--radio-2); }
+  .espera-foto img { max-height: 24rem; }
 }
+
+/* ── (c) Ficha = Inspector ─────────────────────────────────────────────────────────────────────────────── */
+.revision { scroll-margin-top: var(--e-4); }
+/* Barra de la ficha: «Ficha IPTC», id, estado, ruta y tiempo; a la derecha «Catalogar otra foto» */
+.barra-ficha { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--e-3) var(--e-4);
+  padding: var(--e-3) var(--e-4) var(--e-3) var(--e-5); background: var(--superficie); border: 1px solid var(--borde);
+  border-radius: var(--radio-2); box-shadow: var(--sombra-1); }
+.barra-ficha-texto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); min-width: 0; }
+.barra-ficha h2 { flex: 0 1 auto; min-width: 0; margin: 0; font-size: var(--t-4); }
+.barra-ficha h2 > .icono { width: 22px; height: 22px; margin-right: var(--e-2); vertical-align: -.2em; color: var(--texto-suave); }
+.barra-ficha h2 .id { margin-left: var(--e-1); }
+.barra-ficha-datos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.barra-ficha-tiempo { display: inline-flex; align-items: center; gap: var(--e-1); padding-left: var(--e-1); font-family: var(--fuente-mono);
+  font-size: var(--t-1); color: var(--texto-suave); white-space: nowrap; }
+.barra-ficha-tiempo .icono { width: 16px; height: 16px; }
+.revision > .mensaje { margin: var(--e-4) 0 0; }
+.ficha-reticula { margin-top: var(--e-5); }
+
+/* Columna de la foto: lupa oscura 4:3 con la foto en contain (≤ 60vh y ≤ 28rem), procedencia y avisos */
+.ficha-lateral { display: grid; gap: var(--e-5); align-content: start; }
+figure.foto { min-width: 0; margin: 0; }
+.foto .boton-imagen { display: block; aspect-ratio: 4 / 3; max-height: min(60vh, 28rem); background: var(--lupa-fondo);
+  border-radius: var(--radio-2); box-shadow: var(--sombra-1); }
+.foto .boton-imagen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: var(--radio-2); }
+.foto .boton-imagen .lupa { z-index: 1; }
+.foto figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-1) var(--e-4);
+  margin-top: var(--e-2); font-size: var(--t-1); color: var(--texto-suave); }
+.foto-documento { min-width: 0; }
+.foto-estado { display: inline-flex; align-items: center; gap: var(--e-2); }
+.procedencia .panel-cuerpo { padding: var(--e-4) var(--e-5) var(--e-5); }
+.procedencia-campos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-2); margin: var(--e-4) 0 0;
+  padding-top: var(--e-3); border-top: 1px solid var(--borde-suave); font-size: var(--t-1); color: var(--texto-suave); }
+.procedencia-campos .icono { width: 16px; height: 16px; }
+.procedencia-campos.completa { color: var(--ok); }
+.avisos { display: grid; gap: var(--e-3); }
+.avisos .mensaje { margin: 0; }
+.aviso-titulo { font-weight: var(--peso-medio); }
+.aviso-grupo + .aviso-grupo { margin-top: var(--e-3); padding-top: var(--e-3); border-top: 1px solid var(--aviso-borde); }
+
+/* Inspector: secciones con filete, cada campo con su etiqueta, contador o medidor y su fila «Fuentes:» */
+.inspector .panel-cuerpo { padding: 0; }
+.seccion { min-width: 0; padding: var(--e-5); border-top: 1px solid var(--borde-suave); }
+.seccion:first-child { border-top: 0; }
+.seccion-titulo { margin: 0 0 var(--e-4); font-size: var(--t-3); }
+.campo-ficha { margin-bottom: var(--e-5); }
+.campo-ficha:last-child { margin-bottom: 0; }
+.campo-cabecera { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--e-3);
+  margin-bottom: var(--e-1); }
+.campo-cabecera label { flex: 0 1 auto; min-width: 0; margin: 0; }
+.campo-cabecera .contador { flex: none; margin: 0; font-size: var(--t-1); color: var(--texto-suave); }
+.inspector textarea { field-sizing: content; }
+.inspector:not(.solo-lectura) #campo-texto_alternativo { min-height: 5.25rem; }
+.inspector:not(.solo-lectura) :is(#campo-descripcion, #campo-descripcion_extendida) { min-height: 6.75rem; }
+.inspector .medidor { margin-top: var(--e-2); }
+/* Palabras clave: etiquetas (valor editable) y la fila para agregar */
+.palabra-tesauro a { display: inline-flex; align-items: center; gap: var(--e-1); min-height: var(--objetivo-min); }
+.palabra-tesauro .icono { width: 16px; height: 16px; color: var(--chip-tesauro-borde); }
+.etiquetas-vacio { color: var(--texto-suave); }
+.agregar-palabra { margin-top: var(--e-3); }
+.agregar-palabra .boton { flex: none; }
+
+/* «Tu opinión», compuesto como pie del inspector */
+.inspector-pie { display: grid; gap: var(--e-3); padding: var(--e-5); background: var(--panel-cabecera-fondo);
+  border-top: 1px solid var(--borde); border-radius: 0 0 var(--radio-2) var(--radio-2); }
+.inspector-pie h4 { margin: 0; font-size: var(--t-3); }
+.inspector-pie p, .inspector-pie label { margin: 0; }
+.opinion-util { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); }
+.opinion-util p { font-weight: var(--peso-medio); }
+.opinion-comentario { display: grid; gap: var(--e-1); }
+.acciones-ficha { margin-top: var(--e-1); }
+#resultado-opinion:empty { display: none; }
+#resultado-opinion .mensaje { margin: 0; }
+
+/* Solo lectura: valores con estilo propio (sin borde punteado de control, alto al contenido, sin redimensionar) */
+.inspector.solo-lectura :is(input, textarea)[readonly] { border: 1px solid var(--borde); background: var(--superficie-2);
+  color: var(--texto); resize: none; cursor: default; }
+.inspector.solo-lectura textarea[readonly] { min-height: var(--alto-campo); }
+.inspector.solo-lectura :is(input, textarea)[readonly]:hover { border-color: var(--borde); }
+
+/* ── (d) Lote ──────────────────────────────────────────────────────────────────────────────────────────── */
+.lote-progreso { display: grid; gap: var(--e-2); margin-bottom: var(--e-5); }
+.lote-progreso:empty { display: none; }
+.lote-progreso p { margin: 0; }
+.lote-progreso .mensaje { margin: var(--e-2) 0 0; }
+.lote-texto { font-weight: var(--peso-medio); }
+.lote-rejilla { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+  gap: var(--e-4); margin: 0; padding: 0; }
+.lote-rejilla > li { display: flex; min-width: 0; }
+.tarjeta-lote { display: flex; flex-direction: column; gap: var(--e-2); width: 100%; min-width: 0; margin: 0; padding: 6px 6px var(--e-3);
+  background: var(--montura); border: 1px solid var(--montura-borde); border-radius: var(--radio-1); box-shadow: var(--sombra-1);
+  color: var(--texto); font: inherit; text-align: left; cursor: pointer;
+  transition: border-color var(--transicion), box-shadow var(--transicion); }
+.tarjeta-lote:hover { border-color: var(--borde-fuerte); box-shadow: var(--sombra-2); }
+.tarjeta-lote img, .tarjeta-lote .esqueleto.foto { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: 2px; }
+.tarjeta-lote img { object-fit: cover; background: var(--lupa-fondo); }
+.tarjeta-lote-titular { display: -webkit-box; padding: 0 var(--e-1); overflow: hidden; font-weight: var(--peso-medio); line-height: 1.35;
+  -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.tarjeta-lote-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-2);
+  margin-top: auto; padding: 0 var(--e-1); }
+.tarjeta-lote-accion { display: inline-flex; align-items: center; gap: var(--e-1); color: var(--enlace); font-size: var(--t-1);
+  font-weight: var(--peso-medio); }
+.tarjeta-lote-accion .icono { width: 16px; height: 16px; }
+.tarjeta-lote:hover .tarjeta-lote-accion { text-decoration: underline; }
+.tarjeta-lote.pendiente { cursor: default; box-shadow: none; }
+.tarjeta-lote.pendiente:hover { border-color: var(--montura-borde); }
+.tarjeta-lote.pendiente .esqueleto.linea { width: 70%; margin: var(--e-1) var(--e-1) 0; }
+
+/* Contenido mediano (tableta, apilado): la foto a todo el ancho y debajo, lado a lado, la procedencia y los avisos */
+@container contenido (min-width: 40rem) and (max-width: 55.99rem) {
+  .ficha-lateral { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .ficha-lateral > figure.foto, .ficha-lateral > .procedencia:last-child { grid-column: 1 / -1; }
+}
+
+/* Contenido angosto (móvil): el lote en 2 columnas; la barra de la ficha apila su botón */
+@container contenido (max-width: 30rem) {
+  .lote-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); }
+  .barra-ficha { grid-template-columns: minmax(0, 1fr); padding: var(--e-3) var(--e-4); }
+  .barra-ficha > .boton { width: 100%; }
+  .carga-pie .boton { width: 100%; }
+  .zona-soltar { padding: var(--e-5) var(--e-4); }
+  .seccion, .inspector-pie { padding: var(--e-4); }
+  .espera-datos { padding: var(--e-4); }
+}
+
+/* Pie técnico de la ficha con datos reales (guardrails y transiciones), para T5 en base.css: los estados de la máquina
+   son identificadores técnicos (mono) y la tabla de guardrails se desplaza en horizontal en vez de estrangular su
+   columna de resultados en móvil. */
+.revision .pie-tecnico .transiciones { font-family: var(--fuente-mono); }
+.revision .pie-tecnico .desplazable .tabla-compacta :is(td, th) { white-space: nowrap; }

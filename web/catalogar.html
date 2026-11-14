@@ -50,28 +50,50 @@
           <div class="encabezado-acciones"></div>
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
-        <form id="formulario-carga" class="tarjeta">
-          <label for="fotos" class="etiqueta">Fotos (JPEG o PNG, hasta 10 MB cada una)</label>
-          <div id="zona-soltar" class="zona-soltar">
-            <input id="fotos" name="fotos" type="file" accept="image/jpeg,image/png" multiple required aria-describedby="ayuda-fotos">
-            <p id="ayuda-fotos">Con una foto verás su ficha al terminar; con varias se crea un lote con barra de progreso. También puedes arrastrar las fotos aquí.</p>
-          </div>
-          <ul id="vista-previa" class="vista-previa" aria-label="Fotos elegidas (vista previa)" hidden></ul>
-          <button class="boton" type="submit" id="boton-catalogar">Catalogar</button>
-        </form>
-        <div id="carga-plegada" class="tarjeta carga-plegada" hidden>
-          <p id="carga-plegada-texto"></p>
-          <button class="boton secundario" type="button" id="otra-foto">Catalogar otra foto</button>
-        </div>
+        <div class="flujo">
+          <form id="formulario-carga" class="panel carga" aria-labelledby="titulo-carga" novalidate>
+            <header class="panel-cabecera">
+              <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-subir"/></svg>
+              <h2 id="titulo-carga">Fotos para catalogar</h2>
+              <p class="panel-auxiliar">Al guardarlas se quitan el GPS, el número de serie y el autor</p>
+            </header>
+            <div class="panel-cuerpo">
+              <div id="zona-soltar" class="zona-soltar">
+                <svg class="icono icono-48" aria-hidden="true" focusable="false"><use href="#i-subir"/></svg>
+                <p class="zona-titulo">Arrastra fotos aquí</p>
+                <p class="zona-formatos">JPEG o PNG, hasta 10 MB cada una</p>
+                <div class="elegir">
+                  <input id="fotos" name="fotos" type="file" accept="image/jpeg,image/png" multiple aria-describedby="ayuda-fotos estado-carga">
+                  <label for="fotos" class="boton secundario"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto"/></svg>Elegir fotos</label>
+                </div>
+                <p id="ayuda-fotos" class="zona-ayuda">Con una foto verás su ficha al terminar; con varias se crea un lote con barra de progreso.</p>
+              </div>
+              <div id="elegidas" class="elegidas" hidden>
+                <p id="titulo-elegidas" class="elegidas-titulo">Fotos elegidas</p>
+                <ul id="vista-previa" class="vista-previa" aria-labelledby="titulo-elegidas"></ul>
+              </div>
+            </div>
+            <footer class="panel-pie carga-pie">
+              <button class="boton grande" type="submit" id="boton-catalogar"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg><span id="boton-catalogar-texto">Catalogar</span></button>
+              <p id="estado-carga" class="carga-estado">Elige una o varias fotos para empezar.</p>
+            </footer>
+          </form>
 
-        <div id="espera"></div>
-        <section id="progreso" aria-live="polite" class="progreso-region"></section>
-        <section id="lote" aria-labelledby="titulo-lote" hidden>
-          <h2 id="titulo-lote">Fichas del lote</h2>
-          <div id="lote-progreso"></div>
-          <div id="lista-lote" class="rejilla"></div>
-        </section>
-        <section id="revision" aria-labelledby="titulo-revision" hidden></section>
+          <div id="espera"></div>
+          <section id="progreso" aria-live="polite" class="progreso-region"></section>
+          <section id="lote" class="panel lote" aria-labelledby="titulo-lote" hidden>
+            <header class="panel-cabecera">
+              <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-archivo"/></svg>
+              <h2 id="titulo-lote">Fichas del lote</h2>
+              <p id="lote-resumen" class="panel-auxiliar"></p>
+            </header>
+            <div class="panel-cuerpo">
+              <div id="lote-progreso" class="lote-progreso"></div>
+              <ul id="lista-lote" class="lote-rejilla" aria-label="Fichas del lote: abre una para revisarla"></ul>
+            </div>
+          </section>
+          <section id="revision" class="revision" aria-labelledby="titulo-revision" hidden></section>
+        </div>
         <!-- ═══ Fin del contenido de la página ═══ -->
       </main>
       <footer class="pie">
