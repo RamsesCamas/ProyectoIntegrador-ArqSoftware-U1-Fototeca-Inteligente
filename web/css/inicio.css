@@ -42,6 +42,8 @@
 .cifras-inicio .medidor { flex-wrap: wrap; gap: var(--e-1) var(--e-3); margin-top: var(--e-2); }
 .cifras-inicio .medidor-barra { flex-basis: 100%; }
 .cifra-nota { margin: var(--e-1) 0 0; font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+/* Las etiquetas son texto, no cifras: sin números tabulares (que .cifra hereda) */
+.cifras-inicio .cifra-etiqueta, .cifra-nota { font-variant-numeric: normal; }
 .cifra.cargando { gap: var(--e-2); }
 .cifra.cargando .esqueleto { margin: 0; }
 .esqueleto.bloque-cifra { width: 55%; height: 2.25rem; }

@@ -50,30 +50,57 @@
           <div class="encabezado-acciones"></div>
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
-        <section id="zona-soltar" class="tarjeta busqueda" aria-label="Búsqueda">
-          <form id="formulario-texto">
-            <label for="consulta" class="etiqueta">¿Qué fotos buscas?</label>
-            <div class="fila">
-              <input id="consulta" name="consulta" type="search" minlength="2" maxlength="300" required
-                     placeholder="Por ejemplo: personas cargando canastas en un mercado, sin vehículos">
-              <button class="boton" type="submit">Buscar</button>
+        <section id="zona-soltar" class="panel busqueda" aria-labelledby="titulo-busqueda">
+          <h2 id="titulo-busqueda" class="solo-lectores">Búsqueda</h2>
+          <form id="formulario-texto" class="panel-cuerpo" role="search">
+            <label for="consulta">¿Qué fotos buscas?</label>
+            <div class="buscador">
+              <div class="buscador-campo">
+                <svg class="icono buscador-lupa" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg>
+                <input id="consulta" name="consulta" type="search" minlength="2" maxlength="300" required autocomplete="off"
+                       aria-describedby="ayuda-consulta"
+                       placeholder="Describe la escena: qué se ve, dónde, qué excluir">
+              </div>
+              <button class="boton grande" type="submit"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg>Buscar</button>
+            </div>
+            <p id="ayuda-consulta" class="ayuda">En español. Las búsquedas con exclusiones o condiciones las interpreta un modelo de lenguaje y tardan unos segundos más.</p>
+            <div class="ejemplos">
+              <span id="titulo-ejemplos" class="ejemplos-titulo">Ejemplos:</span>
+              <ul class="ejemplos-lista" aria-labelledby="titulo-ejemplos">
+                <li><button type="button" class="chip ejemplo" data-consulta="mercado con frutas"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg>mercado con frutas</button></li>
+                <li><button type="button" class="chip ejemplo" data-consulta="personas cargando canastas en un mercado, sin vehículos"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg>personas cargando canastas en un mercado, sin vehículos</button></li>
+              </ul>
             </div>
           </form>
-          <form id="formulario-imagen" class="busqueda-foto">
-            <label for="imagen">O busca con una foto:</label>
-            <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="ayuda-imagen">
-            <button class="boton secundario discreto" type="submit">Buscar parecidas</button>
-            <p id="ayuda-imagen" class="ayuda">También puedes arrastrar la foto sobre este recuadro.</p>
-          </form>
+          <div class="panel-pie busqueda-pie">
+            <button id="alternar-foto" class="boton secundario" type="button" aria-expanded="false" aria-controls="formulario-imagen"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-lupa-foto"/></svg>O busca con una foto<svg class="icono alternar-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
+            <p class="ayuda busqueda-pie-ayuda">También puedes arrastrar una foto sobre este panel.</p>
+            <form id="formulario-imagen" class="busqueda-foto" hidden>
+              <label for="imagen">Foto de referencia</label>
+              <div class="busqueda-foto-fila">
+                <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="ayuda-imagen">
+                <button class="boton" type="submit"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto-similar"/></svg>Buscar parecidas</button>
+              </div>
+              <p id="ayuda-imagen" class="ayuda">JPEG o PNG. Se buscan en el archivo las fotos que más se le parecen.</p>
+            </form>
+          </div>
         </section>
 
-        <section id="estado" aria-live="polite"></section>
-        <section id="interpretada" hidden></section>
-        <section aria-labelledby="titulo-resultados">
-          <h2 id="titulo-resultados" class="solo-lectores">Resultados</h2>
-          <div id="resultados" class="rejilla resultados"></div>
+        <section class="zona-resultados" aria-labelledby="titulo-resultados">
+          <div class="resultados-barra">
+            <h2 id="titulo-resultados">Resultados</h2>
+            <div id="estado" aria-live="polite"></div>
+          </div>
+          <section id="interpretada" class="panel" aria-labelledby="titulo-interpretada" hidden></section>
+          <div id="resultados" class="resultados">
+            <div class="vacio inicial">
+              <svg class="vacio-ilustracion" aria-hidden="true" focusable="false"><use href="#il-busqueda"/></svg>
+              <h3>Todavía no has buscado nada</h3>
+              <p>Escribe qué quieres ver o usa un ejemplo. Cada resultado dice por qué coincide y abre la foto en grande con su ficha.</p>
+            </div>
+          </div>
+          <div id="tecnico"></div>
         </section>
-        <section id="tecnico"></section>
         <!-- ═══ Fin del contenido de la página ═══ -->
       </main>
       <footer class="pie">
