@@ -1,0 +1,26 @@
+/* Archivo · filtro, tabla de documentos, confirmación de borrado y paginación. Solo maquetación y piezas propias, solo
+   con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado de v1 al
+   sistema v3. */
+
+.filtros { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); padding: var(--e-3) var(--e-4); }
+.filtros label { margin: 0; }
+.filtros select { width: auto; min-width: 12rem; }
+
+.tabla-archivo tbody td, .tabla-archivo tbody th { height: 4.5rem; }
+.miniatura-archivo { width: 72px; }
+.miniatura-archivo img { width: 72px; height: 54px; object-fit: cover; border: 1px solid var(--montura-borde); border-radius: 2px;
+  background: var(--lupa-fondo); }
+.celda-documento { min-width: 14rem; }
+.celda-documento a, .celda-documento .nombre { display: block; max-width: 28rem; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; font-weight: var(--peso-medio); line-height: 1.6; }
+.celda-documento .id { display: block; max-width: 28rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.confirmacion { margin: var(--e-4) 0; border: 2px solid var(--error); border-left-width: 6px; }
+.confirmacion h2 { margin-top: 0; font-size: var(--t-3); color: var(--error); }
+
+.paginacion { justify-content: center; margin-top: var(--e-4); }
+#pagina { font-variant-numeric: tabular-nums; }
+
+@container contenido (max-width: 40rem) {
+  .celda-documento a, .celda-documento .nombre, .celda-documento .id { max-width: 16rem; }
+}

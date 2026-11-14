@@ -1,0 +1,78 @@
+/* Catalogar · carga, espera, ficha (revisión), solo lectura y lote. Solo maquetación y piezas propias, solo con
+   var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado de v1 al sistema v3. */
+
+/* (a) Carga: zona para soltar fotos sobre la «mesa de luz» y vista previa local */
+.zona-soltar { margin: var(--e-2) 0 var(--e-4); padding: var(--e-4); border: 2px dashed var(--borde-fuerte); border-radius: var(--radio-3);
+  background: var(--mesa-fondo); }
+.zona-soltar.activa { border-style: solid; border-color: var(--acento); background: var(--acento-fondo); }
+.zona-soltar p { margin: var(--e-2) 0 0; color: var(--texto-suave); }
+.carga-plegada { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-2) var(--e-4);
+  padding: var(--e-3) var(--e-4); }
+.carga-plegada p { flex: 1 1 16rem; min-width: 0; margin: 0; }
+.vista-previa { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+  gap: var(--e-3); margin: 0 0 var(--e-4); padding: 0; }
+.vista-previa li { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: var(--t-1); }
+.vista-previa img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid var(--montura-borde);
+  border-radius: var(--radio-1); background: var(--lupa-fondo); }
+.nombre-archivo { overflow: hidden; font-weight: var(--peso-medio); text-overflow: ellipsis; white-space: nowrap; }
+
+/* (b) Espera de una ficha (30–70 s en CPU): informativa, nunca verde de éxito */
+.espera { margin: var(--e-4) 0; padding: var(--e-4) var(--e-5); border: 1px solid var(--info); border-left-width: 4px;
+  border-radius: var(--radio-2); background: var(--info-fondo); color: var(--texto); }
+.espera h2 { margin: 0; font-size: var(--t-3); color: var(--info); }
+.espera p { margin: var(--e-1) 0; }
+.espera .reloj { margin: var(--e-2) 0 0; font-family: var(--fuente-mono); font-size: var(--t-7); font-weight: var(--peso-fuerte); line-height: 1.1; }
+.espera .reloj small { font-family: var(--fuente-texto); font-size: var(--t-1); font-weight: var(--peso-normal); color: var(--texto-suave); }
+.barra-tiempo { position: relative; height: .75rem; margin: var(--e-3) 0 var(--e-1); border: 1px solid var(--info);
+  border-radius: var(--radio-pastilla); background: var(--superficie); overflow: hidden; }
+.barra-tiempo .relleno { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--info); transition: width 1s linear; }
+.barra-tiempo .marca-p50 { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1px; background: var(--texto);
+  box-shadow: 0 0 0 1px var(--superficie); }
+.espera.lenta { border-color: var(--aviso); background: var(--aviso-fondo); }
+.espera.lenta h2 { color: var(--aviso); }
+.espera.lenta .barra-tiempo { border-color: var(--aviso); }
+.espera.lenta .relleno { background: var(--aviso); }
+.espera h3 { margin: var(--e-4) 0 var(--e-1); font-size: var(--t-1); }
+.capas { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: var(--e-1) var(--e-5);
+  margin: 0; padding: 0; list-style: none; font-size: var(--t-1); counter-reset: capa; }
+.capas li { display: flex; align-items: center; gap: var(--e-2); min-width: 0; padding: var(--e-1) 0; border-bottom: 1px solid var(--borde);
+  counter-increment: capa; }
+.capas li::before { content: counter(capa) "."; flex: none; min-width: 1.3em; color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+.capas .capa-nombre { flex: 1 1 auto; min-width: 0; }
+.capas .capa-tiempo { flex: none; font-family: var(--fuente-mono); color: var(--texto-suave); }
+.capas .usada .capa-tiempo { color: var(--texto); font-weight: var(--peso-medio); }
+.nota-espera { font-size: var(--t-1); color: var(--texto-suave); }
+
+/* (c) Ficha: la foto (pegajosa) junto a los campos */
+#titulo-revision { margin-top: var(--e-6); }
+.revision { display: grid; grid-template-columns: minmax(16rem, 2fr) minmax(0, 3fr); gap: var(--e-5); align-items: start; }
+.revision > * { min-width: 0; }
+.revision .foto { position: sticky; top: var(--e-4); margin: 0; }
+.revision .foto .boton-imagen { border-radius: var(--radio-2); background: var(--lupa-fondo); }
+.revision .foto img { display: block; width: 100%; height: auto; max-height: 60vh; object-fit: contain; border-radius: var(--radio-2);
+  background: var(--lupa-fondo); }
+.revision .foto figcaption { margin-top: var(--e-2); font-size: var(--t-1); color: var(--texto-suave); }
+.revision .foto figcaption .insignia { margin-left: var(--e-1); }
+fieldset.opinion { margin: var(--e-4) 0; padding: var(--e-3) var(--e-4) var(--e-4); border: 1px solid var(--borde); border-radius: var(--radio-2);
+  background: var(--superficie); }
+fieldset.opinion legend { padding: 0 var(--e-1); font-weight: var(--peso-fuerte); }
+/* Palabras clave de la ficha (valor editable): mismo aspecto que .etiqueta-clave de base.css */
+.palabras { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-2); margin: var(--e-1) 0 var(--e-2); padding: 0; }
+.palabra { display: inline-flex; align-items: center; gap: var(--e-1); max-width: 100%; min-height: 2rem; padding: .125rem .25rem .125rem .625rem;
+  border: 1.5px solid var(--borde-fuerte); border-radius: var(--radio-1); background: var(--superficie); font-size: var(--t-1);
+  font-weight: var(--peso-medio); }
+.palabra a { color: var(--texto); }
+.palabra:not(:has(.quitar)) { padding-right: .625rem; }
+
+/* (d) Lote: tarjetas resultado que abren su ficha */
+#lista-lote { margin-top: var(--e-3); }
+.tarjeta-boton { display: flex; flex-direction: column; gap: var(--e-1); width: 100%; font: inherit; }
+.tarjeta-boton img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio-1);
+  background: var(--lupa-fondo); }
+.tarjeta-boton:hover { background: var(--acento-fondo); }
+
+/* Columnas angostas: la foto arriba y los campos abajo */
+@container contenido (max-width: 40rem) {
+  .revision { grid-template-columns: minmax(0, 1fr); }
+  .revision .foto { position: static; }
+}

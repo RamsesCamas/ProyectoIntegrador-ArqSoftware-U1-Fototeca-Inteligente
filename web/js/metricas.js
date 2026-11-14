@@ -34,7 +34,7 @@ function cifrasClave(m) {
     [consultas ? porcentaje(aciertos / consultas) : "—", `aciertos de caché (${numero(aciertos)} de ${numero(consultas)} consultas)`],
     [porcentaje(r.tasa_util), `opiniones útiles (de ${numero(r.total ?? 0)})`],
     [numero(bloqueos), "bloqueos de los guardrails"],
-  ].map(([valor, texto]) => el("article", { clase: "tarjeta" }, el("p", { clase: "cifra", texto: valor }), el("p", { clase: "cifra-etiqueta", texto })));
+  ].map(([valor, texto]) => el("article", { clase: "cifra" }, el("p", { clase: "cifra-valor", texto: valor }), el("p", { clase: "cifra-etiqueta", texto })));
 }
 
 function latenciaPorEtapa(m) {
@@ -79,7 +79,7 @@ async function cargar() {
     panel.replaceChildren(
       ancha(tarjeta("Latencia por capa", ...latenciaPorEtapa(m), latenciaPorCapaArquitectura(m))),
       tarjeta("Accesibilidad del archivo",
-        el("p", { clase: "cifra", texto: porcentaje(a.porcentaje_alt_validado) }),
+        el("p", { clase: "cifra-valor", texto: porcentaje(a.porcentaje_alt_validado) }),
         el("p", { texto: `de ${numero(a.fotos ?? 0)} fotos tienen texto alternativo validado · ${numero(a.fichas_validadas ?? 0)} fichas validadas · `
           + `${porcentaje(a.porcentaje_requiere_revision)} requieren revisión · ${porcentaje(a.porcentaje_sin_ficha)} sin ficha` }),
         barras([{ etiqueta: "Texto alternativo validado", valor: a.alt_validado || 0, serie: 2 },

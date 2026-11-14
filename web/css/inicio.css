@@ -1,0 +1,36 @@
+/* Inicio · «Resumen del archivo». Solo maquetación y piezas propias, solo con var(--…) (los tokens viven en base.css).
+   Dueño: la tarea de la página. Estado de partida migrado de v1 al sistema v3. */
+
+/* Estado del sistema: insignia general, versión y precalentamiento; abajo, una tarjeta por componente */
+#titulo-componentes { margin-top: 0; }
+.estado-sistema { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-4); margin: 0 0 var(--e-4); }
+.estado-sistema p { margin: 0; }
+#estado-general { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-2); }
+#precalentamiento:not(:empty)::before { content: "·" / ""; margin-right: var(--e-2); }
+.componentes { gap: var(--e-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); }
+.componente { display: flex; flex-direction: column; gap: var(--e-2); padding: var(--e-3) var(--e-4); }
+.componente h3 { margin: 0; font-size: var(--t-2); }
+.componente .insignia { align-self: flex-start; }
+.componente p { margin: 0; font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+.componente .detalle { color: var(--texto); }
+
+/* El archivo en cifras */
+.cifras-inicio { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+
+/* Accesos a las tareas */
+.accesos { grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); }
+.acceso { display: flex; flex-direction: column; gap: var(--e-1); height: 100%; }
+.acceso strong { font-size: var(--t-3); color: var(--enlace); text-decoration: underline; text-decoration-thickness: 1px;
+  text-underline-offset: .15em; }
+.acceso span { font-size: var(--t-1); color: var(--texto-suave); }
+.acceso:hover { background: var(--acento-fondo); }
+.acceso:hover strong { text-decoration-thickness: 2px; }
+
+/* Columna angosta: sin separadores sueltos al inicio de línea */
+@container contenido (max-width: 40rem) {
+  .estado-sistema .sep, #precalentamiento::before { display: none; }
+}
+/* Con ancho de escritorio: los 5 componentes y los 5 accesos en una fila */
+@container contenido (min-width: 56rem) {
+  .componentes, .accesos { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}

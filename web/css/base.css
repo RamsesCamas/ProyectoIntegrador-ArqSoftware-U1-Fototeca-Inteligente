@@ -220,7 +220,7 @@ code, kbd, samp, .mono { font-family: var(--fuente-mono); font-size: var(--t-1);
 }
 /* Rejilla automática de tarjetas (cuántas quepan, de al menos 14rem) */
 .rejilla { display: grid; gap: var(--e-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); }
-ul.rejilla, ol.rejilla { list-style: none; padding: 0; margin: 0; }
+.rejilla:where(ul, ol) { list-style: none; padding: 0; margin: 0; }
 .rejilla > * { min-width: 0; }
 /* Fila de controles que se acomoda en varias líneas */
 .fila { display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-3); align-items: center; }
@@ -374,9 +374,9 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 .tarjeta { padding: var(--e-4); }
 .tarjeta > h2:first-child, .tarjeta > h3:first-child { margin-top: 0; }
 .tarjeta p { margin: var(--e-1) 0; }
-a.tarjeta, button.tarjeta { display: block; color: inherit; text-align: left; text-decoration: none; cursor: pointer;
+.tarjeta:where(a, button) { display: block; color: inherit; text-align: left; text-decoration: none; cursor: pointer;
   transition: border-color var(--transicion), box-shadow var(--transicion), background-color var(--transicion); }
-a.tarjeta:hover, button.tarjeta:hover { border-color: var(--borde-fuerte); box-shadow: var(--sombra-2); }
+.tarjeta:where(a, button):hover { border-color: var(--borde-fuerte); box-shadow: var(--sombra-2); }
 
 /* 4d. Cifra: mosaico con icono, valor (30 px, tabular), etiqueta y subtexto o medidor opcional */
 .cifra { display: flex; flex-direction: column; gap: var(--e-1); min-width: 0; margin: 0; padding: var(--e-4) var(--e-5);
@@ -408,8 +408,8 @@ a.tarjeta:hover, button.tarjeta:hover { border-color: var(--borde-fuerte); box-s
   border: 1px solid var(--chip-borde); border-radius: calc(var(--alto-chip) / 2); background: var(--chip-fondo);
   color: var(--texto); font-size: var(--t-1); line-height: 1.35; text-align: left; text-decoration: none; }
 .chip .icono { width: 16px; height: 16px; color: var(--chip-borde); }
-a.chip:hover, button.chip:hover { text-decoration: underline; box-shadow: inset 0 0 0 1px var(--chip-borde); }
-button.chip { cursor: zoom-in; }
+.chip:where(a, button):hover { text-decoration: underline; box-shadow: inset 0 0 0 1px var(--chip-borde); }
+.chip:where(button) { cursor: zoom-in; }
 .chip-regla { background: var(--chip-regla-fondo); border-color: var(--chip-regla-borde); }
 .chip-regla .icono { color: var(--chip-regla-borde); }
 .chip-tesauro { background: var(--chip-tesauro-fondo); border-color: var(--chip-tesauro-borde); }
@@ -514,12 +514,12 @@ button.chip { cursor: zoom-in; }
 .desplazable { overflow-x: auto; }
 
 /* 4m. Definiciones (consulta interpretada, configuración): término y valor, sin desborde */
-dl.interpretada { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: var(--e-2) var(--e-5); margin: 0; }
-dl.interpretada dt { font-weight: var(--peso-medio); }
-dl.interpretada dd { margin: 0; }
-dl.interpretada.apilada { grid-template-columns: minmax(0, 1fr); gap: 0; }
-dl.interpretada.apilada dt { font-size: var(--t-1); color: var(--texto-suave); }
-dl.interpretada.apilada dd { margin-bottom: var(--e-3); }
+.interpretada { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: var(--e-2) var(--e-5); margin: 0; }
+.interpretada dt { font-weight: var(--peso-medio); }
+.interpretada dd { margin: 0; }
+.interpretada.apilada { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.interpretada.apilada dt { font-size: var(--t-1); color: var(--texto-suave); }
+.interpretada.apilada dd { margin-bottom: var(--e-3); }
 .lista-simple { list-style: none; margin: 0; padding: 0; font-family: var(--fuente-mono); font-size: var(--t-1); }
 
 /* 4n. Estado vacío: ilustración original + título + texto + acción */
@@ -565,10 +565,10 @@ dl.interpretada.apilada dd { margin-bottom: var(--e-3); }
 .boton-imagen:focus-visible { outline-offset: 3px; }
 
 /* 4r. Visor de fotos (dialog#visor): foto a la izquierda sobre la lupa oscura, metadatos a la derecha */
-dialog.visor { width: min(1120px, calc(100vw - 2rem)); max-width: none; max-height: calc(100vh - 2rem); margin: auto; padding: 0;
+.visor { width: min(1120px, calc(100vw - 2rem)); max-width: none; max-height: calc(100vh - 2rem); margin: auto; padding: 0;
   overflow: hidden; border: 0; border-radius: var(--radio-3); background: var(--superficie); color: var(--texto); box-shadow: var(--sombra-2); }
-dialog.visor[open] { display: flex; flex-direction: column; }
-dialog.visor::backdrop { background: var(--velo); }
+.visor[open] { display: flex; flex-direction: column; }
+.visor::backdrop { background: var(--velo); }
 .visor-cabecera { display: flex; align-items: center; gap: var(--e-4); min-height: 3.5rem; padding: var(--e-2) var(--e-3) var(--e-2) var(--e-5);
   border-bottom: 1px solid var(--borde-suave); }
 .visor-cabecera h2 { flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--t-3); }
@@ -588,26 +588,26 @@ dialog.visor::backdrop { background: var(--velo); }
 .visor-cuerpo figure :focus-visible { outline-color: var(--foco-cabecera); }
 
 /* 4s. Pie técnico (details): summary con resumen en mono; dentro, la dl, la barra apilada y la tabla de guardrails */
-details.pie-tecnico { margin-top: var(--e-5); background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-2);
+.pie-tecnico { margin-top: var(--e-5); background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-2);
   box-shadow: var(--sombra-1); font-size: var(--t-1); }
-details.pie-tecnico summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-3); min-height: 3rem;
+.pie-tecnico summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-3); min-height: 3rem;
   padding: var(--e-2) var(--e-4); list-style: none; cursor: pointer; border-radius: var(--radio-2); font-size: var(--t-2);
   font-weight: var(--peso-medio); color: var(--texto); }
-details.pie-tecnico summary::-webkit-details-marker { display: none; }
-details.pie-tecnico summary::before { content: ""; flex: none; width: .5rem; height: .5rem; margin: 0 .25rem; border-right: 2px solid currentColor;
+.pie-tecnico summary::-webkit-details-marker { display: none; }
+.pie-tecnico summary::before { content: ""; flex: none; width: .5rem; height: .5rem; margin: 0 .25rem; border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform var(--transicion); }
-details.pie-tecnico[open] summary::before { transform: rotate(45deg); }
-details.pie-tecnico summary > .icono { width: 18px; height: 18px; color: var(--texto-suave); }
-details.pie-tecnico summary:hover .pie-tecnico-titulo { text-decoration: underline; }
-details.pie-tecnico .resumen-tecnico { flex: 1 1 16rem; min-width: 0; font-family: var(--fuente-mono); font-size: var(--t-1);
+.pie-tecnico[open] summary::before { transform: rotate(45deg); }
+.pie-tecnico summary > .icono { width: 18px; height: 18px; color: var(--texto-suave); }
+.pie-tecnico summary:hover .pie-tecnico-titulo { text-decoration: underline; }
+.pie-tecnico .resumen-tecnico { flex: 1 1 16rem; min-width: 0; font-family: var(--fuente-mono); font-size: var(--t-1);
   font-weight: var(--peso-normal); color: var(--texto-suave); }
-details.pie-tecnico[open] summary { border-bottom: 1px solid var(--borde-suave); border-radius: var(--radio-2) var(--radio-2) 0 0; }
+.pie-tecnico[open] summary { border-bottom: 1px solid var(--borde-suave); border-radius: var(--radio-2) var(--radio-2) 0 0; }
 .pie-tecnico-cuerpo { padding: var(--e-3) var(--e-4) var(--e-4); }
-details.pie-tecnico dl { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: var(--e-1) var(--e-5);
+.pie-tecnico dl { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: var(--e-1) var(--e-5);
   margin: 0 0 var(--e-3); }
-details.pie-tecnico dt { font-weight: var(--peso-medio); color: var(--texto-suave); }
-details.pie-tecnico dd { margin: 0; font-family: var(--fuente-mono); font-size: var(--t-1); }
-details.pie-tecnico dd.id { overflow-wrap: anywhere; }
+.pie-tecnico dt { font-weight: var(--peso-medio); color: var(--texto-suave); }
+.pie-tecnico dd { margin: 0; font-family: var(--fuente-mono); font-size: var(--t-1); }
+.pie-tecnico dd.id { overflow-wrap: anywhere; }
 .transiciones { font-size: var(--t-1); color: var(--texto-suave); }
 
 /* 4t. Gráficas SVG propias (cada una con su tabla equivalente). Barras con extremos redondeados sobre una pista, rejilla
@@ -665,15 +665,16 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   .lateral-local-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
   .panel-cabecera, .panel-pie { padding-inline: var(--e-4); }
   .panel-cuerpo { padding: var(--e-4); }
-  dl.interpretada, details.pie-tecnico dl { grid-template-columns: minmax(0, 1fr); gap: 0 var(--e-4); }
-  dl.interpretada dd, details.pie-tecnico dd { margin-bottom: var(--e-2); }
-  dialog.visor { width: calc(100vw - 1rem); max-height: calc(100vh - 1rem); }
+  .interpretada, .pie-tecnico dl { grid-template-columns: minmax(0, 1fr); gap: 0 var(--e-4); }
+  .interpretada dd, .pie-tecnico dd { margin-bottom: var(--e-2); }
+  .visor { width: calc(100vw - 1rem); max-height: calc(100vh - 1rem); }
 }
 
 /* Barra lateral fija desde 1100 px: 216 px de grafito a la izquierda; la navegación es vertical y el elemento activo
    lleva fondo sutil y una barra naranja de 3 px a la izquierda. */
 @media (min-width: 1100px) {
-  .app { display: grid; grid-template-columns: var(--lateral-ancho) minmax(0, 1fr); }
+  .app { display: grid; grid-template-columns: var(--lateral-ancho) minmax(0, 1fr);
+    background: linear-gradient(to right, var(--lateral-fondo) var(--lateral-ancho), transparent var(--lateral-ancho)); }
   .lateral { position: sticky; top: 0; z-index: 10; align-self: start; flex-direction: column; flex-wrap: nowrap; align-items: stretch;
     gap: 0; height: 100vh; padding: var(--e-5) var(--e-3) var(--e-4); overflow-y: auto; }
   .marca { padding: 0 var(--e-2) var(--e-5); border-bottom: 1px solid var(--lateral-borde); }

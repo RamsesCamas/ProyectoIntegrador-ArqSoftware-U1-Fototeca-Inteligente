@@ -87,7 +87,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function cifra(valor, texto) {
-  return el("article", { clase: "tarjeta" }, el("p", { clase: "cifra", texto: valor }), el("p", { clase: "cifra-etiqueta", texto }));
+  return el("article", { clase: "cifra" }, el("p", { clase: "cifra-valor", texto: valor }), el("p", { clase: "cifra-etiqueta", texto }));
 }
 
 async function actualizarArchivo() {

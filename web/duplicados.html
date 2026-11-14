@@ -4,41 +4,61 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Duplicados · Fototeca Viva</title>
-  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1b1b'/%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.25'%3E%3Crect x='5.5' y='5.5' width='21' height='21' rx='4.5' stroke='%23f2f2f2'/%3E%3Crect x='9.5' y='11.25' width='13' height='9' rx='1' stroke='%23f2f2f2'/%3E%3Cpath d='M17 23.5c2.75 0 4.75-1.1 5.75-3.25' stroke='%23ff7a29' stroke-width='2.5'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/duplicados.css">
+  <link rel="modulepreload" href="js/iconos.js">
   <link rel="modulepreload" href="js/api.js">
   <link rel="modulepreload" href="js/comun.js">
+  <script type="module" src="js/shell.js"></script>
   <script type="module" src="js/duplicados.js"></script>
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
-  <header class="cabecera">
-    <div class="contenedor">
-      <a class="marca" href="index.html">Fototeca Viva <span>Catalogación accesible y trazable</span></a>
+  <div class="app">
+    <!-- ═══ Shell (dueño: sistema de diseño · T1) ═══ -->
+    <header class="lateral">
+      <a class="marca" href="index.html">
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect class="logo-montura" x="2" y="2" width="28" height="28" rx="6"/><rect class="logo-ventana" x="7.5" y="10" width="17" height="12" rx="1.5"/><path class="logo-trazo" d="M19.5 26.25c3.25 0 5.75-1.4 7-4"/></svg>
+        <span class="marca-texto"><span class="marca-nombre">Fototeca Viva</span><span class="marca-lema">Catalogación accesible y trazable</span></span>
+      </a>
       <nav class="navegacion" aria-label="Principal">
         <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="catalogar.html">Catalogar</a></li>
-          <li><a href="buscar.html">Buscar</a></li>
-          <li><a href="duplicados.html" aria-current="page">Duplicados</a></li>
-          <li><a href="archivo.html">Archivo</a></li>
-          <li><a href="metricas.html">Métricas</a></li>
+          <li><a href="index.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-inicio"/></svg><span>Inicio</span></a></li>
+          <li><a href="catalogar.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg><span>Catalogar</span></a></li>
+          <li><a href="buscar.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg><span>Buscar</span></a></li>
+          <li><a href="duplicados.html" aria-current="page"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-duplicados"/></svg><span>Duplicados</span></a></li>
+          <li><a href="archivo.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-archivo"/></svg><span>Archivo</span></a></li>
+          <li><a href="metricas.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-metricas"/></svg><span>Métricas</span></a></li>
         </ul>
       </nav>
+      <div class="lateral-estado">
+        <p class="lateral-local"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-sin-red"/></svg><span class="lateral-local-texto">Todo local · sin internet</span></p>
+        <p class="lateral-salud"><span class="solo-lectores">Estado del sistema: </span><span class="insignia neutra">Consultando…</span></p>
+      </div>
+    </header>
+    <div class="app-principal">
+      <div class="aviso-ia" role="note">
+        <p><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-info"/></svg><span>Las fichas y resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.</span></p>
+      </div>
+      <main id="contenido">
+        <header class="encabezado-pagina">
+          <div class="encabezado-texto">
+            <h1>Casi duplicados</h1>
+            <p class="encabezado-descripcion">Fotos que el sistema detectó como muy parecidas al cargarlas (recortes, recompresiones, copias con marco). Revisa cada grupo y conserva la mejor versión.</p>
+          </div>
+          <div class="encabezado-acciones"></div>
+        </header>
+        <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
+        <section id="estado" aria-live="polite"></section>
+        <div id="grupos"></div>
+        <!-- ═══ Fin del contenido de la página ═══ -->
+      </main>
+      <footer class="pie">
+        <p>Proyecto integrador · Tópicos Selectos de Arquitectura de Software · MCIT UPChiapas</p>
+      </footer>
     </div>
-  </header>
-  <div class="aviso-ia" role="note">
-    <p class="contenedor">Las fichas y resultados los generan modelos de IA y pueden contener errores. Revísalos antes de publicarlos.</p>
   </div>
-  <main id="contenido" class="contenedor">
-    <h1>Casi duplicados</h1>
-    <p class="intro">Fotos que el sistema detectó como muy parecidas al cargarlas (recortes, recompresiones, copias con
-      marco). Revisa cada grupo y conserva la mejor versión.</p>
-    <section id="estado" aria-live="polite"></section>
-    <div id="grupos"></div>
-  </main>
-  <footer class="pie">
-    <div class="contenedor">Proyecto integrador · Tópicos Selectos de Arquitectura de Software · MCIT UPChiapas</div>
-  </footer>
   <div id="anuncios" class="solo-lectores" aria-live="polite"></div>
 </body>
 </html>

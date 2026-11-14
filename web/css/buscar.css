@@ -1,0 +1,30 @@
+/* Buscar · búsqueda por texto o por foto, consulta interpretada y resultados con razones. Solo maquetación y piezas
+   propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado
+   de v1 al sistema v3. */
+
+.busqueda .fila > input[type="search"] { flex: 1 1 18rem; }
+.busqueda .fila > .boton { min-height: var(--alto-campo); }
+.busqueda-foto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); margin-top: var(--e-4);
+  padding-top: var(--e-4); border-top: 1px solid var(--borde-suave); }
+.busqueda-foto > * { min-width: 0; }
+.busqueda-foto label { margin: 0; }
+.busqueda-foto .ayuda { flex: 1 1 100%; margin: 0; }
+.busqueda.activa { border-style: dashed; border-color: var(--acento); background: var(--acento-fondo); }
+
+#interpretada .tarjeta { margin-top: var(--e-4); }
+#interpretada h2 { margin: 0 0 var(--e-3); font-size: var(--t-3); }
+
+.resultados { margin-top: var(--e-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+.resultado { display: flex; flex-direction: column; gap: var(--e-1); padding: var(--e-3); }
+.resultado img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio-1);
+  background: var(--lupa-fondo); }
+.resultado h3 { margin: var(--e-2) 0 0; font-size: var(--t-2); }
+.resultado h3 a { display: inline-block; padding-block: .2em; }
+.puntaje { margin: 0; font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
+.razones { margin: var(--e-1) 0 0; padding-left: 1.1rem; font-size: var(--t-1); color: var(--texto-suave); }
+
+/* Con ratón, «Ver en grande» aparece al pasar o enfocar (la cuadrícula queda limpia); en pantallas táctiles, siempre */
+@media (hover: hover) {
+  .resultado .lupa { visibility: hidden; }
+  .resultado .boton-imagen:is(:hover, :focus-visible) .lupa { visibility: visible; }
+}
