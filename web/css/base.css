@@ -502,6 +502,8 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
 .tabla tbody tr { transition: background-color var(--transicion); }
 .tabla tbody tr:hover { background: var(--superficie-2); }
 .tabla .num { text-align: right; }
+/* La columna principal (encabezado de fila) no se estrangula: si la tabla no cabe, se desplaza en horizontal */
+.tabla:not(.tabla-compacta) tbody th[scope="row"] { min-width: 12rem; }
 .tabla caption { text-align: left; }
 .tabla-compacta { font-size: var(--t-1); margin: var(--e-2) 0; }
 .tabla-compacta th, .tabla-compacta td { padding: var(--e-1) var(--e-2); }
