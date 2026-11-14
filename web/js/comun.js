@@ -145,15 +145,49 @@ export function pieTecnico(meta) {
       meta.transiciones?.length ? el("p", { clase: "transiciones", texto: `Estados: ${meta.transiciones.join(" · ")}` }) : null));
 }
 
-const ICONO_MENSAJE = { ok: "check", info: "info", aviso: "alerta", error: "error" };
+// Solo el aviso y el error llevan símbolo (comunica algo); el resto es el filete y el texto
+const ICONO_MENSAJE = { aviso: "alerta", error: "error" };
 
 /**
  * Nodo de mensaje con su icono a la izquierda. Tipos: error (role=alert), ok, info (progreso, conteos y estados
  * vacíos) y aviso. `contenido` es texto o nodos (p. ej. un párrafo y una lista).
  */
 export function crearMensaje(contenido, tipo = "error") {
-  return el("div", { clase: `mensaje ${tipo} con-icono`, role: tipo === "error" ? "alert" : "status" },
-    icono(ICONO_MENSAJE[tipo] || "info", "mensaje-icono"), el("div", { clase: "mensaje-texto" }, contenido));
+  const simbolo = ICONO_MENSAJE[tipo];
+  return el("div", { clase: `mensaje ${tipo}${simbolo ? " con-icono" : ""}`, role: tipo === "error" ? "alert" : "status" },
+    simbolo ? icono(simbolo, "mensaje-icono") : null, el("div", { clase: "mensaje-texto" }, contenido));
+}
+
+// ── Lápiz graso ──
+// Trazos a mano (no geométricos) del lápiz graso del editor, en el viewBox de cada tipo. Varias variantes por tipo para
+// que dos marcas en la misma pantalla no se vean idénticas. El CSS (.lapiz-<tipo>) los posiciona sobre su padre.
+const TRAZOS_LAPIZ = {
+  circulo: [
+    "M 46 50 C 80 16, 176 6, 240 18 C 288 28, 298 74, 291 116 C 283 162, 230 194, 152 195 C 80 196, 16 170, 9 120 C 3 78, 32 44, 96 28",
+    "M 70 26 C 130 4, 228 10, 272 46 C 302 72, 294 140, 258 170 C 220 198, 116 200, 58 176 C 14 158, 2 104, 20 68 C 36 38, 92 18, 168 12",
+    "M 28 84 C 40 30, 124 6, 204 12 C 270 18, 300 62, 292 114 C 284 168, 212 196, 138 192 C 68 188, 12 156, 10 108 C 9 72, 52 36, 116 22",
+  ],
+  subrayado: [
+    "M 4 12 C 60 5, 128 15, 186 9 C 226 5, 262 11, 296 6",
+    "M 3 8 C 54 14, 120 4, 180 11 C 228 16, 266 6, 297 10",
+  ],
+  tachado: ["M 22 30 C 90 80, 180 130, 280 172 M 278 24 C 196 70, 104 128, 18 176"],
+};
+const CAJA_LAPIZ = { circulo: "0 0 300 200", subrayado: "0 0 300 20", tachado: "0 0 300 200" };
+let turnoLapiz = 0;
+
+/**
+ * Marca de lápiz graso: `marcaLapiz("circulo" | "subrayado" | "tachado")` devuelve <svg class="lapiz lapiz-<tipo>">
+ * (decorativo, aria-hidden). Ponla dentro del elemento que marca, con position: relative (p. ej. el .cuadro-foto de un
+ * fotograma o el rótulo de un .campo.atencion). Solo donde la marca significa algo, 2 o 3 por pantalla como máximo.
+ */
+export function marcaLapiz(tipo = "circulo") {
+  const clave = TRAZOS_LAPIZ[tipo] ? tipo : "circulo";
+  const trazos = TRAZOS_LAPIZ[clave];
+  const marca = svg("svg", { class: `lapiz lapiz-${clave}`, viewBox: CAJA_LAPIZ[clave], preserveAspectRatio: "none",
+    "aria-hidden": "true", focusable: "false" });
+  marca.append(svg("path", { d: trazos[turnoLapiz++ % trazos.length] }));
+  return marca;
 }
 
 /** Mensaje en un contenedor (reemplaza lo que hubiera). */
@@ -195,7 +229,7 @@ export function leyendaFuentes(conteos) {
   const tipos = Object.keys(FUENTES).filter((t) => conteos[t]).concat(Object.keys(conteos).filter((t) => !FUENTES[t] && conteos[t]));
   return el("ul", { clase: "leyenda-fuentes", "aria-label": "Tipos de fuente de la ficha" }, tipos.map((t) => {
     const f = fuente(t);
-    return el("li", {}, el("span", { clase: `chip ${f.claseChip}` }, icono(f.icono), f.etiqueta),
+    return el("li", {}, el("span", { clase: `chip ${f.claseChip}` }, f.etiqueta),
       el("span", { clase: "conteo", texto: `${numero(conteos[t])} ${conteos[t] === 1 ? "cita" : "citas"}` }));
   }));
 }
