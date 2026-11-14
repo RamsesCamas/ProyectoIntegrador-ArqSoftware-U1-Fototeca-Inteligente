@@ -1,10 +1,10 @@
 // Catalogar: subir fotos → espera informativa → ficha IPTC como Inspector (fuentes por campo) → opinión y validación.
-// Con varias fotos, un lote con su progreso. catalogar.html?doc=ID abre la ficha guardada como página propia (migas
-// «Archivo › id», h1 con el titular) o la genera si la foto todavía no tiene.
+// Con varias fotos, un lote con su progreso. La ficha (recién generada o guardada, catalogar.html?doc=ID) es la página:
+// el encabezado lleva migas, el titular como h1, su estado y cómo se generó.
 import { api, anunciar, el, insignia } from "./api.js";
 import {
   abrirVisor, CAPAS, crearMensaje, fuente, leyendaFuentes, mensaje, metadatosQuitados, miniatura, numero, ORDEN_CAPAS,
-  pieTecnico, segundos, textoGuardrail, verFotoGuardada,
+  pieTecnico, segundos, verFotoGuardada,
 } from "./comun.js";
 import { icono } from "./iconos.js";
 
@@ -14,6 +14,10 @@ const ETIQUETAS_CAMPO = {
 };
 const CAMPOS_TEXTO = ["titular", "texto_alternativo", "descripcion", "descripcion_extendida"];
 const MAXIMOS = { titular: 120, texto_alternativo: 250, descripcion: 800, descripcion_extendida: 1200 };
+const PISTAS = {
+  titular: "Escribe el titular (máx. 120)", texto_alternativo: "Escribe el texto alternativo (máx. 250)",
+  descripcion: "Escribe la descripción (máx. 800)", descripcion_extendida: "Escribe la descripción extendida (máx. 1200)",
+};
 const AVISO_ALT = 225;   // el texto alternativo pasa a ámbar desde aquí (y a rojo por encima de 250)
 const FILAS = { texto_alternativo: "3", descripcion: "4", descripcion_extendida: "4" };
 /** Icono de cada capa de la tubería (el mismo que en Inicio y Métricas). */
@@ -22,10 +26,12 @@ const ICONO_CAPA = {
   modelo_vision: "ojo", modelo_composicion: "pluma", guardrails_salida: "escudo-check",
 };
 const RUTAS = { rapida: "ruta rápida", completa: "ruta completa", cache: "desde la caché" };
+// La ruta rápida (prompt P2) solo pide titular, texto alternativo y palabras clave; flujo_ficha deja vacíos los demás
+const NO_GENERA_RAPIDA = ["descripcion", "descripcion_extendida"];
 const NOTA_SOLO_LECTURA = "Ficha del archivo inicial, sin traza: se puede consultar, pero no calificar ni validar desde aquí.";
 const SIN_CONTENIDO = "Sin contenido";
-const OTRA_PESTANA = { target: "_blank", rel: "noopener" };
 const EXTERNO = "enlace externo, requiere internet";
+const OTRA_PESTANA = { target: "_blank", rel: "noopener" };
 const MAX_PREVIAS = 24;
 const ANUNCIO_CADA_S = 20;   // lectores de pantalla: un aviso de progreso cada 20 s, no cada segundo
 const movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -51,11 +57,14 @@ const loteProgreso = $("lote-progreso");
 const listaLote = $("lista-lote");
 let urlsPrevias = [];
 let ocupado = false;
+let loteEnCurso = false;
 
 const tamano = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
 const plural = (n, uno, varios) => `${numero(n)} ${n === 1 ? uno : varios}`;
 const enc = encodeURIComponent;
 const vacio = (v) => !String(v ?? "").trim();
+/** «a», «a y b», «a, b y c». */
+const enumerar = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} y ${xs[xs.length - 1]}`);
 /** Tiempo de reloj en m:ss (h:mm:ss si pasa de una hora). */
 function reloj(s) {
   const t = Math.max(0, Math.round(s));
@@ -70,15 +79,18 @@ const insigniaSoloLectura = () => el("span", { clase: "insignia neutra" }, icono
 // ── Fuentes de cada campo (trazabilidad): un solo nombre por tipo, el de la leyenda ──
 const puntajeChip = (p) => (typeof p === "number" && Number.isFinite(p) ? el("span", { clase: "puntaje-chip", texto: p.toFixed(2) }) : null);
 const claseDe = (tipo) => `chip ${fuente(tipo).claseChip || `chip-${tipo}`}`;
+/** Texto de la cita: en una línea, con elipsis si no cabe (la cita completa va en el title del chip). */
+const textoChip = (texto) => el("span", { clase: "chip-texto", texto });
 
 /**
  * Fuente de un campo como chip, con el icono, el color y el nombre de su tipo (los mismos de la leyenda) y el detalle
- * solo si aporta: la regla concreta, el término del tesauro o la etiqueta. Una foto similar lleva su miniatura y abre el
- * visor con la foto y la ficha del ejemplo; la regla lleva su extracto en el título (legible sin red).
+ * solo si aporta: la regla concreta, el término del tesauro o la etiqueta. El texto va en .chip-texto (una línea con
+ * elipsis) y el puntaje fuera, para que nunca se corte. Una foto similar lleva su miniatura y abre el visor con la foto
+ * y la ficha del ejemplo. La regla no es enlace (sin red no abre): su extracto y su URL van en el title.
  */
-function chipFuente(f) {
+function chipFuente(f, { descartada = false } = {}) {
   const tipo = fuente(f.tipo);
-  const clase = claseDe(f.tipo);
+  const clase = `${claseDe(f.tipo)}${descartada ? " descartada" : ""}`;
   const puntaje = puntajeChip(f.puntaje);
   const detalle = f.titulo || f.id;
   if (f.tipo === "foto_similar") {
@@ -86,45 +98,48 @@ function chipFuente(f) {
       onclick: () => verFotoGuardada(f.id, { titulo: "Foto similar usada como ejemplo",
         extra: [["Puntaje de recuperación", typeof f.puntaje === "number" ? f.puntaje.toFixed(2) : f.puntaje]] }) },
       el("img", { src: `/api/fotos/${enc(f.id)}/miniatura?lado=96`, alt: "", width: "24", height: "24", decoding: "async" }),
-      tipo.etiqueta, puntaje, el("span", { clase: "solo-lectores", texto: `: ${detalle} (ver la foto y su ficha)` }));
+      textoChip(tipo.etiqueta), puntaje, el("span", { clase: "solo-lectores", texto: `: ${detalle} (ver la foto y su ficha)` }));
   }
   if (f.tipo === "regla") {
-    const titulo = f.extracto ? `${f.extracto}\n\nFragmento ${f.id}` : `Fragmento ${f.id}`;
-    return f.url
-      ? el("a", { clase, href: f.url, ...OTRA_PESTANA, title: `${titulo}\n(${EXTERNO})` }, icono(tipo.icono), `${tipo.etiqueta}: ${detalle}`, puntaje,
-        el("span", { clase: "externo", "aria-hidden": "true", texto: "↗" }),
-        el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id}; ${EXTERNO}; se abre en otra pestaña)` }))
-      : el("span", { clase, title: titulo }, icono(tipo.icono), `${tipo.etiqueta}: ${detalle}`, puntaje,
-        el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id})` }));
+    const cita = `${tipo.etiqueta}: ${detalle}`;
+    const titulo = [cita, f.extracto, `Fragmento ${f.id}`, f.url ? `${f.url} (${EXTERNO})` : null].filter(Boolean).join("\n\n");
+    return el("span", { clase, title: titulo }, icono(tipo.icono), textoChip(cita), puntaje,
+      el("span", { clase: "solo-lectores", texto: ` (fragmento ${f.id})` }));
   }
   // Referencia humana y archivista: el tipo basta (el detalle, p. ej. el corpus y su licencia, va en el título)
   const texto = f.tipo === "referencia_humana" || f.tipo === "archivista" ? tipo.etiqueta : `${tipo.etiqueta}: ${detalle}`;
-  return el("span", { clase, title: detalle }, icono(tipo.icono), texto, puntaje);
+  return el("span", { clase, title: texto === detalle ? texto : `${texto}\n${detalle}` }, icono(tipo.icono), textoChip(texto), puntaje);
 }
 
 const sinFuente = () => el("span", { clase: "sin-fuente" }, icono("alerta"), "Sin fuente verificable");
 /** Un campo vacío no necesita fuente: se dice en gris, sin aviso (y no cuenta en «Procedencia»). */
 const noAplica = () => el("span", { clase: "sin-fuente campo-vacio", texto: "no aplica (sin contenido)" });
 
-function filaFuentes(id, fuentes, estaVacio) {
+/**
+ * Fila «Fuentes:» de un campo. Si el texto generado se descartó (un guardrail lo vació), sus citas ya no respaldan
+ * nada: se rotulan «Fuente del texto descartado» y se ven tachadas.
+ */
+function filaFuentes(id, fuentes, estaVacio, { descartadas = false } = {}) {
   const lista = fuentes || [];
-  return el("div", { clase: "fuentes", id },
-    el("span", { clase: "fuentes-titulo", texto: "Fuentes:" }), lista.length ? lista.map(chipFuente) : estaVacio ? noAplica() : sinFuente());
+  const rotulo = descartadas && lista.length ? "Fuente del texto descartado:" : "Fuentes:";
+  return el("div", { clase: `fuentes${descartadas && lista.length ? " fuentes-descartadas" : ""}`, id },
+    el("span", { clase: "fuentes-titulo", texto: rotulo }),
+    lista.length ? lista.map((f) => chipFuente(f, { descartada: descartadas })) : estaVacio ? noAplica() : sinFuente());
 }
 
 /** Panel «Procedencia de la ficha»: leyenda de los tipos con sus citas y los campos CON texto que no citan fuente. */
-function panelProcedencia(ficha, fuentes) {
+function panelProcedencia(ficha, fuentes, descartes = {}) {
   const conteos = {};
   const sinCitas = [];
   for (const c of [...CAMPOS_TEXTO, "palabras_clave"]) {
-    const lista = fuentes[c] || [];
+    const lista = descartes[c] ? [] : fuentes[c] || [];   // las citas de un texto descartado no cuentan
     const conTexto = c === "palabras_clave" ? (ficha.palabras_clave || []).length > 0 : !vacio(ficha[c]);
     if (conTexto && !lista.length) sinCitas.push(ETIQUETAS_CAMPO[c]);
     for (const f of lista) conteos[f.tipo] = (conteos[f.tipo] || 0) + 1;
   }
   const total = Object.values(conteos).reduce((a, b) => a + b, 0);
   return el("section", { clase: "panel procedencia", "aria-labelledby": "titulo-procedencia" },
-    el("header", { clase: "panel-cabecera" }, icono("tesauro"), el("h3", { id: "titulo-procedencia", texto: "Procedencia de la ficha" }),
+    el("header", { clase: "panel-cabecera" }, icono("tesauro"), el("h2", { id: "titulo-procedencia", texto: "Procedencia de la ficha" }),
       el("p", { clase: "panel-auxiliar", texto: plural(total, "cita", "citas") })),
     el("div", { clase: "panel-cuerpo" },
       total ? leyendaFuentes(conteos) : el("p", { clase: "suave", texto: "Ningún campo cita una fuente todavía." }),
@@ -135,29 +150,65 @@ function panelProcedencia(ficha, fuentes) {
           el("span", { texto: "Todos los campos con contenido citan una fuente." }))));
 }
 
+// ── Por qué un campo llegó vacío (solo lo que el servicio reporta o lo que el código garantiza) ──
+/** Campos que un guardrail de salida vació: { campo: explicación }. */
+function camposDescartados(ficha, meta) {
+  const r = {};
+  for (const g of meta?.guardrails?.salida || []) {
+    if (g.verificacion === "copia_contexto" && g.resultado === "marcada" && g.detalle?.titular && vacio(ficha.titular)) {
+      r.titular = `Se dejó vacío: el titular generado ${g.detalle.titular} (guardrail copia_contexto). Escríbelo antes de validar.`;
+    }
+    if (g.verificacion === "instrucciones_en_salida") {
+      for (const c of g.detalle?.campos_vaciados || []) {
+        if (CAMPOS_TEXTO.includes(c) && vacio(ficha[c])) {
+          r[c] = "Se dejó vacío: reproducía una instrucción escrita en la foto (guardrail instrucciones_en_salida). Escríbelo antes de validar.";
+        }
+      }
+    }
+  }
+  return r;
+}
+
+/** Campos que la ruta rápida no genera (su esquema no los pide): una nota neutra, no un aviso. */
+function notasDeRuta(ficha, meta, descartes) {
+  const r = {};
+  if (meta?.ruta !== "rapida") return r;
+  for (const c of NO_GENERA_RAPIDA) {
+    if (vacio(ficha[c]) && !descartes[c]) r[c] = "La ruta rápida no genera este campo (solo titular, texto alternativo y palabras clave).";
+  }
+  return r;
+}
+
 // ── Campos de la ficha ──
 /**
- * Un campo: etiqueta con su contador en mono a la derecha, el control (en edición) o el texto plano (en solo lectura) y
- * su fila «Fuentes:». El texto alternativo lleva además una barra neutra: ámbar desde 225 y roja por encima de 250.
+ * Un campo: etiqueta (y, al validar, «Editado por el archivista») con su contador en mono a la derecha, el control (en
+ * edición) o el texto plano (en solo lectura), el aviso en línea si un guardrail lo vació (ámbar, ligado con
+ * aria-describedby) o la nota de la ruta, y su fila «Fuentes:». El texto alternativo lleva además una barra neutra:
+ * ámbar desde 225 y roja por encima de 250.
  */
-function campoTexto(nombre, valor, fuentes, soloLectura) {
+function campoTexto(nombre, valor, fuentes, soloLectura, { descarte = null, nota = null } = {}) {
   const id = `campo-${nombre}`;
   const idContador = `${id}-contador`;
+  const idAviso = `${id}-aviso`;
   const max = MAXIMOS[nombre];
   const estaVacio = vacio(valor);
   const contador = el("span", { clase: "contador", id: idContador });
   const etiqueta = soloLectura ? el("span", { clase: "etiqueta", id: `${id}-etiqueta`, texto: ETIQUETAS_CAMPO[nombre] })
     : el("label", { for: id, texto: ETIQUETAS_CAMPO[nombre] });
+  const marca = el("span", { clase: "marca-archivista", hidden: true }, icono("archivista"), "Editado por el archivista");
+  const avisoCampo = descarte ? el("p", { clase: "aviso-campo", id: idAviso }, icono("alerta"), el("span", { texto: descarte }))
+    : nota ? el("p", { clase: "nota-campo", id: idAviso }, icono("info"), el("span", { texto: nota })) : null;
+  const describir = () => [idContador, avisoCampo ? idAviso : null, `${id}-fuentes`].filter(Boolean).join(" ");
   let control;
   if (soloLectura) {
-    control = el("p", { id, clase: `valor-ficha${estaVacio ? " sin-contenido" : ""}`, "aria-labelledby": `${id}-etiqueta`,
-      "aria-describedby": `${idContador} ${id}-fuentes` }, estaVacio ? SIN_CONTENIDO : valor);
+    control = el("p", { id, clase: `valor-ficha${estaVacio ? " sin-contenido" : ""}`, "aria-labelledby": `${id}-etiqueta` },
+      estaVacio ? SIN_CONTENIDO : valor);
   } else {
     control = nombre === "titular"
-      ? el("input", { id, name: nombre, type: "text", value: valor || "", maxlength: max, placeholder: SIN_CONTENIDO, autocomplete: "off" })
-      : el("textarea", { id, name: nombre, rows: FILAS[nombre], maxlength: max, placeholder: SIN_CONTENIDO }, valor || "");
-    control.setAttribute("aria-describedby", `${idContador} ${id}-fuentes`);
+      ? el("input", { id, name: nombre, type: "text", value: valor || "", maxlength: max, placeholder: PISTAS[nombre], autocomplete: "off" })
+      : el("textarea", { id, name: nombre, rows: FILAS[nombre], maxlength: max, placeholder: PISTAS[nombre] }, valor || "");
   }
+  control.setAttribute("aria-describedby", describir());
   const relleno = nombre === "texto_alternativo" ? el("span", { clase: "barra-limite-relleno" }) : null;
   const barra = relleno ? el("div", { clase: "barra-limite", "aria-hidden": "true" }, relleno) : null;
   const actualizar = () => {
@@ -176,14 +227,36 @@ function campoTexto(nombre, valor, fuentes, soloLectura) {
     if (nombre === "titular") control.addEventListener("keydown", (ev) => { if (ev.key === "Enter") ev.preventDefault(); });
   }
   actualizar();
-  return el("div", { clase: "campo campo-ficha" }, el("div", { clase: "campo-cabecera" }, etiqueta, contador),
-    control, barra, filaFuentes(`${id}-fuentes`, fuentes, estaVacio));
+  let fila = filaFuentes(`${id}-fuentes`, fuentes, estaVacio, { descartadas: Boolean(descarte) });
+  const nodo = el("div", { clase: `campo campo-ficha${descarte ? " campo-descartado" : ""}` },
+    el("div", { clase: "campo-cabecera" }, el("span", { clase: "campo-rotulo" }, etiqueta, marca), contador),
+    control, barra, avisoCampo, fila);
+  return {
+    nodo,
+    control,
+    /** Tras validar: marca de edición (dato del formulario), fuentes guardadas (dato de la API) y, si el campo ya tiene
+     *  texto, sin el aviso del guardrail. */
+    validado(nuevasFuentes, editado) {
+      if (editado) marca.hidden = false;
+      const vacioAhora = soloLectura ? estaVacio : vacio(control.value);
+      if (!vacioAhora && avisoCampo) {
+        avisoCampo.remove();
+        nodo.classList.remove("campo-descartado");
+        control.setAttribute("aria-describedby", `${idContador} ${id}-fuentes`);
+      }
+      if (nuevasFuentes) {
+        const nueva = filaFuentes(`${id}-fuentes`, nuevasFuentes, vacioAhora, { descartadas: Boolean(descarte) && vacioAhora });
+        fila.replaceWith(nueva);
+        fila = nueva;
+      }
+    },
+  };
 }
 
 /**
  * Qué fuente respalda cada palabra: su término del Tesauro de la UNESCO (con su puntaje) y, en las fichas del archivo
  * inicial, la etiqueta de Open Images de la que salió (la fuente que la precede en la lista). Lo que no se puede
- * asignar a una palabra (p. ej. las fotos similares) queda en una fila «Para todas las palabras».
+ * asignar a una palabra (p. ej. las fotos similares o la corrección del archivista) queda en «Para todas las palabras».
  */
 function origenPalabras(items, fuentes) {
   const usadas = new Set();
@@ -197,7 +270,8 @@ function origenPalabras(items, fuentes) {
   const conEtiqueta = filas.some((f) => f.etiqueta);
   const resto = fuentes.filter((_, j) => !usadas.has(j));
   const celdaTesauro = (f) => el("span", { clase: "celda-fuente" },
-    el("span", { clase: claseDe("tesauro"), title: f.id }, icono(fuente("tesauro").icono), f.titulo || f.id, puntajeChip(f.puntaje)),
+    el("span", { clase: claseDe("tesauro"), title: `${f.titulo || f.id}\n${f.id}` }, icono(fuente("tesauro").icono), textoChip(f.titulo || f.id),
+      puntajeChip(f.puntaje)),
     /^https?:/.test(f.id || "") ? el("a", { clase: "enlace-externo", href: f.id, ...OTRA_PESTANA, title: `${f.id} (${EXTERNO})`,
       "aria-label": `${f.titulo || f.id} en el Tesauro de la UNESCO (${EXTERNO}; se abre en otra pestaña)` }, icono("externo")) : null);
   const nodos = [];
@@ -210,12 +284,13 @@ function origenPalabras(items, fuentes) {
         el("th", { scope: "row", texto: p.termino }),
         el("td", {}, tesauro ? celdaTesauro(tesauro) : el("span", { clase: "suave", texto: "Término libre" })),
         conEtiqueta ? el("td", {}, etiqueta
-          ? el("span", { clase: claseDe("etiqueta_open_images"), title: etiqueta.id }, icono(fuente("etiqueta_open_images").icono), etiqueta.titulo || etiqueta.id)
+          ? el("span", { clase: claseDe("etiqueta_open_images"), title: `${etiqueta.titulo || etiqueta.id}\n${etiqueta.id}` },
+            icono(fuente("etiqueta_open_images").icono), textoChip(etiqueta.titulo || etiqueta.id))
           : el("span", { clase: "suave", texto: "—" })) : null))))));
   }
   if (resto.length || !filas.length) {
     nodos.push(el("div", { clase: "fuentes" }, el("span", { clase: "fuentes-titulo", texto: filas.length ? "Para todas las palabras:" : "Fuentes:" }),
-      resto.length ? resto.map(chipFuente) : noAplica()));
+      resto.length ? resto.map((f) => chipFuente(f)) : noAplica()));
   }
   return nodos;
 }
@@ -223,8 +298,9 @@ function origenPalabras(items, fuentes) {
 function campoPalabras(palabras, fuentes, soloLectura) {
   const lista = el("ul", { clase: "etiquetas-clave", id: "palabras-lista", "aria-labelledby": "palabras-titulo" });
   const items = [...palabras];
-  const todas = fuentes || [];
+  let todas = fuentes || [];
   const origen = el("div", { clase: "fuentes-palabras", id: "campo-palabras_clave-fuentes" });
+  const marca = el("p", { clase: "marca-archivista", hidden: true }, icono("archivista"), "Editadas por el archivista");
   const entrada = soloLectura ? null : el("input", { id: "palabra-nueva", type: "text", maxlength: "80", placeholder: "Nueva palabra clave",
     autocomplete: "off" });
   // Las palabras son chips cuadrados de texto (sin enlace): su término del tesauro, con su enlace, va en la tabla de abajo
@@ -253,22 +329,46 @@ function campoPalabras(palabras, fuentes, soloLectura) {
   entrada?.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); agregar(); } });
   pintar();
   return {
-    nodo: el("div", { clase: "campo campo-ficha" }, lista,
+    nodo: el("div", { clase: "campo campo-ficha" }, marca, lista,
       soloLectura ? null : [el("label", { for: "palabra-nueva", clase: "solo-lectores", texto: "Agregar palabra clave" }),
         el("div", { clase: "fila agregar-palabra" }, entrada,
           el("button", { type: "button", clase: "boton secundario", onclick: agregar }, icono("mas"), "Agregar"))],
       origen),
     items,
-    reemplazar: (nuevas) => { items.splice(0, items.length, ...nuevas); pintar(); },
+    /** Tras validar: las palabras normalizadas que devolvió la API, sus fuentes guardadas y la marca de edición. */
+    validado(nuevas, nuevasFuentes, editado) {
+      items.splice(0, items.length, ...nuevas);
+      if (nuevasFuentes) todas = nuevasFuentes;
+      if (editado) marca.hidden = false;
+      pintar();
+    },
   };
 }
 
 /** Sección del inspector con su sobretítulo (14 px, seminegrita, gris, con regla encima). */
 const seccion = (id, titulo, ...hijos) => el("div", { clase: "seccion", role: "group", "aria-labelledby": id },
-  el("h4", { id, clase: "seccion-titulo", texto: titulo }), ...hijos);
+  el("h3", { id, clase: "seccion-titulo", texto: titulo }), ...hijos);
 
-/** Avisos de la ficha: posible duplicado, advertencias del modelo, motivos de revisión y guardrails que actuaron. */
-function avisos(ficha, meta) {
+/** Guardrail legible: «copia_contexto · marcada», con su valor y umbral rotulados si los tiene. */
+function guardrailLegible(g) {
+  const partes = [`${g.verificacion} · ${g.resultado}`];
+  if (g.umbral !== undefined && g.umbral !== null && g.valor !== undefined && g.valor !== null) partes.push(`valor ${g.valor}, umbral ${g.umbral}`);
+  else if (g.verificacion === "copia_contexto" && g.valor) partes.push(`${g.valor} palabras clave quitadas`);
+  return partes.join(" · ");
+}
+
+const mencionaCampo = (texto, c) => {
+  const t = texto.toLocaleLowerCase("es");
+  return t.includes(ETIQUETAS_CAMPO[c].toLocaleLowerCase("es")) || t.includes(c);
+};
+
+/**
+ * Avisos de la ficha. Antes de validar, un resumen ámbar: qué campos requieren atención (con un botón que lleva al
+ * campo; la explicación está en el campo), una frase por cada otra causa y los guardrails que actuaron, en mono. Después
+ * de validar, lo resuelto pasa a una nota neutra plegada («Resuelto al validar: …»); lo que siga pendiente, en ámbar.
+ * Un posible duplicado va aparte.
+ */
+function avisos(ficha, meta, descartes, campos, { resueltos = null } = {}) {
   const nodos = [];
   if (meta?.duplicado_de) {
     const sim = meta.duplicado_de.similitud;
@@ -276,16 +376,57 @@ function avisos(ficha, meta) {
       el("a", { href: `catalogar.html?doc=${enc(meta.duplicado_de.documento_id)}`, clase: "id", texto: meta.duplicado_de.documento_id }),
       ` (similitud ${typeof sim === "number" ? sim.toFixed(2) : sim}). Se reutilizó su ficha: revísala antes de validarla.`], "aviso"));
   }
-  const grupos = [];
-  if (ficha.advertencias?.length) grupos.push(["Advertencias:", ficha.advertencias]);
-  if (meta?.revision?.length) grupos.push(["Requiere revisión porque:", meta.revision]);
+  const vaciados = Object.keys(descartes);
+  const cubierto = (t) => /vac[ií]/i.test(t) && vaciados.some((c) => mencionaCampo(t, c));
+  const vistos = new Set();
+  const otros = [...(ficha.advertencias || []), ...(meta?.revision || [])].filter((t) => {
+    const clave = t.toLocaleLowerCase("es").replace(/[^\p{L}\d]+/gu, " ").trim();
+    if (cubierto(t) || vistos.has(clave)) return false;
+    vistos.add(clave);
+    return true;
+  });
   const activados = [...(meta?.guardrails?.entrada || []), ...(meta?.guardrails?.salida || [])].filter((g) => g.resultado !== "aprobada");
-  if (activados.length) grupos.push(["Guardrails que actuaron:", activados.map(textoGuardrail)]);
-  if (grupos.length) {
-    const m = crearMensaje(grupos.map(([titulo, lista]) => el("div", { clase: "aviso-grupo" },
-      el("p", { clase: "aviso-titulo", texto: titulo }), el("ul", {}, lista.map((t) => el("li", { texto: t }))))), "aviso");
+  const irA = (c) => el("button", { type: "button", clase: "boton-enlace", onclick: () => {
+    const control = campos[c]?.control;
+    if (!control) return;
+    control.scrollIntoView({ block: "center", behavior: movimientoReducido.matches ? "auto" : "smooth" });
+    control.focus({ preventScroll: true });
+  } }, ETIQUETAS_CAMPO[c]);
+  const listaCampos = (cs) => cs.flatMap((c, i) => [i ? (i === cs.length - 1 ? " y " : ", ") : "", irA(c)]);
+  const grupoOtros = otros.length ? el("div", { clase: "aviso-grupo" }, el("p", { clase: "aviso-titulo", texto: resueltos ? "Avisos de la generación:" : "Además:" }),
+    el("ul", {}, otros.map((t) => el("li", { texto: t })))) : null;
+  const grupoGuardrails = activados.length ? el("div", { clase: "aviso-grupo" }, el("p", { clase: "aviso-titulo", texto: "Guardrails que actuaron:" }),
+    el("ul", { clase: "lista-guardrails" }, activados.map((g) => el("li", { texto: guardrailLegible(g) })))) : null;
+
+  if (!resueltos) {
+    if (!vaciados.length && !otros.length && !activados.length) return nodos;
+    const titulo = vaciados.length
+      ? el("p", { clase: "aviso-titulo" }, `${vaciados.length === 1 ? "1 campo requiere" : `${vaciados.length} campos requieren`} tu atención: `,
+        ...listaCampos(vaciados), ".")
+      : el("p", { clase: "aviso-titulo", texto: "Revisa antes de validar:" });
+    const m = crearMensaje([titulo, grupoOtros, grupoGuardrails].filter(Boolean), "aviso");
     m.removeAttribute("role");   // se lee con la ficha; el aviso vivo es «Ficha lista»
     nodos.push(m);
+    return nodos;
+  }
+  // Después de validar
+  const pendientes = vaciados.filter((c) => !resueltos.includes(c));
+  const hechos = vaciados.filter((c) => resueltos.includes(c));
+  if (pendientes.length) {
+    const m = crearMensaje(el("p", { clase: "aviso-titulo" }, `Sigue${pendientes.length === 1 ? "" : "n"} vacío${pendientes.length === 1 ? "" : "s"}: `,
+      ...listaCampos(pendientes), "."), "aviso");
+    m.removeAttribute("role");
+    nodos.push(m);
+  }
+  if (hechos.length || otros.length || activados.length) {
+    const resumen = hechos.length
+      ? `Resuelto al validar: el archivista escribió ${enumerar(hechos.map((c) => `${c === "titular" ? "el" : "la"} ${ETIQUETAS_CAMPO[c].toLocaleLowerCase("es")}`))}`
+      : "Revisado al validar: avisos de la ficha generada";
+    nodos.push(el("details", { clase: "aviso-resuelto" }, el("summary", {}, icono("check"), el("span", { texto: resumen })),
+      el("div", { clase: "aviso-resuelto-cuerpo" },
+        hechos.length ? el("div", { clase: "aviso-grupo" }, el("p", { clase: "aviso-titulo", texto: "Campos que se habían dejado vacíos:" }),
+          el("ul", {}, hechos.map((c) => el("li", { texto: `${ETIQUETAS_CAMPO[c]}: ${descartes[c]}` })))) : null,
+        grupoOtros, grupoGuardrails)));
   }
   return nodos;
 }
@@ -304,7 +445,7 @@ function listaCapas() {
 
 /**
  * Resumen de la generación en una línea («Generada en 10.2 s · ruta rápida»). Si la respuesta trae los tiempos por capa,
- * es un botón que despliega la lista con el tiempo real de cada capa (el pie técnico tiene además la barra apilada).
+ * es un botón que despliega la lista con el tiempo real de cada capa (el pie técnico tiene además la barra).
  */
 function resumenGeneracion(meta) {
   const partes = [];
@@ -326,7 +467,7 @@ function resumenGeneracion(meta) {
     valores[k].textContent = usada ? segundos(v) : "no se usó";
   }
   const region = el("div", { clase: "tiempos-ficha", id: "tiempos-ficha", hidden: true },
-    el("h3", { texto: "Tiempo real de cada capa en esta ficha" }), lista);
+    el("h2", { texto: "Tiempo real de cada capa en esta ficha" }), lista);
   const control = el("button", { type: "button", clase: "generacion boton-enlace", "aria-expanded": "false", "aria-controls": "tiempos-ficha",
     onclick: (ev) => {
       const abierto = ev.currentTarget.getAttribute("aria-expanded") === "true";
@@ -336,35 +477,21 @@ function resumenGeneracion(meta) {
   return { control, region };
 }
 
-// ── Carga: plegar y desplegar ──
-let botonOtraFoto = null;
-function plegarCarga() {
-  formularioCarga.hidden = true;
-}
+// ── Encabezado de la página: el de Catalogar, el de la espera o el de la ficha ──
+const cabecera = document.querySelector(".encabezado-pagina");
+const cabeceraTexto = cabecera?.querySelector(".encabezado-texto");
+const cabeceraAcciones = cabecera?.querySelector(".encabezado-acciones");
+const original = {
+  texto: [...(cabeceraTexto?.childNodes || [])].map((n) => n.cloneNode(true)),
+  acciones: [...(cabeceraAcciones?.childNodes || [])].map((n) => n.cloneNode(true)),
+  titulo: document.title,
+};
 
-function desplegarCarga() {
-  espera.replaceChildren();
-  progreso.replaceChildren();
-  formularioCarga.hidden = false;
-  formularioCarga.reset();
-  mostrarElegidas([]);
-  if (botonOtraFoto) botonOtraFoto.hidden = true;   // el formulario ya está a la vista
-  entradaFotos.focus({ preventScroll: true });
-  desplazar(formularioCarga);
-}
-
-// ── Encabezado de la ficha guardada (catalogar.html?doc=ID): la página es la ficha ──
-function migas(doc) {
-  return el("nav", { clase: "migas", "aria-label": "Ruta de navegación" }, el("ol", {},
-    el("li", {}, el("a", { href: "archivo.html", texto: "Archivo" })),
-    el("li", {}, el("span", { clase: "id", "aria-current": "page", texto: doc }))));
-}
-
-/** Módulo activo de origen (Archivo) en la navegación; en la barra superior (< 1100 px), además, queda a la vista. */
-function marcarArchivoActivo() {
+/** Módulo activo en la navegación; en la barra superior angosta, además, queda a la vista. */
+function marcarModulo(href) {
   let actual = null;
   for (const a of document.querySelectorAll("nav.navegacion a")) {
-    if (a.getAttribute("href") === "archivo.html") { a.setAttribute("aria-current", "page"); actual = a; } else a.removeAttribute("aria-current");
+    if (a.getAttribute("href") === href) { a.setAttribute("aria-current", "page"); actual = a; } else a.removeAttribute("aria-current");
   }
   const lista = actual?.closest("ul");
   if (!lista || lista.scrollWidth <= lista.clientWidth) return;
@@ -373,29 +500,60 @@ function marcarArchivoActivo() {
   lista.scrollLeft += ra.left - rl.left - (lista.clientWidth - ra.width) / 2;
 }
 
-/** Mientras carga: migas y h1 provisional (sin id: la ficha aún no está lista). */
-function encabezadoProvisional(doc) {
-  const texto = document.querySelector(".encabezado-pagina .encabezado-texto");
-  if (!texto) return;
-  texto.replaceChildren(migas(doc), el("h1", { texto: `Ficha ${doc}` }));
-  marcarArchivoActivo();
+function migas(origen, actual, { esId = true } = {}) {
+  const [nombre, href] = origen === "archivo" ? ["Archivo", "archivo.html"] : ["Catalogar", "catalogar.html"];
+  return el("nav", { clase: "migas", "aria-label": "Ruta de navegación" }, el("ol", {},
+    el("li", {}, el("a", { href, texto: nombre })),
+    el("li", {}, el("span", { clase: esId ? "id" : "migas-actual", "aria-current": "page", texto: actual }))));
 }
 
-/** Encabezado de página de la ficha: migas, h1 con el titular, estado, «Solo lectura» con su nota y la acción. */
-function encabezadoDeFicha(doc, ficha, soloLectura, estado) {
-  const titulo = el("h1", { id: "titulo-revision", tabindex: "-1", texto: ficha.titular || `Ficha ${doc}` });
-  const cabecera = document.querySelector(".encabezado-pagina");
-  const texto = cabecera?.querySelector(".encabezado-texto");
-  if (!texto) return titulo;
+/** Pone el encabezado de una ficha o de su espera (el h1 lleva el id que recibe el foco). */
+function ponerEncabezado(nodos, acciones = []) {
+  if (!cabeceraTexto) return;
   cabecera.classList.add("encabezado-ficha");
-  texto.replaceChildren(migas(doc), titulo,
-    el("div", { clase: "encabezado-ficha-datos" }, estado(), soloLectura ? insigniaSoloLectura() : null,
-      soloLectura ? el("p", { clase: "nota-solo-lectura", texto: NOTA_SOLO_LECTURA }) : null));
-  cabecera.querySelector(".encabezado-acciones")?.replaceChildren(
-    el("a", { clase: "boton secundario", href: "catalogar.html" }, icono("subir"), "Catalogar otra foto"));
-  marcarArchivoActivo();
-  document.title = `${ficha.titular || `Ficha ${doc}`} · Archivo · Fototeca Viva`;
-  return titulo;
+  cabeceraTexto.replaceChildren(...nodos.filter(Boolean));
+  cabeceraAcciones?.replaceChildren(...acciones.filter(Boolean));
+}
+
+function restaurarEncabezado() {
+  if (!cabeceraTexto) return;
+  cabecera.classList.remove("encabezado-ficha");
+  cabeceraTexto.replaceChildren(...original.texto.map((n) => n.cloneNode(true)));
+  cabeceraAcciones?.replaceChildren(...original.acciones.map((n) => n.cloneNode(true)));
+  document.title = original.titulo;
+  marcarModulo("catalogar.html");
+}
+
+/** h1 de la ficha: el titular, o «Ficha sin titular» en gris e itálica. */
+function pintarTitulo(h1, titular) {
+  h1.textContent = vacio(titular) ? "Ficha sin titular" : titular;
+  h1.classList.toggle("sin-titular", vacio(titular));
+}
+
+// ── Carga: plegar y desplegar ──
+let modoActual = null;   // "pagina" (la ficha es la página) o "barra" (ficha de un lote, bajo su panel)
+let botonOtraFoto = null;
+function plegarCarga() {
+  formularioCarga.hidden = true;
+}
+
+function desplegarCarga() {
+  espera.replaceChildren();
+  progreso.replaceChildren();
+  if (modoActual === "pagina") {
+    // El encabezado era el de la ficha: vuelve el de Catalogar y la ficha se cierra (queda guardada en el archivo)
+    restaurarEncabezado();
+    revision.hidden = true;
+    revision.replaceChildren();
+    modoActual = null;
+  } else if (botonOtraFoto) {
+    botonOtraFoto.hidden = true;   // el formulario ya está a la vista
+  }
+  formularioCarga.hidden = false;
+  formularioCarga.reset();
+  mostrarElegidas([]);
+  entradaFotos.focus({ preventScroll: true });
+  desplazar(formularioCarga);
 }
 
 // ── (c) Ficha = Inspector ──
@@ -410,76 +568,118 @@ const observadorColumna = new ResizeObserver(ajustarColumnaFoto);
 window.addEventListener("resize", ajustarColumnaFoto);
 
 /**
- * Muestra una ficha. `comoPagina` (ficha guardada abierta con ?doc=): el encabezado de la página es el de la ficha.
- * Si no, la ficha lleva su barra («Ficha IPTC», resumen de la generación y «Catalogar otra foto») y el pie de la foto
- * dice el documento y su estado (una sola vez en la vista).
+ * Muestra una ficha. modo «pagina» (por omisión: la ficha recién generada o la guardada de ?doc=): el encabezado de la
+ * página es el de la ficha (migas, h1 con el titular, estado y cómo se generó). modo «barra» (ficha abierta desde un
+ * lote): la ficha lleva su propia barra bajo el panel del lote. El pie de la foto dice el documento y su estado (salvo
+ * en ?doc=, donde ya están en el encabezado).
  */
-function mostrarFicha(respuesta, { comoPagina = false } = {}) {
+function mostrarFicha(respuesta, { modo = "pagina", origen = "catalogar" } = {}) {
   const { documento_id: doc, ficha, fuentes = {}, meta = {} } = respuesta;
-  let original = structuredClone(ficha);
+  let guardada = structuredClone(ficha);
   // Sin traza (fichas del archivo inicial): solo lectura, sin «Tu opinión» ni validación
   const soloLectura = !meta.traza_id;
   const estados = [];   // insignias de estado: se actualizan juntas al validar
   const estado = () => { const n = el("span", { clase: "estado-ficha" }, insignia(ficha.estado)); estados.push(n); return n; };
+  const descartes = soloLectura ? {} : camposDescartados(ficha, meta);
+  const notas = soloLectura ? {} : notasDeRuta(ficha, meta, descartes);
+  const { control: generacion, region: tiempos } = resumenGeneracion(meta);
+  modoActual = modo;
 
   let titulo;
   let barra = null;
-  if (comoPagina) {
-    titulo = encabezadoDeFicha(doc, ficha, soloLectura, estado);
+  if (modo === "pagina") {
+    titulo = el("h1", { id: "titulo-revision", tabindex: "-1" });
+    pintarTitulo(titulo, ficha.titular);
+    const otra = origen === "archivo"
+      ? el("a", { clase: "boton secundario", href: "catalogar.html" }, icono("subir"), "Catalogar otra foto")
+      : el("button", { type: "button", clase: "boton secundario", id: "otra-foto", onclick: desplegarCarga }, icono("subir"), "Catalogar otra foto");
+    ponerEncabezado([migas(origen, doc), titulo,
+      el("div", { clase: "encabezado-ficha-datos" }, estado(), soloLectura ? insigniaSoloLectura() : null, generacion,
+        soloLectura ? el("p", { clase: "nota-solo-lectura", texto: NOTA_SOLO_LECTURA }) : null),
+      tiempos], [otra]);
+    marcarModulo(origen === "archivo" ? "archivo.html" : "catalogar.html");
+    document.title = `${vacio(ficha.titular) ? `Ficha ${doc}` : ficha.titular} · ${origen === "archivo" ? "Archivo" : "Catalogar"} · Fototeca Viva`;
   } else {
     titulo = el("h2", { id: "titulo-revision", tabindex: "-1" }, icono("catalogar"), "Ficha IPTC");
-    const { control, region } = resumenGeneracion(meta);
     botonOtraFoto = el("button", { type: "button", clase: "boton secundario", id: "otra-foto", onclick: desplegarCarga },
       icono("subir"), "Catalogar otra foto");
     barra = el("header", { clase: "barra-ficha" },
-      el("div", { clase: "barra-ficha-texto" }, titulo, control, soloLectura ? insigniaSoloLectura() : null),
-      botonOtraFoto, region, soloLectura ? el("p", { clase: "barra-ficha-nota", texto: NOTA_SOLO_LECTURA }) : null);
+      el("div", { clase: "barra-ficha-texto" }, titulo, generacion, soloLectura ? insigniaSoloLectura() : null),
+      botonOtraFoto, tiempos, soloLectura ? el("p", { clase: "barra-ficha-nota", texto: NOTA_SOLO_LECTURA }) : null);
   }
 
   // Inspector: Identificación, Accesibilidad, Descripciones y Palabras clave
+  const campos = Object.fromEntries(CAMPOS_TEXTO.map((c) => [c, campoTexto(c, ficha[c], fuentes[c], soloLectura,
+    { descarte: descartes[c], nota: notas[c] })]));
   const palabras = campoPalabras(ficha.palabras_clave || [], fuentes.palabras_clave, soloLectura);
+  // El h1 sigue al titular mientras se escribe
+  if (modo === "pagina" && !soloLectura) campos.titular.control.addEventListener("input", () => pintarTitulo(titulo, campos.titular.control.value));
   const destino = el("div", { id: "resultado-opinion", "aria-live": "polite" });
   const estadoUtil = { valor: null };
   let pie = null;
+  let acciones = null;
   if (!soloLectura) {
     const grupoUtil = el("div", { clase: "fila", role: "group", "aria-labelledby": "pregunta-util" });
-    const botonUtil = (valor, texto, nombreIcono) => el("button", { type: "button", clase: "boton secundario", "aria-pressed": "false",
+    // Pulsado: contorno carbón, fondo gris claro y ✓ (no el relleno naranja de la acción principal)
+    const botonUtil = (valor, texto) => el("button", { type: "button", clase: "boton secundario boton-opinion", "aria-pressed": "false",
       onclick: (ev) => {
         const pulsado = ev.currentTarget.getAttribute("aria-pressed") === "true";
         estadoUtil.valor = pulsado ? null : valor;
         grupoUtil.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", "false"));
         if (!pulsado) ev.currentTarget.setAttribute("aria-pressed", "true");
-      } }, icono(nombreIcono), texto);
-    grupoUtil.append(botonUtil(true, "Útil", "check"), botonUtil(false, "No útil", "error"));
+      } }, icono("check", "icono-pulsado"), texto);
+    grupoUtil.append(botonUtil(true, "Útil"), botonUtil(false, "No útil"));
     pie = el("footer", { clase: "inspector-pie", role: "group", "aria-labelledby": "titulo-opinion" },
-      el("h4", { id: "titulo-opinion", clase: "seccion-titulo", texto: "Tu opinión" }),
+      el("h3", { id: "titulo-opinion", clase: "seccion-titulo", texto: "Tu opinión" }),
       el("div", { clase: "opinion-util" }, el("p", { id: "pregunta-util", texto: "¿Te fue útil la ficha?" }), grupoUtil),
       el("div", { clase: "opinion-comentario" }, el("label", { for: "comentario", texto: "Comentario (opcional)" }),
-        el("textarea", { id: "comentario", rows: "2", maxlength: "1000" })),
-      el("div", { clase: "fila acciones-ficha" },
+        el("textarea", { id: "comentario", rows: "2", maxlength: "1000" })));
+    // Las acciones quedan fijas abajo mientras el inspector está a la vista: «Validar ficha» siempre a la mano
+    acciones = el("div", { clase: "acciones-ficha" },
+      el("div", { clase: "fila" },
         el("button", { type: "submit", clase: "boton", value: "validar" }, icono("check"), "Validar ficha"),
         el("button", { type: "submit", clase: "boton secundario", value: "opinar", texto: "Solo enviar opinión" })),
       destino);
   }
-  const campos = Object.fromEntries(CAMPOS_TEXTO.map((c) => [c, campoTexto(c, ficha[c], fuentes[c], soloLectura)]));
   const formulario = el("form", { clase: "ficha", id: "formulario-ficha", "aria-labelledby": "titulo-inspector" },
     el("div", { clase: "panel-cuerpo" },
-      seccion("seccion-identificacion", "Identificación", campos.titular),
-      seccion("seccion-accesibilidad", "Accesibilidad", campos.texto_alternativo),
-      seccion("seccion-descripciones", "Descripciones", campos.descripcion, campos.descripcion_extendida),
+      seccion("seccion-identificacion", "Identificación", campos.titular.nodo),
+      seccion("seccion-accesibilidad", "Accesibilidad", campos.texto_alternativo.nodo),
+      seccion("seccion-descripciones", "Descripciones", campos.descripcion.nodo, campos.descripcion_extendida.nodo),
       seccion("palabras-titulo", "Palabras clave", palabras.nodo)),
-    pie);
+    pie, acciones);
+
+  // Foto: el mismo marco que en la espera (contain sobre la lupa); el visor muestra la copia guardada y la ficha tal
+  // como está guardada (se actualiza al validar)
+  const verGuardada = () => verFotoGuardada(doc, { titulo: "Foto guardada en el archivo", ficha: guardada, enlaceFicha: false,
+    extra: [["Ruta", meta.ruta], ["Metadatos quitados al guardar", metadatosQuitados(meta)]] });
+  const foto = el("figure", { clase: "foto" },
+    el("button", { type: "button", clase: "boton-imagen marco-foto", "aria-label": "Ver en grande la foto guardada y su ficha", onclick: verGuardada },
+      el("img", { src: `/api/fotos/${enc(doc)}/miniatura?lado=512`, width: "512", height: "384", decoding: "async",
+        alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
+      el("span", { clase: "lupa", "aria-hidden": "true" }, icono("lupa-foto"), "Ver en grande")),
+    origen === "archivo" ? null : el("figcaption", {}, el("span", { clase: "foto-documento" }, "Documento ", el("span", { clase: "id", texto: doc })),
+      el("span", { clase: "foto-estado" }, el("span", { clase: "solo-lectores", texto: " · " }), "Estado: ", estado())));
+  const zonaAvisos = el("div", { clase: "avisos" });
+  const pintarAvisos = (opciones) => zonaAvisos.replaceChildren(...avisos(ficha, meta, descartes, campos, opciones));
+  pintarAvisos();
+  let procedencia = panelProcedencia(ficha, fuentes, descartes);
+  const inspector = el("section", { clase: `panel inspector col-7${soloLectura ? " solo-lectura" : ""}`, "aria-labelledby": "titulo-inspector" },
+    el("header", { clase: "panel-cabecera" }, icono("pluma"), el("h2", { id: "titulo-inspector", texto: "Campos de la ficha" }),
+      soloLectura ? null : el("p", { clase: "panel-auxiliar", texto: "Edítalos y valida la ficha" })),
+    formulario);
+
   formulario.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     if (soloLectura) return;
     const validar = ev.submitter?.value === "validar";
     const correcciones = {};
     for (const c of CAMPOS_TEXTO) {
-      const v = formulario.querySelector(`[name=${c}]`).value.trim();
-      if (v !== (original[c] || "").trim()) correcciones[c] = v;
+      const v = campos[c].control.value.trim();
+      if (v !== (guardada[c] || "").trim()) correcciones[c] = v;
     }
     const nuevas = palabras.items.map((p) => p.termino);
-    if (JSON.stringify(nuevas) !== JSON.stringify((original.palabras_clave || []).map((p) => p.termino))) correcciones.palabras_clave = nuevas;
+    if (JSON.stringify(nuevas) !== JSON.stringify((guardada.palabras_clave || []).map((p) => p.termino))) correcciones.palabras_clave = nuevas;
     const botones = formulario.querySelectorAll("button[type=submit]");
     botones.forEach((b) => { b.disabled = true; });
     ev.submitter?.setAttribute("aria-busy", "true");
@@ -489,14 +689,28 @@ function mostrarFicha(respuesta, { comoPagina = false } = {}) {
           correcciones, validar_ficha: validar }) });
       let texto = "Opinión registrada. ¡Gracias!";
       if (cuerpo.ficha_validada && cuerpo.ficha) {
-        original = structuredClone(cuerpo.ficha);
+        guardada = structuredClone(cuerpo.ficha);
         for (const c of CAMPOS_TEXTO) {
-          const control = formulario.querySelector(`[name=${c}]`);
-          control.value = cuerpo.ficha[c] || "";
-          control.dispatchEvent(new Event("input"));
+          campos[c].control.value = cuerpo.ficha[c] || "";
+          campos[c].control.dispatchEvent(new Event("input"));
         }
-        palabras.reemplazar(cuerpo.ficha.palabras_clave || []);
         estados.forEach((n) => n.replaceChildren(insignia("validada")));
+        // Las fuentes que guardó el servicio (la corrección del archivista en los campos editados), leídas de la API
+        let fuentesGuardadas = null;
+        try {
+          const { cuerpo: registro } = await api(`/fichas/${enc(doc)}`);
+          fuentesGuardadas = registro?.fuentes || null;
+        } catch { fuentesGuardadas = null; }
+        const editados = Object.keys(correcciones);
+        for (const c of CAMPOS_TEXTO) campos[c].validado(fuentesGuardadas ? fuentesGuardadas[c] || [] : null, editados.includes(c));
+        palabras.validado(cuerpo.ficha.palabras_clave || [], fuentesGuardadas ? fuentesGuardadas.palabras_clave || [] : null,
+          editados.includes("palabras_clave"));
+        if (fuentesGuardadas) {
+          const nuevo = panelProcedencia(cuerpo.ficha, fuentesGuardadas);
+          procedencia.replaceWith(nuevo);
+          procedencia = nuevo;
+        }
+        pintarAvisos({ resueltos: editados.filter((c) => CAMPOS_TEXTO.includes(c) && !vacio(cuerpo.ficha[c])) });
         texto = "Ficha validada: ahora es un ejemplo más para catalogar fotos parecidas.";
       }
       mensaje(destino, `${texto} (traza ${cuerpo.traza_id})`, "ok");
@@ -509,27 +723,9 @@ function mostrarFicha(respuesta, { comoPagina = false } = {}) {
     }
   });
 
-  // Foto: el mismo marco que en la espera (contain sobre la lupa); el visor muestra la copia guardada y la ficha tal
-  // como está guardada (se actualiza al validar)
-  const verGuardada = () => verFotoGuardada(doc, { titulo: "Foto guardada en el archivo", ficha: original, enlaceFicha: false,
-    extra: [["Ruta", meta.ruta], ["Metadatos quitados al guardar", metadatosQuitados(meta)]] });
-  const foto = el("figure", { clase: "foto" },
-    el("button", { type: "button", clase: "boton-imagen marco-foto", "aria-label": "Ver en grande la foto guardada y su ficha", onclick: verGuardada },
-      el("img", { src: `/api/fotos/${enc(doc)}/miniatura?lado=512`, width: "512", height: "384", decoding: "async",
-        alt: ficha.texto_alternativo || `Foto ${doc} (sin texto alternativo todavía)` }),
-      el("span", { clase: "lupa", "aria-hidden": "true" }, icono("lupa-foto"), "Ver en grande")),
-    comoPagina ? null : el("figcaption", {}, el("span", { clase: "foto-documento" }, "Documento ", el("span", { clase: "id", texto: doc })),
-      el("span", { clase: "foto-estado" }, el("span", { clase: "solo-lectores", texto: " · " }), "Estado: ", estado())));
-  const listaAvisos = avisos(ficha, meta);
-  const inspector = el("section", { clase: `panel inspector col-7${soloLectura ? " solo-lectura" : ""}`, "aria-labelledby": "titulo-inspector" },
-    el("header", { clase: "panel-cabecera" }, icono("pluma"), el("h3", { id: "titulo-inspector", texto: "Campos de la ficha" }),
-      soloLectura ? null : el("p", { clase: "panel-auxiliar", texto: "Edítalos y valida la ficha" })),
-    formulario);
-
-  const lateral = el("div", { clase: "ficha-lateral col-5" }, foto, panelProcedencia(ficha, fuentes),
-    listaAvisos.length ? el("div", { clase: "avisos" }, ...listaAvisos) : null);
+  const lateral = el("div", { clase: "ficha-lateral col-5" }, foto, procedencia, zonaAvisos);
   revision.replaceChildren(...[barra, el("div", { clase: "reticula ficha-reticula" }, lateral, inspector), pieTecnico(meta)].filter(Boolean));
-  revision.classList.toggle("como-pagina", comoPagina);
+  revision.classList.toggle("como-pagina", modo === "pagina");
   observadorColumna.disconnect();
   columnaFoto = lateral;
   observadorColumna.observe(lateral);
@@ -537,7 +733,7 @@ function mostrarFicha(respuesta, { comoPagina = false } = {}) {
   plegarCarga();
   // Foco en el título (sin anillo) y la ficha arriba de la ventana
   titulo.focus({ preventScroll: true });
-  desplazar(comoPagina ? document.querySelector(".encabezado-pagina") || revision : revision);
+  desplazar(modo === "pagina" ? cabecera || revision : revision);
   anunciar(`Ficha lista: ${ficha.titular || "sin titular"}`);
 }
 
@@ -565,26 +761,29 @@ function marcarOcupado(si) {
 }
 
 /**
- * Espera con la misma anatomía que tendrá la ficha: una barra de título arriba y, debajo, la foto en el mismo marco y
- * lugar (contain sobre la lupa, con una línea de escaneo sutil) y un panel con el tiempo transcurrido, la barra contra
- * el p95 de las fichas registradas (marca y etiqueta del p50) y los tiempos típicos por capa. No inventa la etapa actual
- * (el servicio no la reporta). Al terminar, la ficha ocupa su lugar y sus tiempos reales quedan en su barra. No es una
- * región viva: los lectores de pantalla oyen un aviso cada 20 s (anunciar), no uno por segundo.
+ * Espera con la misma anatomía que tendrá la ficha: el encabezado de la página es el de la ficha («Generando la ficha
+ * de «…»», con el tiempo transcurrido en mono) y, debajo, la foto en el mismo marco y lugar (contain sobre la lupa,
+ * con una línea de escaneo sutil) y un panel con la barra contra el p95 de las fichas registradas (marca y etiqueta
+ * del p50) y los tiempos típicos por capa. No inventa la etapa actual (el servicio no la reporta). Al terminar, la
+ * ficha ocupa su lugar y sus tiempos reales quedan en su encabezado. No es una región viva: los lectores de pantalla
+ * oyen un aviso cada 20 s (anunciar), no uno por segundo.
  */
-function panelEspera({ nombre = null, src = null, alt = "", detalle = "" } = {}) {
+function panelEspera({ nombre = null, src = null, alt = "", detalle = "", origen = "catalogar", doc = null } = {}) {
   const inicio = Date.now();
   const transcurrido = () => (Date.now() - inicio) / 1000;
-  const titulo = el("h2", { id: "titulo-espera", tabindex: "-1" }, icono("reloj"), "Generando la ficha",
+  const titulo = el("h1", { id: "titulo-espera", tabindex: "-1" }, "Generando la ficha",
     nombre ? [" de «", el("span", { clase: "nombre-en-titulo", texto: nombre, title: nombre }), "»"] : null);
   const valorReloj = el("span", { clase: "reloj-valor", texto: "0:00" });
-  const filaReloj = el("p", { clase: "reloj", "aria-hidden": "true" }, valorReloj, el("span", { clase: "reloj-etiqueta", texto: "transcurridos" }));
+  ponerEncabezado([migas(origen, nombre || doc || "Foto nueva", { esId: !nombre }), titulo,
+    el("div", { clase: "encabezado-ficha-datos" }, insignia("en_curso"),
+      el("p", { clase: "reloj", "aria-hidden": "true" }, icono("reloj"), valorReloj, el("span", { clase: "reloj-etiqueta", texto: "transcurridos" })))]);
   const relleno = el("span", { clase: "progreso-relleno" });
   const marca = el("span", { clase: "progreso-marca" });
   const barra = el("div", { clase: "progreso espera-progreso", "aria-hidden": "true", hidden: true }, relleno, marca);
   const etiquetaP50 = el("span", { clase: "etiqueta-p50" });
   const escala = el("div", { clase: "progreso-escala", "aria-hidden": "true", hidden: true }, etiquetaP50);
   const referencia = el("p", { clase: "espera-referencia", texto: "Consultando cuánto suelen tardar las fichas…" });
-  const subtitulo = el("h3", { texto: "Tiempos típicos por capa (p50)" });
+  const subtitulo = el("h2", { texto: "Tiempos típicos por capa (p50)" });
   const { lista, valores } = listaCapas();
   let nota = el("p", { clase: "nota-espera" }, icono("info"),
     el("span", { texto: "La petición sigue en curso aunque no veas cambios: no recargues ni cierres la página." }));
@@ -592,10 +791,9 @@ function panelEspera({ nombre = null, src = null, alt = "", detalle = "" } = {})
     nombre || detalle ? el("figcaption", {}, el("span", { clase: "nombre-archivo", texto: nombre || "" }),
       detalle ? el("span", { clase: "fotograma", texto: detalle }) : null) : null) : null;
   const datos = el("div", { clase: `panel espera-datos ${foto ? "col-7" : "col-12"}` },
-    el("div", { clase: "panel-cuerpo" }, filaReloj, barra, escala, referencia, subtitulo, lista, nota));
-  const nodo = el("section", { clase: "espera", "aria-labelledby": "titulo-espera" },
-    el("header", { clase: "barra-ficha barra-espera" }, el("div", { clase: "barra-ficha-texto" }, titulo)),
-    el("div", { clase: "reticula ficha-reticula" }, foto, datos));
+    el("div", { clase: "panel-cuerpo" }, el("p", { clase: "espera-rotulo", texto: "Tiempo transcurrido contra lo típico" }),
+      barra, escala, referencia, subtitulo, lista, nota));
+  const nodo = el("section", { clase: "espera", "aria-labelledby": "titulo-espera" }, el("div", { clase: "reticula ficha-reticula" }, foto, datos));
   let p50 = null;
   let p95 = null;
   let vigente = true;
@@ -607,6 +805,7 @@ function panelEspera({ nombre = null, src = null, alt = "", detalle = "" } = {})
       relleno.style.width = `${Math.min(100, (s / p95) * 100).toFixed(1)}%`;
       if (s > p95 && !nodo.classList.contains("lenta")) {
         nodo.classList.add("lenta");
+        cabecera?.classList.add("espera-lenta");
         barra.classList.add("lenta");
         const aviso = crearMensaje("Está tardando más que el 95 % de las fichas, pero la petición sigue en curso: no recargues ni "
           + "cierres la página.", "aviso");
@@ -643,15 +842,16 @@ function panelEspera({ nombre = null, src = null, alt = "", detalle = "" } = {})
   const detener = () => {
     vigente = false;
     clearInterval(reloj1s);
+    cabecera?.classList.remove("espera-lenta");
     nodo.remove();
   };
   return {
     nodo,
     enfocar: () => {
       titulo.focus({ preventScroll: true });
-      desplazar(nodo);
+      desplazar(cabecera || nodo);
     },
-    terminar: detener,   // la ficha ocupa su lugar; sus tiempos reales quedan en la barra de la ficha
+    terminar: detener,   // la ficha ocupa su lugar; sus tiempos reales quedan en su encabezado
     fallar: detener,
   };
 }
@@ -662,7 +862,7 @@ function mostrarError(contenedor, e) {
   if (aviso) { aviso.tabIndex = -1; aviso.focus(); }
 }
 
-/** POST /api/fichas con el panel de espera, el formulario plegado, el botón ocupado y el aviso al salir de la página. */
+/** POST /api/fichas con la espera, el formulario plegado, el botón ocupado y el aviso al salir de la página. */
 async function generarFicha(opciones, vista = {}) {
   if (ocupado) return;
   const panel = panelEspera(vista);
@@ -676,9 +876,10 @@ async function generarFicha(opciones, vista = {}) {
   try {
     const { cuerpo } = await api("/fichas", { method: "POST", ...opciones });
     panel.terminar();
-    mostrarFicha(cuerpo);
+    mostrarFicha(cuerpo, { modo: "pagina", origen: vista.origen || "catalogar" });
   } catch (e) {
     panel.fallar();
+    restaurarEncabezado();
     formularioCarga.hidden = false;   // la foto sigue elegida: se puede reintentar
     mostrarError(progreso, e);
   } finally {
@@ -689,7 +890,7 @@ async function generarFicha(opciones, vista = {}) {
 
 // ── (d) Lote ──
 function tarjetaLote(f, i) {
-  return el("li", {}, el("button", { type: "button", clase: "tarjeta-lote", onclick: () => mostrarFicha(f) },
+  return el("li", {}, el("button", { type: "button", clase: "tarjeta-lote", onclick: () => mostrarFicha(f, { modo: "barra" }) },
     miniatura(f.documento_id, { alt: "", diferida: i >= 8 }),
     el("span", { clase: "tarjeta-lote-titular", texto: f.ficha.titular || "Sin titular" }),
     el("span", { clase: "tarjeta-lote-pie" }, insignia(f.ficha.estado),
@@ -727,7 +928,8 @@ async function catalogarLote(archivos) {
     loteResumen.replaceChildren(insignia("en_curso"));
     listaLote.replaceChildren(...Array.from({ length: lote.total }, tarjetaPendiente));
     seccionLote.hidden = false;
-    // Las fotos ya están en el lote: el formulario queda libre para elegir otras
+    // Las fotos ya están en el lote: el formulario queda libre para elegir otras (sin acción primaria mientras corre)
+    loteEnCurso = true;
     formularioCarga.reset();
     mostrarElegidas([]);
     let pintadas = 0;
@@ -745,6 +947,8 @@ async function catalogarLote(archivos) {
         listaLote.append(...Array.from({ length: estado.estado === "terminado" ? 0 : pendientes }, tarjetaPendiente));
         if (estado.estado !== "terminado") setTimeout(consultar, 3000);
         else {
+          loteEnCurso = false;
+          marcarHayFotos(entradaFotos.files.length > 0);
           loteResumen.replaceChildren(insignia(estado.fallidas && !estado.completadas ? "error" : "listo"));
           anunciar(`El lote terminó: ${estado.completadas} fichas listas${estado.fallidas ? `, ${estado.fallidas} fallidas` : ""}.`);
         }
@@ -764,13 +968,26 @@ function estadoDeCarga(texto, error = false) {
   estadoCarga.replaceChildren(...(error ? [icono("error"), el("span", { texto })] : [texto]));
 }
 
-/** Jerarquía de la carga: sin fotos, «Elegir fotos» es la acción primaria y «Catalogar» se ve deshabilitado (sigue
- *  enfocable y explica qué falta); con fotos, «Catalogar» pasa a primaria. */
+/** Jerarquía de la carga: sin fotos, «Elegir fotos» es la acción primaria (salvo mientras corre un lote) y «Catalogar»
+ *  se ve deshabilitado (sigue enfocable y explica qué falta); con fotos, «Catalogar» pasa a primaria y la mesa se
+ *  compacta. */
 function marcarHayFotos(hay) {
-  etiquetaElegir.classList.toggle("secundario", hay);
+  etiquetaElegir.classList.toggle("secundario", hay || loteEnCurso);
   textoElegir.textContent = hay ? "Elegir otras fotos" : "Elegir fotos";
+  zona.classList.toggle("compacta", hay);
   if (hay) botonCatalogar.removeAttribute("aria-disabled");
   else botonCatalogar.setAttribute("aria-disabled", "true");
+}
+
+/** Quita una foto de la selección (el input de archivo no se puede editar: se arma una lista nueva). */
+function quitarElegida(archivo) {
+  const restantes = [...entradaFotos.files].filter((f) => f !== archivo);
+  const lista = new DataTransfer();
+  restantes.forEach((f) => lista.items.add(f));
+  entradaFotos.files = lista.files;
+  mostrarElegidas(restantes);
+  anunciar(`Se quitó ${archivo.name}`);
+  (vistaPrevia.querySelector(".quitar-foto") || entradaFotos).focus();
 }
 
 /** Vista previa de las fotos elegidas, antes de subirlas: se ven tal como están en tu equipo. */
@@ -794,6 +1011,8 @@ function mostrarElegidas(archivos) {
         onclick: () => abrirVisor({ src: url, alt: `Foto elegida: ${a.name}`, titulo: `Foto elegida: ${a.name}`, datos: datos(),
           nota: "Es el archivo original, todavía en tu equipo: aún no se ha subido." }) },
         img, el("span", { clase: "lupa", "aria-hidden": "true" }, icono("lupa-foto"), "Ver")),
+      el("button", { type: "button", clase: "quitar quitar-foto", "aria-label": `Quitar ${a.name}`, title: `Quitar ${a.name}`,
+        onclick: () => quitarElegida(a) }, icono("cerrar")),
       el("figcaption", {}, el("span", { clase: "nombre-archivo", texto: a.name, title: a.name }),
         el("span", { clase: "fotograma" }, el("span", { texto: tamano(a.size) }), medidas))));
   });
@@ -855,7 +1074,8 @@ window.addEventListener("drop", (e) => { if (!zona.contains(e.target)) e.prevent
 const doc = new URLSearchParams(location.search).get("doc");
 if (doc) {
   plegarCarga();
-  encabezadoProvisional(doc);
+  ponerEncabezado([migas("archivo", doc), el("h1", { texto: `Ficha ${doc}` })]);
+  marcarModulo("archivo.html");
   mensaje(progreso, `Cargando la ficha de ${doc}…`, "info");
   (async () => {
     try {
@@ -864,10 +1084,10 @@ if (doc) {
       if (cuerpo?.ficha) {
         mostrarFicha({ documento_id: doc, ficha: cuerpo.ficha, fuentes: cuerpo.fuentes,
           meta: { traza_id: cuerpo.traza_id, ruta: `guardada (${cuerpo.origen})`, cache: "ninguna", modelos: {}, tiempos_por_capa_ms: {} } },
-        { comoPagina: true });
+        { modo: "pagina", origen: "archivo" });
       } else {
         await generarFicha({ headers: { "Content-Type": "application/json" }, body: JSON.stringify({ documento_id: doc }) },
-          { src: `/api/fotos/${enc(doc)}/miniatura?lado=512`, alt: `Foto ${doc}`, detalle: doc });
+          { src: `/api/fotos/${enc(doc)}/miniatura?lado=512`, alt: `Foto ${doc}`, detalle: doc, origen: "archivo", doc });
       }
     } catch (e) {
       formularioCarga.hidden = false;

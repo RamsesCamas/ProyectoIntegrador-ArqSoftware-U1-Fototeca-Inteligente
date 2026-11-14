@@ -56,18 +56,18 @@
      morado · Imagen (foto similar) = grafito. El tipo también va escrito y con su icono. */
   --chip-fondo: #efefee;
   --chip-borde: #6b6b6b;
-  --chip-regla-fondo: #e3ebf7;
-  --chip-regla-borde: #2f5689;
-  --chip-tesauro-fondo: #dcefef;
-  --chip-tesauro-borde: #11646c;
+  --chip-regla-fondo: #eeecf9;
+  --chip-regla-borde: #4e3b9b;
+  --chip-tesauro-fondo: #e7eef9;
+  --chip-tesauro-borde: #235495;
   --chip-foto-fondo: #e9e9e8;
   --chip-foto-borde: #4a4a4a;
-  --chip-archivista-fondo: #f3e5f1;
-  --chip-archivista-borde: #7a3a70;
-  --chip-referencia-fondo: #ece6f6;
-  --chip-referencia-borde: #5e4596;
-  --chip-etiqueta-fondo: #e4f2f3;
-  --chip-etiqueta-borde: #2b6c74;
+  --chip-archivista-fondo: #f8edf6;
+  --chip-archivista-borde: #823578;
+  --chip-referencia-fondo: #f5edf8;
+  --chip-referencia-borde: #703a88;
+  --chip-etiqueta-fondo: #e5f5f5;
+  --chip-etiqueta-borde: #146e71;
   --foto-fondo: #1b1b1b;
   --insignia-foto-fondo: rgba(27, 27, 27, .9);
   --insignia-foto-texto: #ffffff;
@@ -435,6 +435,11 @@ progress { width: 100%; height: .75rem; accent-color: var(--acento); }
   border: 1px solid var(--chip-borde); border-radius: calc(var(--alto-chip) / 2); background: var(--chip-fondo);
   color: var(--texto); font-size: var(--t-1); line-height: 1.35; text-align: left; text-decoration: none; }
 .chip .icono { width: 16px; height: 16px; color: var(--chip-borde); }
+/* Un chip es UNA línea: la cita larga se corta con elipsis (completa en el title) y el puntaje y el ↗ quedan fuera
+   del corte (R2-03: la cita de dos líneas parecía una píldora deformada). */
+.chip { flex-wrap: nowrap; }
+.chip-texto { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip > .icono, .chip > .puntaje-chip, .chip > .puntaje, .chip > .externo, .chip > img { flex: none; }
 .chip:where(a, button):hover { text-decoration: underline; box-shadow: inset 0 0 0 1px var(--chip-borde); }
 .chip:where(button) { cursor: zoom-in; }
 .chip-regla { background: var(--chip-regla-fondo); border-color: var(--chip-regla-borde); }
@@ -718,6 +723,16 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   .navegacion a { height: 100%; gap: 6px; padding: 0 var(--e-2); border-radius: 0; }
   .navegacion a .icono { width: 18px; height: 18px; }
   .lateral-estado { order: 3; flex: none; margin-left: 0; }
+}
+
+/* «Todo local» visible también en la barra superior (R2-12): es el mensaje de R2 en la demo y un laptop de 1366 px
+   al 125 % cae en este rango. El texto completo sigue para lectores de pantalla y en el title; este rótulo corto es
+   solo visual. Para que quepa en la barra única de 1000–1099 px, los módulos van solo con texto. */
+@media (min-width: 600px) and (max-width: 1099.98px) {
+  .lateral-local::after { content: "Todo local" / ""; white-space: nowrap; }
+}
+@media (min-width: 1000px) and (max-width: 1099.98px) {
+  .navegacion a .icono { display: none; }
 }
 
 /* Barra lateral fija desde 1100 px: 216 px de grafito a la izquierda; la navegación es vertical y el elemento activo
