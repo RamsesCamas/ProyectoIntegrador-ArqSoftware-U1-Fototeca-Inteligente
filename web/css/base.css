@@ -90,8 +90,8 @@
   --insignia-foto-texto: #ffffff;
   --velo: rgba(10, 12, 14, .88);
   --panel-cabecera-fondo: #f3f6f8;
-  --montura: #24292e;                /* el fotograma suelto: marco de película fino */
-  --montura-borde: #24292e;
+  --montura: #ffffff;                /* el fotograma suelto sobre la mesa: papel con filete fino (la película es .tira) */
+  --montura-borde: #d3d9de;
   --lupa-fondo: #e6ebee;             /* escenario de la foto en su proporción (contain): la mesa, un tono abajo */
   --lupa-texto: #1c2024;
   --lupa-texto-suave: #545c64;
@@ -302,7 +302,8 @@ main { display: block; width: 100%; max-width: calc(var(--contenido-max) + 2 * v
 .boton.texto:hover, .boton.fantasma:hover { background: transparent; border-color: transparent; text-decoration-thickness: 2px; }
 .boton.peligro { background: var(--error); border-color: var(--error); color: var(--superficie); }
 .boton.peligro:hover { background: var(--error-hover); border-color: var(--error-hover); }
-.boton.fantasma.peligro, .boton.texto.peligro { color: var(--error); }
+.boton.fantasma.peligro, .boton.texto.peligro, .boton.fantasma.peligro:hover, .boton.texto.peligro:hover { background: transparent;
+  border-color: transparent; color: var(--error); }
 .boton.discreto { min-height: 2.25rem; padding: var(--e-1) var(--e-3); font-size: var(--t-1); }
 .boton.discreto.peligro { background: transparent; color: var(--error); border-color: var(--error); border-width: 1px; }
 .boton.discreto.peligro:hover { background: var(--error-fondo); }
@@ -472,7 +473,7 @@ progress { width: 100%; height: .5rem; accent-color: var(--texto); }
 .tabla .num, table.catalogo .num { text-align: right; font-family: var(--fuente-mono); font-size: var(--t-1); }
 .tabla th.num, table.catalogo th.num { font-family: var(--fuente-rotulo); font-size: 15px; }
 .tabla caption, table.catalogo caption { text-align: left; }
-.tabla:not(.tabla-compacta) tbody th[scope="row"] { min-width: 12rem; }
+.tabla:not(.tabla-compacta) tbody th[scope="row"], table.catalogo tbody th[scope="row"] { min-width: 12rem; }
 .tabla-compacta { font-size: var(--t-1); margin: var(--e-2) 0; }
 .tabla-compacta th, .tabla-compacta td { padding: var(--e-1) var(--e-3) var(--e-1) 0; }
 .tabla.tabla-compacta tbody td, .tabla.tabla-compacta tbody th { height: auto; }
@@ -503,7 +504,8 @@ progress { width: 100%; height: .5rem; accent-color: var(--texto); }
   background: none; border: 0; }
 .vacio-ilustracion { width: 120px; height: 96px; color: var(--texto-suave); fill: none; stroke: currentColor; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round; }
-.acento-trazo { stroke: var(--lapiz); }
+/* Las ilustraciones van en carbón y gris: el naranja es solo del lápiz y de la acción principal */
+.acento-trazo { stroke: var(--texto); }
 .vacio h2, .vacio h3 { margin: 0; font-size: var(--t-4); }
 .vacio p, .vacio ol, .vacio ul { max-width: 60ch; margin: 0; color: var(--texto-suave); }
 .vacio ol, .vacio ul { padding-left: var(--e-5); }
@@ -549,6 +551,8 @@ progress { width: 100%; height: .5rem; accent-color: var(--texto); }
 /* En la hoja de contactos el círculo es el indicador del fotograma con foco, señalado o elegido */
 .cuadro .lapiz { display: none; }
 .cuadro.marcado .lapiz, .cuadro:hover .lapiz, .cuadro:focus-within .lapiz { display: block; }
+/* .con-lapiz envuelve el texto que se marca (p. ej. el rótulo de un campo que pide atención): el trazo mide lo que él */
+.con-lapiz { position: relative; display: inline-block; }
 .atencion { position: relative; }
 .atencion > label, .atencion > .rotulo, .atencion .campo-rotulo { position: relative; display: inline-block; }
 
@@ -572,17 +576,23 @@ progress { width: 100%; height: .5rem; accent-color: var(--texto); }
 .campo-ficha .valor-titular, .campo-ficha .titular { margin: 0; font-family: var(--fuente-texto); font-size: 22px; font-weight: var(--peso-medio);
   line-height: 1.25; letter-spacing: -0.005em; }
 .campo-ficha .sin-contenido { margin: 0; font-style: italic; color: var(--texto-suave); }
-.notas-margen, .etiqueta > .nota { grid-column: 1; margin: -6px 20px var(--e-4); font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+.notas-margen, .etiqueta > .nota { grid-column: 1; margin: 0 20px var(--e-4); font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+/* Bajo 1000 px la nota va pegada bajo su campo, dentro de la etiqueta */
+.campo-ficha:has(+ .notas-margen, + .nota) { padding-bottom: var(--e-1); }
 .notas-margen > p, .nota > p { margin: 0; }
 .notas-margen .fuentes { margin-top: 0; }
+.notas-margen .chip, .etiqueta > .nota .chip { display: flex; min-height: 0; }
+.notas-margen .chip-texto, .etiqueta > .nota .chip-texto { overflow: visible; white-space: normal; text-overflow: clip; }
+.llave { align-self: stretch; }
 .nota { color: var(--texto-suave); font-size: var(--t-1); line-height: 1.4; }
 
-/* 4s. Montura (fotograma suelto) y foto que abre el visor */
-.montura { display: block; min-width: 0; margin: 0; padding: 5px; background: var(--montura); border: 0; border-radius: 0; box-shadow: none; }
+/* 4s. Montura (fotograma suelto sobre la mesa: papel con filete fino; la película es .tira) y foto que abre el visor */
+.montura { display: block; min-width: 0; margin: 0; padding: 5px; background: var(--montura); border: 1px solid var(--montura-borde);
+  border-radius: 0; box-shadow: none; }
 .montura img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--pelicula-hueco); }
 .montura.contener img { object-fit: contain; }
 .montura figcaption, .montura .fotograma { display: flex; justify-content: space-between; gap: var(--e-2); margin-top: var(--e-1);
-  padding: 0 2px 2px; font-size: var(--t-1); line-height: 1.4; color: var(--pelicula-texto); }
+  padding: 0 2px 2px; font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
 .fotograma { font-family: var(--fuente-mono); font-variant-numeric: tabular-nums; }
 .boton-imagen { display: block; position: relative; width: 100%; padding: 0; border: 0; border-radius: 0; background: none; color: inherit;
   text-align: left; cursor: zoom-in; }
@@ -689,6 +699,7 @@ svg.barra-svg { display: block; width: 100%; height: 1rem; overflow: visible; }
   .etiqueta { grid-template-columns: minmax(0, 1fr) var(--ancho-notas); }
   .etiqueta::before { right: var(--ancho-notas); }
   .notas-margen, .etiqueta > .nota { grid-column: 2; margin: 0 0 var(--e-4); padding-left: 18px; }
+  .campo-ficha:has(+ .notas-margen, + .nota) { padding-bottom: var(--e-4); }
   .notas-margen::before, .etiqueta > .nota::before { content: ""; position: absolute; left: 0; top: .7em; width: 11px; border-top: 1px solid var(--gris-tenue); }
   .notas-margen .fuentes { flex-direction: column; align-items: flex-start; gap: 2px; }
   .notas-margen .fuentes-titulo { display: none; }

@@ -54,8 +54,8 @@ const TRAZOS = {
   actualizar: '<path d="M19.5 10A7.75 7.75 0 0 0 5.6 7.4"/><path d="M5 3.75V7.9h4.15"/><path d="M4.5 14a7.75 7.75 0 0 0 13.9 2.6"/><path d="M19 20.25V16.1h-4.15"/>',
 };
 
-/** Ilustraciones para los estados vacíos (contenido de un <symbol viewBox="0 0 120 96">). La clase acento-trazo usa
- *  el color de acento (base.css); lo demás, el color del texto. */
+/** Ilustraciones para los estados vacíos (contenido de un <symbol viewBox="0 0 120 96">). La clase acento-trazo va en
+ *  carbón (base.css) y lo demás en el gris del texto: el naranja es solo del lápiz y de la acción principal. */
 const ILUSTRACIONES = {
   // Una diapositiva vacía sobre la mesa de luz
   vacio: '<rect x="30" y="14" width="60" height="60" rx="6"/><rect x="40" y="28" width="40" height="28" rx="2"/>'

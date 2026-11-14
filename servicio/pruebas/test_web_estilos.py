@@ -352,7 +352,7 @@ def test_naranja_solo_lapiz_y_accion_principal(web):
                     hallazgos.append(f"{nombre}: «{sel}» usa el naranja como color de texto")
                 elif prop.startswith(("background", "border", "box-shadow")) and "primario" not in sel:
                     hallazgos.append(f"{nombre}: «{sel}» usa el naranja en {prop} fuera de la acción principal")
-                elif prop == "stroke" and not re.search(r"lapiz|acento-trazo", sel):
+                elif prop in ("stroke", "fill") and not re.search(r"\.lapiz\b", sel):
                     hallazgos.append(f"{nombre}: «{sel}» usa el naranja como trazo fuera del lápiz")
     assert not hallazgos, "\n".join(hallazgos[:20])
 
