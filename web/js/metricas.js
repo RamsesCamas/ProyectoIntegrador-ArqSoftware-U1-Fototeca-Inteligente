@@ -282,7 +282,8 @@ async function cargar() {
     anunciar("Métricas actualizadas");
   } catch (e) {
     if (mio !== turno) return;
-    mensaje(estado, conDatos ? `No se pudo actualizar: ${e.message}` : e.message);
+    // Sin datos previos, el panel explica el error con «Reintentar»: en el encabezado basta una línea corta
+    mensaje(estado, conDatos ? `No se pudo actualizar: ${e.message}` : "No se pudieron leer las métricas.");
     if (!conDatos) {
       banda.replaceChildren();
       tablero.replaceChildren(errorDeCarga(e.message));
