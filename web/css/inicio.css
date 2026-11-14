@@ -10,34 +10,37 @@
 /* Una sola línea con puntos suspensivos (el texto completo va en title) */
 .una-linea { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4; }
 
-/* ── Estado del sistema: cabecera con la insignia general, la configuración y el precalentamiento ── */
+/* ── Estado del sistema: UNA insignia general en la cabecera; por subsistema, ✓ (⚠ / ✕), nombre y un detalle ──
+   Celdas iguales con filetes de 1 px (el fondo asoma entre celdas). A 1000 y 1280 px, 5 en una fila cortaban
+   «Almacén de documentos»: va en 3×2 con la configuración en la sexta celda; 5 en una fila desde 75rem de contenido
+   (1536 px), con la configuración en la cabecera; una columna en móvil. */
 #panel-estado .panel-cabecera h2 { flex: 0 1 auto; }
 #estado-general { display: flex; align-items: center; margin: 0; }
-#panel-estado .estado-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-3); min-width: 0;
+#panel-estado .estado-meta { display: none; flex-wrap: wrap; align-items: center; gap: var(--e-1) var(--e-3); min-width: 0;
   margin-left: auto; }
 .estado-meta .mono { color: var(--texto); }
-#precalentamiento:empty { display: none; }
-
-/* Franja de 5 celdas con filetes de 1 px (el fondo de la franja asoma entre celdas). Cada celda: icono + nombre,
-   insignia + tecnología y un detalle; cada fila de UNA línea, así que todas miden lo mismo. */
-.franja { display: flex; flex-wrap: wrap; gap: 1px; background: var(--borde-suave);
+.estado-meta .precalentamiento:empty { display: none; }
+.estado-meta .precalentamiento::before { content: "·" / ""; margin-right: var(--e-3); }
+.franja { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1px; background: var(--borde-suave);
   clip-path: inset(0 round 0 0 calc(var(--radio-2) - 1px) calc(var(--radio-2) - 1px)); }
-.franja .componente { display: flex; flex-direction: column; gap: var(--e-2); flex: 1 1 100%; min-width: 0; margin: 0;
-  padding: var(--e-4); background: var(--superficie); border: 0; border-radius: 0; box-shadow: none; }
+.franja .componente { display: flex; flex-direction: column; justify-content: center; gap: var(--e-1); min-width: 0; margin: 0;
+  padding: var(--e-3) var(--e-4); background: var(--superficie); border: 0; border-radius: 0; box-shadow: none; }
 .franja .componente p, .franja .componente h3 { margin: 0; }
-.componente-nombre { display: flex; align-items: center; gap: var(--e-2); min-width: 0; font-size: var(--t-2); }
-.componente-nombre > .icono { width: 20px; height: 20px; color: var(--texto-suave); }
-.componente-estado { display: flex; align-items: center; gap: var(--e-2); min-width: 0; }
-.componente-estado .insignia { flex: none; }
-.componente-tecnologia { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
-.componente-detalle { font-size: var(--t-1); color: var(--texto); }
-.componente.con-error .componente-detalle { color: var(--error); }
-.franja .componente.cargando { gap: var(--e-3); }
-.franja .componente.cargando .esqueleto { height: 1.25rem; margin: 0; }
+.componente-nombre { display: flex; align-items: center; gap: var(--e-2); min-width: 0; font-size: var(--t-1);
+  font-weight: var(--peso-medio); }
+.componente-nombre > .icono { width: 16px; height: 16px; stroke-width: 2.25; color: var(--texto-suave); }
+.componente.estado-ok .componente-marca { color: var(--ok); }
+.componente.estado-degradado .componente-marca { color: var(--aviso); }
+.componente.estado-error .componente-marca, .componente.estado-error .componente-detalle { color: var(--error); }
+.componente-detalle { font-size: var(--t-1); color: var(--texto-suave); }
+.componente-config .mono { color: var(--texto); }
+.componente-config .precalentamiento:not(:empty)::before { content: "·" / ""; margin: 0 var(--e-2); }
+.franja .componente.cargando { gap: var(--e-2); }
+.franja .componente.cargando .esqueleto { height: 1.125rem; margin: 0; }
 .franja.con-mensaje { display: block; padding: 0 var(--e-5); background: var(--superficie); }
 
-/* ── El archivo en cifras ── */
-.cifras-inicio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4); }
+/* ── El archivo en cifras: cada mosaico con su altura (sin estirarse) ── */
+.cifras-inicio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4); align-items: start; }
 .cifras-inicio > .mensaje { grid-column: 1 / -1; margin: 0; }
 .cifras-inicio .medidor { flex-wrap: wrap; gap: var(--e-1) var(--e-3); margin-top: var(--e-2); }
 .cifras-inicio .medidor-barra { flex-basis: 100%; }
@@ -48,101 +51,91 @@
 .cifra.cargando .esqueleto { margin: 0; }
 .esqueleto.bloque-cifra { width: 55%; height: 2.25rem; }
 
-/* ── Dos columnas 8/4: muestra del archivo y tareas (misma altura) ── */
+/* ── Dos columnas 8/4: muestra del archivo y cifras por módulo (misma altura) ── */
 .inicio-columnas { align-items: stretch; }
 
-/* Hoja de contactos: monturas 4:3 sin rotar, fotograma en mono y titular de una línea */
-.hoja-contactos { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4) var(--e-3);
+/* Hoja de contactos: monturas 4:3 sin rotar, fotograma en mono sobre la foto y titular de dos líneas */
+#panel-muestra .panel-cuerpo { padding: var(--e-4); }
+.hoja-contactos { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3) var(--e-3);
   margin: 0; padding: 0; }
 .hoja-contactos > li { min-width: 0; }
 .hoja-contactos > li:nth-child(n+7) { display: none; }   /* en móvil, 6 fotos bastan */
 .hoja-contactos > li.vacio { grid-column: 1 / -1; }
 .hoja-contactos .montura { height: 100%; transition: border-color var(--transicion), box-shadow var(--transicion); }
 .hoja-contactos .montura:hover, .hoja-contactos .montura:focus-within { border-color: var(--borde-fuerte); box-shadow: var(--sombra-2); }
-.hoja-contactos figcaption { justify-content: flex-start; margin-top: var(--e-2); }
-/* Número de fotograma impreso en la esquina de la foto (mono, sobre grafito translúcido) */
+.hoja-contactos figcaption { display: block; margin-top: var(--e-2); }
 .hoja-contactos .boton-imagen .fotograma { position: absolute; top: var(--e-1); left: var(--e-1); display: block; margin: 0;
   padding: 0 var(--e-1); border-radius: 2px; background: var(--insignia-foto-fondo); color: var(--insignia-foto-texto);
   font-size: var(--t-1); line-height: 1.4; }
-.muestra-titular { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto); }
+.muestra-titular { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  min-width: 0; color: var(--texto); }
 .hoja-contactos .cargando .esqueleto.linea { margin: var(--e-2) 0 0; }
 
-/* Tareas: una fila por página, con icono, verbo, una línea y chevron; las filas reparten la altura del panel */
-#panel-tareas { display: flex; flex-direction: column; }
+/* Por módulo: una fila por página con su cifra en vivo; las filas reparten la altura del panel */
+#panel-modulos { display: flex; flex-direction: column; }
 .accesos { list-style: none; display: flex; flex-direction: column; flex: 1 1 auto; margin: 0; padding: 0; }
 .accesos > li { display: flex; flex: 1 1 auto; min-width: 0; }
 .accesos > li + li { border-top: 1px solid var(--borde-suave); }
-.acceso { display: flex; flex: 1 1 auto; align-items: center; gap: var(--e-3); min-width: 0; min-height: 4rem;
-  padding: var(--e-3) var(--e-5); color: var(--texto); text-decoration: none; transition: background-color var(--transicion); }
+.acceso { display: flex; flex: 1 1 auto; align-items: center; gap: var(--e-3); min-width: 0; min-height: 3.5rem;
+  padding: var(--e-2) var(--e-5); color: var(--texto); text-decoration: none; transition: background-color var(--transicion); }
 .accesos > li:last-child .acceso { border-radius: 0 0 var(--radio-2) var(--radio-2); }
-.acceso:hover { background: var(--acento-fondo); }
+.acceso > .icono:first-child { width: 20px; height: 20px; color: var(--texto-suave); }
+.acceso:hover { background: var(--superficie-2); }
 .acceso:focus-visible { outline-offset: -3px; }
-.acceso-icono { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border: 1px solid var(--borde);
-  border-radius: var(--radio-2); background: var(--superficie-2); color: var(--acento); }
-.acceso-icono .icono { width: 20px; height: 20px; }
 .acceso-texto { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0; }
-.acceso-texto strong { font-weight: var(--peso-medio); line-height: 1.3; }
-.acceso-texto span { font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
-.acceso:hover .acceso-texto strong { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.acceso-texto strong { font-weight: var(--peso-medio); line-height: 1.3; text-decoration: none; }
+.acceso:is(:hover, :focus-visible) .acceso-texto strong { text-decoration: underline; text-decoration-color: var(--acento);
+  text-decoration-thickness: 2px; text-underline-offset: .2em; }
+.acceso-dato { font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+.acceso-cifra { font-weight: var(--peso-medio); font-variant-numeric: tabular-nums; color: var(--texto); }
 .acceso-chevron { flex: none; width: 16px; height: 16px; color: var(--texto-suave); transition: transform var(--transicion); }
 .acceso:hover .acceso-chevron { transform: translateX(2px); }
 
-/* ── Cómo se genera una ficha: la tubería de las 7 capas ──
-   Móvil: cuadrícula de 2. Desde 40rem: 4 + 3 sobre 12 columnas (antes del modelo / generación y control). Desde 75rem:
-   las 7 en una fila. Las flechas solo unen etapas vecinas de la misma fila. */
-.tuberia { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 0;
-  background: var(--borde-suave); }
-#panel-tuberia:has(#tuberia-total[hidden]) .tuberia {
-  clip-path: inset(0 round 0 0 calc(var(--radio-2) - 1px) calc(var(--radio-2) - 1px)); }
-.etapa { position: relative; display: flex; flex-direction: column; gap: var(--e-1); min-width: 0; padding: var(--e-4) var(--e-5);
-  background: var(--superficie); }
-.etapa:last-child { grid-column: 1 / -1; }
-.etapa-cabeza { display: flex; align-items: center; justify-content: space-between; gap: var(--e-2); margin-bottom: var(--e-2); }
-.etapa-cabeza > .icono { color: var(--texto); }
-.etapa-numero { display: inline-flex; align-items: center; font-family: var(--fuente-mono); font-size: var(--t-1);
+/* ── Cómo se genera una ficha: lista vertical de las 7 capas (número, icono, nombre y descripción, barra del p50 con
+   escala común, p50 y n en mono). Barras neutras; la capa más lenta, en acento. Sin colores por capa. ── */
+.tuberia { list-style: none; margin: 0; padding: 0; }
+.etapa { display: grid; grid-template-columns: 1.75rem 1.25rem minmax(0, 1fr) auto auto;
+  grid-template-areas: "numero icono texto texto texto" "numero icono barra p50 n";
+  align-items: center; gap: var(--e-1) var(--e-3); min-width: 0; padding: var(--e-3) var(--e-4); }
+.etapa + .etapa { border-top: 1px solid var(--borde-suave); }
+.etapa-numero { grid-area: numero; align-self: start; padding-top: 2px; font-family: var(--fuente-mono); font-size: var(--t-1);
   font-variant-numeric: tabular-nums; color: var(--texto-suave); }
-.etapa-numero .muestra { margin-right: var(--e-2); }
-.etapa h3 { margin: 0; font-size: var(--t-2); line-height: 1.3; }
-.etapa-texto { margin: 0; font-size: var(--t-1); line-height: 1.45; color: var(--texto-suave); }
-.etapa-tiempo { margin: auto 0 0; padding-top: var(--e-2); font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
-.etapa-tiempo .valor { font-weight: var(--peso-medio); color: var(--texto); }
-.etapa-flecha { display: none; position: absolute; z-index: 1; top: 50%; right: calc(-1 * var(--e-3) - .5px); width: var(--e-5);
-  height: var(--e-5); align-items: center; justify-content: center; transform: translateY(-50%); background: var(--superficie);
-  border: 1px solid var(--borde); border-radius: var(--radio-1); color: var(--texto-suave); }
-.etapa-flecha .icono { width: 16px; height: 16px; }
-.etapa:nth-child(odd) .etapa-flecha { display: flex; }
-#tuberia-total { margin: 0; }
+.etapa-icono { grid-area: icono; align-self: start; width: 20px; height: 20px; margin-top: 2px; color: var(--texto); }
+.etapa-texto { grid-area: texto; min-width: 0; }
+.etapa-texto h3 { margin: 0; font-size: var(--t-2); line-height: 1.35; }
+.etapa-texto p { margin: 2px 0 0; font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
+.etapa-barra { grid-area: barra; position: relative; display: block; height: .5rem; min-width: 3rem; overflow: hidden;
+  background: var(--grafica-pista); border-radius: 2px; }
+.etapa-relleno { position: absolute; inset: 0 auto 0 0; width: 0; min-width: 2px; background: var(--grafica-1); border-radius: 2px; }
+.etapa.dominante .etapa-relleno { background: var(--acento); }
+.etapa-p50, .etapa-n { margin: 0; font-family: var(--fuente-mono); font-size: var(--t-1); font-variant-numeric: tabular-nums;
+  text-align: right; white-space: nowrap; }
+.etapa-p50 { grid-area: p50; min-width: 4.5rem; color: var(--texto); }
+.etapa-p50 .valor { font-weight: var(--peso-medio); }
+.etapa-n { grid-area: n; min-width: 4.5rem; color: var(--texto-suave); }
+#tuberia-total { gap: var(--e-1) var(--e-3); margin: 0; }
 #tuberia-total > .icono { width: 20px; height: 20px; color: var(--texto-suave); }
-#tuberia-total { gap: var(--e-1) var(--e-3); }
 #tuberia-total > .mono { font-weight: var(--peso-medio); color: var(--texto); }
 #tuberia-total > .suave { font-size: var(--t-1); }
 
 /* ── Disposición por ancho del contenido ── */
 @container contenido (min-width: 36rem) {
-  .franja .componente { flex: 1 1 calc(50% - 1px); }
+  .franja { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .hoja-contactos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .hoja-contactos > li:nth-child(n+7) { display: block; }
 }
 @container contenido (min-width: 40rem) {
   .cifras-inicio { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .tuberia { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .etapa, .etapa:last-child { grid-column: span 3; }
-  .etapa:nth-child(n+5), .etapa:nth-child(n+5):last-child { grid-column: span 4; }
-  .etapa .etapa-flecha { display: flex; }
-  .etapa:nth-child(4) .etapa-flecha { display: none; }
-  #precalentamiento::before { content: "·" / ""; margin-right: var(--e-3); }
+  .etapa { grid-template-columns: 1.75rem 1.25rem minmax(0, 1.5fr) minmax(4rem, 1fr) auto auto;
+    grid-template-areas: "numero icono texto barra p50 n"; padding-inline: var(--e-5); }
+  .etapa-numero, .etapa-icono { align-self: center; padding-top: 0; margin-top: 0; }
 }
 @container contenido (min-width: 56rem) {
-  .franja .componente { flex: 1 1 calc(33.333% - 1px); }
   .cifras-inicio { gap: var(--e-5); }
 }
-/* 5 en una fila: cada celda toma su ancho natural y reparten el sobrante (ningún nombre se corta a 1280) */
-@container contenido (min-width: 62rem) {
-  .franja { flex-wrap: nowrap; }
-  .franja .componente { flex: 1 1 auto; }
-}
+/* Una fila de 5: la configuración vuelve a la cabecera */
 @container contenido (min-width: 75rem) {
-  .tuberia { grid-template-columns: repeat(7, minmax(0, 1fr)); }
-  .etapa, .etapa:nth-child(n+5), .etapa:nth-child(n+5):last-child { grid-column: auto; }
-  .etapa:nth-child(4) .etapa-flecha { display: flex; }
+  .franja { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .franja .componente-config { display: none; }
+  #panel-estado .estado-meta { display: flex; }
 }
