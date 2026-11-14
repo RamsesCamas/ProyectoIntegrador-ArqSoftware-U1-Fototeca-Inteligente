@@ -1,6 +1,6 @@
 # Umbrales calibrados con datos. Lo genera `python -m scripts.aplicar_calibracion`; no se edita a mano.
 # El servicio lo mezcla sobre parametros.yaml (fototeca/api/arranque.py → fusionar_calibracion).
-_generado: '2026-11-13T17:35:23+00:00'
+_generado: '2026-11-14T05:05:14+00:00'
 _origen:
   guardrails.tau_tesauro: calibracion_tesauro.json → tau_elegido
   agente.tau_ret: calibracion_h4.json → umbrales.agente.tau_ret
@@ -13,6 +13,7 @@ _origen:
   guardrails.tau_inyeccion: calibracion_h5.json → umbrales.guardrails.tau_inyeccion
   cache.fichas.tau_dup: cache.json → metricas.fichas_semantica_tau_dup.tau_elegido
   enrutador_fichas.tau_acuerdo: enrutador.json → metricas.fichas.umbrales_elegidos.enrutador_fichas.tau_acuerdo
+  enrutador_busquedas.tau_excluir: calibracion_tau_excluir.json → tau_excluir
 guardrails:
   tau_tesauro: 0.89
   tau_apego_visual: 0.6547
@@ -27,6 +28,7 @@ enrutador_fichas:
   tau_acuerdo: 0.0
 enrutador_busquedas:
   tau_busqueda: 0.6086
+  tau_excluir: 0.73
 cache:
   fichas:
     tau_dup: 0.95
