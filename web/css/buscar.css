@@ -21,7 +21,11 @@
 .ejemplos-titulo { font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto-suave); }
 .ejemplos-lista { list-style: none; display: flex; flex-wrap: wrap; gap: var(--e-2); min-width: 0; margin: 0; padding: 0; }
 .ejemplos-lista > li { min-width: 0; max-width: 100%; }
-.chip.ejemplo { cursor: pointer; }
+.chip.ejemplo { max-width: 100%; cursor: pointer; }
+/* Cada ejemplo en una línea (el texto completo en title) */
+.ejemplo-texto { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Con resultados, la ayuda larga se pliega; los ejemplos se quedan a mano */
+.busqueda.con-resultados #ayuda-consulta { display: none; }
 .chip.ejemplo .icono { color: var(--texto-suave); }
 
 /* Pie: «O busca con una foto» despliega el formulario de foto */
@@ -42,7 +46,8 @@
 
 /* ── Resultados ── */
 .zona-resultados { margin-top: var(--e-6); }
-.resultados-barra { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-5); margin-bottom: var(--e-4); }
+.resultados-barra { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-5); margin-bottom: var(--e-4);
+  scroll-margin-top: var(--e-4); }
 .resultados-barra h2 { margin: 0; }
 #estado { flex: 1 1 18rem; min-width: 0; }
 #estado .mensaje { margin: 0; }
@@ -65,7 +70,7 @@
 /* Rejilla de diapositivas */
 .resultados { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-4); }
 .resultados > .vacio { grid-column: 1 / -1; }
-.resultado { display: flex; flex-direction: column; min-width: 0; padding: 6px 6px var(--e-3); background: var(--montura);
+.resultado { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 6px 6px var(--e-3); background: var(--montura);
   border: 1px solid var(--montura-borde); border-radius: var(--radio-2); box-shadow: var(--sombra-1);
   transition: border-color var(--transicion), box-shadow var(--transicion); }
 .resultado:hover, .resultado:focus-within { border-color: var(--borde-fuerte); box-shadow: var(--sombra-2); }
@@ -74,8 +79,17 @@
 .rango { font-family: var(--fuente-mono); font-size: var(--t-1); font-weight: var(--peso-fuerte); font-variant-numeric: tabular-nums;
   color: var(--texto); }
 .resultado-titular { margin: var(--e-2) var(--e-2) 0; font-size: var(--t-2); line-height: 1.4; }
-/* Titular de 2 líneas como máximo (el completo, en title y en la ficha) */
-.resultado-titular a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+/* Titular de 2 líneas como máximo (el completo, en title y en la ficha): texto en carbón, sin subrayado; al pasar o
+   enfocar, subrayado en acento. Toda la tarjeta lleva a la ficha (enlace estirado); la foto, encima, abre el visor. */
+.resultado-titular a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  color: var(--texto); font-weight: var(--peso-medio); text-decoration: none; }
+.resultado-titular a:is(:hover, :focus-visible), .resultado:hover .resultado-titular a { text-decoration: underline;
+  text-decoration-color: var(--acento); text-decoration-thickness: 2px; text-underline-offset: .2em; }
+.resultado-titular a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radio-2); }
+.resultado-titular a:focus-visible { outline: none; }
+.resultado:has(.resultado-titular a:focus-visible) { outline: var(--foco-ancho) solid var(--foco); outline-offset: 2px; }
+.resultado { cursor: pointer; }
+.resultado-foto { position: relative; z-index: 1; }
 .razones { list-style: none; display: flex; flex-direction: column; gap: var(--e-1); margin: var(--e-2) var(--e-2) 0; padding: 0;
   font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
 .razones > li { display: flex; align-items: flex-start; gap: var(--e-2); min-width: 0; }
