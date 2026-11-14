@@ -1,147 +1,75 @@
-# Esqueleto de las diapositivas · Fototeca Viva
+# Diapositivas · Fototeca Viva
 
-**Duración:** 15 minutos de exposición y 5 de preguntas. Reparto: idea (2 min), arquitectura (3 min), modelos y
-decisiones de RAG (3 min), demo en vivo (5 min) y resultados y limitaciones (2 min).
+**Duración:** 15 minutos de exposición y 5 de preguntas. Reparto aproximado: proyecto (2 min), arquitectura de
+software (2 min), arquitectura de modelos (2 min), decisiones (3 min), resultados (1 min), demo en vivo (5 min) y
+limitaciones (0.5 min). [AUTOR: ajustar después del ensayo.]
 
-**Reglas de diseño:** una idea por diapositiva; diagramas y gráficas en lugar de párrafos (como máximo tres viñetas
-cortas); letra grande; los diagramas se toman de `docs/diagramas/*.png` y las gráficas de `evaluacion/graficas/`. Toda
-cifra que aparezca sale de `evaluacion/resultados/` y lleva su fuente en letra pequeña al pie.
+**Versión diseñada:** el mazo de 21 diapositivas está en el artifact «Fototeca Viva · Arquitectura» (privado; se
+exporta a PDF o PPTX desde Compartir › Exportar). Las notas del orador están en cada diapositiva. Para presentar sin
+internet, llevar la exportación en PDF.
+
+**Reglas de diseño:** estilo «Mesa de luz», el mismo de la web (mesa clara, película oscura, etiqueta de papel y lápiz
+graso naranja solo para marcar). Títulos descriptivos y cortos; una idea por diapositiva; las explicaciones van en las
+notas. Toda cifra sale de `evaluacion/resultados/` y su fuente aparece al pie.
 
 ---
 
-## 1 · Portada · 0:00–0:15
+## Proyecto
 
-- **Contenido:** «Fototeca Viva: catalogación accesible y trazable de archivos fotográficos». Autor, materia, docente.
-- **Visual:** una ficha real de la web con sus chips de fuentes. [AUTOR: captura de pantalla de `catalogar.html`.]
-- **Notas del orador:** «Les voy a mostrar un sistema que cataloga fotos como lo haría un catalogador con formación en
-  accesibilidad, en una laptop, sin internet».
+1. **Fototeca Viva** (portada). Tira de película con seis fotos del archivo de prueba; autor, materia y docente.
+2. **Fotos sin catalogar.** Tres fotos con su campo vacío: no aparece al buscar, no es accesible, se cataloga dos
+   veces.
+3. **Ficha IPTC con la fuente de cada campo.** Ficha real (`casos/fichas_con_rag.jsonl`) con sus fuentes al margen:
+   foto similar 0.87, regla W3C 0.80 y 0.78, «Mar» en el Tesauro UNESCO 0.94.
 
-## 2 · El problema · 0:15–1:00
+## Arquitectura de software
 
-- **Contenido:** miles de fotos sin metadatos · sin texto alternativo no son accesibles · duplicados que nadie detecta.
-- **Visual:** una cuadrícula de fotos sin título junto a una persona que usa lector de pantalla. [AUTOR: imagen con
-  atribución si es de XM3600.]
-- **Notas del orador:** quién es el usuario (el archivista de comunicación social o de una fototeca) y en qué momento de
-  su trabajo lo usa (al recibir un lote de fotos de un evento). Beneficiarias: personas ciegas o con baja visión.
+4. **Ejecución local en CPU.** Privacidad, 11 de 11 pasos sin internet (`demo_sin_red.json`), sin pago por llamada,
+   versiones fijadas. Consecuencia: ≤ 1.7B parámetros; ficha p50 de 25.996 s (rápida) y 56.793 s (completa)
+   (`desempeno.json`).
+5. **Vista de contenedores.** web, servicio, ollama, qdrant, SQLite y `./data`, y el contenedor de preparación. Límites y
+   picos (`h9_memoria.json`): ollama 5 GiB · 4.429, qdrant 0.5 GiB · 0.443, servicio 1.5 GiB · 0.081, web 0.0625 GiB.
+6. **Capas del servicio.** C1–C7 y dominio, T1 y T2 con sus puertos; import-linter en pytest: 3 contratos, 0 rotos
+   (`contrato_capas.json`).
 
-## 3 · Qué entrega (no es un chatbot) · 1:00–2:00
+## Arquitectura de modelos
 
-- **Contenido:** ficha IPTC con la fuente de cada campo · reporte de duplicados · búsqueda por texto o por foto con
-  razones · panel de accesibilidad del archivo.
-- **Visual:** la ficha con sus chips de fuentes, señalando un chip de regla, uno de tesauro y uno de foto similar.
-- **Notas del orador:** lo original: (a) el archivo aprende de las correcciones sin fine-tuning, (b) trazabilidad por
-  campo, (c) accesibilidad como objetivo, (d) arquitectura híbrida adaptativa con modelos de 1.7B parámetros o menos.
-  Prueba rápida: si se quita la web, queda una API de catalogación útil.
+7. **Modelos y tareas.** Qwen3.5-0.8B (P1, P2, P3, P6), LFM3-1.7B (P4, P5, P7), EmbeddingGemma-2 440m (vecinos, caché,
+   enrutadores, guardrails) y granite (consistencia, R3).
+8. **Flujo de una ficha.** Ocho pasos con su capa y, en carriles, el modelo de cada paso; el ciclo de agente entre
+   Ejemplos y Enrutar.
+9. **Gateway de modelos (C6).** Tabla de tareas, JSON Schema sin razonamiento (100 % válido a la primera,
+   `r3_modelos.json`), reintento y respaldo, un turno por modelo. Tiempos límite recalibrados
+   (`calibracion_tiempos_limite.json`): 58 → 92 s, 64 → 70 s y 90 → 109 s.
 
-## 4 · Contenedores · 2:00–3:00
+## Decisiones (ADR)
 
-- **Contenido:** cuatro contenedores, todo local, solo CPU.
-- **Visual:** Figura 2 (`docs/diagramas/02-contenedores.png`).
-- **Notas del orador:** la web solo habla con `/api/*` (R8); el servicio habla con Ollama y Qdrant por HTTP/JSON; SQLite
-  guarda documentos, fichas, caché, eventos, retroalimentación y lotes. Límites de memoria: 7.0625 GiB en total
-  (ADR-12).
+10. **Decisiones de arquitectura.** Los 13 ADR con su archivo de evidencia; se presentan seis.
+11. **ADR-01 · Modelo de composición.** Calidad 4.88 / 4.95 / 5.00; sin revisión 18, 20 y 22 de 30; p50 31.3 / 50.5 /
+    56.2 s; memoria 0.83 / 0.83 / 1.39 GB (`r3_modelos.json`). Ningún IC95 excluye 0: decide la latencia.
+12. **ADR-02 · Arquitectura de embeddings.** R@1 0.9 unificado, 0.82 híbrido, 0.704 y 0.48 pipelines; describir 250
+    imágenes con Qwen tomó 1.65 h (`r3_embeddings.json`).
+13. **ADR-03 · Enrutador de fichas.** Estrategias (`enrutador.json`); regla: ruta completa si hay texto visible o
+    consenso < 0.6768; 0.83 de exactitud fuera de muestra.
+14. **ADR-04 · Umbral de la caché semántica.** Barrido de τ_dup: con 0.95, 141 de 150 casi duplicados y 1 de 75 fichas
+    ajenas; ficha desde la caché en 0.023 s contra 69.312 s (`cache.json`).
+15. **ADR-05 · Guardrails y políticas.** Bloquear, sanitizar, aislar y marcar, reintentar; 29 de 33 entradas bien
+    manejadas (meta 0.9), 1 de 23 falsos positivos, 10 de 10 fotos con GPS limpias (`guardrails.json`).
+16. **ADR-07 · Ciclo de agente.** Máquina de estados con MAX_ITER = 2; se activó en 3 de 25 fotos, 0 de 3 mejoraron,
+    24.167 s de p50 añadido (`agente.json`).
 
-## 5 · Capas del servicio · 3:00–4:00
+## Cierre
 
-- **Contenido:** C1–C7 con dependencias solo hacia abajo · T1 y T2 con sus propios puertos · tres contratos verificados
-  en `pytest`.
-- **Visual:** Figura 3 (`docs/diagramas/03-capas.png`).
-- **Notas del orador:** explicar la inversión de dependencias de T1 y T2 (ADR-13) y que un import indebido rompe las
-  pruebas (`servicio/pruebas/test_contratos.py`). Cambiar Qdrant por otra base vectorial es escribir un adaptador
-  (ADR-09).
+17. **Resultados.** Siete cifras: R@1 · R@10 0.9 · 1.0; fuentes válidas 84 de 84 · 0 de 90; guardrails 29 de 33 · 1 de
+    23; caché 0.94 · 1 de 75; ficha p50 25.996 · 56.793 · 0.023 s; búsqueda p95 0.359 · 6.815 s; 11 de 11 pasos sin red.
+18. **Aprendizaje sin fine-tuning.** Cuatro pasos de la promoción y la curva de la simulación: 0.6788 en el bloque 1 y
+    0.7396 en el 5, con intervalos que se traslapan (`aprendizaje.json`).
+19. **Demo sin red.** Los once pasos de `guion_demo.md` con el tiempo de cada uno en el ensayo del 14 de noviembre.
+20. **Limitaciones.** Modelos pequeños, latencia en CPU, guardrails en 0.8788, ciclo de agente sin mejora, aprendizaje
+    sin efecto demostrado, 36 locales de XM3600. Trabajo futuro: medir de nuevo la búsqueda compleja con τ_excluir =
+    0.73 y las latencias en la laptop de la demo.
+21. **Preguntas.** Repositorio y créditos de las fotos (Open Images vía Crossmodal-3600, CC BY 2.0).
 
-## 6 · Flujo de una ficha · 4:00–5:00
-
-- **Contenido:** guardrails → caché → RAG → enrutador → modelos → guardrails → caché y traza → retroalimentación.
-- **Visual:** Figura 7 (`docs/diagramas/07-secuencia-ficha-normal.png`), con zoom en la parte central, o una versión
-  simplificada de los diez pasos. [AUTOR: decidir si se simplifica para la diapositiva.]
-- **Notas del orador:** el paso 6 (recuperar ejemplos) va antes que el 5 (enrutar), porque el enrutador decide con los
-  vecinos. Cada respuesta trae `meta` con la ruta, los modelos, la caché, los guardrails, las iteraciones del agente, el
-  tiempo por capa y el `traza_id`.
-
-## 7 · Modelos: quién hace qué · 5:00–6:00
-
-- **Contenido:** Qwen3.5-0.8B = los ojos y la pluma (describe y compone las fichas) · LFM3-1.7B = el intérprete de
-  búsquedas y el respaldo · EmbeddingGemma-2 = la memoria multimodal · granite = el auditor.
-- **Visual:** la tabla comparativa de modelos de lenguaje del informe (Tabla 8), de
-  `evaluacion/resultados/r3_modelos.json`, y la gráfica `evaluacion/graficas/r3_modelos_latencia.png`.
-- **Notas del orador:** criterios: calidad (juez y métricas sin juez), guardrails, latencia, memoria, licencia e
-  idioma, con una regla de decisión escrita antes de medir. La hipótesis era que LFM3, más grande, compondría mejor.
-  Con la misma entrada, ni el juez (5.0 contra 4.95) ni las fichas que pasan sin revisión (22 contra 20 de 30) los
-  separan con significancia, así que decide el costo: Qwen compone con p50 de 50.528 s contra 56.231 s
-  (`r3_modelos.json`). Lección: en la primera corrida LFM3 «ganaba» porque copiaba el contexto y el juez no lo veía; al
-  agregar la verificación `copia_contexto` la ventaja desapareció (ADR-01). La ruta rápida tarda menos (p50 31.291 s).
-  Por qué no modelos más grandes: los cuatro ya ocupan el límite de memoria de `ollama` (pico de 4.592 GiB de 5.0,
-  `evaluacion/resultados/h0.json` → `verificaciones.0.5.docker_stats`). Qué se sacrificó y por qué es adecuado
-  (ADR-01).
-
-## 8 · Unificado contra pipeline contra híbrido · 6:00–7:00
-
-- **Contenido:** una pregunta de arquitectura: ¿embedding multimodal o «describir y buscar como texto»?
-- **Visual:** la gráfica de R@k por arquitectura, `evaluacion/graficas/r3_embeddings_texto_imagen.png`.
-- **Notas del orador:** sobre la misma galería de 250 imágenes, la foto correcta queda en primer lugar en 0.9 de las
-  consultas con el unificado, 0.704 con el pipeline de Qwen y EmbeddingGemma-2, 0.48 con el de Qwen y granite, y 0.82
-  con el híbrido (`evaluacion/resultados/r3_embeddings.json` → `metricas.texto_imagen`). La decisión: unificado por
-  defecto y pipeline como reformulación del agente (ADR-02 y ADR-07). Mencionar el costo: describir las 250 imágenes
-  con Qwen tomó 1.65 h (`metricas.costo_pipeline`); embeber una imagen tuvo una p50 de 2.464 s en la viabilidad
-  (`h0.json` → `verificaciones.0.6`). Relación con la tesis.
-
-## 9 · Enrutador y decisiones de RAG · 7:00–8:00
-
-- **Contenido:** ruta rápida o completa según consenso, acuerdo y texto visible · RRF de dos listas · una regla por
-  fragmento · caché semántica con τ_dup.
-- **Visual:** una tabla pequeña con los parámetros y su justificación (k = 5 vecinos, k = 4 reglas, RRF k = 60, τ_dup y
-  su barrido) y la curva de τ_dup, `evaluacion/graficas/cache_tau_dup.png`. Con τ_dup = 0.95: recall 0.94 en 150 casi
-  duplicados y 1 de 75 fotos distintas con la ficha de otra (FPR 0.0133, meta ≤ 0.02); el recorte es la transformación
-  más difícil (recall 0.7917) (`evaluacion/resultados/cache.json` → `metricas.fichas_semantica_tau_dup`).
-- **Notas del orador:** ADR-03, ADR-04 y ADR-06; los umbrales se calibran con datos, no a ojo.
-
-## 10 · Demo en vivo · 8:00–13:00
-
-- **Contenido:** los nueve pasos, en una línea cada uno: sin red · ficha con fuentes · duplicado desde la caché ·
-  bloqueo · ciclo de agente · validar · buscar · métricas · OpenAPI.
-- **Visual:** cambiar al navegador y seguir `docs/presentacion/guion_demo.md`.
-- **Notas del orador:** lanzar el lote del paso 5 al empezar la diapositiva 4. Plan B: el video.
-
-## 11 · Resultados · 13:00–14:00
-
-- **Contenido:** una tabla de 4 a 6 cifras clave: R@10 de la búsqueda, calidad con RAG contra sin RAG, bloqueos correctos
-  y falsos positivos, respuestas incorrectas desde la caché, mejora del ciclo de agente y latencia p50 por ruta.
-- **Visual:** la gráfica `evaluacion/graficas/desempeno_capas_fichas.png` y esta tabla (todas las cifras, del 50 % de
-  cada conjunto):
-
-  | Cifra | Valor | Fuente |
-  |---|---|---|
-  | Búsqueda texto→imagen, R@1 · R@10 (unificada) | 0.9 · 1.0 | `r3_embeddings.json` |
-  | Campos de la ficha con fuente válida, con RAG · sin RAG | 84 de 84 · 0 de 90 | `rag_fichas.json` |
-  | Guardrails: casos bien manejados · falsos positivos | 29 de 33 · 1 de 23 | `guardrails.json` |
-  | Caché semántica: recall · fotos distintas con ficha ajena | 0.94 · 1 de 75 | `cache.json` |
-  | Ficha p50: rápida · completa · desde la caché | 25.996 s · 56.793 s · 0.023 s | `desempeno.json`, `cache.json` |
-  | Ciclo de agente: se activa · mejora | 3 de 25 · 0 de 3 | `agente.json` |
-- **Notas del orador:** el error más instructivo, la ficha que obedecía el letrero inyectado (informe §10.4, caso 1):
-  marcar y aislar no bastaba. Con la verificación de salida y la omisión del texto, la inyección en imagen bien
-  manejada pasó de 5 a 7 de 8. [AUTOR: elegir las cifras.]
-
-## 12 · Limitaciones y trabajo futuro · 14:00–15:00
-
-- **Contenido:** modelos pequeños (alucinaciones) · sesgos por región · solo CPU · el texto en las fotos como vector de
-  inyección.
-- **Visual:** la curva de aprendizaje, `evaluacion/graficas/aprendizaje_curva.png`. En la simulación, la similitud
-  granite pasa de 0.6788 en el primer bloque a 0.7396 en el último, con intervalos que se traslapan, y la tasa de
-  fichas aceptables no cambia (0.4). El mecanismo funciona, pero con 50 fotos no se demuestra el efecto
-  (`evaluacion/resultados/aprendizaje.json`).
-- **Notas del orador:** cada ficha la valida una persona antes de publicarse; trabajo futuro y relación con la tesis.
-  [AUTOR: cierre personal en una frase.]
-
-## 13 · Preguntas · 15:00–20:00
-
-- **Contenido:** «Gracias» y el enlace al repositorio.
-- **Diapositivas de respaldo** (solo si hay preguntas):
-  - Figura 5, despliegue local, con los límites de memoria (ADR-12);
-  - Figura 8, ficha desde la caché, y Figura 9, entrada bloqueada;
-  - Figura 10, ciclo de agente;
-  - la tabla de los 13 ADR (Tabla 12 del informe);
-  - la tabla de guardrails y sus políticas (ADR-05).
-- **Preguntas probables para ensayar:** ¿por qué no un modelo más grande? (memoria y CPU, ADR-01 y ADR-12) · ¿cómo
-  evitan que el texto de la foto dé órdenes al modelo? (ADR-05) · ¿qué pasa si la caché sirve la ficha de otra foto?
-  (ADR-04) · ¿cómo saben que las capas se respetan? (ADR-13) · ¿por qué SQLite y no Redis? (ADR-09).
+**Preguntas probables:** ¿por qué no un modelo más grande? (ADR-01 y ADR-12) · ¿cómo se evita que el texto de una foto
+dé órdenes al modelo? (ADR-05) · ¿qué pasa si la caché sirve la ficha de otra foto? (ADR-04) · ¿cómo se comprueba que
+las capas se respetan? (ADR-13) · ¿por qué SQLite y no Redis? (ADR-08 y ADR-09).
