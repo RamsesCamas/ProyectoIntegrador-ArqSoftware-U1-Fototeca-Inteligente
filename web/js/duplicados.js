@@ -36,8 +36,9 @@ function resumenGrupo(docs) {
   if (!otras.length) return `${cuantas}.`;
   const min = Math.min(...otras);
   const max = Math.max(...otras);
-  const rango = min.toFixed(2) === max.toFixed(2) ? dos(max) : `de ${dos(min)} a ${dos(max)}`;
-  return [`${cuantas}: similitud de imagen `, el("span", { clase: "cifra", texto: rango }),
+  const cifra = (s) => el("span", { clase: "cifra", texto: dos(s) });
+  const rango = min.toFixed(2) === max.toFixed(2) ? [cifra(max)] : ["de ", cifra(min), " a ", cifra(max)];
+  return [`${cuantas}: similitud de imagen `, ...rango,
     ` con la referencia, circulada (${min >= EXACTA ? "copia exacta" : "parecido semántico"}).`];
 }
 
