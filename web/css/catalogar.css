@@ -102,6 +102,7 @@
 .nota-espera .icono { margin-top: 1px; }
 .espera .mensaje { margin: var(--e-4) 0 0; }
 /* Pasado el p95: aviso (texto + color), la petición sigue en curso */
+.espera.lenta { border-color: var(--aviso-borde); }
 .espera.lenta .reloj-valor { color: var(--aviso); }
 /* Terminada: sin la lupa (la ficha ya muestra la foto) y con las capas en rejilla */
 .espera.terminada .espera-foto { display: none; }
@@ -130,7 +131,7 @@
 .revision > .mensaje { margin: var(--e-4) 0 0; }
 .ficha-reticula { margin-top: var(--e-5); }
 
-/* Columna de la foto: lupa oscura 4:3 con la foto en contain (≤ 60vh), procedencia y avisos */
+/* Columna de la foto: lupa oscura 4:3 con la foto en contain (≤ 60vh y ≤ 28rem), procedencia y avisos */
 .ficha-lateral { display: grid; gap: var(--e-5); align-content: start; }
 figure.foto { min-width: 0; margin: 0; }
 .foto .boton-imagen { display: block; aspect-ratio: 4 / 3; max-height: min(60vh, 28rem); background: var(--lupa-fondo);
