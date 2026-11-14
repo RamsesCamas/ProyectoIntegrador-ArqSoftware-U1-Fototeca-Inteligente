@@ -78,7 +78,9 @@
             <form id="formulario-imagen" class="busqueda-foto" hidden>
               <label for="imagen">Foto de referencia</label>
               <div class="busqueda-foto-fila">
-                <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="ayuda-imagen">
+                <input id="imagen" class="archivo-oculto" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="nombre-imagen ayuda-imagen">
+                <label for="imagen" class="boton secundario elegir-foto"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-subir"/></svg>Elegir foto</label>
+                <span id="nombre-imagen" class="nombre-imagen">Ninguna foto elegida</span>
                 <button class="boton" type="submit"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto-similar"/></svg>Buscar parecidas</button>
               </div>
               <p id="ayuda-imagen" class="ayuda">JPEG o PNG. Se buscan en el archivo las fotos que más se le parecen.</p>

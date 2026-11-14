@@ -32,6 +32,12 @@
 .busqueda-foto { flex: 1 1 100%; min-width: 0; margin-top: var(--e-1); padding-top: var(--e-4); border-top: 1px solid var(--borde-suave); }
 .busqueda-foto-fila { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); }
 .busqueda-foto-fila > * { min-width: 0; }
+/* El input de archivo queda oculto a la vista pero enfocable; su etiqueta-botón muestra el foco */
+.archivo-oculto { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.elegir-foto { margin: 0; }
+.archivo-oculto:focus-visible + .elegir-foto { outline: var(--foco-ancho) solid var(--foco); outline-offset: 2px; }
+.nombre-imagen { flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4;
+  font-size: var(--t-1); color: var(--texto-suave); }
 .busqueda-foto .ayuda { margin: var(--e-2) 0 0; }
 
 /* ── Resultados ── */

@@ -152,9 +152,15 @@ function mostrarFormularioFoto(abrir) {
 }
 alternarFoto.addEventListener("click", () => mostrarFormularioFoto(formularioFoto.hidden));
 
+// El nombre de la foto elegida, junto al botón (el input queda oculto a la vista pero enfocable)
+const entradaFoto = document.getElementById("imagen");
+entradaFoto.addEventListener("change", () => {
+  document.getElementById("nombre-imagen").textContent = entradaFoto.files[0]?.name || "Ninguna foto elegida";
+});
+
 formularioFoto.addEventListener("submit", (ev) => {
   ev.preventDefault();
-  const archivo = document.getElementById("imagen").files[0];
+  const archivo = entradaFoto.files[0];
   if (!archivo) { mensaje(estado, "Elige una foto para buscar otras parecidas."); return; }
   const datos = new FormData();
   datos.append("imagen", archivo);
@@ -170,6 +176,7 @@ zona.addEventListener("drop", (e) => {
   zona.classList.remove("activa");
   if (!e.dataTransfer.files.length) return;
   mostrarFormularioFoto(true);
-  document.getElementById("imagen").files = e.dataTransfer.files;
+  entradaFoto.files = e.dataTransfer.files;
+  entradaFoto.dispatchEvent(new Event("change"));
   formularioFoto.requestSubmit();
 });
