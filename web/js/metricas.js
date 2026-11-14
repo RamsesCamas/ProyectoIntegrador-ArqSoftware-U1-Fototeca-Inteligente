@@ -8,7 +8,7 @@ import { barras, CAPAS, crearMensaje, duracion, mensaje, numero, ORDEN_CAPAS, po
 
 const GRAVEDAD = { bloqueada: 0, sanitizado: 1, marcada: 2 };
 // Resultado de un guardrail: tono, símbolo y texto (el símbolo y el tono nunca van solos)
-const RESULTADO = { bloqueada: ["error", "×", "bloqueada", "bloqueadas"], sanitizado: ["neutra", "~", "sanitizada", "sanitizadas"],
+const RESULTADO = { bloqueada: ["error", "×", "bloqueada", "bloqueadas"], sanitizado: ["neutra", "", "sanitizada", "sanitizadas"],
   marcada: ["aviso", "!", "marcada", "marcadas"] };
 const FLUJOS = { fichas: "Fichas", busquedas: "Búsquedas" };
 const RUTAS = { rapida: "rápida", cache: "caché" };
@@ -156,7 +156,7 @@ function figuraResultado(res, filas) {
     { titulo: varios, encabezado: "Verificación", columnaValor: "Activaciones" }));
   figura.classList.add("figura-resultado");
   figura.querySelector("figcaption")?.replaceChildren(
-    el("span", { clase: `resultado resultado-${tono}` }, el("span", { clase: "resultado-simbolo", "aria-hidden": "true", texto: simbolo }),
+    el("span", { clase: `resultado resultado-${tono}` }, simbolo ? el("span", { clase: "resultado-simbolo", "aria-hidden": "true", texto: simbolo }) : null,
       plural(suma(filas.map((g) => g.n)), uno, varios)),
     ` en ${plural(filas.length, "verificación", "verificaciones")}`);
   return figura;

@@ -12,7 +12,7 @@
 .estado-metricas { min-width: 0; }
 .estado-metricas:empty { display: none; }
 /* El estado es una línea, no una caja */
-.estado-metricas .mensaje { margin: 0; padding: var(--e-1) 0 var(--e-1) var(--e-3); background: transparent; font-size: var(--t-1); }
+.estado-metricas .mensaje { margin: 0; padding: var(--e-1) 0; border-left: 0; background: transparent; font-size: var(--t-1); }
 .estado-metricas .mensaje.con-icono { padding-left: 1.75rem; }
 .estado-metricas .mensaje-icono { left: 0; top: calc(var(--e-1) + 1px); width: 18px; height: 18px; }
 .estado-metricas .mono { font-family: var(--fuente-mono); font-size: var(--t-1); }
@@ -42,7 +42,7 @@
 .cifras-prosa .cifra { font-size: var(--t-2); font-weight: var(--peso-fuerte); }
 
 /* ── Documento: secciones en una columna de lectura ────────────────────────────────────────────────────────── */
-.tablero { display: flex; flex-direction: column; gap: var(--e-7); max-width: 72rem; min-width: 0; }
+.tablero { display: flex; flex-direction: column; gap: var(--e-7); max-width: 64rem; min-width: 0; }
 .tablero > .mensaje { margin: 0; }
 .tablero .panel + .panel { margin-top: 0; }
 .tablero[aria-busy="true"] .seccion-metrica { opacity: .6; transition: opacity var(--transicion); }
@@ -85,7 +85,9 @@
 }
 
 /* ── Gráficas (marcado de comun.js): ajustes de esta página ────────────────────────────────────────────────── */
-.tablero .grafica { margin: var(--e-4) 0 0; }
+.tablero .grafica { max-width: 48rem; margin: var(--e-4) 0 0; }
+/* Las tablas con muchas columnas o de dos en fondo usan todo el ancho de la columna de lectura */
+#sec-cache .grafica, #sec-modelos .grafica, #sec-endpoints .grafica, .por-evento .grafica, .flujo .grafica { max-width: none; }
 /* Cabeceras numéricas de una sola palabra (p50, Tasa, Activaciones…): sin mínimo de ancho, en una línea */
 .tablero .tabla-barras thead th.num { min-width: 0; white-space: nowrap; }
 #sec-modelos .tabla-barras thead th.num { min-width: 6rem; white-space: normal; }

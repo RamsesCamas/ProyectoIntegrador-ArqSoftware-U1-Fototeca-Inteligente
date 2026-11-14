@@ -49,11 +49,12 @@ function cuadro(d, posicion, diferida) {
     el("button", { type: "button", clase: "cuadro-foto",
       onclick: () => verFotoGuardada(d.id, { titulo, extra: [["Similitud en el grupo", dos(d.similitud)]] }) },
       miniatura(d.id, { alt: d.texto_alternativo || `Foto ${d.id} (sin ficha todavía)`, lado: 256, ancho: 256, alto: 192, diferida }),
-      el("span", { clase: "solo-lectores", texto: referencia ? " (referencia del grupo; ver en grande)" : " (ver en grande)" })),
+      el("span", { clase: "solo-lectores", texto: referencia ? " (referencia del grupo; ver en grande)" : " (ver en grande)" }),
+      // El círculo del lápiz va sobre la foto (el .cuadro-foto es su padre posicionado)
+      referencia ? lapiz("circulo") : null),
     referencia
       ? el("span", { clase: "cuadro-num cuadro-referencia", texto: "Referencia" })
       : el("span", { clase: "cuadro-num" }, el("span", { clase: "solo-lectores", texto: "similitud " }), dos(d.similitud)),
-    referencia ? lapiz("circulo") : null,
     el("div", { clase: "cuadro-pie" },
       el("p", { clase: "cuadro-titular" }, el("a", { href: `catalogar.html?doc=${encodeURIComponent(d.id)}`, texto: d.titular || "Sin ficha todavía" })),
       el("p", { clase: "cuadro-id" }, el("span", { clase: "id", title: d.id, texto: d.id }))));
