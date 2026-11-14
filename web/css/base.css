@@ -110,7 +110,7 @@
   --franja-fondo: #e7e7e4;                     /* franja neutra del aviso de IA */
   --mesa-fondo: #fafaf8;                       /* zona de carga «mesa de luz» */
   --mesa-rejilla: #e6e6e2;                     /* retícula tenue de la mesa de luz */
-  --escaneo: rgba(255, 255, 255, .22);         /* línea de escaneo sobre la lupa durante la espera */
+  --escaneo: rgba(27, 27, 27, .12);            /* línea de escaneo (oscura y tenue: la lupa ahora es clara) sobre la lupa durante la espera */
   --grafica-rejilla: #d7d7d4;                  /* rejilla tenue de las gráficas */
   --grafica-pista: #e5e5e2;                    /* pista (100 %) detrás de cada barra */
   --esqueleto-fondo: #e9e9e6;
