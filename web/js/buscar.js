@@ -34,16 +34,15 @@ function cuadro(x, i) {
   const razones = x.razones || [];
   // Solo el rango: el orden sale de fusionar dos listas (RRF) con penalizaciones, y `puntaje` de la API es solo la
   // similitud texto→imagen, que ya aparece en las razones (un puntaje junto al rango no cuadraba con el orden).
-  // El marco (foto + número sobre la película) lleva el círculo de lápiz graso al pasar o enfocar; el pie va en la mesa
+  // El marco: la foto y su número sobre la película (el círculo de lápiz graso, dentro de la foto, aparece al pasar o
+  // enfocar); el pie va en la mesa, bajo la tira
   const marco = el("div", { clase: "cuadro-marco" },
     el("button", { type: "button", clase: "cuadro-foto", title: titular,
       onclick: () => verFotoGuardada(x.documento_id, { titulo: titular,
         extra: [["Posición", numero(i + 1)], ["Por qué coincide", razones.join("; ")]] }) },
       miniatura(x.documento_id, { alt, diferida: i >= VISIBLES_SIN_DIFERIR }),
-      el("span", { clase: "solo-lectores", texto: " (ver en grande con su ficha)" })),
+      el("span", { clase: "solo-lectores", texto: " (ver en grande con su ficha)" }), lapiz("circulo")),
     el("span", { clase: "cuadro-num" }, el("span", { clase: "solo-lectores", texto: "Posición " }), numero(i + 1)));
-  const trazo = lapiz("circulo");
-  if (trazo) marco.append(trazo);
   return el("li", { clase: "cuadro" }, el("article", { clase: "cuadro-articulo", "aria-labelledby": idTitular },
     marco,
     el("div", { clase: "cuadro-pie" },

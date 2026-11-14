@@ -43,12 +43,12 @@ function cuadro(d) {
   const titular = d.titular || d.nombre || d.documento_id;
   const alt = d.texto_alternativo || d.titular || `Fotograma ${d.numero} (foto sin ficha)`;
   const item = el("li", { clase: "cuadro" });
+  // El círculo de lápiz graso va DENTRO de la foto: rodea el fotograma con foco, señalado o elegido
   item.append(
     el("button", { type: "button", clase: "cuadro-foto", title: titular, onclick: () => elegir(item, d) },
-      miniatura(d.documento_id, { alt }), el("span", { clase: "solo-lectores", texto: ` (fotograma ${d.numero}: ver en grande)` })),
+      miniatura(d.documento_id, { alt }), el("span", { clase: "solo-lectores", texto: ` (fotograma ${d.numero}: ver en grande)` }),
+      lapiz("circulo")),
     el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: numero(d.numero) }));
-  const trazo = lapiz("circulo");
-  if (trazo) item.append(trazo);
   return item;
 }
 

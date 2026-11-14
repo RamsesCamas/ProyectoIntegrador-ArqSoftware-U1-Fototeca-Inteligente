@@ -20,8 +20,7 @@
 .hoja-cabeza h1 { margin: 0; font-size: var(--t-5); white-space: nowrap; }
 .hoja-rango { flex: 1 1 18rem; min-width: 0; margin: 0; color: var(--texto-suave); }
 .paginas { display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-5); margin-left: auto; }
-.hoja-contactos { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr));
-  column-gap: 0; row-gap: var(--e-3); margin: 0; padding: 0; }
+.hoja-contactos { grid-template-columns: repeat(3, minmax(0, 1fr)); }   /* en móvil, 3 por tira; 6 en escritorio */
 .hoja-contactos > .cuadro { position: relative; min-width: 0; }
 .hoja-contactos .cuadro-foto img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
 .hoja-contactos > .cuadro.cargando { padding: 7px 5px 26px; background: var(--pelicula); }
