@@ -20,12 +20,9 @@ function esqueleto() {
     el("ul", { clase: "panel-cuerpo diapositivas" }, diapositiva(), diapositiva(), diapositiva())));
 }
 
-/** Descripción del encabezado: «Compara cada grupo» (no hay acción de conservar) y el umbral τ_dup actual. */
+/** Descripción del encabezado: agrega el umbral τ_dup actual (el texto base, «Compara cada grupo», está en el HTML). */
 function ajustarDescripcion(umbral) {
   if (!descripcion) return;
-  for (const nodo of descripcion.childNodes) {
-    if (nodo.nodeType === Node.TEXT_NODE) nodo.textContent = nodo.textContent.replace(/Revisa cada grupo y conserva la mejor versión\.?/, "Compara cada grupo.");
-  }
   if (umbral !== null) descripcion.append(" Se agrupan cuando su similitud de imagen llega al umbral ", el("span", { clase: "umbral", texto: `τ_dup = ${umbral}` }), ".");
 }
 
