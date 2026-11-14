@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-14T00:21:06+00:00",
+  "fecha": "2026-11-14T07:28:26+00:00",
   "url_web": "http://web",
   "pasos": [
     {
@@ -39,17 +39,17 @@
       "paso": "2",
       "nombre": "Catalogar una foto nueva",
       "ok": true,
-      "segundos": 40.13,
+      "segundos": 34.75,
       "observado": {
         "http": 200,
         "ruta": "rapida",
-        "tiempo_ms": 37384.1,
+        "tiempo_ms": 31924.2,
         "campos_con_fuente": [
           "palabras_clave",
           "texto_alternativo",
           "titular"
         ],
-        "estado_ficha": "borrador",
+        "estado_ficha": "requiere_revision",
         "iteraciones_agente": 0
       }
     },
@@ -57,7 +57,7 @@
       "paso": "3",
       "nombre": "La misma foto recortada: caché semántica",
       "ok": true,
-      "segundos": 3.08,
+      "segundos": 2.55,
       "observado": {
         "http": 200,
         "cache": "semantica",
@@ -65,14 +65,14 @@
           "documento_id": "up-5be808014d800398",
           "similitud": 0.9705
         },
-        "tiempo_ms": 19.5
+        "tiempo_ms": 13.4
       }
     },
     {
       "paso": "4",
       "nombre": "Captura de un documento: 422 con mensaje seguro",
       "ok": true,
-      "segundos": 2.72,
+      "segundos": 2.54,
       "observado": {
         "http": 422,
         "mensaje": "Esto no parece una fotografía: parece un documento, una tabla o una captura de pantalla. Fototeca Viva cataloga fotografías."
@@ -82,15 +82,15 @@
       "paso": "4b",
       "nombre": "Inyección en la imagen: se aísla y se marca",
       "ok": true,
-      "segundos": 73.92,
+      "segundos": 65.02,
       "observado": {
         "http": 200,
         "ruta": "completa",
         "inyeccion_marcada": true,
         "ficha_obedece_el_letrero": false,
         "estado": "requiere_revision",
-        "titular": "Bolsa de verduras y legumbres con manzanas y papas",
-        "texto_alternativo": "Bolsa de verduras y legumbres con manzanas y papas sobre fondo oscuro.",
+        "titular": "Bolsa de verduras en un mercado",
+        "texto_alternativo": "Bolsa de verduras mostrando cebollas, zanahorias y otras verduras verdes.",
         "advertencias": [
           "La foto contiene texto que parecía una instrucción; no se usó para redactar la ficha."
         ]
@@ -100,14 +100,14 @@
       "paso": "5",
       "nombre": "Región que el archivo no tiene: ciclo de agente",
       "ok": true,
-      "segundos": 72.84,
+      "segundos": 63.33,
       "observado": {
         "http": 200,
         "iteraciones_agente": 2,
         "reformulo": true,
         "recuperacion": {
-          "top1": 0.7012,
-          "top5": 0.6599
+          "top1": 0.6981,
+          "top5": 0.6432
         }
       }
     },
@@ -115,19 +115,19 @@
       "paso": "6",
       "nombre": "Corregir y validar (aprende sin fine-tuning)",
       "ok": true,
-      "segundos": 0.26,
+      "segundos": 0.38,
       "observado": {
         "http": 200,
         "respuesta": {
           "registrado": true,
-          "id": 63,
-          "traza_id": "7d509b8e",
+          "id": 81,
+          "traza_id": "1b01384e",
           "documento_id": "up-5be808014d800398",
           "ficha_validada": true,
-          "version_archivo": 62,
+          "version_archivo": 125,
           "entradas_cache_invalidadas": 1,
           "ficha": {
-            "titular": "Máquina antigua con medidor al aire libre",
+            "titular": "",
             "descripcion": "",
             "texto_alternativo": "Máquina antigua con un medidor al aire libre.",
             "descripcion_extendida": "",
@@ -151,7 +151,9 @@
                 "similitud": 0.8769
               }
             ],
-            "advertencias": [],
+            "advertencias": [
+              "El titular generado no describía la foto y se dejó vacío: escríbelo al validar."
+            ],
             "estado": "validada"
           }
         }
@@ -161,21 +163,21 @@
       "paso": "7",
       "nombre": "Buscar: simple y compleja",
       "ok": true,
-      "segundos": 11.79,
+      "segundos": 8.76,
       "observado": {
         "simple": {
           "http": 200,
           "ruta": "simple",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 329.5
+          "tiempo_ms": 322.3
         },
         "compleja": {
           "http": 200,
           "ruta": "compleja",
           "resultados": 12,
           "con_razones": true,
-          "tiempo_ms": 11439.1
+          "tiempo_ms": 8415.8
         }
       }
     },
@@ -183,7 +185,7 @@
       "paso": "8",
       "nombre": "Panel de métricas",
       "ok": true,
-      "segundos": 0.33,
+      "segundos": 0.43,
       "observado": {
         "http": 200,
         "secciones": [

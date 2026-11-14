@@ -27,8 +27,8 @@ pantalla» describe lo que debe verse en cada paso, para ensayar y para grabar e
 - [ ] Medir en la laptop de la demo cuánto tarda una ficha por la ruta completa. Las latencias de referencia de la
       verificación de viabilidad son de otra máquina: P1 de Qwen tuvo una p50 de 34.28 s y P3 de Qwen solo texto, que
       compone desde R3 (ADR-01), una p50 de 35.583 s (`evaluacion/resultados/h0.json` → `verificaciones.0.6`). En la prueba sin red del equipo de desarrollo
-      (Mac M1 Pro, repetida después del rediseño de la web y de las mejoras de carga), el paso 2 tardó 40.13 s por la
-      ruta rápida, el 4b 73.92 s y el 5 72.84 s
+      (Mac M1 Pro, repetida con la configuración final: rediseño v3 de la web y τ_excluir calibrado), el paso 2 tardó
+      34.75 s por la ruta rápida, el 4b 65.02 s y el 5 63.33 s
       (`evaluacion/resultados/demo_sin_red.json`). [AUTOR: anotar aquí la latencia medida en la laptop de la demo y
       ajustar los tiempos del guion.]
 - [ ] Ensayar el guion completo dos veces con el cronómetro y grabar el video del plan B.
