@@ -1,27 +1,70 @@
-/* Archivo · filtro, tabla de documentos, confirmación de borrado y paginación. Solo maquetación y piezas propias, solo
-   con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página. Estado de partida migrado de v1 al
-   sistema v3. */
+/* Archivo · barra de herramientas (filtro segmentado y paginación), confirmación de borrado y tabla de documentos.
+   Solo maquetación y piezas propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página (T4).
 
-.filtros { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); padding: var(--e-3) var(--e-4); }
-.filtros label { margin: 0; }
-.filtros select { width: auto; min-width: 12rem; }
+   · La tabla tiene filas de 72 px: montura de 72 × 54 (borde de 4 px) y dos líneas de texto.
+   · ≥ 56rem de contenido: la envoltura no se desplaza y el encabezado de la tabla se pega a la ventana.
+   · < 56rem: la envoltura se desplaza en horizontal (la columna Documento no baja de 12rem). */
 
-.tabla-archivo tbody td, .tabla-archivo tbody th { height: 4.5rem; }
-.miniatura-archivo { width: 72px; }
-.miniatura-archivo img { width: 72px; height: 54px; object-fit: cover; border: 1px solid var(--montura-borde); border-radius: 2px;
-  background: var(--lupa-fondo); }
-.celda-documento { min-width: 14rem; }
-.celda-documento a, .celda-documento .nombre { display: block; max-width: 28rem; overflow: hidden; text-overflow: ellipsis;
-  white-space: nowrap; font-weight: var(--peso-medio); line-height: 1.6; }
-.celda-documento .id { display: block; max-width: 28rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ── Barra de herramientas ──────────────────────────────────────────────────────────────────────────────────── */
+.barra-archivo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-3) var(--e-5);
+  margin: 0 0 var(--e-4); }
+.barra-archivo .segmentado { flex: none; }
+.paginacion { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-4); min-width: 0; margin-left: auto; }
+.paginacion-botones { display: flex; flex-wrap: wrap; gap: var(--e-2); }
+#pagina { color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+#pagina:empty { display: none; }
+.icono-atras { transform: scaleX(-1); }
+.paginacion .boton { padding-inline: var(--e-3); }
 
-.tabla-archivo tbody td:nth-of-type(4) { font-family: var(--fuente-mono); font-size: var(--t-1); white-space: nowrap; }
-.confirmacion { margin: var(--e-4) 0; border: 2px solid var(--error); border-left-width: 6px; }
-.confirmacion h2 { margin-top: 0; font-size: var(--t-3); color: var(--error); }
+#estado > .mensaje { margin-top: 0; }
 
-.paginacion { justify-content: center; margin-top: var(--e-4); }
-#pagina { font-variant-numeric: tabular-nums; }
+/* ── Confirmación de borrado: panel de peligro con la montura del documento ─────────────────────────────── */
+.confirmacion { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--e-4) var(--e-5); margin: 0 0 var(--e-4);
+  padding: var(--e-4) var(--e-5); background: var(--superficie); border: 1px solid var(--error); border-left-width: 4px;
+  border-radius: var(--radio-2); box-shadow: var(--sombra-2); }
+.confirmacion > .montura { flex: none; }
+.confirmacion-cuerpo { flex: 1 1 20rem; min-width: 0; }
+.confirmacion h2 { display: flex; align-items: center; gap: var(--e-2); margin: 0; font-size: var(--t-3); color: var(--error); }
+.confirmacion h2 .icono { width: 20px; height: 20px; }
+.confirmacion-documento { margin: var(--e-2) 0 0; }
+.confirmacion-documento strong { display: block; }
+.confirmacion-documento .documento-meta { white-space: normal; }
+.confirmacion-acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); margin-top: var(--e-4); }
 
-@container contenido (max-width: 40rem) {
-  .celda-documento a, .celda-documento .nombre, .celda-documento .id { max-width: 16rem; }
+/* ── Montura de 72 × 54 (miniatura y confirmación) ─────────────────────────────────────────────────────────── */
+.tabla-archivo .montura, .confirmacion .montura { width: calc(72px + 2 * 4px + 2px); padding: 4px; }
+.montura-norma { display: grid; place-items: center; height: calc(54px + 2 * 4px + 2px); color: var(--texto-suave);
+  background: var(--superficie-2); }
+.montura-norma .icono { width: 24px; height: 24px; }
+.miniatura-esqueleto { display: block; height: 54px; }
+
+/* ── Tabla ─────────────────────────────────────────────────────────────────────────────────────────────────── */
+.envoltura-archivo { margin-top: 0; }
+.tabla-archivo tbody td, .tabla-archivo tbody th { height: 4.5rem; padding-top: var(--e-1); padding-bottom: var(--e-1); }
+.tabla-archivo td { white-space: nowrap; }
+.tabla-archivo .celda-foto { width: 1%; padding-left: var(--e-4); }
+.tabla-archivo thead th:first-child { padding-left: var(--e-4); }
+.miniatura-archivo { width: auto; }
+/* Documento: ocupa el ancho que sobra; titular (600) y «nombre · id» en mono gris, una línea cada uno con elipsis */
+.tabla-archivo .celda-documento { width: 100%; max-width: 0; }
+.documento-titular { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--peso-medio);
+  line-height: 1.5; }
+a.documento-titular { text-decoration: none; }
+a.documento-titular:hover, a.documento-titular:focus-visible { text-decoration: underline; }
+.documento-meta { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--fuente-mono);
+  font-size: var(--t-1); font-weight: var(--peso-normal); line-height: 1.5; color: var(--texto-suave); }
+.documento-meta .id { overflow-wrap: normal; }
+.tabla-archivo .fecha { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave); }
+.tabla-archivo .col-acciones { text-align: right; }
+.tabla-archivo .fila-cargando .esqueleto.linea { max-width: 8rem; }
+.tabla-archivo .fila-cargando .celda-documento .esqueleto.linea { max-width: 24rem; }
+.tabla-archivo .fila-aviso td { height: auto; padding: var(--e-6) var(--e-4); white-space: normal; }
+.aviso-tabla { display: flex; align-items: center; justify-content: center; gap: var(--e-2); margin: 0; color: var(--texto-suave); }
+
+/* Encabezado pegajoso: con espacio de sobra, la envoltura no desplaza y el thead se pega a la ventana */
+@container contenido (min-width: 56rem) {
+  .envoltura-archivo { overflow: visible; }
+  .tabla-archivo thead th { top: 0; }
+  .tabla-archivo thead th:first-child { border-top-left-radius: var(--radio-2); }
+  .tabla-archivo thead th:last-child { border-top-right-radius: var(--radio-2); }
 }

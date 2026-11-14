@@ -113,7 +113,8 @@ function latenciaPorCapa(m) {
     const id = `flujo-${flujo}`;
     return el("section", { clase: "flujo", "aria-labelledby": id },
       el("h3", { id }, icono(flujo === "fichas" ? "catalogar" : flujo === "busquedas" ? "buscar" : "reloj"), nombre),
-      el("p", { clase: "flujo-resumen", texto: t?.n ? `total p50 ${ms(t.p50_ms)} · p95 ${ms(t.p95_ms)} · n = ${numero(t.n)}` : "sin datos todavía" }),
+      el("p", { clase: "flujo-resumen", texto: t?.n ? [`total p50 ${ms(t.p50_ms)}`, `p95 ${ms(t.p95_ms)}`, `n = ${numero(t.n)}`].map(sinCorte).join(" · ")
+        : "sin datos todavía" }),
       partes.length ? barraApilada(partes, { titulo: `${nombre}: tiempo p50 por capa (barras apiladas)` }) : null,
       barras(ordenadas.map(([c, v]) => ({ clave: c, etiqueta: CAPAS[c] || c, valor: v.p95_ms || 0, n: v.n, p50: v.p50_ms })),
         { titulo: `${nombre}: p50 y p95 por capa`, encabezado: "Capa", columnaValor: "p95", formato: ms,

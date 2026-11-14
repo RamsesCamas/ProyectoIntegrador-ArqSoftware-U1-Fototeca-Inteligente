@@ -50,29 +50,31 @@
           <div class="encabezado-acciones"></div>
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
-        <form id="filtros" class="tarjeta filtros">
-          <label for="tipo">Tipo de documento</label>
-          <select id="tipo" name="tipo">
-            <option value="foto">Fotos</option>
-            <option value="norma">Normas</option>
-            <option value="">Todos</option>
-          </select>
-        </form>
-        <section id="estado" aria-live="polite"></section>
-        <div id="confirmacion" class="tarjeta confirmacion" role="alertdialog" aria-modal="false"
+        <div class="barra-archivo">
+          <fieldset class="segmentado" id="filtro-tipo">
+            <legend>Tipo de documento</legend>
+            <input type="radio" name="tipo" id="tipo-todos" value=""><label for="tipo-todos">Todos</label>
+            <input type="radio" name="tipo" id="tipo-foto" value="foto" checked><label for="tipo-foto"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto"/></svg>Fotos</label>
+            <input type="radio" name="tipo" id="tipo-norma" value="norma"><label for="tipo-norma"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-regla"/></svg>Normas</label>
+          </fieldset>
+          <nav class="paginacion" aria-label="Paginación">
+            <span id="pagina" aria-live="polite"></span>
+            <span class="paginacion-botones">
+              <button class="boton secundario" type="button" id="anterior"><svg class="icono icono-atras" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg>Anterior</button>
+              <button class="boton secundario" type="button" id="siguiente">Siguiente<svg class="icono" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
+            </span>
+          </nav>
+        </div>
+        <div id="estado" aria-live="polite"></div>
+        <div id="confirmacion" class="confirmacion" role="alertdialog" aria-modal="false"
              aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-texto" hidden></div>
-        <div class="tabla-envoltura" role="region" aria-labelledby="titulo-tabla" tabindex="0">
+        <div class="tabla-envoltura envoltura-archivo" role="region" aria-labelledby="titulo-tabla" tabindex="0">
           <table class="tabla tabla-archivo">
             <caption id="titulo-tabla" class="solo-lectores">Documentos del archivo</caption>
-            <thead><tr><th scope="col">Vista</th><th scope="col">Documento</th><th scope="col">Tipo</th><th scope="col">Ficha</th><th scope="col">Fecha</th><th scope="col">Acciones</th></tr></thead>
+            <thead><tr><th scope="col">Foto</th><th scope="col">Documento</th><th scope="col">Tipo</th><th scope="col">Estado</th><th scope="col">Fecha</th><th scope="col" class="col-acciones">Acciones</th></tr></thead>
             <tbody id="filas"></tbody>
           </table>
         </div>
-        <nav class="paginacion fila" aria-label="Paginación">
-          <button class="boton secundario" type="button" id="anterior">Anterior</button>
-          <span id="pagina" aria-live="polite"></span>
-          <button class="boton secundario" type="button" id="siguiente">Siguiente</button>
-        </nav>
         <!-- ═══ Fin del contenido de la página ═══ -->
       </main>
       <footer class="pie">

@@ -66,6 +66,14 @@
   border-top-right-radius: var(--radio-2); font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-suave);
   white-space: nowrap; font-variant-numeric: tabular-nums; }
 .panel-metrica > .panel-cuerpo { grid-column: 1 / -1; min-width: 0; }
+/* Contenido angosto (móvil): el texto auxiliar baja a su propia línea, alineado con el título */
+@container contenido (max-width: 35.99rem) {
+  .panel-metrica { grid-template-columns: minmax(0, 1fr); }
+  .panel-metrica > h2 { padding-inline: var(--e-4); }
+  .panel-metrica.con-auxiliar > h2 { min-height: 0; padding-bottom: 0; border-bottom: 0; border-top-right-radius: var(--radio-2); }
+  .panel-metrica > .panel-auxiliar { grid-column: 1; grid-row: 2; padding: var(--e-1) var(--e-4) var(--e-3) calc(var(--e-4) + 20px + var(--e-3));
+    border-top-right-radius: 0; white-space: normal; }
+}
 
 /* Esqueletos de carga */
 .panel-cargando-cabecera { min-height: 3.5rem; padding: var(--e-4) var(--e-5); background: var(--panel-cabecera-fondo);
