@@ -360,12 +360,17 @@ function migas(doc) {
     el("li", {}, el("span", { clase: "id", "aria-current": "page", texto: doc }))));
 }
 
-/** Módulo activo de origen (Archivo) en la navegación. */
+/** Módulo activo de origen (Archivo) en la navegación; en la barra superior (< 1100 px), además, queda a la vista. */
 function marcarArchivoActivo() {
+  let actual = null;
   for (const a of document.querySelectorAll("nav.navegacion a")) {
-    if (a.getAttribute("href") === "archivo.html") a.setAttribute("aria-current", "page");
-    else a.removeAttribute("aria-current");
+    if (a.getAttribute("href") === "archivo.html") { a.setAttribute("aria-current", "page"); actual = a; } else a.removeAttribute("aria-current");
   }
+  const lista = actual?.closest("ul");
+  if (!lista || lista.scrollWidth <= lista.clientWidth) return;
+  const ra = actual.getBoundingClientRect();
+  const rl = lista.getBoundingClientRect();
+  lista.scrollLeft += ra.left - rl.left - (lista.clientWidth - ra.width) / 2;
 }
 
 /** Mientras carga: migas y h1 provisional (sin id: la ficha aún no está lista). */
