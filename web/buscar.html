@@ -59,7 +59,7 @@
       <form id="formulario-imagen" class="busqueda-foto" hidden>
         <label for="imagen">Foto de referencia</label>
         <div class="busqueda-foto-fila">
-          <input id="imagen" class="archivo-oculto" name="imagen" type="file" accept="image/jpeg,image/png" aria-describedby="nombre-imagen ayuda-imagen">
+          <input id="imagen" class="archivo-oculto" name="imagen" type="file" accept="image/jpeg,image/png,image/heic,image/heif,.heic,.heif" aria-describedby="nombre-imagen ayuda-imagen">
           <label for="imagen" class="boton elegir-foto">Elegir foto</label>
           <span id="nombre-imagen" class="nombre-imagen">Ninguna foto elegida</span>
           <button class="boton" type="submit">Buscar parecidas</button>
@@ -71,7 +71,7 @@
           </div>
           <figcaption id="foto-referencia-datos" class="foto-referencia-datos"></figcaption>
         </figure>
-        <p id="ayuda-imagen" class="ayuda">JPEG o PNG. Se buscan en el archivo las fotos que más se le parecen.</p>
+        <p id="ayuda-imagen" class="ayuda">JPEG, PNG o HEIC (las fotos del iPhone). Se buscan en el archivo las fotos que más se le parecen.</p>
       </form>
     </section>
 

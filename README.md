@@ -59,7 +59,8 @@ sola línea y funciona igual en bash y en PowerShell:
 # Estado del sistema: servicio, modelos, Qdrant, almacén y caché
 curl -s http://localhost:8080/api/health
 
-# 1. Cargar una foto (JPEG o PNG): responde 201 con su documento_id y los posibles duplicados
+# 1. Cargar una foto (JPEG, PNG o HEIC del iPhone, que se guarda como JPEG): responde 201 con su documento_id y los
+#    posibles duplicados
 curl -s http://localhost:8080/api/documentos -F "archivos=@foto.jpg" -F "tipo=foto"
 
 # 2. Catalogar la foto cargada: ficha IPTC con la fuente de cada campo y meta (ruta, modelos, caché, guardrails, traza_id)
@@ -123,6 +124,11 @@ los ADR que siguen como «Propuesta» aparecen como *pendiente*. Toda cifra publ
   ```
 
   y reinicia WSL (`wsl --shutdown`) y Docker Desktop. Los límites de los contenedores suman 7.1 GB.
+- **«Formato no soportado» con fotos del iPhone.** El iPhone guarda las fotos en HEIC. El servicio las acepta en
+  Catalogar y en Buscar y las convierte a JPEG al recibirlas (`pi-heif`, sin GPS ni metadatos); si aparece este error,
+  la imagen del servicio es anterior: reconstrúyela con internet (`docker compose up -d --build`). Fuera de Safari, el
+  navegador no muestra la vista previa de una HEIC antes de subirla: la página lo indica y la foto aparece ya
+  convertida al buscar o al catalogar.
 - **La primera ficha tarda.** Al arrancar, el servicio carga los 4 modelos en memoria (`GET /health` muestra el
   precalentamiento). En CPU, una ficha nueva tarda decenas de segundos y una ficha desde la caché es casi inmediata;
   las latencias medidas están en `evaluacion/resultados/`.

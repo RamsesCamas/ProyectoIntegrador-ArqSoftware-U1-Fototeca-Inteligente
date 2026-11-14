@@ -9,6 +9,7 @@ parece a él (coseno ≥ τ_excluir entre el término y el vector de texto de la
 """
 from __future__ import annotations
 
+import base64
 import re
 import time
 from collections import defaultdict
@@ -17,6 +18,7 @@ import numpy as np
 
 from fototeca.cache.cache_busquedas import CacheBusquedas
 from fototeca.contexto.fusion import rrf
+from fototeca.datos.imagenes import preparar_imagen
 from fototeca.datos.puertos import AlmacenDocumentos, AlmacenVectorial, Embebedor
 from fototeca.dominio import colecciones as col
 from fototeca.dominio.configuracion import Configuracion
@@ -268,8 +270,16 @@ class FlujoBusqueda:
                                "titular": reg.ficha.titular if reg else None,
                                "texto_alternativo": reg.ficha.texto_alternativo if reg else None, "razones": razones})
         version = self.config.version_configuracion(self.version_corpus())
+        interpretada = {"consulta_semantica": None, "excluir": [], "filtros": {}, "terminos_tesauro": []}
+        convertida = r2.detalle.get("convertida")
+        if convertida:
+            # Una HEIC de iPhone: casi ningún navegador fuera de Safari la muestra. Se devuelve tal como la vio el
+            # servicio (el JPEG convertido, reducido a 480 px y sin metadatos) para la vista previa de la página.
+            previa = base64.b64encode(preparar_imagen(limpio, 480, 80)).decode("ascii")
+            interpretada["imagen"] = {"formato_original": convertida["de"], "ancho": convertida["ancho"],
+                                      "alto": convertida["alto"], "vista_previa": f"data:image/jpeg;base64,{previa}"}
         respuesta = {"resultados": resultados, "mensaje": None if resultados else "El archivo todavía no tiene fotos.",
-                "consulta_interpretada": {"consulta_semantica": None, "excluir": [], "filtros": {}, "terminos_tesauro": []},
+                "consulta_interpretada": interpretada,
                 "meta": {"ruta": "imagen", "modelo": None, "cache": "ninguna",
                          "guardrails": {"entrada": [r1.a_dict(), r2.a_dict(), r3.a_dict()],
                                         "salida": [ResultadoGuardrail("salida_busqueda", "aprobada").a_dict()]},

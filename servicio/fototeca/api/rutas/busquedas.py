@@ -56,7 +56,8 @@ CUERPO = {"requestBody": {"required": True, "content": {
 async def buscar(request: Request):
     """Texto: guardrails (datos personales e inyección), caché exacta y semántica, enrutador simple/compleja (la
     compleja se descompone con P4), recuperación texto→imagen y texto→texto con RRF, reformulación si no hay
-    resultados y una razón por cada coincidencia. Foto: búsqueda imagen→imagen sin modelo de lenguaje."""
+    resultados y una razón por cada coincidencia. Foto (JPEG, PNG o HEIC): búsqueda imagen→imagen sin modelo de
+    lenguaje; una HEIC se convierte a JPEG y vuelve como vista previa en `consulta_interpretada.imagen`."""
     c = request.app.state.contenedor
     if request.headers.get("content-type", "").startswith("multipart/form-data"):
         formulario = await request.form()

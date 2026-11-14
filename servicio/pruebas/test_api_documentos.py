@@ -3,13 +3,14 @@ from __future__ import annotations
 
 import io
 
+import piexif
 from PIL import Image
 
 from fototeca.dominio import colecciones as col
 from fototeca.guardrails.entrada.exif import detectar
 from pruebas.conftest import imagen_bytes
 from pruebas.test_api_observabilidad import ORIGINAL, _catalogar, _subir, _tablero
-from pruebas.test_guardrails_entrada import con_exif_sensible
+from pruebas.test_guardrails_entrada import HEIC_IPHONE, con_exif_sensible
 
 
 def subir(cliente, contenido: bytes, nombre="foto.jpg", tipo="foto", mime="image/jpeg"):
@@ -29,6 +30,29 @@ def test_foto_con_gps_se_guarda_y_miniatura_sin_gps(cliente_api, contenedor):
     with Image.open(io.BytesIO(mini.content)) as im:
         assert max(im.size) <= 512
     assert contenedor.almacen_vectorial.contar(col.FOTOS_IMG, {"documento_id": doc["documento_id"]}) == 1
+
+
+def test_foto_heic_de_iphone_se_guarda_como_jpeg_derecho_y_sin_gps(cliente_api, contenedor):
+    r = subir(cliente_api, HEIC_IPHONE.read_bytes(), nombre="IMG_0001.HEIC", mime="image/heic")
+    assert r.status_code == 201, r.text
+    doc = r.json()["documentos"][0]
+    exif = next(g for g in doc["guardrails"] if g["verificacion"] == "exif_privacidad")
+    assert exif["resultado"] == "sanitizado" and exif["detalle"]["convertida"]["a"] == "JPEG"
+    guardado = contenedor.almacen_documentos.obtener_foto(doc["documento_id"])
+    assert guardado[:2] == b"\xff\xd8" and detectar(guardado)["gps"] is False
+    meta = contenedor.almacen_documentos.obtener_documento(doc["documento_id"])["metadatos"]
+    assert (meta["formato"], meta["formato_original"], meta["ancho"], meta["alto"]) == ("JPEG", "HEIF", 120, 160)
+    mini = cliente_api.get(f"/fotos/{doc['documento_id']}/miniatura")
+    with Image.open(io.BytesIO(mini.content)) as im:
+        assert im.size == (120, 160)
+
+
+def test_miniatura_de_un_jpeg_vertical_de_iphone_sale_derecha(cliente_api):
+    acostada = imagen_bytes(color=(30, 160, 90), exif=piexif.dump({"0th": {piexif.ImageIFD.Orientation: 6}}))
+    doc = subir(cliente_api, acostada).json()["documentos"][0]
+    mini = cliente_api.get(f"/fotos/{doc['documento_id']}/miniatura")
+    with Image.open(io.BytesIO(mini.content)) as im:   # 320 × 240 guardada; se ve de 240 × 320
+        assert im.size == (240, 320)
 
 
 def test_subir_dos_veces_es_idempotente(cliente_api):

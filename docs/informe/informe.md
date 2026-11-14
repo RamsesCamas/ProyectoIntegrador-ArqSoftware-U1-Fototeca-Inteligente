@@ -146,7 +146,7 @@ Tamaños (`evaluacion/conjuntos/particiones.json` → `tamanos`): `archivo` 2,60
 
 | ID | Prioridad | Requisito | Dónde se implementa |
 |---|---|---|---|
-| RF1 | Alta | Ingerir fotos JPEG o PNG, quitar el EXIF sensible, guardarlas, calcular su embedding e indexarlas | `POST /documentos`, `FlujoIngesta` |
+| RF1 | Alta | Ingerir fotos JPEG, PNG o HEIC del iPhone (que se convierten a JPEG), quitar el EXIF sensible, guardarlas, calcular su embedding e indexarlas | `POST /documentos`, `FlujoIngesta` |
 | RF2 | Alta | Generar la ficha IPTC con la fuente de cada campo, por la ruta rápida o la completa | `POST /fichas`, `FlujoFicha` |
 | RF3 | Alta | Buscar por texto en español o por foto, con la razón de cada resultado | `POST /busquedas`, `FlujoBusqueda` |
 | RF4 | Alta | Detectar casi duplicados al ingerir y reportarlos | `FlujoIngesta`, `GET /duplicados` |

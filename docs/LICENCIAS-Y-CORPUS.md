@@ -60,11 +60,12 @@ etiqueta en español (ninguno descartado). El corpus de fotos (XM3600) se cuenta
 |---|---|---|---|
 | Swagger UI (`swagger-ui-dist`) | 5.34.0 | Apache 2.0 | `servicio/fototeca/api/estaticos/` (assets locales para `/docs` sin red; integridad sha512 verificada contra npm) |
 | Imágenes Docker | `ollama/ollama:0.40.15`, `qdrant/qdrant:v1.19.2`, `python:3.12.16-slim-bookworm`, `nginx:1.30.6-alpine`, `ghcr.io/astral-sh/uv:0.13.5` | Ollama: MIT · Qdrant: Apache 2.0 · uv: Apache 2.0 · nginx: BSD-2-Clause (campo `license` de la API de GitHub de cada repositorio, consultado el 2026-11-07) · CPython: licencia propia de la PSF (GitHub la reporta como «Other») | `docker-compose.yml`, `servicio/Dockerfile` |
+| libheif y libde265 (dentro de la rueda de `pi_heif`) | libheif 1.23.0 · libde265 1.1.0 (`pi_heif.libheif_info()` en la imagen) | LGPL-3.0 (`LICENSES_bundled.txt` de la rueda), enlazadas dinámicamente y sin modificar | Imagen `servicio`: solo decodifican las HEIC del iPhone, que se convierten a JPEG al recibirlas; la rueda no trae el codificador HEVC (x265, GPL) |
 | Paquetes de Python | ver `servicio/uv.lock` y `servicio/requirements.txt` | Tabla siguiente | Imagen `servicio` |
 
-### Paquetes de Python instalados en la imagen `servicio` (51)
+### Paquetes de Python instalados en la imagen `servicio` (52)
 
-Generada con `docker compose run --rm servicio python -m scripts.licencias_paquetes` a partir de los metadatos de cada paquete instalado (`License-Expression`, `License` o los clasificadores «License ::»); el detalle, con el campo de origen, está en `evaluacion/resultados/licencias_paquetes.json`. Ninguna es copyleft fuerte: son MIT, BSD, Apache 2.0, PSF, MIT-CMU, CNRI-Python y, dentro de numpy, 0BSD, Zlib y CC0. La única de copyleft débil es MPL 2.0 (`certifi`, por archivo), que se usa sin modificar.
+Generada con `docker compose run --rm servicio python -m scripts.licencias_paquetes` a partir de los metadatos de cada paquete instalado (`License-Expression`, `License` o los clasificadores «License ::»); el detalle, con el campo de origen, está en `evaluacion/resultados/licencias_paquetes.json`. Ninguna es copyleft fuerte: son MIT, BSD, Apache 2.0, PSF, MIT-CMU, CNRI-Python y, dentro de numpy, 0BSD, Zlib y CC0. Las de copyleft débil son MPL 2.0 (`certifi`, por archivo) y LGPL-3.0 (libheif y libde265, las bibliotecas que trae la rueda binaria de `pi_heif`, cuyo código Python es BSD-3-Clause), y todas se usan sin modificar.
 
 | Paquete | Versión | Licencia (metadatos) |
 |---|---|---|
@@ -94,6 +95,7 @@ Generada con `docker compose run --rm servicio python -m scripts.licencias_paque
 | numpy | 2.5.4 | BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0 |
 | opentelemetry-api | 1.45.1 | Apache-2.0 |
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
+| pi_heif | 1.4.0 | BSD-3-Clause |
 | piexif | 1.1.3 | MIT |
 | pillow | 13.0.0 | MIT-CMU |
 | pluggy | 1.7.0 | MIT |

@@ -102,6 +102,8 @@ function pintar(cuerpo) {
       || "Ninguna foto del archivo coincide lo suficiente. Prueba con otras palabras, con menos condiciones o con una foto parecida." }));
   if (meta.ruta === "compleja" && cuerpo.consulta_interpretada) pintarInterpretada(cuerpo.consulta_interpretada);
   else interpretada.hidden = true;
+  const vista = cuerpo.consulta_interpretada?.imagen;
+  if (meta.ruta === "imagen" && vista?.vista_previa) mostrarReferenciaDelServicio(vista);
   tecnico.replaceChildren(pieTecnico(meta) || "");
   estado.replaceChildren(resumen(meta, r.length));
   // Con resultados, la ayuda larga se pliega (los ejemplos se quedan) y «Resultados» queda a la vista
@@ -156,16 +158,29 @@ function mostrarFormularioFoto(abrir) {
 alternarFoto.addEventListener("click", () => mostrarFormularioFoto(formularioFoto.hidden));
 
 // La foto elegida se ve como un fotograma suelto sobre la mesa, entera y con sus medidas y su peso, para saber con qué
-// se busca. Es una URL local del navegador (no se sube nada hasta pulsar «Buscar parecidas»).
+// se busca. Es una URL local del navegador (no se sube nada hasta pulsar «Buscar parecidas»). Una HEIC del iPhone solo
+// la pinta Safari: en otro navegador el fotograma lo dice y la foto llega con la respuesta, ya convertida a JPEG por el
+// servicio (consulta_interpretada.imagen).
 const figuraReferencia = document.getElementById("foto-referencia");
 const imagenReferencia = document.getElementById("foto-referencia-img");
 const datosReferencia = document.getElementById("foto-referencia-datos");
+const avisoReferencia = comun.sinVistaPrevia("Se verá al buscar");
+avisoReferencia.hidden = true;
+imagenReferencia.after(avisoReferencia);
 const peso = (b) => (b >= 1024 * 1024 ? `${(b / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
 let urlReferencia = null;
+let archivoReferencia = null;
+
+function pintarAviso(sinVista) {
+  imagenReferencia.hidden = sinVista;
+  avisoReferencia.hidden = !sinVista;
+}
 
 function mostrarReferencia(archivo) {
   if (urlReferencia) URL.revokeObjectURL(urlReferencia);
   urlReferencia = null;
+  archivoReferencia = archivo || null;
+  pintarAviso(false);
   if (!archivo) {
     figuraReferencia.hidden = true;
     imagenReferencia.removeAttribute("src");
@@ -178,9 +193,24 @@ function mostrarReferencia(archivo) {
   imagenReferencia.onload = () => {
     datosReferencia.textContent = `${comun.numero(imagenReferencia.naturalWidth)} × ${comun.numero(imagenReferencia.naturalHeight)} px, ${peso(archivo.size)}`;
   };
-  imagenReferencia.onerror = () => { figuraReferencia.hidden = true; };
+  imagenReferencia.onerror = () => {
+    if (!comun.esHeic(archivo)) { figuraReferencia.hidden = true; return; }   // el servicio dirá qué tiene
+    pintarAviso(true);
+    datosReferencia.textContent = `${peso(archivo.size)}. Este navegador no muestra HEIC; el servicio la convierte a JPEG.`;
+  };
   imagenReferencia.src = urlReferencia;
   figuraReferencia.hidden = false;
+}
+
+/** La foto de consulta tal como la vio el servicio: una HEIC convertida a JPEG, derecha, reducida y sin metadatos. */
+function mostrarReferenciaDelServicio(v) {
+  imagenReferencia.onload = null;
+  imagenReferencia.onerror = null;
+  imagenReferencia.src = v.vista_previa;
+  pintarAviso(false);
+  figuraReferencia.hidden = false;
+  const tam = archivoReferencia ? `, ${peso(archivoReferencia.size)}` : "";
+  datosReferencia.textContent = `${comun.numero(v.ancho)} × ${comun.numero(v.alto)} px${tam}. HEIC convertida a JPEG por el servicio.`;
 }
 
 // El nombre de la foto elegida, junto al botón (el input queda oculto a la vista pero enfocable), y su vista previa

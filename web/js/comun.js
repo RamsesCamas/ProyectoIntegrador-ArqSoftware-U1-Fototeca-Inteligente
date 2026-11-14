@@ -251,6 +251,7 @@ export function cuandoVisible(fn) {
 const NOMBRES_METADATOS = {
   gps: "GPS", numero_serie: "número de serie de la cámara", autor: "autor", exif_completo: "EXIF completo",
   xmp: "bloque XMP", iptc_photoshop: "bloque IPTC/Photoshop", metadatos_png: "metadatos del PNG",
+  metadatos_heif: "metadatos de la HEIC (se guardó como JPEG)",
 };
 let visor = null;
 let turnoVisor = 0;
@@ -325,6 +326,15 @@ export function abrirVisor({ src, alt, titulo, datos = [], nota = "", enlace = n
 }
 
 /** Metadatos que el guardrail `exif_privacidad` quitó al guardar la foto (si la respuesta trae esa verificación). */
+/** HEIC/HEIF, las fotos del iPhone: fuera de Safari el navegador no las muestra. El servicio las convierte a JPEG al
+ * recibirlas, así que se aceptan igual; solo la vista previa local falta. Windows a veces no da el tipo: se mira la
+ * extensión. */
+export const esHeic = (archivo) => /^image\/hei[cf]/.test(archivo?.type || "") || /\.(heic|heif)$/i.test(archivo?.name || "");
+
+/** Lo que muestra el fotograma de una foto que el navegador no puede pintar (una HEIC fuera de Safari). */
+export const sinVistaPrevia = (detalle) => el("span", { clase: "sin-vista" },
+  el("span", { clase: "sin-vista-formato", texto: "HEIC" }), el("span", { clase: "sin-vista-detalle", texto: detalle }));
+
 export function metadatosQuitados(meta) {
   const g = (meta?.guardrails?.entrada || []).find((x) => x.verificacion === "exif_privacidad");
   if (!g) return null;

@@ -71,12 +71,15 @@ packaging==26.3
     # via
     #   matplotlib
     #   pytest
+pi-heif==1.4.0
+    # via fototeca
 piexif==1.1.3
     # via fototeca
 pillow==13.0.0
     # via
     #   fototeca
     #   matplotlib
+    #   pi-heif
 pluggy==1.7.0
     # via pytest
 portalocker==4.4.1

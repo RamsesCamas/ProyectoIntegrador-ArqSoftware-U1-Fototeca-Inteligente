@@ -47,9 +47,9 @@
         <h2 id="titulo-carga" class="solo-lectores">Fotos para catalogar</h2>
         <div id="zona-soltar" class="zona-soltar">
           <p class="zona-titulo">Arrastra fotos a la mesa</p>
-          <p class="zona-formatos">JPEG o PNG, hasta 10 MB cada una. Al guardarlas se quitan el GPS, el número de serie y el autor.</p>
+          <p class="zona-formatos">JPEG, PNG o HEIC (iPhone), hasta 10 MB cada una. Las HEIC se guardan como JPEG. Al guardarlas se quitan el GPS, el número de serie y el autor.</p>
           <div class="elegir">
-            <input id="fotos" name="fotos" type="file" accept="image/jpeg,image/png" multiple aria-describedby="ayuda-fotos estado-carga">
+            <input id="fotos" name="fotos" type="file" accept="image/jpeg,image/png,image/heic,image/heif,.heic,.heif" multiple aria-describedby="ayuda-fotos estado-carga">
             <label for="fotos" class="boton primario"><span id="texto-elegir">Elegir fotos</span></label>
           </div>
           <p id="ayuda-fotos" class="zona-ayuda">Con una foto verás su ficha al terminar; con varias se crea un lote.</p>

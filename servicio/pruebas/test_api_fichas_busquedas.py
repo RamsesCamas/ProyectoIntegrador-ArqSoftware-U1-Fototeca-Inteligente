@@ -4,10 +4,15 @@ Se verifica el contrato de la API (informe, Anexo B): los campos de la ficha, la
 """
 from __future__ import annotations
 
+import base64
+import io
 import json
 import time
 
+from PIL import Image
+
 from pruebas.conftest import imagen_bytes
+from pruebas.test_guardrails_entrada import HEIC_IPHONE
 
 P1 = json.dumps({"tipo": "fotografia", "descripcion_visual": "Un puesto de frutas con mangos bajo un toldo azul.",
                  "elementos": ["puesto", "mangos", "toldo"], "texto_visible": [],
@@ -119,6 +124,24 @@ def test_busqueda_por_foto(cliente_api):
     assert cuerpo["meta"]["ruta"] == "imagen"
     assert cuerpo["resultados"] and cuerpo["resultados"][0]["documento_id"] == doc
     assert cuerpo["resultados"][0]["razones"]
+
+
+def test_busqueda_con_foto_heic_de_iphone_devuelve_su_vista_previa(cliente_api):
+    r = cliente_api.post("/busquedas", files=[("imagen", ("IMG_0002.HEIC", HEIC_IPHONE.read_bytes(), "image/heic"))])
+    assert r.status_code == 200, r.text
+    cuerpo = r.json()
+    assert cuerpo["meta"]["ruta"] == "imagen"
+    imagen = cuerpo["consulta_interpretada"]["imagen"]
+    assert (imagen["formato_original"], imagen["ancho"], imagen["alto"]) == ("HEIF", 120, 160)
+    prefijo = "data:image/jpeg;base64,"
+    assert imagen["vista_previa"].startswith(prefijo)
+    with Image.open(io.BytesIO(base64.b64decode(imagen["vista_previa"][len(prefijo):]))) as im:
+        assert im.format == "JPEG" and im.size == (120, 160) and not im.getexif()
+
+
+def test_busqueda_con_foto_jpeg_no_repite_la_vista_previa(cliente_api):
+    r = cliente_api.post("/busquedas", files=[("imagen", ("q.jpg", imagen_bytes(color=(90, 20, 140)), "image/jpeg"))])
+    assert r.status_code == 200 and "imagen" not in r.json()["consulta_interpretada"]
 
 
 def test_busqueda_invalida_400(cliente_api):

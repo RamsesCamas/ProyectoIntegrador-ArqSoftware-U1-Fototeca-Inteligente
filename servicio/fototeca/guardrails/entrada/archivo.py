@@ -1,5 +1,6 @@
-"""`archivo_valido`: el contenido real (no la extensión) es JPEG o PNG, pesa 10 MB o menos y mide entre 64 y
-12,000 px por lado. Política: bloquear (413, 415 o 422) con un mensaje seguro."""
+"""`archivo_valido`: el contenido real (no la extensión) es JPEG, PNG o HEIC/HEIF (las fotos de iPhone), pesa 10 MB
+o menos y mide entre 64 y 12,000 px por lado. Política: bloquear (413, 415 o 422) con un mensaje seguro. Una HEIC
+válida pasa a `exif_privacidad`, que la convierte a JPEG sin metadatos antes de guardarla o de buscar con ella."""
 from __future__ import annotations
 
 import io
@@ -7,11 +8,12 @@ from dataclasses import dataclass
 
 from PIL import Image, UnidentifiedImageError
 
+from fototeca.datos.imagenes import FORMATOS_HEIF   # al importarlo, Pillow ya reconoce HEIC/HEIF
 from fototeca.dominio.errores import ArchivoDemasiadoGrande, BloqueadoPorGuardrail, FormatoNoSoportado
 from fototeca.guardrails.politicas import MENSAJES_SEGUROS, politica
 from fototeca.guardrails.resultado import ResultadoGuardrail
 
-FORMATOS = {"JPEG", "PNG"}
+FORMATOS = {"JPEG", "PNG", *FORMATOS_HEIF}
 Image.MAX_IMAGE_PIXELS = 12000 * 12000  # el límite de lado lo aplica esta verificación
 
 
@@ -33,9 +35,9 @@ def verificar_archivo(contenido: bytes, max_mb: float = 10, lado_min: int = 64,
             formato, (ancho, alto) = im.format, im.size
             im.verify()
     except (UnidentifiedImageError, OSError, SyntaxError, Image.DecompressionBombError) as e:
-        raise FormatoNoSoportado("El contenido no es una imagen JPEG o PNG válida.") from e
+        raise FormatoNoSoportado("El contenido no es una imagen JPEG, PNG o HEIC válida.") from e
     if formato not in FORMATOS:
-        raise FormatoNoSoportado(f"Formato {formato} no soportado: solo JPEG o PNG.")
+        raise FormatoNoSoportado(f"Formato {formato} no soportado: solo JPEG, PNG o HEIC.")
     if min(ancho, alto) < lado_min or max(ancho, alto) > lado_max:
         r = ResultadoGuardrail("archivo_valido", "bloqueada", valor=float(max(ancho, alto)),
                                politica_aplicada=politica("archivo_valido"),

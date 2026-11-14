@@ -71,13 +71,13 @@ class RespuestaEliminacion(BaseModel):
              summary="Cargar fotos o documentos normativos",
              responses=respuestas_error(400, 413, 415, 422, 503))
 def cargar(request: Request,
-           archivos: list[UploadFile] = File(..., description="Una o varias fotos (JPEG o PNG, ≤10 MB) o normas "
+           archivos: list[UploadFile] = File(..., description="Una o varias fotos (JPEG, PNG o HEIC de iPhone, ≤10 MB) o normas "
                                                               "(HTML, Markdown, PDF o TXT)"),
            tipo: Literal["foto", "norma"] = Form("foto"),
            metadatos: str | None = Form(None, description='JSON opcional, p. ej. {"fuente": "...", "licencia": "..."}')):
-    """Fotos: se validan (contenido real, tamaño y lados), se les quita el EXIF sensible, se guardan, se calcula su
-    embedding, se detectan casi duplicados y se indexan. Normas: se fragmentan (una regla por fragmento), se
-    embeben y se indexan. Con un solo archivo, un rechazo devuelve su código (413, 415 o 422); con varios, cada
+    """Fotos: se validan (contenido real, tamaño y lados), las HEIC de iPhone se convierten a JPEG, se les quita el
+    EXIF sensible, se guardan, se calcula su embedding, se detectan casi duplicados y se indexan. Normas: se
+    fragmentan (una regla por fragmento), se embeben y se indexan. Con un solo archivo, un rechazo devuelve su código (413, 415 o 422); con varios, cada
     resultado indica su error y la respuesta es 201 si al menos uno se cargó."""
     try:
         meta = json.loads(metadatos) if metadatos else {}

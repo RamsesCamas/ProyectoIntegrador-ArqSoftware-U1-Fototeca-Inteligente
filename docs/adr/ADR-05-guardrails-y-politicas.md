@@ -18,8 +18,8 @@ valor, umbral y política aplicada) que viaja en `meta.guardrails` y en la traza
 
 | Verificación | Dónde | Cómo | Política ante la falla |
 |---|---|---|---|
-| `archivo_valido` | entrada, foto | contenido real JPEG o PNG (Pillow, no la extensión), tamaño máximo y lados mínimo y máximo | **bloquear**: 413, 415 o 422 con mensaje seguro |
-| `exif_privacidad` | entrada, foto | GPS, número de serie, autor, XMP e IPTC | **sanitizar** antes de guardar y dejar constancia |
+| `archivo_valido` | entrada, foto | contenido real JPEG, PNG o HEIC/HEIF del iPhone (Pillow con `pi-heif`, no la extensión), tamaño máximo y lados mínimo y máximo | **bloquear**: 413, 415 o 422 con mensaje seguro |
+| `exif_privacidad` | entrada, foto | GPS, número de serie, autor, XMP e IPTC; una HEIC se convierte a JPEG sin ningún metadato (`datos/imagenes.heif_a_jpeg`) | **sanitizar** antes de guardar y dejar constancia |
 | `fuera_de_dominio` | entrada, foto: al cargarla (antes de guardarla) y otra vez al catalogar | similitud de la imagen con prototipos de «fotografía de una escena real» contra «captura de un documento, tabla o interfaz» | **bloquear**: 422 «Esto no parece una fotografía…»; la captura no entra al archivo |
 | `texto_visible` | entrada, foto | similitud con prototipos de foto con texto escrito | **marcar**: la ficha va por la ruta completa (ADR-03) |
 | `inyeccion_en_imagen` | entrada, foto (ruta completa) | patrones («ignora», «instrucciones», «system», «olvida»…) y similitud con prototipos de inyección sobre el texto visible que copia P1 | **aislar**: no se bloquea la foto; P3 no recibe el texto marcado ni las oraciones o elementos de P1 que lo reproducen (el texto visible no marcado sí entra, entre delimitadores, como dato); se agrega una advertencia y, con confianza alta, la ficha queda `requiere_revision` |
@@ -169,3 +169,13 @@ que se les inyecta un GPS sintético. Las pruebas unitarias de las verificacione
   - Un umbral mal calibrado puede bloquear fotos legítimas.
   - Omitir el texto marcado hace que la ficha pierda el texto de un letrero legítimo cuando la entrada lo marca por
     error (1 de 18).
+
+## Actualización (2026-11-14): fotos del iPhone en HEIC
+A pedido del autor, `archivo_valido` acepta HEIC/HEIF, el formato en que el iPhone guarda las fotos, y
+`exif_privacidad` las convierte a JPEG antes de guardarlas o de buscar con ellas: la orientación queda aplicada, se
+conserva solo el perfil de color y se anota qué datos sensibles traía (`detalle.eliminado`, más
+`detalle.convertida`). La HEIC original no se guarda. El decodificador es `pi-heif` 1.4.0 (libheif y libde265,
+LGPL-3.0, sin codificador; `docs/LICENCIAS-Y-CORPUS.md`). Las políticas no cambian: un HEIC dañado se rechaza con 415.
+La evidencia de esta sección son pruebas, no métricas: `servicio/pruebas/test_guardrails_entrada.py` y
+`test_api_documentos.py` usan una HEIC sintética vertical con GPS, autor y número de serie
+(`servicio/pruebas/datos/`).

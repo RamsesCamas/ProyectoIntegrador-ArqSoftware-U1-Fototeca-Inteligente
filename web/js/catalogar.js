@@ -57,6 +57,7 @@ const loteResumen = $("lote-resumen");
 const loteProgreso = $("lote-progreso");
 const listaLote = $("lista-lote");
 let urlsPrevias = [];
+const sinVistaLocal = new WeakSet();   // fotos elegidas que el navegador no pudo pintar (una HEIC fuera de Safari)
 let ocupado = false;
 let loteEnCurso = false;
 
@@ -999,10 +1000,11 @@ function quitarElegida(archivo) {
   (vistaPrevia.querySelector(".quitar-foto") || entradaFotos).focus();
 }
 
-/** Vista previa de las fotos elegidas, antes de subirlas: se ven tal como están en tu equipo. */
+/** Vista previa de las fotos elegidas, antes de subirlas: se ven tal como están en tu equipo. Una HEIC del iPhone
+ * se acepta aunque el navegador no la pinte: el servicio la convierte a JPEG y la ficha la muestra ya convertida. */
 function mostrarElegidas(archivos) {
   urlsPrevias.forEach((u) => URL.revokeObjectURL(u));
-  const imagenes = archivos.filter((a) => /^image\/(jpeg|png)$/.test(a.type));
+  const imagenes = archivos.filter((a) => /^image\/(jpeg|png)$/.test(a.type) || comun.esHeic(a));
   const visibles = imagenes.slice(0, MAX_PREVIAS);
   urlsPrevias = visibles.map((a) => URL.createObjectURL(a));
   elegidas.hidden = !visibles.length;
@@ -1011,16 +1013,27 @@ function mostrarElegidas(archivos) {
     const url = urlsPrevias[i];
     const medidas = el("span", { clase: "medidas" });
     const img = el("img", { src: url, alt: `Vista previa de ${a.name}`, decoding: "async" });
-    const datos = () => [["Archivo", a.name], ["Tamaño", tamano(a.size)], ["Tipo", a.type],
+    const datos = () => [["Archivo", a.name], ["Tamaño", tamano(a.size)], ["Tipo", a.type || (comun.esHeic(a) ? "image/heic" : "")],
       ["Medidas originales", img.naturalWidth ? `${img.naturalWidth} × ${img.naturalHeight} px` : null],
       ["Al guardarla", "El servicio quita el GPS, el número de serie de la cámara y los datos del autor antes de guardarla."]];
     img.addEventListener("load", () => { medidas.textContent = `${img.naturalWidth} × ${img.naturalHeight}`; medidas.title = "Medidas en píxeles"; });
     // Un fotograma por foto elegida: el número es su orden en el lote (una secuencia real)
+    const boton = el("button", { type: "button", clase: "cuadro-foto", "aria-label": `Ver en grande ${a.name}`,
+      onclick: () => {
+        if (sinVistaLocal.has(a)) return;
+        abrirVisor({ src: url, alt: `Foto elegida: ${a.name}`, titulo: `Foto elegida: ${a.name}`, datos: datos(),
+          nota: "Es el archivo original, todavía en tu equipo: aún no se ha subido." });
+      } },
+      img, el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: String(i + 1) }), lapiz("circulo"));
+    img.addEventListener("error", () => {
+      if (!comun.esHeic(a)) return;
+      sinVistaLocal.add(a);
+      img.replaceWith(comun.sinVistaPrevia("Sin vista previa: se convierte a JPEG al subirla"));
+      boton.setAttribute("aria-disabled", "true");
+      boton.setAttribute("aria-label", `${a.name}: este navegador no muestra HEIC; el servicio la convierte a JPEG`);
+    });
     return el("li", { clase: "cuadro" },
-      el("button", { type: "button", clase: "cuadro-foto", "aria-label": `Ver en grande ${a.name}`,
-        onclick: () => abrirVisor({ src: url, alt: `Foto elegida: ${a.name}`, titulo: `Foto elegida: ${a.name}`, datos: datos(),
-          nota: "Es el archivo original, todavía en tu equipo: aún no se ha subido." }) },
-        img, el("span", { clase: "cuadro-num", "aria-hidden": "true", texto: String(i + 1) }), lapiz("circulo")),
+      boton,
       el("button", { type: "button", clase: "quitar quitar-foto", "aria-label": `Quitar ${a.name}`, title: `Quitar ${a.name}`,
         onclick: () => quitarElegida(a) }, icono("cerrar")),
       el("div", { clase: "cuadro-pie" }, el("span", { clase: "nombre-archivo", texto: a.name, title: a.name }),
@@ -1029,7 +1042,7 @@ function mostrarElegidas(archivos) {
   if (imagenes.length > visibles.length) items.push(el("li", { clase: "mas-fotos", texto: `y ${imagenes.length - visibles.length} fotos más` }));
   vistaPrevia.replaceChildren(...items);
   const otros = archivos.length - imagenes.length;
-  const nota = otros ? ` ${plural(otros, "archivo no es", "archivos no son")} JPEG ni PNG: el servicio ${otros === 1 ? "lo" : "los"} rechazará.` : "";
+  const nota = otros ? ` ${plural(otros, "archivo no es", "archivos no son")} JPEG, PNG ni HEIC: el servicio ${otros === 1 ? "lo" : "los"} rechazará.` : "";
   textoBoton.textContent = archivos.length > 1 ? `Catalogar ${numero(archivos.length)} fotos` : archivos.length ? "Catalogar la foto" : "Catalogar";
   marcarHayFotos(archivos.length > 0);
   estadoDeCarga(!archivos.length ? "Elige una o varias fotos para empezar."
@@ -1046,8 +1059,8 @@ formularioCarga.addEventListener("submit", (ev) => {
   if (ocupado) return;   // un solo POST a la vez, aunque se pulse Enter o el botón dos veces
   const archivos = [...entradaFotos.files];
   if (!archivos.length) {
-    estadoDeCarga("Elige al menos una foto JPEG o PNG para catalogar.", true);
-    anunciar("Elige al menos una foto JPEG o PNG para catalogar.");
+    estadoDeCarga("Elige al menos una foto JPEG, PNG o HEIC para catalogar.", true);
+    anunciar("Elige al menos una foto JPEG, PNG o HEIC para catalogar.");
     entradaFotos.focus();
     return;
   }
@@ -1055,7 +1068,7 @@ formularioCarga.addEventListener("submit", (ev) => {
     const a = archivos[0];
     const datos = new FormData();
     datos.append("foto", a);
-    generarFicha({ body: datos }, { nombre: a.name, src: urlsPrevias[0] || null, alt: `Foto que se está catalogando: ${a.name}`,
+    generarFicha({ body: datos }, { nombre: a.name, src: sinVistaLocal.has(a) ? null : urlsPrevias[0] || null, alt: `Foto que se está catalogando: ${a.name}`,
       detalle: tamano(a.size) });
   } else {
     seccionLote.hidden = true;

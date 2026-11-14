@@ -12,7 +12,8 @@ Politica = Literal["bloquear", "sanitizar", "marcar", "reintentar", "aislar"]
 POLITICAS: dict[str, tuple[Politica, str]] = {
     # Entrada (fotos)
     "archivo_valido": ("bloquear", "Archivo inválido: se rechaza con 413, 415 o 422 y un mensaje seguro"),
-    "exif_privacidad": ("sanitizar", "Se quitan GPS, número de serie y autor antes de guardar; queda en la traza"),
+    "exif_privacidad": ("sanitizar", "Se quitan GPS, número de serie y autor antes de guardar (una HEIC se convierte "
+                                     "a JPEG sin metadatos); queda en la traza"),
     "fuera_de_dominio": ("bloquear", "No parece una fotografía: se rechaza con 422 y un mensaje seguro"),
     "inyeccion_en_imagen": ("aislar", "No se bloquea: el texto visible pasa como dato citado, se agrega una "
                                       "advertencia y la ficha queda en revisión si la confianza es alta"),
@@ -38,7 +39,7 @@ POLITICAS: dict[str, tuple[Politica, str]] = {
 }
 
 MENSAJES_SEGUROS = {
-    "archivo_valido": "El archivo no es una foto JPEG o PNG válida dentro de los límites permitidos.",
+    "archivo_valido": "El archivo no es una foto JPEG, PNG o HEIC válida dentro de los límites permitidos.",
     "fuera_de_dominio": "Esto no parece una fotografía: parece un documento, una tabla o una captura de pantalla. "
                         "Fototeca Viva cataloga fotografías.",
     "inyeccion_texto": "La búsqueda contiene instrucciones que no corresponden a una descripción de fotos y no se "

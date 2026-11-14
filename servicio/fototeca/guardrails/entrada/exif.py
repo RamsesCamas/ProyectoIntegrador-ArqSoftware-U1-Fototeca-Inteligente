@@ -4,6 +4,9 @@
   número de serie. Además se eliminan los segmentos XMP (APP1) e IPTC/Photoshop (APP13), que pueden repetir la
   ubicación o el autor.
 - PNG: se vuelve a guardar sin metadatos (sin pérdida: PNG no recomprime con pérdida).
+- HEIC/HEIF (fotos de iPhone): el paso intermedio la convierte a JPEG (`datos/imagenes.heif_a_jpeg`) sin ningún
+  metadato. Se anota qué datos sensibles traía (el iPhone guarda el GPS si la ubicación está activa) y que se
+  convirtió; la HEIC original nunca se guarda.
 Política: sanitizar y continuar, dejando constancia en la traza.
 """
 from __future__ import annotations
@@ -13,6 +16,8 @@ import io
 import piexif
 from PIL import Image
 
+from fototeca.datos.imagenes import FORMATOS_HEIF, heif_a_jpeg
+from fototeca.dominio.errores import FormatoNoSoportado
 from fototeca.guardrails.politicas import politica
 from fototeca.guardrails.resultado import ResultadoGuardrail
 
@@ -60,9 +65,35 @@ def detectar(contenido: bytes) -> dict[str, bool]:
     return hallado
 
 
+def _sensibles_heif(im: Image.Image) -> list[str]:
+    """Qué datos sensibles trae una HEIC abierta con Pillow (las mismas etiquetas EXIF que en JPEG, más el XMP)."""
+    exif = im.getexif()
+    hallado = ["gps"] if exif.get_ifd(0x8825) or 0x8825 in exif else []   # IFD de GPS
+    hallado += [clase for etiqueta, clase in ETIQUETAS_0TH.items() if etiqueta in exif]
+    sub = exif.get_ifd(0x8769)   # IFD Exif
+    hallado += [clase for etiqueta, clase in ETIQUETAS_EXIF.items() if etiqueta in sub]
+    return hallado + (["xmp"] if im.info.get("xmp") else [])
+
+
+def _heif_a_jpeg_sin_metadatos(contenido: bytes) -> tuple[bytes, list[str], dict]:
+    """El paso intermedio para las fotos de iPhone: HEIC → JPEG sin metadatos, con lo que se quitó y sus medidas."""
+    try:
+        with Image.open(io.BytesIO(contenido)) as im:
+            hallado = _sensibles_heif(im)
+        jpeg, (ancho, alto) = heif_a_jpeg(contenido)
+    except (OSError, ValueError, RuntimeError, SyntaxError) as e:
+        raise FormatoNoSoportado("La foto HEIC está dañada o no se pudo leer.") from e
+    return jpeg, hallado + ["metadatos_heif"], {"de": "HEIF", "a": "JPEG", "ancho": ancho, "alto": alto}
+
+
 def sanitizar(contenido: bytes, formato: str) -> tuple[bytes, ResultadoGuardrail]:
+    """Devuelve los bytes que se guardan (o con los que se busca) y el resultado. Si la foto era HEIC, los bytes son
+    un JPEG y `detalle["convertida"]` dice de qué formato a cuál, con las medidas del JPEG."""
     quitado: list[str] = []
-    if formato == "JPEG":
+    convertida = None
+    if formato in FORMATOS_HEIF:
+        contenido, quitado, convertida = _heif_a_jpeg_sin_metadatos(contenido)
+    elif formato == "JPEG":
         try:
             exif = piexif.load(contenido)
         except Exception:  # noqa: BLE001
@@ -98,7 +129,9 @@ def sanitizar(contenido: bytes, formato: str) -> tuple[bytes, ResultadoGuardrail
                 im.save(salida, "PNG", icc_profile=im.info.get("icc_profile"))
                 contenido = salida.getvalue()
     unicos = sorted(set(quitado))
+    detalle = {"eliminado": unicos} if unicos else {}
+    if convertida:
+        detalle["convertida"] = convertida
     resultado = ResultadoGuardrail("exif_privacidad", "sanitizado" if unicos else "aprobada",
-                                   politica_aplicada=politica("exif_privacidad") if unicos else None,
-                                   detalle={"eliminado": unicos} if unicos else {})
+                                   politica_aplicada=politica("exif_privacidad") if unicos else None, detalle=detalle)
     return contenido, resultado

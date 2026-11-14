@@ -2,7 +2,8 @@
 
 Foto: RECIBIR → GUARDRAILS_ENTRADA (archivo_valido, exif_privacidad[, fuera_de_dominio en H5]) → DUPLICADO
 EXACTO (sha256) → GUARDAR → EMBEDDING DE IMAGEN → CASI DUPLICADOS (fotos_img ≥ τ_dup) → INDEXAR →
-version_archivo++ (invalida la caché de búsquedas).
+version_archivo++ (invalida la caché de búsquedas). Una HEIC de iPhone sale de exif_privacidad convertida a JPEG: se
+guarda y se indexa el JPEG (con `formato_original` = HEIF en sus metadatos).
 
 Norma (HTML, Markdown, PDF o TXT): RECIBIR → FRAGMENTAR (una regla por fragmento) → EMBEDDINGS → INDEXAR en
 `normas` → nueva versión del corpus (invalida las fichas en caché).
@@ -14,7 +15,7 @@ import io
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 from fototeca.contexto.fragmentador import FORMATOS_NORMA, fragmentar_documento
 from fototeca.datos.puertos import AlmacenCache, AlmacenDocumentos, AlmacenVectorial, Embebedor
@@ -58,6 +59,9 @@ class FlujoIngesta:
             limpio, r_exif = sanitizar(contenido, imagen.formato)
             guardrails += [r_archivo.a_dict(), r_exif.a_dict()]
             d["resultado"] = r_exif.resultado
+        convertida = r_exif.detalle.get("convertida")   # HEIC → JPEG: se guarda el JPEG, con sus medidas
+        formato, ancho, alto = ((convertida["a"], convertida["ancho"], convertida["alto"]) if convertida
+                                else (imagen.formato, imagen.ancho, imagen.alto))
         sha = hashlib.sha256(limpio).hexdigest()
         existente = self.documentos.buscar_por_sha(sha)
         if existente:
@@ -71,8 +75,9 @@ class FlujoIngesta:
             guardrails.append(self.verificador_dominio(vector).a_dict())   # bloquea con 422 si no es foto
         with medir("C7", "guardar_foto"):
             documento_id = self.documentos.guardar_foto(limpio, {
-                **(metadatos or {}), "nombre": nombre, "formato": imagen.formato, "ancho": imagen.ancho,
-                "alto": imagen.alto, "tamano_bytes": len(limpio), "particion": "subida",
+                **(metadatos or {}), "nombre": nombre, "formato": formato, "ancho": ancho, "alto": alto,
+                **({"formato_original": imagen.formato} if convertida else {}),
+                "tamano_bytes": len(limpio), "particion": "subida",
                 "exif_eliminado": r_exif.detalle.get("eliminado", []),
                 # se repiten en meta.guardrails.entrada de su ficha (trazabilidad de la ingesta)
                 "guardrails_ingesta": guardrails})
@@ -96,16 +101,18 @@ class FlujoIngesta:
                                 version_archivo=version)
 
     def miniatura(self, documento_id: str, lado: int = 512) -> bytes:
-        """JPEG de 512 px como máximo y sin EXIF (para la web)."""
+        """JPEG de 512 px como máximo, derecho y sin EXIF (para la web)."""
         cache = Path(self.config.rutas["datos"]) / "miniaturas" / f"{documento_id}_{lado}.jpg"
         if cache.exists():
             return cache.read_bytes()
         contenido = self.documentos.obtener_foto(documento_id)
         with Image.open(io.BytesIO(contenido)) as im:
-            im = im.convert("RGB")
+            # una foto vertical de iPhone en JPEG guarda los píxeles acostados y la orientación en EXIF
+            im = ImageOps.exif_transpose(im).convert("RGB")
             im.thumbnail((lado, lado))
+            im.info.clear()   # sin `info` ni el parámetro exif: la miniatura sale sin metadatos (tampoco XMP)
             buf = io.BytesIO()
-            im.save(buf, "JPEG", quality=85)   # sin el parámetro exif: la miniatura sale sin metadatos
+            im.save(buf, "JPEG", quality=85)
         cache.parent.mkdir(parents=True, exist_ok=True)
         cache.write_bytes(buf.getvalue())
         return buf.getvalue()
