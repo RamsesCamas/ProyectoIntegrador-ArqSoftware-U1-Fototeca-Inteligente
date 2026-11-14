@@ -10,6 +10,8 @@ regla documentada:
 - `calibracion_h5.json` (calibrar h5): τ_fuera_dominio, τ_texto_visible y τ_inyeccion.
 - `cache.json` (evaluación): τ_dup = máximo recall con FPR ≤ 2 % (ADR-04).
 - `enrutador.json` (evaluación): τ_consenso y τ_acuerdo con la restricción de latencia (ADR-03); sustituyen a los de H4.
+- `calibracion_tau_excluir.json` (`scripts.calibrar_tau_excluir`): τ_excluir de la búsqueda compleja, con ≤ 5 % de
+  fichas penalizadas sin tener el término excluido.
 Cada valor queda con su archivo de origen en `_origen`. Cambiar la calibración cambia la versión de configuración y,
 con ella, invalida la caché de fichas. Si un archivo no existe, sus umbrales se quedan como estén.
 """
@@ -50,6 +52,9 @@ def umbrales_disponibles() -> dict[str, tuple[float, str]]:
     for clave in ("enrutador_fichas.tau_consenso", "enrutador_fichas.tau_acuerdo"):
         if elegidos.get(clave) is not None:
             salida[clave] = (float(elegidos[clave]), f"enrutador.json → metricas.fichas.umbrales_elegidos.{clave}")
+    excluir = _leer("calibracion_tau_excluir.json")
+    if excluir and excluir.get("tau_excluir") is not None:
+        salida["enrutador_busquedas.tau_excluir"] = (float(excluir["tau_excluir"]), "calibracion_tau_excluir.json → tau_excluir")
     return salida
 
 

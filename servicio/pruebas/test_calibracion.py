@@ -34,11 +34,14 @@ def test_aplicar_calibracion_toma_los_valores_elegidos(tmp_path, monkeypatch):
     (tmp_path / "enrutador.json").write_text(json.dumps({"metricas": {"fichas": {"umbrales_elegidos": {
         "enrutador_fichas.tau_consenso": 0.7, "enrutador_fichas.tau_acuerdo": 0.3, "nota": "x"}}}}))
     (tmp_path / "cache.json").write_text(json.dumps({"metricas": {"fichas_semantica_tau_dup": {"tau_elegido": 0.95}}}))
+    (tmp_path / "calibracion_tau_excluir.json").write_text(json.dumps({"tau_excluir": 0.73, "tau_anterior": 0.6}))
     monkeypatch.setattr(ap, "RESULTADOS", tmp_path)
     arbol = ap.como_arbol(ap.umbrales_disponibles())
     assert arbol["agente"]["tau_ret"] == 0.6 and arbol["cache"]["fichas"]["tau_dup"] == 0.95
     assert arbol["enrutador_fichas"] == {"tau_consenso": 0.7, "tau_acuerdo": 0.3}
     assert "enrutador.json" in arbol["_origen"]["enrutador_fichas.tau_consenso"]
+    assert arbol["enrutador_busquedas"] == {"tau_excluir": 0.73}
+    assert "calibracion_tau_excluir.json" in arbol["_origen"]["enrutador_busquedas.tau_excluir"]
 
 
 def test_prototipos_son_todos_texto():

@@ -1,0 +1,267 @@
+{
+  "modulo": "calibracion_tau_excluir",
+  "fecha": "2026-11-14T05:04:45+00:00",
+  "descripcion": "Calibra τ_excluir: el coseno desde el que una búsqueda penaliza una ficha por parecerse a lo que se pidió excluir.",
+  "metodo": "coseno entre el término excluido (embedding de consulta) y el vector #descripcion de cada ficha del archivo; etiqueta por palabras clave en titular, descripción, texto alternativo y palabras clave",
+  "regla": "τ_excluir = máximo entre términos del percentil 95 de las fichas sin el término, hacia arriba a 0.01",
+  "modelo_embedding": "embeddinggemma-2:440m",
+  "fichas": 2600,
+  "tau_anterior": 0.6,
+  "tau_excluir": 0.73,
+  "penalizacion_sin_termino_con_tau": {
+    "vehículos": {
+      "penaliza_sin_termino": 0.016,
+      "penaliza_con_termino": 0.703
+    },
+    "animales": {
+      "penaliza_sin_termino": 0.003,
+      "penaliza_con_termino": 0.211
+    },
+    "comida": {
+      "penaliza_sin_termino": 0.034,
+      "penaliza_con_termino": 0.766
+    },
+    "agua": {
+      "penaliza_sin_termino": 0.002,
+      "penaliza_con_termino": 0.09
+    },
+    "edificios": {
+      "penaliza_sin_termino": 0.013,
+      "penaliza_con_termino": 0.265
+    },
+    "nieve": {
+      "penaliza_sin_termino": 0.006,
+      "penaliza_con_termino": 0.917
+    }
+  },
+  "por_termino": {
+    "vehículos": {
+      "fichas_con_termino": 192,
+      "fichas_sin_termino": 2408,
+      "auc": 0.955,
+      "coseno_mediana_con": 0.742,
+      "coseno_mediana_sin": 0.682,
+      "percentil_95_sin": 0.715,
+      "por_umbral": {
+        "0.50": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.55": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.60": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.65": {
+          "penaliza_sin_termino": 0.965,
+          "penaliza_con_termino": 1.0
+        },
+        "0.70": {
+          "penaliza_sin_termino": 0.164,
+          "penaliza_con_termino": 0.943
+        },
+        "0.75": {
+          "penaliza_sin_termino": 0.006,
+          "penaliza_con_termino": 0.344
+        },
+        "0.80": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.005
+        }
+      }
+    },
+    "animales": {
+      "fichas_con_termino": 199,
+      "fichas_sin_termino": 2401,
+      "auc": 0.911,
+      "coseno_mediana_con": 0.709,
+      "coseno_mediana_sin": 0.665,
+      "percentil_95_sin": 0.695,
+      "por_umbral": {
+        "0.50": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.55": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.60": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.65": {
+          "penaliza_sin_termino": 0.801,
+          "penaliza_con_termino": 0.99
+        },
+        "0.70": {
+          "penaliza_sin_termino": 0.031,
+          "penaliza_con_termino": 0.643
+        },
+        "0.75": {
+          "penaliza_sin_termino": 0.001,
+          "penaliza_con_termino": 0.05
+        },
+        "0.80": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.0
+        }
+      }
+    },
+    "comida": {
+      "fichas_con_termino": 124,
+      "fichas_sin_termino": 2476,
+      "auc": 0.968,
+      "coseno_mediana_con": 0.746,
+      "coseno_mediana_sin": 0.685,
+      "percentil_95_sin": 0.722,
+      "por_umbral": {
+        "0.50": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.55": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.60": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.65": {
+          "penaliza_sin_termino": 0.986,
+          "penaliza_con_termino": 1.0
+        },
+        "0.70": {
+          "penaliza_sin_termino": 0.18,
+          "penaliza_con_termino": 0.984
+        },
+        "0.75": {
+          "penaliza_sin_termino": 0.011,
+          "penaliza_con_termino": 0.395
+        },
+        "0.80": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.008
+        }
+      }
+    },
+    "agua": {
+      "fichas_con_termino": 289,
+      "fichas_sin_termino": 2311,
+      "auc": 0.893,
+      "coseno_mediana_con": 0.686,
+      "coseno_mediana_sin": 0.654,
+      "percentil_95_sin": 0.683,
+      "por_umbral": {
+        "0.50": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.55": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.60": {
+          "penaliza_sin_termino": 0.999,
+          "penaliza_con_termino": 1.0
+        },
+        "0.65": {
+          "penaliza_sin_termino": 0.591,
+          "penaliza_con_termino": 0.976
+        },
+        "0.70": {
+          "penaliza_sin_termino": 0.012,
+          "penaliza_con_termino": 0.263
+        },
+        "0.75": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.021
+        },
+        "0.80": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.0
+        }
+      }
+    },
+    "edificios": {
+      "fichas_con_termino": 358,
+      "fichas_sin_termino": 2242,
+      "auc": 0.838,
+      "coseno_mediana_con": 0.698,
+      "coseno_mediana_sin": 0.652,
+      "percentil_95_sin": 0.703,
+      "por_umbral": {
+        "0.50": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.55": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.60": {
+          "penaliza_sin_termino": 0.991,
+          "penaliza_con_termino": 0.997
+        },
+        "0.65": {
+          "penaliza_sin_termino": 0.531,
+          "penaliza_con_termino": 0.919
+        },
+        "0.70": {
+          "penaliza_sin_termino": 0.058,
+          "penaliza_con_termino": 0.489
+        },
+        "0.75": {
+          "penaliza_sin_termino": 0.005,
+          "penaliza_con_termino": 0.201
+        },
+        "0.80": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.022
+        }
+      }
+    },
+    "nieve": {
+      "fichas_con_termino": 36,
+      "fichas_sin_termino": 2564,
+      "auc": 0.988,
+      "coseno_mediana_con": 0.767,
+      "coseno_mediana_sin": 0.669,
+      "percentil_95_sin": 0.7,
+      "por_umbral": {
+        "0.50": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.55": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.60": {
+          "penaliza_sin_termino": 1.0,
+          "penaliza_con_termino": 1.0
+        },
+        "0.65": {
+          "penaliza_sin_termino": 0.852,
+          "penaliza_con_termino": 1.0
+        },
+        "0.70": {
+          "penaliza_sin_termino": 0.052,
+          "penaliza_con_termino": 0.972
+        },
+        "0.75": {
+          "penaliza_sin_termino": 0.001,
+          "penaliza_con_termino": 0.75
+        },
+        "0.80": {
+          "penaliza_sin_termino": 0.0,
+          "penaliza_con_termino": 0.028
+        }
+      }
+    }
+  }
+}
