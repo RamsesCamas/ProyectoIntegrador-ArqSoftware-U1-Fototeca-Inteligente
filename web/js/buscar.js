@@ -34,22 +34,24 @@ function cuadro(x, i) {
   const razones = x.razones || [];
   // Solo el rango: el orden sale de fusionar dos listas (RRF) con penalizaciones, y `puntaje` de la API es solo la
   // similitud texto→imagen, que ya aparece en las razones (un puntaje junto al rango no cuadraba con el orden).
-  const item = el("li", { clase: "cuadro" }, el("article", { clase: "cuadro-articulo", "aria-labelledby": idTitular },
+  // El marco (foto + número sobre la película) lleva el círculo de lápiz graso al pasar o enfocar; el pie va en la mesa
+  const marco = el("div", { clase: "cuadro-marco" },
     el("button", { type: "button", clase: "cuadro-foto", title: titular,
       onclick: () => verFotoGuardada(x.documento_id, { titulo: titular,
         extra: [["Posición", numero(i + 1)], ["Por qué coincide", razones.join("; ")]] }) },
       miniatura(x.documento_id, { alt, diferida: i >= VISIBLES_SIN_DIFERIR }),
       el("span", { clase: "solo-lectores", texto: " (ver en grande con su ficha)" })),
-    el("span", { clase: "cuadro-num" }, el("span", { clase: "solo-lectores", texto: "Posición " }), numero(i + 1)),
+    el("span", { clase: "cuadro-num" }, el("span", { clase: "solo-lectores", texto: "Posición " }), numero(i + 1)));
+  const trazo = lapiz("circulo");
+  if (trazo) marco.append(trazo);
+  return el("li", { clase: "cuadro" }, el("article", { clase: "cuadro-articulo", "aria-labelledby": idTitular },
+    marco,
     el("div", { clase: "cuadro-pie" },
       el("h3", { clase: "resultado-titular", id: idTitular },
         el("a", { href: `catalogar.html?doc=${encodeURIComponent(x.documento_id)}`, title: titular, texto: titular })),
       el("p", { clase: "solo-lectores", texto: "Por qué coincide:" }),
       el("ul", { clase: "razones" }, razones.map((razon) => el("li", { clase: esPenalizacion(razon) ? "penalizada" : null },
         esPenalizacion(razon) ? el("span", { clase: "razon-simbolo", "aria-hidden": "true", texto: "!" }) : null, razon))))));
-  const trazo = lapiz("circulo");
-  if (trazo) item.append(trazo);
-  return item;
 }
 
 /** Marcadores mientras llega la respuesta (no son article: no son resultados). */

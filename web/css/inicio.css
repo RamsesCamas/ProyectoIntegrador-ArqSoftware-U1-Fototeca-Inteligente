@@ -97,8 +97,10 @@
   .etapa-numero { align-self: center; }
   .componentes .componente { grid-template-columns: minmax(0, 1.2fr) minmax(0, .6fr) minmax(0, 1.6fr); }
   .componente-descripcion { grid-column: 3; }
-  .accesos { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+  .accesos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @container contenido (min-width: 56rem) {
   .hoja-contactos { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .accesos { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .accesos > li { display: flex; flex-direction: column; }
 }

@@ -58,6 +58,9 @@
 .hoja-resultados > .cuadro { position: relative; min-width: 0; }
 .hoja-resultados .cuadro-foto img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
 .cuadro-articulo { display: flex; flex-direction: column; min-width: 0; height: 100%; }
+/* El marco: la foto y su número sobre la película (la banda se cierra entre cuadros, como en la base) */
+.cuadro-marco { position: relative; }
+.cuadro-marco > .cuadro-num { padding: 4px 6px 5px; background: var(--pelicula); box-shadow: -5px 0 0 var(--pelicula), 5px 0 0 var(--pelicula); }
 .cuadro-pie { padding: var(--e-2) var(--e-2) 0; }
 .resultado-titular { margin: 0; font-size: var(--t-2); line-height: 1.4; }
 /* Titular de 2 líneas como máximo (el completo en title y en la ficha): carbón, sin subrayado; al pasar o enfocar,
@@ -65,7 +68,7 @@
 .resultado-titular a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
   color: var(--texto); font-weight: var(--peso-medio); text-decoration: none; }
 .resultado-titular a:is(:hover, :focus-visible) { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .2em; }
-.razones { list-style: none; display: flex; flex-direction: column; gap: 2px; margin: var(--e-1) 0 0; padding: 0;
+.cuadro-pie .razones { list-style: none; display: flex; flex-direction: column; gap: 2px; margin: var(--e-1) 0 0; padding: 0;
   font-size: var(--t-1); line-height: 1.4; color: var(--texto-suave); }
 .razones > li { min-width: 0; }
 .razones > li.penalizada { color: var(--texto); }
