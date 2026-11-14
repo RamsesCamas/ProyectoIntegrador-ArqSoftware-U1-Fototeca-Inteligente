@@ -1,6 +1,7 @@
 // Archivo: GET /api/documentos (paginado, con filtro por tipo) y DELETE /api/documentos/{id} con confirmación en la
 // página (sin window.confirm). El listado trae `titular` y `texto_alternativo` de cada ficha (null si no tiene): el
-// titular y el `alt` de la miniatura salen de ahí, con una sola petición por página.
+// titular y el `alt` de la miniatura salen de ahí, con una sola petición por página. Bajo 640 px de contenido cada fila
+// se muestra como tarjeta (CSS); los roles ARIA explícitos conservan la semántica de tabla.
 import { api, anunciar, el, insignia } from "./api.js";
 import { mensaje, miniatura, numero, verFotoGuardada } from "./comun.js";
 import { icono } from "./iconos.js";
@@ -9,14 +10,15 @@ const POR_PAGINA = 24;
 const VISIBLES_SIN_DIFERIR = 8;   // filas que suelen verse sin desplazarse: sus miniaturas no se difieren
 const COLUMNAS = 6;
 const TIPOS = { foto: ["Foto", "foto"], norma: ["Norma", "regla"] };
+const CONTEO = { foto: ["foto", "fotos"], norma: ["norma", "normas"], "": ["documento", "documentos"] };
 const parametros = new URLSearchParams(location.search);
 let pagina = Math.max(1, Number(parametros.get("pagina")) || 1);
 const estado = document.getElementById("estado");
 const confirmacion = document.getElementById("confirmacion");
 const filas = document.getElementById("filas");
-const textoPagina = document.getElementById("pagina");
-const anterior = document.getElementById("anterior");
-const siguiente = document.getElementById("siguiente");
+const tabla = filas.closest("table");
+const paginaciones = [["pagina", "anterior", "siguiente"], ["pagina-abajo", "anterior-abajo", "siguiente-abajo"]]
+  .map(([t, a, s]) => ({ texto: document.getElementById(t), anterior: document.getElementById(a), siguiente: document.getElementById(s) }));
 const radios = [...document.querySelectorAll('#filtro-tipo input[name="tipo"]')];
 if (parametros.has("tipo")) {
   const elegido = radios.find((r) => r.value === parametros.get("tipo"));
@@ -26,7 +28,20 @@ const tipoActual = () => radios.find((r) => r.checked)?.value ?? "foto";
 let alCerrar = null;
 let turno = 0;
 
-const fecha = (iso) => (iso || "").slice(0, 10);
+const dos = (n) => String(n).padStart(2, "0");
+/** Fecha local en ISO de 24 h, «2026-11-13 14:00» (el mismo formato que Métricas, sin segundos). */
+function fecha(iso) {
+  const d = iso ? new Date(iso) : null;
+  if (!d || Number.isNaN(d.getTime())) return "—";
+  return `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())} ${dos(d.getHours())}:${dos(d.getMinutes())}`;
+}
+
+/** «nombre · id» solo si el nombre original dice algo más que el id (las fotos del archivo se llaman como su hash). */
+function meta(d, principal) {
+  const base = (d.nombre || "").replace(/\.[^.]+$/, "");
+  const repetido = !d.nombre || d.nombre === principal || (base && d.documento_id.endsWith(base));
+  return el("span", { clase: "documento-meta", title: d.documento_id }, repetido ? "" : `${d.nombre} · `, el("span", { clase: "id", texto: d.documento_id }));
+}
 
 /** Montura de 72 × 54: la miniatura de la foto o, para una norma, un marco con su icono. */
 function montura(d, { alt, diferida = false } = {}) {
@@ -48,8 +63,7 @@ function pedirConfirmacion(doc, origen) {
     montura(doc, { alt: "" }),
     el("div", { clase: "confirmacion-cuerpo" },
       el("h2", { id: "confirmacion-titulo" }, icono("alerta"), "¿Eliminar este documento?"),
-      el("p", { clase: "confirmacion-documento" }, el("strong", { texto: titulo }),
-        el("span", { clase: "documento-meta" }, titulo !== doc.nombre ? `${doc.nombre} · ` : "", el("span", { clase: "id", texto: doc.documento_id }))),
+      el("p", { clase: "confirmacion-documento" }, el("strong", { texto: titulo }), meta(doc, titulo)),
       el("p", { id: "confirmacion-texto", texto: "Se borrarán el documento, sus vectores, su ficha y las entradas de caché que dependen de él. No se puede deshacer." }),
       el("div", { clase: "confirmacion-acciones" },
         el("button", { type: "button", clase: "boton peligro", onclick: () => { alCerrar = null; cerrarConfirmacion(); eliminar(doc); } },
@@ -82,10 +96,11 @@ function estadoFicha(d) {
   return insignia(d.estado_ficha);
 }
 
+const celda = (clase, ...hijos) => el("td", { role: "cell", clase }, ...hijos);
+
 function fila(d, i) {
   const foto = d.tipo === "foto";
-  const titular = d.titular || null;
-  const principal = titular || d.nombre;
+  const principal = d.titular || d.nombre;
   const vista = foto
     ? el("button", { type: "button", clase: "boton-imagen miniatura-archivo",
       onclick: () => verFotoGuardada(d.documento_id, { titulo: principal, extra: [["Fecha de carga", fecha(d.fecha)]] }) },
@@ -96,29 +111,29 @@ function fila(d, i) {
     ? el("a", { clase: "documento-titular", href: `catalogar.html?doc=${encodeURIComponent(d.documento_id)}`, title: principal, texto: principal })
     : el("span", { clase: "documento-titular", title: principal, texto: principal });
   const [tipo, iconoTipo] = TIPOS[d.tipo] || [d.tipo, "info"];
-  return el("tr", { "data-documento": d.documento_id },
-    el("td", { clase: "celda-foto" }, vista),
-    el("th", { scope: "row", clase: "celda-documento" }, enlace,
-      el("span", { clase: "documento-meta" }, titular ? `${d.nombre} · ` : "", el("span", { clase: "id", texto: d.documento_id }))),
-    el("td", {}, el("span", { clase: "insignia neutra" }, icono(iconoTipo), tipo)),
-    el("td", {}, estadoFicha(d)),
-    el("td", { clase: "fecha" }, el("time", { datetime: d.fecha || null, texto: fecha(d.fecha) || "—" })),
-    el("td", { clase: "col-acciones" },
-      el("button", { type: "button", clase: "boton fantasma peligro", "aria-label": `Eliminar ${d.nombre}`,
-        onclick: (ev) => pedirConfirmacion(d, ev.currentTarget) }, icono("papelera"), "Eliminar")));
+  const nombreAccion = `Eliminar ${d.nombre}`;
+  return el("tr", { role: "row", "data-documento": d.documento_id },
+    celda("celda-foto", vista),
+    el("th", { scope: "row", role: "rowheader", clase: "celda-documento" }, enlace, meta(d, principal)),
+    celda("col-tipo", el("span", { clase: "insignia neutra" }, icono(iconoTipo), tipo)),
+    celda("celda-estado", estadoFicha(d)),
+    celda("celda-fecha", el("time", { datetime: d.fecha || null, texto: fecha(d.fecha) })),
+    celda("col-acciones",
+      el("button", { type: "button", clase: "boton-eliminar", "aria-label": nombreAccion, title: nombreAccion,
+        onclick: (ev) => pedirConfirmacion(d, ev.currentTarget) }, icono("papelera"))));
 }
 
 /** Fila que ocupa toda la tabla (vacío o error). */
 function filaAviso(contenido) {
-  return el("tr", { clase: "fila-aviso" }, el("td", { colspan: String(COLUMNAS) }, contenido));
+  return el("tr", { role: "row", clase: "fila-aviso" }, el("td", { role: "cell", colspan: String(COLUMNAS) }, contenido));
 }
 
 function esqueletos() {
   const linea = (clase = "") => el("span", { clase: `esqueleto linea ${clase}`.trim() });
-  filas.replaceChildren(...Array.from({ length: 6 }, () => el("tr", { clase: "fila-cargando", "aria-hidden": "true" },
-    el("td", { clase: "celda-foto" }, el("span", { clase: "montura" }, el("span", { clase: "esqueleto miniatura-esqueleto" }))),
-    el("td", { clase: "celda-documento" }, linea(), linea("corta")),
-    el("td", {}, linea()), el("td", {}, linea()), el("td", {}, linea()), el("td", {}))));
+  filas.replaceChildren(...Array.from({ length: 6 }, () => el("tr", { role: "row", clase: "fila-cargando", "aria-hidden": "true" },
+    celda("celda-foto", el("span", { clase: "montura" }, el("span", { clase: "esqueleto miniatura-esqueleto" }))),
+    el("td", { role: "cell", clase: "celda-documento" }, linea(), linea("corta")),
+    celda("col-tipo", linea()), celda("celda-estado", linea()), celda("celda-fecha", linea()), celda("col-acciones"))));
 }
 
 function sincronizarDireccion() {
@@ -128,12 +143,22 @@ function sincronizarDireccion() {
   history.replaceState(null, "", `${location.pathname}?${p}`);
 }
 
+function pintarPaginacion(texto, paginas) {
+  for (const p of paginaciones) {
+    if (!p.texto) continue;
+    p.texto.textContent = texto;
+    p.anterior.disabled = !texto || pagina <= 1;
+    p.siguiente.disabled = !texto || pagina >= paginas;
+  }
+}
+
 async function cargar() {
   const mio = ++turno;
   const tipo = tipoActual();
   const params = new URLSearchParams({ pagina, por_pagina: POR_PAGINA });
   if (tipo) params.set("tipo", tipo);
-  filas.closest("table").setAttribute("aria-busy", "true");
+  tabla.dataset.filtro = tipo || "todos";
+  tabla.setAttribute("aria-busy", "true");
   try {
     const { cuerpo } = await api(`/documentos?${params}`);
     if (mio !== turno) return;
@@ -143,9 +168,8 @@ async function cargar() {
       if (cuerpo.total) { cargar(); return; }
     }
     estado.replaceChildren();
-    textoPagina.textContent = `Página ${numero(pagina)} de ${numero(paginas)} · ${numero(cuerpo.total)} ${cuerpo.total === 1 ? "documento" : "documentos"}`;
-    anterior.disabled = pagina <= 1;
-    siguiente.disabled = pagina >= paginas;
+    const [uno, varios] = CONTEO[tipo] || CONTEO[""];
+    pintarPaginacion(`Página ${numero(pagina)} de ${numero(paginas)} · ${numero(cuerpo.total)} ${cuerpo.total === 1 ? uno : varios}`, paginas);
     filas.replaceChildren(...(cuerpo.documentos.length ? cuerpo.documentos.map((d, i) => fila(d, i))
       : [filaAviso(el("p", { clase: "aviso-tabla" }, icono("info"), tipo === "norma" ? "No hay normas en el archivo."
         : tipo === "foto" ? "No hay fotos en el archivo todavía." : "El archivo está vacío."))]));
@@ -153,10 +177,10 @@ async function cargar() {
   } catch (e) {
     if (mio !== turno) return;
     mensaje(estado, e.message);
-    textoPagina.textContent = "";
+    pintarPaginacion("", 1);
     filas.replaceChildren(filaAviso(el("p", { clase: "aviso-tabla" }, icono("error"), "No se pudo leer el listado del archivo.")));
   } finally {
-    if (mio === turno) filas.closest("table").removeAttribute("aria-busy");
+    if (mio === turno) tabla.removeAttribute("aria-busy");
   }
 }
 
@@ -169,7 +193,12 @@ function irA(nueva) {
 }
 
 for (const r of radios) r.addEventListener("change", () => irA(1));
-anterior.addEventListener("click", () => irA(pagina - 1));
-siguiente.addEventListener("click", () => irA(pagina + 1));
+const barra = document.querySelector(".barra-archivo");
+paginaciones.forEach((p, i) => {
+  // Desde la paginación de abajo, la página nueva se lee desde su principio
+  const volverArriba = () => { if (i > 0) barra?.scrollIntoView({ block: "start" }); };
+  p.anterior?.addEventListener("click", () => { irA(pagina - 1); volverArriba(); });
+  p.siguiente?.addEventListener("click", () => { irA(pagina + 1); volverArriba(); });
+});
 esqueletos();
 cargar();

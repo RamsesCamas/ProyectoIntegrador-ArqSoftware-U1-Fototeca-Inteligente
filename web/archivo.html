@@ -69,12 +69,19 @@
         <div id="confirmacion" class="confirmacion" role="alertdialog" aria-modal="false"
              aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-texto" hidden></div>
         <div class="tabla-envoltura envoltura-archivo" role="region" aria-labelledby="titulo-tabla" tabindex="0">
-          <table class="tabla tabla-archivo">
+          <table class="tabla tabla-archivo" role="table" data-filtro="foto">
             <caption id="titulo-tabla" class="solo-lectores">Documentos del archivo</caption>
-            <thead><tr><th scope="col">Foto</th><th scope="col">Documento</th><th scope="col">Tipo</th><th scope="col">Estado</th><th scope="col">Fecha</th><th scope="col" class="col-acciones">Acciones</th></tr></thead>
-            <tbody id="filas"></tbody>
+            <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader" class="celda-foto">Foto</th><th scope="col" role="columnheader" class="celda-documento">Documento</th><th scope="col" role="columnheader" class="col-tipo">Tipo</th><th scope="col" role="columnheader" class="celda-estado">Estado</th><th scope="col" role="columnheader" class="celda-fecha">Fecha</th><th scope="col" role="columnheader" class="col-acciones">Acciones</th></tr></thead>
+            <tbody id="filas" role="rowgroup"></tbody>
           </table>
         </div>
+        <nav class="paginacion paginacion-abajo" aria-label="Paginación al final de la tabla">
+          <span id="pagina-abajo"></span>
+          <span class="paginacion-botones">
+            <button class="boton secundario" type="button" id="anterior-abajo"><svg class="icono icono-atras" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg>Anterior</button>
+            <button class="boton secundario" type="button" id="siguiente-abajo">Siguiente<svg class="icono" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
+          </span>
+        </nav>
         <!-- ═══ Fin del contenido de la página ═══ -->
       </main>
       <footer class="pie">
