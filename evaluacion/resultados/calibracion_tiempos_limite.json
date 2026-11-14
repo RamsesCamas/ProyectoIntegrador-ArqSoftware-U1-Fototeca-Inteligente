@@ -1,0 +1,54 @@
+{
+  "modulo": "calibracion_tiempos_limite",
+  "fecha": "2026-11-14T16:47:20+00:00",
+  "descripcion": "Calibra los tiempos límite de las llamadas a los modelos con lo que registró la bitácora del servicio.",
+  "regla": "límite = 1.5 × máximo observado en llamadas exitosas, hacia arriba al segundo, nunca por debajo del vigente en parametros.yaml",
+  "fuente": "eventos C6 llamada_modelo de la bitácora del servicio (SQLite)",
+  "por_llamada": {
+    "lfm3": {
+      "tareas": [
+        "P3",
+        "P4",
+        "P7"
+      ],
+      "n_exitosas": 644,
+      "tiempo_agotado": 4,
+      "p50_s": 9.1,
+      "p95_s": 43.5,
+      "max_s": 72.2,
+      "limite_anterior_s": 90.0,
+      "limite_s": 109
+    },
+    "qwen_imagen": {
+      "tareas": [
+        "P1",
+        "P2"
+      ],
+      "n_exitosas": 887,
+      "tiempo_agotado": 13,
+      "p50_s": 24.9,
+      "p95_s": 36.5,
+      "max_s": 61.1,
+      "limite_anterior_s": 58.0,
+      "limite_s": 92
+    },
+    "qwen_texto": {
+      "tareas": [
+        "P3",
+        "P6"
+      ],
+      "n_exitosas": 343,
+      "tiempo_agotado": 3,
+      "p50_s": 19.2,
+      "p95_s": 32.0,
+      "max_s": 46.6,
+      "limite_anterior_s": 64.0,
+      "limite_s": 70
+    }
+  },
+  "tiempos_limite_s": {
+    "lfm3": 109,
+    "qwen_imagen": 92,
+    "qwen_texto": 70
+  }
+}

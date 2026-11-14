@@ -12,6 +12,8 @@ regla documentada:
 - `enrutador.json` (evaluación): τ_consenso y τ_acuerdo con la restricción de latencia (ADR-03); sustituyen a los de H4.
 - `calibracion_tau_excluir.json` (`scripts.calibrar_tau_excluir`): τ_excluir de la búsqueda compleja, con ≤ 5 % de
   fichas penalizadas sin tener el término excluido.
+- `calibracion_tiempos_limite.json` (`scripts.calibrar_tiempos_limite`): los tiempos límite por tipo de llamada,
+  1.5 × el máximo observado en la bitácora.
 Cada valor queda con su archivo de origen en `_origen`. Cambiar la calibración cambia la versión de configuración y,
 con ella, invalida la caché de fichas. Si un archivo no existe, sus umbrales se quedan como estén.
 """
@@ -55,6 +57,9 @@ def umbrales_disponibles() -> dict[str, tuple[float, str]]:
     excluir = _leer("calibracion_tau_excluir.json")
     if excluir and excluir.get("tau_excluir") is not None:
         salida["enrutador_busquedas.tau_excluir"] = (float(excluir["tau_excluir"]), "calibracion_tau_excluir.json → tau_excluir")
+    tiempos = _leer("calibracion_tiempos_limite.json")
+    for tipo, limite in ((tiempos or {}).get("tiempos_limite_s") or {}).items():
+        salida[f"tiempos_limite_s.{tipo}"] = (float(limite), f"calibracion_tiempos_limite.json → tiempos_limite_s.{tipo}")
     return salida
 
 

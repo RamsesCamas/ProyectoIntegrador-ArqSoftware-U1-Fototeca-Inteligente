@@ -1,9 +1,12 @@
 """Gateway de modelos (C6): interfaz única `ejecutar(tarea, variables, imagenes)` hacia todos los modelos.
 
 - Tabla de tareas: cada prompt (P1–P6) declara su modelo preferido, su respaldo, su `num_predict` y su esquema.
-- Tiempo límite por modelo y tipo de entrada (`tiempos_limite_s`, calibrados en H0 como 1.5 × p95).
+- Tiempo límite por modelo y tipo de entrada (`tiempos_limite_s`: 1.5 × p95 en H0; desde el 14-nov, 1.5 × el máximo
+  observado en la bitácora, `scripts/calibrar_tiempos_limite.py`). El cliente espera el turno del modelo ANTES de
+  contar el tiempo (candado por modelo en `datos/ollama_cliente.py`).
 - Reintentos: 1 ante error de transporte o JSON inválido, con 1 s de espera. En el reintento por JSON inválido se
-  agrega al prompt el error del validador.
+  agrega al prompt el error del validador. Tras un tiempo agotado NO se repite la misma llamada (con la misma
+  entrada volvería a agotarse y solo duplicaba la espera): se pasa al modelo de respaldo, si lo hay.
 - Cadena de respaldo: si el modelo preferido agota sus intentos, se usa el de respaldo (P3: Qwen → LFM3, desde R3;
   P4/P5: LFM3 → Qwen). El «último recurso» de cada tarea lo decide la orquestación (C2).
 - Registro de uso en T1: modelo, tarea, tokens, duraciones, si se agotó el tiempo y si se usó el respaldo.
@@ -94,6 +97,8 @@ class Gateway:
                               tiempo_agotado=isinstance(e, TiempoAgotado), **comun)
                     ultimo = e
                     errores_previos.append(f"{modelo}: {type(e).__name__}")
+                    if isinstance(e, TiempoAgotado):
+                        break   # la misma entrada volvería a agotar el tiempo: al respaldo (o a la orquestación)
                     time.sleep(espera)
                     continue
                 datos, errores = extraer_json(resp.texto)

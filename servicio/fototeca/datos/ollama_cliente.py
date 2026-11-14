@@ -5,11 +5,16 @@
 - Si una salida trae bloques `<think>…</think>`, se eliminan aquí y se marca `thinking_eliminado` (ADR-11).
 - Errores: tiempo agotado → `TiempoAgotado`; servidor caído o error HTTP → `ServicioNoDisponible`. Los
   reintentos y el respaldo NO viven aquí: son responsabilidad del gateway (C6).
+- Un candado por modelo: Ollama atiende una petición a la vez por modelo (`OLLAMA_NUM_PARALLEL=1`), así que una
+  petición que esperaba en SU cola gastaba ahí su tiempo límite (una ficha de un lote o de otra pestaña en curso
+  dejaba sin tiempo a la siguiente). Se espera el turno aquí, antes de enviar, y el límite mide solo el trabajo
+  del modelo.
 """
 from __future__ import annotations
 
 import base64
 import re
+import threading
 
 import httpx
 
@@ -27,6 +32,13 @@ class OllamaCliente:
         self.lado_imagen_px = int(lado_imagen_px)   # imágenes hacia el modelo de visión (H0, verificación 0.6)
         self.modelos_requeridos = list(dict.fromkeys(modelos_requeridos))
         self._http = httpx.Client(base_url=self.url, timeout=httpx.Timeout(tiempo_conexion_s, read=600.0))
+        self._candados: dict[str, threading.Lock] = {}
+        self._candado_tabla = threading.Lock()
+
+    def _turno(self, modelo: str) -> threading.Lock:
+        """El candado de un modelo (uno por modelo: modelos distintos sí corren a la vez en Ollama)."""
+        with self._candado_tabla:
+            return self._candados.setdefault(modelo, threading.Lock())
 
     # ── estado para GET /health ──
     def estado(self) -> dict:
@@ -83,7 +95,8 @@ class OllamaCliente:
         if esquema_json is not None:
             cuerpo["format"] = esquema_json
         try:
-            r = self._http.post("/api/chat", json=cuerpo, timeout=httpx.Timeout(10.0, read=tiempo_limite_s))
+            with self._turno(modelo):   # el tiempo límite empieza cuando le toca a esta petición, no en la cola
+                r = self._http.post("/api/chat", json=cuerpo, timeout=httpx.Timeout(10.0, read=tiempo_limite_s))
         except httpx.TimeoutException as e:
             raise TiempoAgotado(f"{modelo} no respondió en {tiempo_limite_s:.0f} s") from e
         except httpx.HTTPError as e:

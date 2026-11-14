@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from fototeca.dominio.errores import TiempoAgotado
+from fototeca.dominio.errores import ServicioNoDisponible, TiempoAgotado
 from fototeca.modelos.gateway import Gateway, SalidaInvalida
 from fototeca.modelos.plantillas import cargar_plantillas, rellenar, versiones
 from fototeca.observabilidad.registro import configurar_sumidero
@@ -59,18 +59,28 @@ def test_reintento_por_json_invalido_agrega_el_error(config, plantillas):
     assert "no cumple el esquema" in cliente.llamadas[1]["mensajes"][-1]
 
 
-def test_respaldo_cuando_el_primario_agota_intentos(config, plantillas):
+def test_respaldo_cuando_el_primario_agota_el_tiempo(config, plantillas):
     lfm, qwen = config.modelos["composicion"], config.modelos["vision"]
     cliente = ClienteGuionado({lfm: [TiempoAgotado("t"), TiempoAgotado("t")], qwen: [P4_OK]})
     s = Gateway(cliente, config, plantillas).ejecutar("P4", {"consulta": "mercado"})
     assert s.respaldo and s.modelo == qwen
+    # Tras agotar el tiempo no se repite la misma llamada: una sola a LFM3 y luego el respaldo
+    assert [c["modelo"] for c in cliente.llamadas] == [lfm, qwen]
 
 
-def test_sin_respaldo_y_tiempo_agotado(config, plantillas):
+def test_sin_respaldo_y_tiempo_agotado_no_repite_la_llamada(config, plantillas):
     qwen = config.modelos["vision"]
     cliente = ClienteGuionado({qwen: [TiempoAgotado("t"), TiempoAgotado("t")]})
     with pytest.raises(TiempoAgotado):
         Gateway(cliente, config, plantillas).ejecutar("P1", {}, imagenes=[b"x"])
+    assert len(cliente.llamadas) == 1   # antes eran 2 × el límite (la foto con mucho texto tardó 4 min en degradarse)
+
+
+def test_error_de_transporte_si_se_reintenta(config, plantillas):
+    lfm = config.modelos["composicion"]
+    cliente = ClienteGuionado({lfm: [ServicioNoDisponible("caído"), P4_OK]})
+    s = Gateway(cliente, config, plantillas).ejecutar("P4", {"consulta": "mercado"})
+    assert s.intentos == 2 and not s.respaldo and len(cliente.llamadas) == 2
 
 
 def test_json_invalido_persistente_sin_respaldo(config, plantillas):
