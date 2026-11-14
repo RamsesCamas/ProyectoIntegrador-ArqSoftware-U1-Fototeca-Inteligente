@@ -229,3 +229,9 @@ figure.foto { min-width: 0; margin: 0; }
   .seccion, .inspector-pie { padding: var(--e-4); }
   .espera-datos { padding: var(--e-4); }
 }
+
+/* Pie técnico de la ficha con datos reales (guardrails y transiciones), para T5 en base.css: los estados de la máquina
+   son identificadores técnicos (mono) y la tabla de guardrails se desplaza en horizontal en vez de estrangular su
+   columna de resultados en móvil. */
+.revision .pie-tecnico .transiciones { font-family: var(--fuente-mono); }
+.revision .pie-tecnico .desplazable .tabla-compacta :is(td, th) { white-space: nowrap; }

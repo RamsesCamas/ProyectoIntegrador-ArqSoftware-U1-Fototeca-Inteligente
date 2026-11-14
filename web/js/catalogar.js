@@ -601,8 +601,8 @@ async function catalogarLote(archivos) {
     const errores = el("div");
     // El progreso vive dentro del panel del lote: catalogar otra foto mientras tanto no lo borra
     progreso.replaceChildren();
-    loteProgreso.replaceChildren(barra, texto, nota, errores);
-    loteResumen.textContent = "Se actualiza cada 3 s";
+    loteProgreso.replaceChildren(...[barra, texto, nota, errores].filter(Boolean));
+    loteResumen.replaceChildren(insignia("en_curso"));
     listaLote.replaceChildren(...Array.from({ length: lote.total }, tarjetaPendiente));
     seccionLote.hidden = false;
     // Las fotos ya están en el lote: el formulario queda libre para elegir otras
@@ -623,7 +623,7 @@ async function catalogarLote(archivos) {
         listaLote.append(...Array.from({ length: estado.estado === "terminado" ? 0 : pendientes }, tarjetaPendiente));
         if (estado.estado !== "terminado") setTimeout(consultar, 3000);
         else {
-          loteResumen.textContent = "Terminado";
+          loteResumen.replaceChildren(insignia(estado.fallidas && !estado.completadas ? "error" : "listo"));
           anunciar(`El lote terminó: ${estado.completadas} fichas listas${estado.fallidas ? `, ${estado.fallidas} fallidas` : ""}.`);
         }
       } catch (e) { mensaje(errores, e.message); }
