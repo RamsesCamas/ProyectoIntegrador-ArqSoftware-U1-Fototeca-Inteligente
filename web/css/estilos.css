@@ -3,83 +3,85 @@
    Reglas:
    · Ningún color literal fuera de :root (lo verifica pruebas/test_web_estilos.py). Los componentes solo usan tokens.
    · Contraste AA: texto ≥ 4.5:1; bordes de componentes, series de gráficas y foco ≥ 3:1.
-   · Paleta «Hemeroteca»: tinta negra sobre papel prensa y marcatextos de colores; para cambiar de paleta basta con
+   · Paleta «Mesa de luz»: grises neutros, cabecera de carbón con filete naranja; para cambiar de paleta basta con
      cambiar los valores del bloque 1a (mismos nombres de token). */
 
 /* ── 1. Tokens ─────────────────────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* 1a. Color (paleta «Hemeroteca») */
-  --fondo: #f3f3ef;
+  /* 1a. Color (paleta «Mesa de luz»): grises neutros que no tiñen las fotos, marcos de carbón y el naranja del lápiz
+     graso del editor. Base: ux/paletas/p3.css; los tokens que esa paleta no traía se derivan con el mismo criterio. */
+  --fondo: #f2f2f0;
   --superficie: #ffffff;
-  --superficie-2: #e9e9e3;
-  --texto: #111111;
-  --texto-suave: #3b3b38;
-  --borde: #bdbdb5;
-  --borde-fuerte: #111111;
-  --enlace: #111111;
-  --acento: #111111;
-  --acento-hover: #3a3a3a;
-  --acento-fondo: #fff3a0;
+  --superficie-2: #f2f2f1;
+  --texto: #161616;
+  --texto-suave: #474747;
+  --borde: #cdcdcb;
+  --borde-fuerte: #6b6b6b;
+  --enlace: #8c2f00;
+  --acento: #a33600;
+  --acento-hover: #7f2a00;
+  --acento-fondo: #fdebe1;
   --acento-texto: #ffffff;
-  --cabecera-fondo: #ffffff;
-  --cabecera-texto: #111111;
-  --cabecera-texto-suave: #4a4a46;
-  --cabecera-borde: #111111;
-  --nav-hover-fondo: #f1f1ea;
-  --nav-activo-fondo: #ffe14d;
-  --nav-activo-texto: #111111;
-  --nav-activo-borde: #111111;
-  --foco: #111111;
-  --foco-cabecera: #111111;
-  --ok: #0b5a2a;
-  --ok-fondo: #e1f3e5;
-  --aviso: #6f3d00;
-  --aviso-fondo: #fff1bf;
-  --aviso-borde: #111111;
-  --error: #9a001d;
-  --error-hover: #7a0017;
-  --error-fondo: #fde6e9;
-  --info: #1f3f8f;
-  --info-fondo: #e3eaff;
-  --chip-fondo: #f0f0eb;
-  --chip-borde: #111111;
-  --chip-regla-fondo: #d4e4ff;
-  --chip-regla-borde: #111111;
-  --chip-tesauro-fondo: #cff3cb;
-  --chip-tesauro-borde: #111111;
-  --chip-foto-fondo: #e8e8e8;
-  --chip-foto-borde: #111111;
-  --chip-archivista-fondo: #fff27a;
-  --chip-archivista-borde: #111111;
-  --chip-referencia-fondo: #ffd5ea;
-  --chip-referencia-borde: #111111;
-  --chip-etiqueta-fondo: #ffe1bd;
-  --chip-etiqueta-borde: #111111;
-  --foto-fondo: #111111;
-  --insignia-foto-fondo: rgba(17, 17, 17, .9);
+  --cabecera-fondo: #1b1b1b;
+  --cabecera-texto: #f7f7f7;
+  --cabecera-texto-suave: #c4c4c4;
+  --cabecera-borde: #ff7a29;
+  --nav-hover-fondo: rgba(255, 255, 255, .12);
+  --nav-activo-fondo: #f7f7f7;
+  --nav-activo-texto: #1b1b1b;
+  --nav-activo-borde: #ff7a29;
+  --foco: #c2410c;
+  --foco-cabecera: #ff9a57;
+  --ok: #18582e;
+  --ok-fondo: #e2f1e7;
+  --aviso: #5f4600;
+  --aviso-fondo: #fbf0c6;
+  --aviso-borde: #c9a227;
+  --error: #960e34;
+  --error-hover: #7a0b2a;          /* derivado: el mismo carmesí, más oscuro (hover de «Sí, eliminar») */
+  --error-fondo: #fce6ec;
+  --info: #264c7a;
+  --info-fondo: #e5ecf5;
+  --chip-fondo: #f0f0ef;
+  --chip-borde: #6b6b6b;
+  --chip-regla-fondo: #e6ecf6;
+  --chip-regla-borde: #3e5c94;
+  --chip-tesauro-fondo: #e2f1e7;
+  --chip-tesauro-borde: #2f7548;
+  --chip-foto-fondo: #ececec;
+  --chip-foto-borde: #4f4f4f;
+  --chip-archivista-fondo: #fdebe1;
+  --chip-archivista-borde: #b23a00;
+  --chip-referencia-fondo: #eee7f6;
+  --chip-referencia-borde: #6c4fa1;
+  --chip-etiqueta-fondo: #e1f0f2;
+  --chip-etiqueta-borde: #2b7380;
+  --foto-fondo: #1b1b1b;
+  --insignia-foto-fondo: rgba(27, 27, 27, .9);
   --insignia-foto-texto: #ffffff;
-  --velo: rgba(17, 17, 17, .82);
-  --pie-fondo: #111111;
-  --pie-texto: #e8e8e3;
-  --pie-borde: #111111;
-  /* Series de las gráficas (≥ 3:1 sobre la tarjeta). El color va por CLAVE de capa (comun.js · SERIE_CAPA);
-     la 5 (rojo) se reserva para «bloqueada» y errores. */
-  --grafica-1: #111111;
-  --grafica-2: #137a39;
-  --grafica-3: #b35c00;
-  --grafica-4: #6a3fb5;
-  --grafica-5: #c8102e;
-  --grafica-6: #007a87;
-  --grafica-7: #85857e;
-  --grafica-8: #1f3f8f;
-  --sombra: none;
-  --sombra-visor: 0 12px 40px rgba(17, 17, 17, .35);
+  --velo: rgba(12, 12, 12, .86);
+  --pie-fondo: #1b1b1b;
+  --pie-texto: #d4d4d4;
+  --pie-borde: #ff7a29;
+  /* Series de las gráficas (≥ 3:1 sobre la tarjeta). El color va por CLAVE de capa (comun.js · SERIE_CAPA):
+     1 total y serie por defecto, 2 modelo de visión, 3 contexto, 4 guardrails, 6 caché, 7 enrutador y 8 modelo de
+     composición (carbón, derivado). La 5 (carmesí, igual que --error) se reserva para «bloqueada» y errores. */
+  --grafica-1: #2f5f98;
+  --grafica-2: #18582e;
+  --grafica-3: #a26700;
+  --grafica-4: #6c4fa1;
+  --grafica-5: #960e34;
+  --grafica-6: #00778a;
+  --grafica-7: #6f6f6f;
+  --grafica-8: #2b2b2b;
+  --sombra: 0 1px 2px rgba(0, 0, 0, .12);
+  --sombra-visor: 0 12px 40px rgba(0, 0, 0, .35);
   --cabecera-borde-ancho: 4px;
-  --pie-borde-ancho: 0px;
+  --pie-borde-ancho: 4px;
 
   /* 1b. Tipografía: solo fuentes del sistema. Escala ≈ 1.25 con piso de 14 px. */
   --fuente-texto: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Ubuntu, sans-serif;
-  --fuente-titulos: Georgia, "Times New Roman", serif;
+  --fuente-titulos: var(--fuente-texto);
   --fuente-mono: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace;
   --t-xs: .875rem;    /* 14 px con la base mínima · metadatos, contadores, chips */
   --t-s: .9375rem;    /* tablas, pie técnico, aviso */
@@ -111,7 +113,9 @@
 html { font-size: clamp(1rem, .925rem + .25vw, 1.125rem); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; font-family: var(--fuente-texto); font-size: var(--t-m); line-height: var(--interlineado);
   background: var(--fondo); color: var(--texto); }
-h1, h2, h3 { font-family: var(--fuente-titulos); line-height: var(--interlineado-titulos); color: var(--texto); }
+h1, h2, h3 { font-family: var(--fuente-titulos); line-height: var(--interlineado-titulos); color: var(--texto); text-wrap: balance; }
+/* Sin palabras huérfanas en párrafos cortos (tarjetas angostas de Inicio y Métricas) */
+p, li, dd, .acceso span { text-wrap: pretty; }
 h1 { font-size: var(--t-2xl); margin: 0 0 var(--e-2); }
 h2 { font-size: var(--t-xl); margin: var(--e-6) 0 var(--e-3); }
 h3 { font-size: var(--t-l); margin: 0 0 var(--e-1); }
@@ -152,7 +156,7 @@ main { padding-block: var(--e-5) var(--e-7); min-height: 100vh; }
 .navegacion a:hover { background: var(--nav-hover-fondo); text-decoration: underline; }
 .navegacion a[aria-current="page"] { background: var(--nav-activo-fondo); color: var(--nav-activo-texto); font-weight: 700;
   box-shadow: inset 0 -3px 0 var(--nav-activo-borde); }
-.cabecera a:focus-visible { outline-color: var(--foco-cabecera); }
+.cabecera a:focus-visible, .saltar:focus-visible { outline-color: var(--foco-cabecera); }
 
 /* Aviso de IA en todas las páginas. Solo se fija el relleno vertical: el horizontal lo da .contenedor */
 .aviso-ia { background: var(--aviso-fondo); color: var(--aviso); border-bottom: 1px solid var(--aviso-borde); }
@@ -256,7 +260,7 @@ button.chip { font: inherit; font-size: var(--t-xs); cursor: zoom-in; }
   font: inherit; font-size: 1.15em; line-height: 1; cursor: pointer; }
 .palabra .quitar:hover { background: var(--error-fondo); color: var(--error); }
 
-/* Pie técnico: borde sólido, filete negro y un resumen legible en el summary */
+/* Pie técnico: borde sólido, filete a la izquierda y un resumen legible en el summary */
 details.pie-tecnico { margin-top: var(--e-5); padding: var(--e-2) var(--e-4); background: var(--superficie);
   border: 1px solid var(--borde-fuerte); border-left-width: 4px; border-radius: var(--radio); font-size: var(--t-s); }
 details.pie-tecnico summary { display: list-item; padding-block: var(--e-1); cursor: pointer; font-weight: 700; color: var(--texto); }
@@ -391,7 +395,7 @@ dl.interpretada.apilada dd { margin-bottom: var(--e-2); }
 .barra-tiempo { position: relative; height: .85rem; margin: var(--e-3) 0 var(--e-1); border: 1px solid var(--info);
   border-radius: var(--radio-pastilla); background: var(--superficie); overflow: hidden; }
 .barra-tiempo .relleno { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--info); transition: width 1s linear; }
-/* Marca del p50: línea negra con halo blanco, visible sobre la parte vacía y sobre el relleno */
+/* Marca del p50: línea oscura con halo blanco, visible sobre la parte vacía y sobre el relleno */
 .barra-tiempo .marca-p50 { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1px; background: var(--texto);
   box-shadow: 0 0 0 1px var(--superficie); }
 .espera.lenta { border-color: var(--aviso); background: var(--aviso-fondo); }

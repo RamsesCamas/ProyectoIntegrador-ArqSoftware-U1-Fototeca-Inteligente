@@ -196,7 +196,9 @@ TEXTO = [  # (primer plano, fondo): texto normal, ≥ 4.5:1
 ]
 COMPONENTES = [  # (primer plano, fondo): bordes, foco y series de gráficas, ≥ 3:1
     ("borde-fuerte", "superficie"), ("borde-fuerte", "superficie-2"), ("acento", "superficie"), ("foco", "fondo"),
-    ("foco", "superficie"), ("foco-cabecera", "cabecera-fondo"), ("nav-activo-borde", "nav-activo-fondo"),
+    ("foco", "superficie"), ("foco-cabecera", "cabecera-fondo"),
+    # Página actual del menú: la pestaña y su subrayado se distinguen de la cabecera
+    ("nav-activo-fondo", "cabecera-fondo"), ("nav-activo-borde", "cabecera-fondo"),
     ("chip-borde", "fondo"), ("chip-borde", "superficie"), ("chip-regla-borde", "fondo"), ("chip-tesauro-borde", "fondo"),
     ("chip-foto-borde", "fondo"), ("chip-archivista-borde", "fondo"), ("chip-referencia-borde", "fondo"),
     ("chip-etiqueta-borde", "fondo"), ("error", "superficie"), ("info", "info-fondo"), ("info", "superficie"),
