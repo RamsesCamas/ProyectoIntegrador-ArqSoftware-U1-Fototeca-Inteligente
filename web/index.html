@@ -33,7 +33,7 @@
         </ul>
       </nav>
       <div class="lateral-estado">
-        <p class="lateral-local"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-sin-red"/></svg><span class="lateral-local-texto">Todo local · sin internet</span></p>
+        <p class="lateral-local" title="Todo local · sin internet"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-sin-red"/></svg><span class="lateral-local-texto">Todo local · sin internet</span></p>
         <p class="lateral-salud"><span class="solo-lectores">Estado del sistema: </span><span class="insignia neutra">Consultando…</span></p>
       </div>
     </header>
@@ -45,7 +45,7 @@
         <header class="encabezado-pagina">
           <div class="encabezado-texto">
             <h1>Resumen del archivo</h1>
-            <p class="encabezado-descripcion">Fichas IPTC con texto alternativo, casi duplicados y búsqueda por texto o por foto, todo en este equipo y sin servicios en la nube.</p>
+            <p class="encabezado-descripcion" id="resumen-operativo">Fotos, fichas y estado del sistema de este equipo.</p>
           </div>
           <div class="encabezado-acciones">
             <a class="boton" href="catalogar.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg>Catalogar fotos</a>
@@ -58,14 +58,15 @@
             <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-servidor"/></svg>
             <h2 id="titulo-estado">Estado del sistema</h2>
             <p id="estado-general" aria-live="polite"><span class="solo-lectores">Estado general: </span><span class="insignia neutra"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-reloj"/></svg>Consultando…</span></p>
-            <p class="panel-auxiliar estado-meta"><span id="version-configuracion">Configuración <span class="mono">—</span></span><span id="precalentamiento"></span></p>
+            <p class="panel-auxiliar estado-meta"><span class="version-configuracion">Configuración <span class="mono">—</span></span><span class="precalentamiento"></span></p>
           </header>
           <div id="componentes" class="franja" aria-busy="true">
-            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
-            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
-            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
-            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
-            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span><span class="esqueleto linea"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span></article>
+            <article class="tarjeta componente cargando"><span class="esqueleto linea"></span><span class="esqueleto linea corta"></span></article>
+            <div class="componente componente-config"><p class="componente-nombre"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-cpu"/></svg><span class="una-linea">Configuración</span></p><p class="componente-detalle una-linea"><span class="version-configuracion"><span class="mono">—</span></span><span class="precalentamiento"></span></p></div>
           </div>
         </section>
 
@@ -91,17 +92,17 @@
             </div>
           </section>
 
-          <section id="panel-tareas" class="panel col-4" aria-labelledby="titulo-tareas">
+          <section id="panel-modulos" class="panel col-4" aria-labelledby="titulo-modulos">
             <header class="panel-cabecera">
-              <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-flecha"/></svg>
-              <h2 id="titulo-tareas">Tareas</h2>
+              <svg class="icono" aria-hidden="true" focusable="false"><use href="#i-metricas"/></svg>
+              <h2 id="titulo-modulos">Por módulo</h2>
             </header>
             <ul class="accesos">
-              <li><a class="acceso" href="catalogar.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg></span><span class="acceso-texto"><strong>Catalogar fotos</strong><span>Sube fotos y revisa su ficha con fuentes.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
-              <li><a class="acceso" href="buscar.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg></span><span class="acceso-texto"><strong>Buscar en el archivo</strong><span>Por texto en español o con una foto.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
-              <li><a class="acceso" href="duplicados.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-duplicados"/></svg></span><span class="acceso-texto"><strong>Revisar duplicados</strong><span>Grupos de fotos casi iguales, lado a lado.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
-              <li><a class="acceso" href="archivo.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-archivo"/></svg></span><span class="acceso-texto"><strong>Explorar el archivo</strong><span>Fotos y normas con el estado de su ficha.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
-              <li><a class="acceso" href="metricas.html"><span class="acceso-icono"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-metricas"/></svg></span><span class="acceso-texto"><strong>Ver métricas</strong><span>Latencia por capa, caché, guardrails y accesibilidad.</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="catalogar.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-catalogar"/></svg><span class="acceso-texto"><strong>Catalogar fotos</strong><span class="acceso-dato" id="dato-catalogar"><span class="acceso-cifra">—</span> fotos en el archivo</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="buscar.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-buscar"/></svg><span class="acceso-texto"><strong>Buscar en el archivo</strong><span class="acceso-dato" id="dato-buscar"><span class="acceso-cifra">—</span> búsquedas medidas</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="duplicados.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-duplicados"/></svg><span class="acceso-texto"><strong>Revisar duplicados</strong><span class="acceso-dato" id="dato-duplicados"><span class="acceso-cifra">—</span> grupos de casi duplicados</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="archivo.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-archivo"/></svg><span class="acceso-texto"><strong>Explorar el archivo</strong><span class="acceso-dato" id="dato-archivo"><span class="acceso-cifra">—</span> documentos guardados</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
+              <li><a class="acceso" href="metricas.html"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-metricas"/></svg><span class="acceso-texto"><strong>Ver métricas</strong><span class="acceso-dato" id="dato-metricas"><span class="acceso-cifra">—</span> fichas medidas</span></span><svg class="icono acceso-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></a></li>
             </ul>
           </section>
         </div>

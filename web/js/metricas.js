@@ -1,24 +1,31 @@
 // Métricas: GET /api/metricas y GET /api/configuracion. En el encabezado, el estado («Actualizado …»), el periodo y
-// «Actualizar»; debajo, la banda de 6 cifras clave y el panel: secciones con icono en su cabecera, a todo el ancho las
-// de tablas anchas y en dos columnas equilibradas las demás. Gráficas SVG de comun.js, cada una con su tabla
-// equivalente; el color de cada serie va por clave de capa (comun.js · SERIE_CAPA) o por resultado.
+// «Actualizar»; debajo, la barra de anclas (fija al desplazarse), la banda de 6 cifras clave y el panel: secciones con
+// icono en su cabecera, a todo el ancho las de tablas anchas y en dos columnas equilibradas las demás.
+// Gráficas SVG de comun.js, cada una con su tabla equivalente. Las barras de un solo valor van neutras (sin `serie` ni
+// `clave`): el estado se dice con texto e icono (insignias), nunca solo con el color de la barra.
 import { anunciar, api, el } from "./api.js";
-import { barraApilada, barras, CAPAS, crearMensaje, duracion, mensaje, numero, ORDEN_CAPAS, porcentaje, segundos } from "./comun.js";
+import { barras, CAPAS, crearMensaje, duracion, mensaje, numero, ORDEN_CAPAS, porcentaje, segundos } from "./comun.js";
 import { icono } from "./iconos.js";
 
-// Rojo (serie 5) solo para «bloqueada»
-const SERIE_RESULTADO = { aprobada: 2, sanitizado: 6, marcada: 3, bloqueada: 5 };
 const GRAVEDAD = { bloqueada: 0, sanitizado: 1, marcada: 2 };
+// Resultado de un guardrail: variante de insignia, icono y texto (el color nunca va solo)
+const RESULTADO = { bloqueada: ["error", "error", "bloqueada"], sanitizado: ["neutra", "escudo-check", "sanitizada"],
+  marcada: ["aviso", "alerta", "marcada"], aprobada: ["ok", "check", "aprobada"] };
 const FLUJOS = { fichas: "Fichas", busquedas: "Búsquedas" };
 const RUTAS = { rapida: "rápida", cache: "caché" };
 const CAMPOS = { titular: "Titular", texto_alternativo: "Texto alternativo", descripcion: "Descripción",
   descripcion_extendida: "Descripción extendida", palabras_clave: "Palabras clave" };
+const MODELOS = { vision: "Modelo de visión", composicion: "Modelo de composición", embedding: "Modelo de embedding",
+  embedding_secundario: "Modelo de embedding secundario" };
 const ms = (v) => segundos(v || 0);
 const ordenCapa = (c) => (c === "total" ? 99 : ORDEN_CAPAS.includes(c) ? ORDEN_CAPAS.indexOf(c) : 50);
 const suma = (xs) => xs.reduce((s, n) => s + (n || 0), 0);
 const plural = (n, uno, varios) => `${numero(n)} ${n === 1 ? uno : varios}`;
 // Cifra con su unidad: nunca se parte entre líneas («38.8 s», «100.0 %»)
-const sinCorte = (t) => String(t).replace(/ /g, " ");
+const sinCorte = (t) => String(t).replace(/ /g, "\u00a0");
+const dos = (n) => String(n).padStart(2, "0");
+/** Fecha y hora locales en ISO de 24 h: «2026-11-14 04:42:17» (el mismo formato en Métricas y en Archivo). */
+const fechaIso = (d) => `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())} ${dos(d.getHours())}:${dos(d.getMinutes())}:${dos(d.getSeconds())}`;
 
 const estado = document.getElementById("estado");
 const tablero = document.getElementById("panel");
@@ -49,14 +56,26 @@ function cifra(nombreIcono, valor, etiqueta, sub) {
     el("p", { clase: "cifra-sub", texto: sub }));
 }
 
-/** Datos en línea: [[valor, texto], …] → «37 útiles · 28 no útiles · …» con el valor resaltado. */
-function datosEnLinea(pares, clase = "") {
-  return el("ul", { clase: `datos-linea ${clase}`.trim() }, pares.map(([v, t]) => el("li", {}, el("strong", { texto: sinCorte(v) }), ` ${t}`)));
+/** Datos en línea: [[valor, texto], …] → «37 útiles · 28 no útiles · …» con el valor resaltado (en mono). */
+function datosEnLinea(pares) {
+  return el("ul", { clase: "datos-linea" }, pares.map(([v, t]) => el("li", {}, el("strong", { texto: sinCorte(v) }), ` ${t}`)));
 }
 
-/** Figura de barras con etiquetas técnicas (ids, modelos, rutas): en mono. */
+/** Figura de barras con etiquetas técnicas (ids, modelos, rutas, eventos): en mono. */
 function conEtiquetasMono(figura) {
   figura.classList.add("etiquetas-mono");
+  return figura;
+}
+
+/** Figura de barras de un resultado de guardrail: la leyenda es su insignia (icono y texto) con el total. */
+function figuraResultado(res, filas, [uno, varios]) {
+  const figura = conEtiquetasMono(barras(filas.map((g) => ({ etiqueta: g.verificacion, valor: g.n })),
+    { titulo: varios, encabezado: "Verificación", columnaValor: "Activaciones" }));
+  figura.classList.add("figura-resultado");
+  const [clase, nombreIcono] = RESULTADO[res] || ["neutra", "info"];
+  figura.querySelector("figcaption")?.replaceChildren(
+    el("span", { clase: `insignia ${clase}` }, icono(nombreIcono), plural(suma(filas.map((g) => g.n)), uno, varios)),
+    el("span", { clase: "suave", texto: `en ${plural(filas.length, "verificación", "verificaciones")}` }));
   return figura;
 }
 
@@ -100,6 +119,8 @@ function cifrasClave(m) {
 }
 
 // ── Secciones ──
+/** Latencia por capa: el p50 de cada capa con su p95 y su n, en barras neutras. Sin barra apilada ni «Proporción»: cada
+ *  capa es una distribución medida aparte (con otra n) y las medianas no se suman. */
 function latenciaPorCapa(m) {
   const flujos = Object.entries(m.latencia_por_capa || {});
   const total = (f) => m.latencia_por_capa?.[f]?.total?.n || 0;
@@ -107,27 +128,27 @@ function latenciaPorCapa(m) {
   const bloques = flujos.map(([flujo, etapas]) => {
     const nombre = FLUJOS[flujo] || flujo;
     const ordenadas = Object.entries(etapas).sort(([x], [y]) => ordenCapa(x) - ordenCapa(y));
-    const partes = ordenadas.filter(([c, v]) => c !== "total" && v.n && v.p50_ms > 0)
-      .map(([c, v]) => ({ clave: c, etiqueta: CAPAS[c] || c, valor: v.p50_ms }));
     const t = etapas.total;
     const id = `flujo-${flujo}`;
     return el("section", { clase: "flujo", "aria-labelledby": id },
       el("h3", { id }, icono(flujo === "fichas" ? "catalogar" : flujo === "busquedas" ? "buscar" : "reloj"), nombre),
       el("p", { clase: "flujo-resumen", texto: t?.n ? [`total p50 ${ms(t.p50_ms)}`, `p95 ${ms(t.p95_ms)}`, `n = ${numero(t.n)}`].map(sinCorte).join(" · ")
         : "sin datos todavía" }),
-      partes.length ? barraApilada(partes, { titulo: `${nombre}: tiempo p50 por capa (barras apiladas)` }) : null,
-      barras(ordenadas.map(([c, v]) => ({ clave: c, etiqueta: CAPAS[c] || c, valor: v.p95_ms || 0, n: v.n, p50: v.p50_ms })),
-        { titulo: `${nombre}: p50 y p95 por capa`, encabezado: "Capa", columnaValor: "p95", formato: ms,
-          extras: [{ titulo: "p50", texto: (f) => ms(f.p50) }, { titulo: "n", texto: (f) => numero(f.n) }] }));
+      barras(ordenadas.map(([c, v]) => ({ etiqueta: c === "total" ? `Total de la ${flujo === "busquedas" ? "búsqueda" : "ficha"}` : CAPAS[c] || c,
+        valor: v.p50_ms || 0, p95: v.p95_ms, n: v.n })),
+      { titulo: `${nombre}: p50 por capa, con su p95 y su n`, encabezado: "Capa", columnaValor: "p50", formato: ms,
+        extras: [{ titulo: "p95", texto: (f) => ms(f.p95) }, { titulo: "n", texto: (f) => numero(f.n) }] }));
   });
   const eventos = Object.entries(m.latencia_por_evento || {}).flatMap(([capa, evs]) =>
     Object.entries(evs).map(([evento, v]) => ({ etiqueta: `${capa} · ${evento}`, valor: v.p50_ms || 0, p95: v.p95_ms, n: v.n })));
   return panel("sec-latencia", "Latencia por capa", "reloj", auxiliar,
     bloques.length ? el("div", { clase: "latencias" }, bloques) : el("p", { clase: "suave", texto: "Sin fichas ni búsquedas todavía." }),
+    el("p", { clase: "nota-percentiles" }, icono("info"),
+      "Cada fila es una distribución medida aparte, con su propia n: las medianas de las capas no se suman y su suma no es el total."),
     el("section", { clase: "por-evento", "aria-labelledby": "titulo-por-evento" },
       el("h3", { id: "titulo-por-evento" }, icono("servidor"), "Por capa de la arquitectura y evento"),
-      conEtiquetasMono(barras(eventos, { titulo: "p50 y p95 por capa (C1–C7, T1, T2) y evento", encabezado: "Capa · evento", columnaValor: "p50",
-        formato: ms, extras: [{ titulo: "p95", texto: (f) => ms(f.p95) }, { titulo: "n", texto: (f) => numero(f.n) }] }))));
+      conEtiquetasMono(barras(eventos, { titulo: "p50 por capa (C1–C7, T1, T2) y evento, con su p95 y su n", encabezado: "Capa · evento",
+        columnaValor: "p50", formato: ms, extras: [{ titulo: "p95", texto: (f) => ms(f.p95) }, { titulo: "n", texto: (f) => numero(f.n) }] }))));
 }
 
 function cache(m, conf) {
@@ -138,10 +159,11 @@ function cache(m, conf) {
   const configurados = Object.entries(parametros).filter(([, v]) => v && typeof v === "object");
   return panel("sec-cache", "Caché", "rayo", espacios.length ? plural(consultas, "consulta", "consultas") : null,
     el("div", { clase: "cache-cuerpo" },
-      barras(espacios.map(([k, v]) => ({ etiqueta: FLUJOS[k] || k, valor: v.tasa_aciertos || 0, clave: "cache", ...v })),
-        { titulo: "Tasa de aciertos por espacio", encabezado: "Espacio", columnaValor: "Tasa", formato: porcentaje, maximo: 1,
-          extras: [{ titulo: "Consultas", texto: (f) => numero(f.consultas) }, { titulo: "Exactos", texto: (f) => numero(f.aciertos_exactos) },
-            { titulo: "Semánticos", texto: (f) => numero(f.aciertos_semanticos) }] }),
+      barras(espacios.map(([k, v]) => ({ etiqueta: FLUJOS[k] || k, valor: v.tasa_aciertos || 0, consultas: v.consultas,
+        aciertos_exactos: v.aciertos_exactos, aciertos_semanticos: v.aciertos_semanticos })),
+      { titulo: "Tasa de aciertos por espacio", encabezado: "Espacio", columnaValor: "Tasa", formato: porcentaje, maximo: 1,
+        extras: [{ titulo: "Consultas", texto: (f) => numero(f.consultas) }, { titulo: "Exactos", texto: (f) => numero(f.aciertos_exactos) },
+          { titulo: "Semánticos", texto: (f) => numero(f.aciertos_semanticos) }] }),
       configurados.length ? el("aside", { clase: "umbrales", "aria-labelledby": "titulo-umbrales" },
         el("h3", { id: "titulo-umbrales", texto: "Umbrales y vigencia" }),
         el("p", { clase: "umbrales-nota", texto: "Un acierto semántico reutiliza la respuesta de una consulta parecida: su similitud llega al umbral τ." }),
@@ -161,10 +183,8 @@ function accesibilidad(m) {
       el("p", { clase: "destacado-texto", texto: `de las ${numero(a.fotos ?? 0)} fotos tienen texto alternativo validado` })),
     datosEnLinea([[numero(a.fichas_validadas ?? 0), "fichas validadas"], [porcentaje(a.porcentaje_requiere_revision), "requieren revisión"],
       [porcentaje(a.porcentaje_sin_ficha), "sin ficha"]]),
-    barras([{ etiqueta: "Texto alternativo validado", valor: a.alt_validado || 0, serie: 2 },
-      { etiqueta: "Borrador", valor: a.borrador || 0, serie: 7 },
-      { etiqueta: "Requiere revisión", valor: a.requiere_revision || 0, serie: 3 },
-      { etiqueta: "Sin ficha", valor: a.sin_ficha || 0, serie: 1 }],
+    barras([{ etiqueta: "Texto alternativo validado", valor: a.alt_validado || 0 }, { etiqueta: "Borrador", valor: a.borrador || 0 },
+      { etiqueta: "Requiere revisión", valor: a.requiere_revision || 0 }, { etiqueta: "Sin ficha", valor: a.sin_ficha || 0 }],
     { titulo: "Fotos por estado de su ficha", maximo: a.fotos || 1, encabezado: "Estado", columnaValor: "Fotos" }));
 }
 
@@ -172,7 +192,7 @@ function enrutador(m) {
   const rutas = Object.entries(m.rutas || {});
   const nombreRuta = (k) => { const [flujo, ruta] = k.split(":"); return `${FLUJOS[flujo] || flujo} · ${RUTAS[ruta] || ruta}`; };
   return panel("sec-enrutador", "Enrutador y agente", "bifurcacion", rutas.length ? plural(suma(rutas.map(([, v]) => v)), "decisión", "decisiones") : null,
-    barras(rutas.map(([k, v]) => ({ etiqueta: nombreRuta(k), valor: v, clave: "enrutador" })),
+    barras(rutas.map(([k, v]) => ({ etiqueta: nombreRuta(k), valor: v })),
       { titulo: "Rutas elegidas por el enrutador", encabezado: "Flujo · ruta", columnaValor: "Veces" }),
     barras(Object.entries(m.iteraciones_agente || {}).map(([k, v]) => ({ etiqueta: `${k} ${k === "1" ? "iteración" : "iteraciones"}`, valor: v })),
       { titulo: "Iteraciones del ciclo de agente por ficha", encabezado: "Iteraciones", columnaValor: "Fichas" }),
@@ -187,29 +207,29 @@ function retroalimentacion(m) {
   return panel("sec-retroalimentacion", "Retroalimentación", "archivista", r.total !== undefined ? plural(r.total, "opinión", "opiniones") : null,
     datosEnLinea([[numero(r.util ?? 0), "útiles"], [numero(r.no_util ?? 0), "no útiles"], [porcentaje(r.tasa_util), "tasa útil"],
       [numero(r.con_comentario ?? 0), "con comentario"], [numero(r.fichas_validadas ?? 0), "fichas validadas"]]),
-    barras(Object.entries(r.por_ruta || {}).map(([k, v]) => ({ etiqueta: RUTAS[k] || k, valor: tasa(v), ...v, serie: 2 })),
+    barras(Object.entries(r.por_ruta || {}).map(([k, v]) => ({ etiqueta: RUTAS[k] || k, valor: tasa(v), util: v.util, no_util: v.no_util })),
       { titulo: "Tasa útil por ruta", encabezado: "Ruta", columnaValor: "Tasa útil", formato: porcentaje, maximo: 1, extras }),
-    conEtiquetasMono(barras(Object.entries(r.por_modelo || {}).map(([k, v]) => ({ etiqueta: k, valor: tasa(v), ...v, serie: 2 })),
+    conEtiquetasMono(barras(Object.entries(r.por_modelo || {}).map(([k, v]) => ({ etiqueta: k, valor: tasa(v), util: v.util, no_util: v.no_util })),
       { titulo: "Tasa útil por modelo", encabezado: "Modelo", columnaValor: "Tasa útil", formato: porcentaje, maximo: 1, extras })),
-    barras(Object.entries(r.campos_corregidos || {}).map(([k, v]) => ({ etiqueta: CAMPOS[k] || k, valor: v, serie: 3 })),
+    barras(Object.entries(r.campos_corregidos || {}).map(([k, v]) => ({ etiqueta: CAMPOS[k] || k, valor: v })),
       { titulo: "Campos corregidos por el archivista", encabezado: "Campo", columnaValor: "Correcciones" }));
 }
 
 function guardrails(m) {
   const lista = m.guardrails || [];
   const por = (res) => suma(lista.filter((g) => g.resultado === res).map((g) => g.n));
-  const intervenciones = lista.filter((g) => g.resultado !== "aprobada")
-    .sort((x, y) => (GRAVEDAD[x.resultado] ?? 9) - (GRAVEDAD[y.resultado] ?? 9) || y.n - x.n);
+  const intervenciones = Object.keys(GRAVEDAD).map((res) => [res, lista.filter((g) => g.resultado === res).sort((x, y) => y.n - x.n)])
+    .filter(([, filas]) => filas.length);
   const aprobadas = lista.filter((g) => g.resultado === "aprobada").sort((x, y) => y.n - x.n);
-  const resumen = [["error", "error", por("bloqueada"), "bloqueada", "bloqueadas"], ["info", "escudo-check", por("sanitizado"), "sanitizada", "sanitizadas"],
-    ["aviso", "alerta", por("marcada"), "marcada", "marcadas"], ["ok", "check", por("aprobada"), "aprobada", "aprobadas"]];
   return panel("sec-guardrails", "Guardrails", "escudo", lista.length ? plural(suma(lista.map((g) => g.n)), "activación", "activaciones") : null,
-    lista.length ? el("ul", { clase: "resumen-insignias", "aria-label": "Activaciones por resultado" },
-      resumen.map(([clase, nombreIcono, n, uno, varios]) => el("li", {}, el("span", { clase: `insignia ${clase}` }, icono(nombreIcono), plural(n, uno, varios))))) : null,
-    barras(intervenciones.map((g) => ({ etiqueta: `${g.verificacion} · ${g.resultado}`, valor: g.n, serie: SERIE_RESULTADO[g.resultado] ?? 7 })),
-      { titulo: "Intervenciones: bloqueadas, sanitizadas y marcadas", encabezado: "Verificación · resultado", columnaValor: "Activaciones" }),
-    barras(aprobadas.map((g) => ({ etiqueta: g.verificacion, valor: g.n, serie: SERIE_RESULTADO.aprobada })),
-      { titulo: "Aprobadas por verificación", encabezado: "Verificación", columnaValor: "Activaciones" }));
+    intervenciones.length ? el("h3", { clase: "subtitulo-panel", texto: "Intervenciones por verificación" }) : null,
+    intervenciones.map(([res, filas]) => figuraResultado(res, filas,
+      { bloqueada: ["bloqueada", "bloqueadas"], sanitizado: ["sanitizada", "sanitizadas"], marcada: ["marcada", "marcadas"] }[res] || [res, res])),
+    aprobadas.length ? el("details", { clase: "plegable" },
+      el("summary", {}, el("span", { clase: "plegable-titulo" }, "Aprobadas: ", el("strong", { texto: numero(por("aprobada")) }),
+        ` en ${plural(aprobadas.length, "verificación", "verificaciones")}`), el("span", { clase: "plegable-accion", texto: "ver la tabla" })),
+      conEtiquetasMono(barras(aprobadas.map((g) => ({ etiqueta: g.verificacion, valor: g.n })),
+        { titulo: "Aprobadas por verificación", encabezado: "Verificación", columnaValor: "Activaciones" }))) : null);
 }
 
 function configuracion(conf) {
@@ -217,29 +237,35 @@ function configuracion(conf) {
   return panel("sec-configuracion", "Configuración activa", "etiqueta", conf.version_configuracion ? `versión ${conf.version_configuracion}` : null,
     el("dl", { clase: "interpretada apilada configuracion" },
       dato("Versión de configuración", conf.version_configuracion),
-      dato("Servicio · corpus", [conf.version_servicio, conf.version_corpus].filter(Boolean).join(" · ") || null),
-      ...Object.entries(conf.modelos || {}).flatMap(([k, v]) => dato(`Modelo · ${k}`, v)),
+      dato("Versión del servicio · del corpus", [conf.version_servicio, conf.version_corpus].filter(Boolean).join(" · ") || null),
+      ...Object.entries(conf.modelos || {}).flatMap(([k, v]) => dato(MODELOS[k] || `Modelo · ${k}`, v)),
       el("dt", { texto: "Versiones de prompts" }),
       el("dd", {}, Object.keys(conf.versiones_prompts || {}).length
         ? el("ul", { clase: "lista-simple" }, Object.entries(conf.versiones_prompts).map(([k, v]) => el("li", { texto: `${k}: ${v}` })))
         : "—")));
 }
 
+/** Uso por modelo: las llamadas en barras y, debajo, el detalle por modelo (modelos en columnas: cabe en media columna). */
 function usoPorModelo(m) {
   const modelos = Object.entries(m.modelos || {});
+  const filas = [["Llamadas", (v) => numero(v.llamadas)], ["Tokens de entrada", (v) => numero(v.tokens_prompt)],
+    ["Tokens de salida", (v) => numero(v.tokens_salida)], ["Tiempo total", (v) => duracion((v.tiempo_ms || 0) / 1000)],
+    ["Respaldos", (v) => numero(v.respaldos)], ["Tiempos agotados", (v) => numero(v.tiempos_agotados)], ["JSON inválido", (v) => numero(v.json_invalido)]];
   return panel("sec-modelos", "Uso por modelo", "cpu", modelos.length ? plural(suma(modelos.map(([, v]) => v.llamadas)), "llamada", "llamadas") : null,
-    conEtiquetasMono(barras(modelos.map(([k, v]) => ({ etiqueta: k, valor: v.llamadas, ...v })),
-      { titulo: "Llamadas por modelo", encabezado: "Modelo", columnaValor: "Llamadas",
-        extras: [{ titulo: "Tokens de entrada", texto: (f) => numero(f.tokens_prompt) }, { titulo: "Tokens de salida", texto: (f) => numero(f.tokens_salida) },
-          { titulo: "Tiempo total", texto: (f) => duracion((f.tiempo_ms || 0) / 1000) }, { titulo: "Respaldos", texto: (f) => numero(f.respaldos) },
-          { titulo: "Tiempos agotados", texto: (f) => numero(f.tiempos_agotados) }, { titulo: "JSON inválido", texto: (f) => numero(f.json_invalido) }] })));
+    conEtiquetasMono(barras(modelos.map(([k, v]) => ({ etiqueta: k, valor: v.llamadas })),
+      { titulo: "Llamadas por modelo", encabezado: "Modelo", columnaValor: "Llamadas" })),
+    modelos.length ? el("div", { clase: "desplazable" }, el("table", { clase: "tabla tabla-compacta detalle-modelos" },
+      el("caption", { texto: "Detalle por modelo" }),
+      el("thead", {}, el("tr", {}, el("th", { scope: "col", texto: "Concepto" }), modelos.map(([k]) => el("th", { scope: "col", clase: "num mono", texto: k })))),
+      el("tbody", {}, filas.map(([titulo, valor]) => el("tr", {}, el("th", { scope: "row", texto: titulo }),
+        modelos.map(([, v]) => el("td", { clase: "num", texto: valor(v) }))))))) : null);
 }
 
 function latenciaPorEndpoint(m) {
   const endpoints = Object.entries(m.latencia_por_endpoint || {}).sort(([, x], [, y]) => (y.p50_ms || 0) - (x.p50_ms || 0));
   return panel("sec-endpoints", "Latencia por endpoint", "servidor", endpoints.length ? plural(suma(endpoints.map(([, v]) => v.n)), "petición", "peticiones") : null,
     conEtiquetasMono(barras(endpoints.map(([k, v]) => ({ etiqueta: k, valor: v.p50_ms || 0, p95: v.p95_ms, n: v.n })),
-      { titulo: "p50 y p95 por endpoint (del más lento al más rápido)", encabezado: "Endpoint", columnaValor: "p50", formato: ms,
+      { titulo: "p50 por endpoint, con su p95 (del más lento al más rápido)", encabezado: "Endpoint", columnaValor: "p50", formato: ms,
         extras: [{ titulo: "p95", texto: (f) => ms(f.p95) }, { titulo: "Peticiones", texto: (f) => numero(f.n) }] })));
 }
 
@@ -267,18 +293,22 @@ async function cargar() {
     if (mio !== turno) return;
     banda.replaceChildren(...cifrasClave(m));
     const vacio = !m.eventos_considerados;
+    // Columnas equilibradas: izquierda ≈ accesibilidad + guardrails; derecha ≈ enrutador + retroalimentación
     tablero.replaceChildren(...[
       vacio ? crearMensaje("No hay eventos en este periodo: las secciones muestran solo el estado del archivo. Elige «Todo el historial» para ver todo.", "info") : null,
       latenciaPorCapa(m),
       cache(m, conf),
       el("div", { clase: "reticula columnas-paneles" },
-        el("div", { clase: "col-6 columna-paneles" }, accesibilidad(m), enrutador(m), retroalimentacion(m)),
-        el("div", { clase: "col-6 columna-paneles" }, guardrails(m), conf ? configuracion(conf) : null)),
-      usoPorModelo(m),
+        el("div", { clase: "col-6 columna-paneles" }, accesibilidad(m), guardrails(m)),
+        el("div", { clase: "col-6 columna-paneles" }, enrutador(m), retroalimentacion(m))),
+      el("div", { clase: "reticula columnas-paneles" },
+        el("div", { clase: "col-6 columna-paneles" }, usoPorModelo(m)),
+        el("div", { clase: "col-6 columna-paneles" }, conf ? configuracion(conf) : null)),
       latenciaPorEndpoint(m)].filter(Boolean));
     conDatos = true;
-    const generado = m.generado ? new Date(m.generado).toLocaleString("es-MX") : new Date().toLocaleString("es-MX");
-    mensaje(estado, `Actualizado ${generado} · ${plural(m.eventos_considerados ?? 0, "evento", "eventos")}`, "ok");
+    const generado = m.generado ? new Date(m.generado) : new Date();
+    mensaje(estado, el("span", {}, "Actualizado ", el("time", { clase: "mono", datetime: generado.toISOString(), texto: fechaIso(generado) }),
+      ` · ${plural(m.eventos_considerados ?? 0, "evento", "eventos")}`), "ok");
     anunciar("Métricas actualizadas");
   } catch (e) {
     if (mio !== turno) return;

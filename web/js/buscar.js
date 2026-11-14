@@ -94,6 +94,15 @@ function pintarInterpretada(q) {
   interpretada.hidden = false;
 }
 
+/** Lleva «Resultados» a la parte de arriba si quedó fuera de la vista (suave, salvo con movimiento reducido). */
+function mostrarResultados() {
+  const barra = document.querySelector(".resultados-barra");
+  const arriba = barra.getBoundingClientRect().top;
+  if (arriba >= 0 && arriba <= innerHeight * 0.35) return;
+  const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  barra.scrollIntoView({ behavior: reducido ? "auto" : "smooth", block: "start" });
+}
+
 function pintar(cuerpo) {
   const r = cuerpo.resultados || [];
   const meta = cuerpo.meta || {};
@@ -104,6 +113,9 @@ function pintar(cuerpo) {
   else interpretada.hidden = true;
   tecnico.replaceChildren(pieTecnico(meta) || "");
   estado.replaceChildren(resumen(meta, r.length));
+  // Con resultados, la ayuda larga se pliega (los ejemplos se quedan) y «Resultados» queda a la vista
+  if (r.length) document.getElementById("zona-soltar").classList.add("con-resultados");
+  mostrarResultados();
   anunciar(r.length ? `${r.length === 1 ? "1 resultado" : `${r.length} resultados`}` : "Sin resultados");
 }
 
