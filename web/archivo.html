@@ -51,36 +51,33 @@
         </header>
         <!-- ═══ Contenido de la página (dueño: la tarea de la página) ═══ -->
         <div class="barra-archivo">
-          <fieldset class="segmentado" id="filtro-tipo">
-            <legend>Tipo de documento</legend>
-            <input type="radio" name="tipo" id="tipo-todos" value=""><label for="tipo-todos">Todos</label>
-            <input type="radio" name="tipo" id="tipo-foto" value="foto" checked><label for="tipo-foto"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-foto"/></svg>Fotos</label>
-            <input type="radio" name="tipo" id="tipo-norma" value="norma"><label for="tipo-norma"><svg class="icono" aria-hidden="true" focusable="false"><use href="#i-regla"/></svg>Normas</label>
-          </fieldset>
+          <nav class="filtro-tipo" aria-label="Tipo de documento">
+            <ul>
+              <li><a href="archivo.html?tipo=" data-tipo="">Todos</a></li>
+              <li><a href="archivo.html?tipo=foto" data-tipo="foto" aria-current="true">Fotos</a></li>
+              <li><a href="archivo.html?tipo=norma" data-tipo="norma">Normas</a></li>
+            </ul>
+          </nav>
           <nav class="paginacion" aria-label="Paginación">
-            <span id="pagina" aria-live="polite"></span>
-            <span class="paginacion-botones">
-              <button class="boton secundario" type="button" id="anterior"><svg class="icono icono-atras" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg>Anterior</button>
-              <button class="boton secundario" type="button" id="siguiente">Siguiente<svg class="icono" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
-            </span>
+            <p id="pagina" class="paginacion-texto" aria-live="polite"></p>
+            <button class="boton texto" type="button" id="anterior">Página anterior</button>
+            <button class="boton texto" type="button" id="siguiente">Página siguiente</button>
           </nav>
         </div>
         <div id="estado" aria-live="polite"></div>
         <div id="confirmacion" class="confirmacion" role="alertdialog" aria-modal="false"
              aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-texto" hidden></div>
-        <div class="tabla-envoltura envoltura-archivo" role="region" aria-labelledby="titulo-tabla" tabindex="0">
-          <table class="tabla tabla-archivo" role="table" data-filtro="foto">
+        <div class="envoltura-catalogo" role="region" aria-labelledby="titulo-tabla" tabindex="0">
+          <table class="catalogo tabla-archivo" data-filtro="foto">
             <caption id="titulo-tabla" class="solo-lectores">Documentos del archivo</caption>
-            <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader" class="celda-foto">Foto</th><th scope="col" role="columnheader" class="celda-documento">Documento</th><th scope="col" role="columnheader" class="col-tipo">Tipo</th><th scope="col" role="columnheader" class="celda-estado">Estado</th><th scope="col" role="columnheader" class="celda-fecha">Fecha</th><th scope="col" role="columnheader" class="col-acciones">Acciones</th></tr></thead>
-            <tbody id="filas" role="rowgroup"></tbody>
+            <thead><tr><th scope="col" class="col-foto"><span class="solo-lectores">Foto</span></th><th scope="col" class="col-documento">Documento</th><th scope="col" class="col-tipo">Tipo</th><th scope="col" class="col-estado">Estado de la ficha</th><th scope="col" class="col-fecha num">Fecha de carga</th><th scope="col" class="col-acciones"><span class="solo-lectores">Acciones</span></th></tr></thead>
+            <tbody id="filas"></tbody>
           </table>
         </div>
-        <nav class="paginacion paginacion-abajo" aria-label="Paginación al final de la tabla">
-          <span id="pagina-abajo"></span>
-          <span class="paginacion-botones">
-            <button class="boton secundario" type="button" id="anterior-abajo"><svg class="icono icono-atras" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg>Anterior</button>
-            <button class="boton secundario" type="button" id="siguiente-abajo">Siguiente<svg class="icono" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
-          </span>
+        <nav class="paginacion paginacion-abajo" aria-label="Paginación al final de la lista">
+          <p id="pagina-abajo" class="paginacion-texto"></p>
+          <button class="boton texto" type="button" id="anterior-abajo">Página anterior</button>
+          <button class="boton texto" type="button" id="siguiente-abajo">Página siguiente</button>
         </nav>
         <!-- ═══ Fin del contenido de la página ═══ -->
       </main>

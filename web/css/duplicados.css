@@ -1,65 +1,40 @@
-/* Duplicados · grupos de casi duplicados (panel con diapositivas lado a lado) y estado vacío. Solo maquetación y
-   piezas propias, solo con var(--…) (los tokens viven en base.css). Dueño: la tarea de la página (T4).
-
-   Las diapositivas usan .montura.contener: la foto entera (contain) sobre --lupa-fondo, para comparar recortes y
-   marcos. El titular y el id van dentro de la misma tarjeta. */
+/* Duplicados · cada grupo es una tira de película corta (ol.tira de base.css) con la referencia circulada por el lápiz
+   graso (.cuadro.marcado) y la similitud de las demás en mono; el titular va bajo cada fotograma (.cuadro-pie). El
+   estado vacío va en prosa. Solo maquetación y piezas propias, solo con var(--…). Dueño: la tarea de la página (T4). */
 
 .umbral { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto); white-space: nowrap; }
 
-/* Resumen («2 grupos · 5 fotos casi duplicadas») */
+/* Resumen («2 grupos con 5 fotos casi duplicadas.») */
 .estado-duplicados:empty { display: none; }
 .estado-duplicados > .mensaje { margin-top: 0; }
-.resumen-grupos { display: flex; align-items: center; gap: var(--e-2); margin: 0 0 var(--e-4); color: var(--texto-suave); }
-.resumen-grupos .icono { width: 20px; height: 20px; }
+.resumen-grupos { margin: 0 0 var(--e-4); color: var(--texto-suave); }
 
-/* Grupos */
-.grupos { display: flex; flex-direction: column; gap: var(--e-5); }
+/* Grupos: una sección por grupo, con su resumen en prosa y la tira */
+.grupos { display: flex; flex-direction: column; gap: var(--e-6); }
 .grupos .panel + .panel { margin-top: 0; }
-.grupo .panel-cabecera > .icono { color: var(--texto-suave); }
-.grupo h2 { font-size: var(--t-3); }
-.grupo-similitud { font-weight: var(--peso-normal); color: var(--texto-suave); }
+.grupo-resumen { max-width: var(--ancho-lectura); margin: var(--e-1) 0 var(--e-4); color: var(--texto-suave); }
+.grupo-resumen .cifra { font-family: var(--fuente-mono); color: var(--texto); }
 
-/* Diapositivas: tantas como quepan (≥ 17rem: tres por fila a 1000 y 1280 px, fotos grandes para comparar); en móvil, dos */
-.diapositivas { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
-  gap: var(--e-5) var(--e-4); margin: 0; }
-.diapositiva { display: flex; min-width: 0; }
-.diapositiva .montura { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; margin: 0; }
-/* Pie de la tarjeta: titular (2 líneas) y, debajo, el id y la referencia o la similitud */
-.diapositiva-pie { display: flex; flex-direction: column; gap: var(--e-1); min-width: 0; margin: var(--e-2) 0 0; padding: 0 2px 2px; }
-.montura .diapositiva-pie { justify-content: flex-start; }
-.diapositiva-titular { margin: 0; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
-  font-size: var(--t-2); line-height: 1.4; color: var(--texto); }
-.diapositiva-titular a { color: var(--texto); font-weight: var(--peso-medio); text-decoration: none; }
-.diapositiva-titular a:hover, .diapositiva-titular a:focus-visible { text-decoration: underline; text-decoration-color: var(--acento);
-  text-decoration-thickness: 2px; }
-.diapositiva .fotograma { display: flex; align-items: center; justify-content: space-between; gap: var(--e-2); margin: 0; min-width: 0; }
-/* El id en una línea (con elipsis y el id completo en `title`): no se parte en el guion */
-.diapositiva .fotograma .id { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.diapositiva .similitud { flex: none; font-family: var(--fuente-mono); font-size: var(--t-1); font-weight: var(--peso-medio); color: var(--texto); }
-.diapositiva .fotograma .insignia { flex: none; }
-@container contenido (max-width: 35.99rem) {
-  .diapositivas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4) var(--e-3); }
-  .diapositiva .fotograma { flex-wrap: wrap; }
-}
+/* Tira corta: fotogramas de ancho fijo (no se estiran a todo el ancho con 2 o 3 fotos) */
+.tira-corta { grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 17rem)); }
+.cuadro-referencia { font-family: var(--fuente-texto); }
 
-/* «Ver» sobre la foto: a la vista solo al pasar el puntero o con el foco (en pantallas táctiles, siempre) */
-@media (hover: hover) {
-  .diapositiva .lupa { visibility: hidden; }
-  .diapositiva .boton-imagen:is(:hover, :focus-visible) .lupa { visibility: visible; }
-}
+/* Pie del fotograma, en la mesa: titular (2 líneas) e id en una línea con elipsis (el id completo en title) */
+.cuadro-pie { min-width: 0; }
+.cuadro-titular { margin: 0; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.4; }
+.cuadro-titular a { color: var(--texto); font-weight: var(--peso-medio); text-decoration: none; }
+.cuadro-titular a:hover, .cuadro-titular a:focus-visible { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.cuadro-id { display: flex; min-width: 0; margin: var(--e-1) 0 0; }
+.cuadro-id .id { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Carga */
-.grupo-cargando .panel-cabecera .esqueleto { width: 16rem; margin: 0; }
+.grupo-cargando .esqueleto.linea { width: 16rem; margin: 0 0 var(--e-3); }
 .grupo-cargando .esqueleto.foto { display: block; }
 
-/* Estado vacío: un bloque de lectura (~560 px) alineado a la izquierda, con la ilustración al lado */
-.vacio-duplicados { flex-direction: row; flex-wrap: wrap; align-items: flex-start; justify-content: flex-start; gap: var(--e-4) var(--e-6);
-  text-align: left; }
-.vacio-duplicados .vacio-ilustracion { flex: none; }
-.vacio-texto { flex: 0 1 35rem; min-width: 0; max-width: 35rem; }
-.vacio-texto h2 { margin: 0 0 var(--e-2); }
-.vacio-texto p { max-width: none; margin: 0; }
-.vacio-texto .vacio-pasos-titulo { margin: var(--e-5) 0 var(--e-2); font-size: var(--t-2); color: var(--texto); }
-.vacio-texto .vacio-pasos { max-width: none; margin: 0; padding-left: var(--e-5); }
-.vacio-pasos li + li { margin-top: var(--e-1); }
-.vacio-texto .boton { margin-top: var(--e-5); }
+/* Estado vacío en prosa: un bloque de lectura alineado a la izquierda */
+.vacio-duplicados { max-width: 35rem; }
+.vacio-duplicados p { margin: var(--e-2) 0; }
+.vacio-duplicados h3 { margin: var(--e-5) 0 var(--e-2); font-size: var(--t-3); }
+.vacio-duplicados .pasos { margin: 0; padding-left: var(--e-5); }
+.vacio-duplicados .pasos li + li { margin-top: var(--e-1); }
+.vacio-duplicados .boton { margin-top: var(--e-3); }
