@@ -11,7 +11,11 @@
   son valores de tokens.
 - Todo icono que usan los HTML (`#i-nombre`) y el JavaScript (`icono("nombre")`) existe en js/iconos.js.
 - Los pares de tokens de texto cumplen 4.5:1 y los de componentes (bordes, foco, iconos con significado, series de
-  gráficas) 3:1 (WCAG 2.x, luminancia relativa sRGB), incluidos los de la barra lateral, la montura y la lupa.
+  gráficas) 3:1 (WCAG 2.x, luminancia relativa sRGB), incluidos los de la barra lateral, la montura, la lupa (gris
+  claro), el visor (oscuro) y la franja del aviso de IA.
+- Color por significado: verde, ámbar y rojo son solo de estado; la procedencia (chips) usa familias exclusivas que no
+  se confunden con el estado ni con el naranja de acción; las series de datos 1–4 y 6–8 son grises y la información
+  es neutra.
 
 Lee la web montada en el contenedor `servicio` (FOTOTECA_WEB o /app/web_estatica), como pruebas/test_web_r8.py.
 """
@@ -292,19 +296,25 @@ TEXTO = [  # (primer plano, fondo): texto normal, ≥ 4.5:1
     ("texto", "montura"), ("texto-suave", "montura"), ("lupa-texto", "lupa-fondo"), ("lupa-texto-suave", "lupa-fondo"),
     ("texto", "mesa-fondo"), ("texto-suave", "mesa-fondo"), ("acento", "mesa-fondo"), ("superficie", "texto"),
     ("texto-suave", "esqueleto-fondo"),
+    # Ronda 2: visor oscuro, franja neutra del aviso de IA y texto sobre el escenario claro de la foto
+    ("visor-texto", "visor-fondo"), ("visor-texto-suave", "visor-fondo"), ("texto", "franja-fondo"),
+    ("texto-suave", "franja-fondo"), ("lupa-texto", "lupa-fondo"), ("lupa-texto-suave", "lupa-fondo"),
+    ("insignia-foto-texto", "insignia-foto-fondo@visor-fondo"),
 ]
 COMPONENTES = [  # (primer plano, fondo): bordes, foco, indicadores e iconos con significado, ≥ 3:1
     ("borde-fuerte", "superficie"), ("borde-fuerte", "superficie-2"), ("borde-fuerte", "mesa-fondo"), ("acento", "superficie"),
     ("foco", "fondo"), ("foco", "superficie"), ("foco", "aviso-fondo"), ("foco", "info-fondo"), ("foco", "panel-cabecera-fondo"),
-    ("foco-cabecera", "cabecera-fondo"), ("foco-cabecera", "lateral-fondo"), ("foco-cabecera", "lupa-fondo"),
+    ("foco-cabecera", "cabecera-fondo"), ("foco-cabecera", "lateral-fondo"), ("foco-cabecera", "visor-fondo"),
+    ("foco", "lupa-fondo"), ("foco", "franja-fondo"),
     # Página actual del menú: el indicador naranja y el fondo activo se distinguen del grafito
     ("nav-activo-fondo", "cabecera-fondo"), ("nav-activo-borde", "cabecera-fondo"), ("lateral-marca", "lateral-fondo"),
     ("lateral-marca", "lateral-activo-fondo@lateral-fondo"),
     ("chip-borde", "fondo"), ("chip-borde", "superficie"), ("chip-borde", "chip-fondo"),
     *[(f"chip-{t}-borde", "fondo") for t in TIPOS_CHIP], *[(f"chip-{t}-borde", f"chip-{t}-fondo") for t in TIPOS_CHIP],
     ("error", "superficie"), ("info", "info-fondo"), ("info", "superficie"), ("aviso", "aviso-fondo"), ("aviso", "superficie"),
-    # Medidor (relleno contra su pista) y segmento elegido del control segmentado
-    ("ok", "grafica-pista"), ("aviso", "grafica-pista"), ("error", "grafica-pista"), ("texto", "superficie"),
+    # Medidor (relleno neutro, aviso y error contra su pista), progreso (neutro) y segmento elegido
+    ("grafica-1", "grafica-pista"), ("aviso", "grafica-pista"), ("error", "grafica-pista"), ("info", "superficie"),
+    ("texto", "superficie"),
 ]
 
 
@@ -319,3 +329,43 @@ def test_contraste_aa_de_los_tokens(web):
             if r < minimo:
                 fallas.append(f"{uno} sobre {otro}: {r:.2f} < {minimo}")
     assert not fallas, "Pares de tokens bajo el mínimo AA:\n" + "\n".join(fallas)
+
+
+# ───────────────────────────── color por significado (crítica G5 · P1-03) ─────────────────────────────
+def _hsl(tokens: dict[str, str], nombre: str) -> tuple[float, float, float]:
+    r, g, b = (x / 255 for x in _color(tokens, nombre))
+    alto, bajo = max(r, g, b), min(r, g, b)
+    luz = (alto + bajo) / 2
+    if alto == bajo:
+        return 0.0, 0.0, luz
+    d = alto - bajo
+    sat = d / (2 - alto - bajo) if luz > 0.5 else d / (alto + bajo)
+    tono = ((g - b) / d % 6 if alto == r else (b - r) / d + 2 if alto == g else (r - g) / d + 4) * 60
+    return tono % 360, sat, luz
+
+
+def _distancia_tono(a: float, b: float) -> float:
+    return min(abs(a - b), 360 - abs(a - b))
+
+
+def test_color_por_significado(web):
+    """Verde, ámbar y rojo solo de estado; la procedencia no se confunde con el estado ni con el naranja de acción; los
+    datos y la información son neutros."""
+    tokens = web["tokens"]
+    reservados = {n: _hsl(tokens, n)[0] for n in ("ok", "aviso", "error", "acento")}
+    fallas = []
+    for tipo in TIPOS_CHIP:
+        tono, sat, _ = _hsl(tokens, f"chip-{tipo}-borde")
+        for nombre, otro in reservados.items():
+            if sat > 0.15 and _distancia_tono(tono, otro) < 30:
+                fallas.append(f"chip-{tipo}-borde ({tono:.0f}°) se confunde con --{nombre} ({otro:.0f}°)")
+    for n in (1, 2, 3, 4, 6, 7, 8):
+        _, sat, _ = _hsl(tokens, f"grafica-{n}")
+        if sat > 0.05:
+            fallas.append(f"--grafica-{n} no es neutra (saturación {sat:.2f}): los datos van en grises")
+    for nombre in ("info", "info-fondo", "franja-fondo"):
+        _, sat, _ = _hsl(tokens, nombre)
+        if sat > 0.08:
+            fallas.append(f"--{nombre} no es neutro (saturación {sat:.2f})")
+    assert not fallas, "\n".join(fallas)
+

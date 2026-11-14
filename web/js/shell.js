@@ -53,6 +53,19 @@ function centrarActual() {
   lista.scrollLeft += a.left - l.left - (lista.clientWidth - a.width) / 2;
 }
 
+// Pista de desplazamiento: el borde de la barra de módulos por el que queda contenido se desvanece (máscara en
+// base.css). Sin desplazamiento posible (barra lateral o todo cabe), sin clases.
+function marcarDesplazamiento() {
+  const lista = document.querySelector(".navegacion ul");
+  if (!lista) return;
+  const maximo = lista.scrollWidth - lista.clientWidth;
+  lista.classList.toggle("mas-izq", maximo > 1 && lista.scrollLeft > 1);
+  lista.classList.toggle("mas-der", maximo > 1 && lista.scrollLeft < maximo - 1);
+}
+
 centrarActual();
+marcarDesplazamiento();
+document.querySelector(".navegacion ul")?.addEventListener("scroll", marcarDesplazamiento, { passive: true });
+window.addEventListener("resize", marcarDesplazamiento);
 if (document.hidden) programar();
 else consultar().then(programar);

@@ -1,7 +1,7 @@
 // Componentes comunes de la web: pie técnico plegable, gráficas SVG propias (sin bibliotecas) con su tabla
 // equivalente, visor de fotos, mensajes, medidor, tipos de fuente y utilidades de formato. Los colores NO viven aquí:
 // cada serie es una clase .serie-N y cada componente una clase de css/base.css (tokens --…).
-import { api, el, ETIQUETA_ESTADO, insignia } from "./api.js";
+import { api, el, insignia } from "./api.js";
 import { icono } from "./iconos.js";
 
 export const CAPAS = {
@@ -19,7 +19,10 @@ export const SERIE_CAPA = {
   guardrails_entrada: 4, guardrails_salida: 4, cache: 6, contexto: 3, enrutador: 7, modelo_vision: 2, modelo_composicion: 8, total: 1,
 };
 export const claseSerie = (n) => `serie-${Number.isInteger(n) && n >= 1 && n <= 8 ? n : 1}`;
+// Color por significado: las barras de datos son neutras (serie 1, gris) salvo que se pida una serie explícita; el
+// color por CLAVE de capa solo se usa en la barra apilada, donde las partes sí suman (los tiempos de UNA petición).
 const serieDe = (f) => f.serie ?? SERIE_CAPA[f.clave] ?? 1;
+const serieBarra = (f) => f.serie ?? 1;
 const SVG = "http://www.w3.org/2000/svg";
 
 export const segundos = (ms) => (ms >= 1000 ? `${(ms / 1000).toFixed(1)} s` : ms > 0 && ms < 1 ? "< 1 ms" : `${Math.round(ms)} ms`);
@@ -90,10 +93,10 @@ export function barras(filas, { titulo, formato = (v) => numero(v), maximo, enca
         // Sin viewBox (unidades en px, anchos en % del real): pista al 100 %, rejilla tenue a 25/50/75 % y la barra
         // con extremos redondeados encima
         const barra = svg("svg", { class: "barra-svg", "aria-hidden": "true", focusable: "false" });
-        barra.append(svg("rect", { class: "pista", x: 0, y: 3, width: "100%", height: 10, rx: 5 }));
+        barra.append(svg("rect", { class: "pista", x: 0, y: 3, width: "100%", height: 10, rx: 2 }));
         for (const x of ["25%", "50%", "75%"]) barra.append(svg("line", { class: "rejilla-linea", x1: x, x2: x, y1: 0, y2: 16 }));
         const ancho = Math.max(0.5, Math.min(100, ((f.valor || 0) / max) * 100));
-        barra.append(svg("rect", { x: 0, y: 3, height: 10, rx: 5, width: `${ancho.toFixed(2)}%`, class: claseSerie(serieDe(f)) }));
+        barra.append(svg("rect", { x: 0, y: 3, height: 10, rx: 2, width: `${ancho.toFixed(2)}%`, class: claseSerie(serieBarra(f)) }));
         return el("tr", {}, el("th", { scope: "row", texto: f.etiqueta }), el("td", { clase: "celda-barra" }, barra),
           el("td", { clase: "valor num", texto: formato(f.valor) }), extras.map((x) => el("td", { clase: "num", texto: x.texto(f) })));
       })))));
@@ -234,13 +237,17 @@ function crearVisor() {
   return dialogo;
 }
 
-// Datos que son identificadores técnicos: van en mono (y pueden partirse en cualquier punto)
+// Identificadores técnicos (mono, pueden partirse en cualquier punto) y cifras o valores técnicos (mono)
 const DATOS_ID = new Set(["Documento", "Traza", "Fragmento"]);
+const DATOS_MONO = new Set(["Ruta", "Similitud", "Puntaje", "Puntaje de recuperación", "Medidas originales", "Tamaño", "Tipo",
+  "Fecha de carga"]);
 
+/** Pinta los pares [etiqueta, valor] del visor. El valor puede ser texto o un nodo (p. ej. una insignia de estado). */
 function pintarDatos(datos) {
   visor.querySelector("#visor-datos").replaceChildren(...datos
     .filter(([, v]) => v !== null && v !== undefined && v !== "")
-    .flatMap(([k, v]) => [el("dt", { texto: k }), el("dd", { clase: DATOS_ID.has(k) ? "id" : null, texto: String(v) })]));
+    .flatMap(([k, v]) => [el("dt", { texto: k }),
+      el("dd", { clase: DATOS_ID.has(k) ? "id" : DATOS_MONO.has(k) ? "mono" : null }, v instanceof Node ? v : String(v))]));
 }
 
 /** Abre el visor. `datos` es una lista de pares [etiqueta, valor]; `enlace` = { href, texto } abre en otra pestaña. */
@@ -251,7 +258,12 @@ export function abrirVisor({ src, alt, titulo, datos = [], nota = "", enlace = n
   const medidas = visor.querySelector("#visor-medidas");
   visor.querySelector("#visor-titulo").textContent = titulo;
   medidas.textContent = "Cargando la imagen…";
-  img.onload = () => { medidas.textContent = `Se muestra a ${img.naturalWidth} × ${img.naturalHeight} px. ${nota}`.trim(); };
+  // El pie dice la verdad sobre la escala: la imagen nunca se amplía (base.css) y, si no cabe, se reduce
+  img.onload = () => {
+    const ancho = img.getBoundingClientRect().width;
+    const escala = ancho && ancho < img.naturalWidth - 1 ? `se muestra al ${Math.round((ancho / img.naturalWidth) * 100)} %` : "a tamaño real";
+    medidas.textContent = `Imagen de ${img.naturalWidth} × ${img.naturalHeight} px, ${escala}. ${nota}`.trim();
+  };
   img.onerror = () => { medidas.textContent = "No se pudo cargar la imagen."; };
   img.alt = alt || titulo;
   img.removeAttribute("src");
@@ -287,7 +299,7 @@ function datosDeFicha(doc, ficha, extra) {
   return [
     ["Documento", doc],
     ...extra,
-    ["Estado de la ficha", ficha ? (ETIQUETA_ESTADO[ficha.estado] || ficha.estado) : "Sin ficha todavía"],
+    ["Estado de la ficha", ficha ? insignia(ficha.estado) : "Sin ficha todavía"],
     ["Titular", ficha?.titular],
     ["Texto alternativo", ficha?.texto_alternativo],
     ["Descripción", ficha?.descripcion],
